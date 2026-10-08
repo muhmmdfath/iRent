@@ -71,7 +71,12 @@ export class ProofStorageService {
         mode: 0o600,
       });
     } catch (error) {
-      await this.remove(path);
+      if (!(
+        error instanceof Error &&
+        'code' in error &&
+        error.code === 'EEXIST'
+      ))
+        await this.remove(path);
       throw error;
     }
     return {
@@ -106,5 +111,19 @@ export class ProofStorageService {
       throw new NotFoundException('Bukti tidak ditemukan.');
     }
     return createReadStream(fullPath);
+  }
+  async metadata(path: string) {
+    try {
+      const info = await stat(this.checkedPath(path));
+      if (!info.isFile()) throw new NotFoundException();
+      const mime = path.endsWith('.pdf')
+        ? 'application/pdf'
+        : path.endsWith('.png')
+          ? 'image/png'
+          : 'image/jpeg';
+      return { mime, size: info.size };
+    } catch {
+      throw new NotFoundException('Bukti tidak ditemukan.');
+    }
   }
 }

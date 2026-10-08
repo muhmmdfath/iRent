@@ -36,7 +36,7 @@ const safeProof = {
   rejectedReason: true,
 } satisfies Prisma.PaymentProofSelect;
 type ActionResult = { bookingId: string; proofId?: string; decision?: string };
-type LockedBooking = Prisma.BookingGetPayload<{
+export type LockedBooking = Prisma.BookingGetPayload<{
   include: { items: true; obligations: true };
 }>;
 
@@ -50,7 +50,7 @@ export class PaymentsService {
     private readonly ledger: PaymentLedgerService,
   ) {}
 
-  private rules(booking: Booking) {
+  rules(booking: Booking) {
     const snapshot = booking.rulesSnapshot;
     if (!snapshot || typeof snapshot !== 'object' || Array.isArray(snapshot))
       throw new ConflictException('Snapshot aturan booking tidak valid.');
@@ -108,7 +108,9 @@ export class PaymentsService {
     return key;
   }
 
-  private async action(
+  /** Shared financial action boundary: actor/customer, inventory and booking locks,
+   * authorization, idempotency and a private owner/admin ledger response. */
+  async action(
     context: AuthContext,
     bookingId: string,
     key: string | undefined,
@@ -156,6 +158,7 @@ export class PaymentsService {
             ? { decision: ref.decision }
             : {}),
         };
+        await this.lockBooking(tx, ref.bookingId, context);
         return { ...result, ...(await this.view(tx, ref.bookingId)) };
       }
       const booking = await this.lockBooking(tx, bookingId, context);
@@ -193,6 +196,11 @@ export class PaymentsService {
             requestedAmount: true,
             approvedAmount: true,
             transferredAt: true,
+            recipientDetails: true,
+            reasonNote: true,
+            rejectedReason: true,
+            approvedAt: true,
+            policySnapshot: true,
           },
         },
       },
@@ -821,6 +829,10 @@ export class PaymentsService {
       { proofId: proofId.toLowerCase(), reason: reason.trim() },
       'admin',
       async (tx, booking) => {
+        if (['dibatalkan', 'kedaluwarsa', 'ditolak'].includes(booking.status))
+          throw new ConflictException(
+            'Booking sudah ditutup; gunakan rekonsiliasi dana.',
+          );
         const proof = await tx.paymentProof.findUnique({
           where: { id: proofId.toLowerCase() },
         });
@@ -931,14 +943,22 @@ export class PaymentsService {
               where: { id: input.proofId.toLowerCase() },
             })
           : null;
+        const terminal = ['kedaluwarsa', 'ditolak', 'dibatalkan'].includes(
+          booking.status,
+        );
         if (
           input.proofId &&
           (!proof ||
             proof.paymentObligationId !== obligation.id ||
-            proof.status !== 'rejected')
+            (proof.status !== 'rejected' &&
+              !(
+                terminal &&
+                obligation.status === 'closed' &&
+                proof.status === 'pending'
+              )))
         )
           throw new ConflictException(
-            'Rekonsiliasi bukti hanya menerima bukti ditolak pada kewajiban ini.',
+            'Gunakan bukti ditolak atau bukti belum diperiksa pada booking yang ditutup.',
           );
         if (
           !['kedaluwarsa', 'ditolak', 'dibatalkan'].includes(booking.status) &&
@@ -956,6 +976,15 @@ export class PaymentsService {
           proof?.id,
           true,
         );
+        if (proof?.status === 'pending')
+          await tx.paymentProof.update({
+            where: { id: proof.id },
+            data: {
+              status: 'verified',
+              reviewedBy: context.user.id,
+              reviewedAt: this.clock.now(),
+            },
+          });
         await this.ledger.requestUnusedRefund(
           tx,
           receipt,

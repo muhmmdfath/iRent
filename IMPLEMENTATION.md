@@ -18,7 +18,8 @@ Verifikasi 8 Oktober 2026: build/typecheck/lint/format dan tes fondasi lulus; mi
 - [x] Settings, katalog/unit, zona ongkir, pricing dan snapshot.
 - [x] Booking/alokasi atomik, lock pelanggan/unit, FCFS dan idempotensi.
 - [x] Upload bukti privat, receipt awal/pelunasan, verifikasi/approval, rekonsiliasi untuk refund dan expiry booking.
-- [ ] Pembatalan/refund manual/no-show, pembayaran perpanjangan dan alur koreksi receipt yang masih terbuka.
+- [x] Pembatalan booking penuh sebelum serah terima, kebijakan refund snapshot, approval/penolakan dan pencatatan transfer manual privat.
+- [ ] No-show, pembayaran/refund perpanjangan dan alur koreksi receipt yang masih terbuka.
 - [ ] Serah terima, perpanjangan per unit, pengembalian, persiapan/perawatan, denda/kehilangan.
 - [ ] Outbox, scheduler, Web Push, adapter WhatsApp, laporan/Excel.
 - [ ] Seluruh skenario PRD termasuk konkurensi PostgreSQL dan otorisasi.
@@ -31,9 +32,13 @@ Booking/alokasi sudah diverifikasi di PostgreSQL: perebutan unit terakhir, batas
 
 Verifikasi tahap booking 8 Oktober 2026: build, typecheck, lint, format, 13 tes tanpa database, dan suite PostgreSQL dengan 50 tes lulus. Pengujian lock timeout nyata berhasil retry tanpa duplikasi booking/outbox. Ini belum berarti seluruh 65 skenario aplikasi PRD selesai.
 
-Pembayaran/expiry tersedia: multipart JPG/PNG/PDF privat, otorisasi download, deduplikasi proof/receipt, deadline upload/konfirmasi, dana kurang/lebih, aplikasi DP/pelunasan, ledger dan penutupan kewajiban, refund requested untuk dana gagal/berlebih, serta worker expiry tiap menit. Kontrak/configuration dan batas tahap di [backend/PAYMENTS.md](backend/PAYMENTS.md). Refund belum bisa disetujui atau ditandai ditransfer; event notifikasi baru tersimpan, belum dikirim.
+Pembayaran/expiry tersedia: multipart JPG/PNG/PDF privat, otorisasi download, deduplikasi proof/receipt, deadline upload/konfirmasi, dana kurang/lebih, aplikasi DP/pelunasan, ledger dan penutupan kewajiban, refund requested untuk dana gagal/berlebih, serta worker expiry tiap menit. Kontrak/configuration dan batas tahap di [backend/PAYMENTS.md](backend/PAYMENTS.md). Approval dan transfer refund tersedia melalui [backend/REFUNDS.md](backend/REFUNDS.md); event notifikasi baru tersimpan, belum dikirim.
 
 Verifikasi tahap pembayaran 8 Oktober 2026: build/typecheck/lint/format, 13 tes tanpa DB dan 73 tes PostgreSQL lulus. Cakupan tambahan mencakup HTTP multipart/download privat, file invalid/oversize, throttle 429, upload terlambat setelah penyimpanan/pencatatan, idempotensi file, reviewer dan worker bersamaan, bank reference lintas pelanggan, dana kurang/lebih/lunas, kegagalan persetujuan yang tetap mencatat uang, rekonsiliasi, serta isolasi kegagalan batch expiry. Schema/migrasi tidak berubah pada tahap ini.
+
+Pembatalan/refund manual tersedia: seluruh booking sebelum serah terima, snapshot cutoff dan kategori dari applied funds, adjustment tanpa piutang fiktif, rekening penerima, review admin, transfer privat dan pencatatan uang keluar atomik. Pembulatan sekali pada total BIGINT, dana pelunasan sebagian/kelebihan dipisahkan, dan bukti pending dapat direkonsiliasi tanpa mengaktifkan booking kembali. Kontrak di [backend/REFUNDS.md](backend/REFUNDS.md). No-show tetap tahap berikutnya.
+
+Verifikasi tahap pembatalan/refund 8 Oktober 2026: build/typecheck/lint/format, 15 tes tanpa DB dan 90 tes PostgreSQL lulus. Cakupan baru meliputi batas tepat 48 jam, DP menjadi lunas, booking kecil/rounding, partial settlement/kelebihan, pembatalan toko, larangan batal setelah handover, otorisasi/bukti privat HTTP, idempotensi, reviewer/transfer bersamaan, sumber dana yang bersaing, bank reference lintas pelanggan, rekonsiliasi bukti booking batal, dan refund expiry. Schema/migrasi tidak berubah.
 
 ## Tahap 3 — UI, integrasi, dan deployment
 

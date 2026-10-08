@@ -33,6 +33,116 @@ import {
   VerifyProofDto,
 } from './payments.dto';
 import { PaymentExpiryWorker } from './payment-expiry.worker';
+import { RefundsService } from './refunds.service';
+import {
+  CancelBookingDto,
+  RefundRecipientDto,
+  TransferRefundDto,
+} from './refunds.dto';
+
+@Controller()
+export class RefundsController {
+  constructor(
+    private readonly refunds: RefundsService,
+    private readonly storage: ProofStorageService,
+  ) {}
+
+  @Post('bookings/:id/cancel') @Roles('customer') cancel(
+    @Req() req: AuthRequest,
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() input: CancelBookingDto,
+    @Headers('idempotency-key') key?: string,
+  ) {
+    return this.refunds.cancel(req.auth, id, input.reason, key);
+  }
+
+  @Post('admin/bookings/:id/cancel') @Roles('admin') shopCancel(
+    @Req() req: AuthRequest,
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() input: CancelBookingDto,
+    @Headers('idempotency-key') key?: string,
+  ) {
+    return this.refunds.cancel(req.auth, id, input.reason, key, true);
+  }
+
+  @Post('refunds/:id/recipient') @Roles('customer') recipient(
+    @Req() req: AuthRequest,
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() input: RefundRecipientDto,
+    @Headers('idempotency-key') key?: string,
+  ) {
+    return this.refunds.recipient(req.auth, id, input, key);
+  }
+
+  @Post('admin/refunds/:id/approve') @Roles('admin') approve(
+    @Req() req: AuthRequest,
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Headers('idempotency-key') key?: string,
+  ) {
+    return this.refunds.approve(req.auth, id, key);
+  }
+
+  @Post('admin/refunds/:id/recipient') @Roles('admin') adminRecipient(
+    @Req() req: AuthRequest,
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() input: RefundRecipientDto,
+    @Headers('idempotency-key') key?: string,
+  ) {
+    return this.refunds.recipient(req.auth, id, input, key);
+  }
+
+  @Post('admin/refunds/:id/reject') @Roles('admin') reject(
+    @Req() req: AuthRequest,
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() input: RejectProofDto,
+    @Headers('idempotency-key') key?: string,
+  ) {
+    return this.refunds.reject(req.auth, id, input.reason, key);
+  }
+
+  @Post('admin/refunds/:id/transfer')
+  @Roles('admin')
+  @ProofUploadRoute()
+  @UseInterceptors(
+    FileInterceptor('file', {
+      limits: { fileSize: MAX_PROOF_BYTES, files: 1, fields: 4, parts: 5 },
+    }),
+  )
+  transfer(
+    @Req() req: AuthRequest,
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() input: TransferRefundDto,
+    @UploadedFile() file: ProofUpload | undefined,
+    @Headers('idempotency-key') key?: string,
+  ) {
+    return this.refunds.transfer(req.auth, id, input, file, key);
+  }
+
+  @Get('refunds/:id/file') async download(
+    @Req() req: AuthRequest,
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const proof = await this.refunds.proof(req.auth, id);
+    const metadata = await this.storage.metadata(proof.path);
+    const stream = await this.storage.download(proof.path);
+    response.setHeader('X-Content-Type-Options', 'nosniff');
+    response.setHeader(
+      'Content-Security-Policy',
+      "default-src 'none'; sandbox",
+    );
+    return new StreamableFile(stream, {
+      type: metadata.mime,
+      length: metadata.size,
+      disposition:
+        'attachment; filename="refund-' +
+        proof.id +
+        '.' +
+        proof.path.split('.').pop() +
+        '"',
+    });
+  }
+}
 
 @Controller('bookings')
 export class CustomerPaymentsController {
@@ -145,12 +255,14 @@ export class AdminPaymentsController {
     CustomerPaymentsController,
     PrivateProofsController,
     AdminPaymentsController,
+    RefundsController,
   ],
   providers: [
     PaymentsService,
     PaymentLedgerService,
     ProofStorageService,
     PaymentExpiryWorker,
+    RefundsService,
   ],
   exports: [PaymentsService],
 })

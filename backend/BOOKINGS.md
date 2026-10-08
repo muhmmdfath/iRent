@@ -51,4 +51,4 @@ Satu transaksi menyimpan snapshot harga/zona/persetujuan, booking_item dan aloka
 
 Availability memeriksa stok kalender; tidak menjamin request berikutnya berhasil atau pelanggan memenuhi semua persyaratan booking. Permintaan kalah tidak menjadi antrean otomatis.
 
-Worker expiry, adjustment tagihan, penutupan kewajiban, upload privat dan approval tersedia melalui modul payments. Hold kedaluwarsa tetap diabaikan saat alokasi sebelum worker sempat memperbarui status. Refund dana masuk tercatat sebagai permintaan; persetujuan/transfer manual, cancellation/no-show, extension actions, worker pengirim outbox, dan UI belum tersedia.
+Worker expiry, adjustment tagihan, penutupan kewajiban, upload privat dan approval tersedia melalui modul payments. Hold kedaluwarsa tetap diabaikan saat alokasi sebelum worker sempat memperbarui status. Pembatalan dan refund manual tersedia melalui [REFUNDS.md](REFUNDS.md). No-show, extension actions, worker pengirim outbox, dan UI belum tersedia.

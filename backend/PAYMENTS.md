@@ -1,6 +1,6 @@
 # Pembayaran dan bukti privat
 
-Tahap ini mencakup bukti pembayaran awal/pelunasan, receipt aktual, persetujuan booking, rekonsiliasi dana untuk refund, serta expiry booking. Mengikuti PRD §6–8 dan §15. Pembatalan/no-show, pembayaran perpanjangan, persetujuan/transfer refund, dan pengiriman notifikasi belum tersedia.
+Tahap ini mencakup bukti pembayaran awal/pelunasan, receipt aktual, persetujuan booking, rekonsiliasi dana untuk refund, serta expiry booking. Mengikuti PRD §6–8 dan §15. Pembatalan dan approval/transfer refund tersedia melalui [REFUNDS.md](REFUNDS.md). No-show, pembayaran perpanjangan, dan pengiriman notifikasi belum tersedia.
 
 ## API dan akses
 
@@ -47,7 +47,7 @@ Upload diterima sampai deadline inklusif, setelah file tersimpan dan pencatatan 
 
 Receipt dicatat sebagai uang masuk aktual. Application memisahkan dana reserved dan applied. Kurang bayar tetap reserved; bukti berikutnya harus masuk dalam deadline awal, tanpa countdown baru. Ketika lengkap, seluruh bagian wajib diterapkan. Contoh DP Rp20.000 dibayar Rp25.000: applied Rp20.000, uang masuk Rp25.000, permintaan refund Rp5.000; tidak otomatis lunas.
 
-DP yang disetujui menghasilkan `dikonfirmasi`. Pelunasan memakai obligation terpisah; receipt pelunasan sebagian tidak mengubah label menjadi lunas. Response summary menampilkan tagihan sah, received/refunded/netCash, applied/reserved/unapplied, sisa tagihan, refund requested/approved, dan label pembayaran. Refund requested/approved belum mengurangi kas; transfer refund belum tersedia.
+DP yang disetujui menghasilkan `dikonfirmasi`. Pelunasan memakai obligation terpisah; receipt pelunasan sebagian tidak mengubah label menjadi lunas. Response summary menampilkan tagihan sah, received/refunded/netCash, applied/reserved/unapplied, sisa tagihan, refund requested/approved, dan label pembayaran. Refund requested/approved belum mengurangi kas; uang keluar baru dicatat saat transfer refund diselesaikan melalui [REFUNDS.md](REFUNDS.md).
 
 Jika uang masuk tetapi unit/alokasi gagal memenuhi persetujuan, receipt dan hasil verifikasi tetap commit; booking ditolak, charge dikreditkan, alokasi dilepas, dan dana menjadi permintaan refund penuh. Ini bukan rollback uang yang sudah diterima. Kelebihan dan dana kewajiban gagal tetap dipisahkan dari potongan pembatalan.
 

@@ -1,6 +1,6 @@
 # Backend iRent
 
-Backend NestJS/Express dan PostgreSQL sesuai [PRD](../PRD.md). API tersedia untuk health, auth/profil, katalog/unit, settings, zona ongkir, perawatan/persiapan, dan quote harga/snapshot. Booking/alokasi, pembayaran, worker, dan UI masih mengikuti [IMPLEMENTATION.md](../IMPLEMENTATION.md). Kontrak/setup: [AUTH.md](AUTH.md) dan [INVENTORY_PRICING.md](INVENTORY_PRICING.md).
+Backend NestJS/Express dan PostgreSQL sesuai [PRD](../PRD.md). API tersedia untuk health, auth/profil, katalog/unit, settings, zona ongkir, perawatan/persiapan, dan quote harga/snapshot. Booking/alokasi, pembayaran, pembatalan/refund manual juga tersedia. Progres worker dan UI mengikuti [IMPLEMENTATION.md](../IMPLEMENTATION.md). Kontrak/setup: [AUTH.md](AUTH.md) dan [INVENTORY_PRICING.md](INVENTORY_PRICING.md).
 
 ## Setup lokal
 
@@ -42,7 +42,7 @@ Jika PostgreSQL sudah tersedia, gunakan database baru dan sesuaikan `DATABASE_UR
 - Rupiah memakai PostgreSQL BIGINT/TypeScript bigint; response API mengirim string desimal, misalnya `"20000"`. Frontend tidak boleh mengubahnya menjadi Number untuk perhitungan saldo.
 - Datetime bisnis memakai `timestamp(3)` WIB. `parseWibDateTime` menerima ISO ber-offset `+07:00`; Date internal menyimpan wall time WIB di field UTC. Gunakan codec itu pada batas API dan `wibNow()` untuk waktu server. Jangan memakai `new Date()` langsung untuk menulis waktu bisnis. Default dan trigger `updated_at` database menggunakan `Asia/Jakarta`.
 - Migrasi memiliki CHECK, partial unique index, composite FK, dan trigger yang tidak seluruhnya tampil di schema Prisma. Tinjau SQL ketika membuat migrasi baru; jangan memakai `db push` untuk menggantikan migrasi.
-- Constraint mencegah sejumlah data invalid, bukti pending ganda, dan referensi lintas booking/unit. Booking/alokasi FCFS, snapshot, idempotensi, serta pembayaran awal/pelunasan/expiry tersedia dengan tes konkurensi PostgreSQL; lihat [BOOKINGS.md](BOOKINGS.md) dan [PAYMENTS.md](PAYMENTS.md). Pembatalan, persetujuan/transfer refund, no-show, dan pembayaran perpanjangan masih tahap berikutnya. Seluruh 65 skenario PRD belum selesai.
+- Constraint mencegah sejumlah data invalid, bukti pending ganda, dan referensi lintas booking/unit. Booking/alokasi FCFS, snapshot, idempotensi, serta pembayaran awal/pelunasan/expiry tersedia dengan tes konkurensi PostgreSQL; lihat [BOOKINGS.md](BOOKINGS.md) dan [PAYMENTS.md](PAYMENTS.md). Pembatalan penuh dan approval/transfer refund manual tersedia melalui [REFUNDS.md](REFUNDS.md). No-show dan pembayaran perpanjangan masih tahap berikutnya. Seluruh 65 skenario PRD belum selesai.
 - Interceptor mengubah nilai JSON dan mempertahankan streaming file. Auth memakai response terpilih, enkripsi NIK, rate limit PostgreSQL, dan guard server/CSRF. Bukti privat tersimpan di `PROOF_STORAGE_DIR`; directory tidak boleh dipublikasikan sebagai static. `PAYMENT_WORKER_ENABLED=true` mengaktifkan expiry tiap menit, kecuali pada test. Worker pengirim outbox belum tersedia; event bisnis tersimpan saat commit.
 
 Versi dependency dikunci dalam lockfile. Override `deepmerge-ts` dan `mysql2` memperbaiki advisory dependency CLI Prisma; evaluasi ulang ketika upgrade Prisma.
