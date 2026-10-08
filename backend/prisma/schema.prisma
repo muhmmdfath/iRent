@@ -1,0 +1,909 @@
+// Business timestamps store WIB wall-clock values, not implicit UTC instants.
+// Use shared/time/wib.ts at API boundaries. SQL maintains updated_at in WIB.
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum UserRole {
+  customer
+  admin
+
+  @@map("user_role")
+}
+
+enum ItemCategory {
+  iphone
+  accessory
+
+  @@map("item_category")
+}
+
+enum UnitCondition {
+  layak
+  maintenance
+  lost
+
+  @@map("unit_condition")
+}
+
+enum PhysicalStatus {
+  ready
+  in_use
+  awaiting_check
+  in_transit
+  preparing
+  lost
+
+  @@map("physical_status")
+}
+
+enum BookingStatus {
+  menunggu_pembayaran
+  menunggu_konfirmasi
+  dikonfirmasi
+  berjalan
+  selesai
+  kedaluwarsa
+  ditolak
+  dibatalkan
+
+  @@map("booking_status")
+}
+
+enum DeliveryType {
+  pickup
+  delivery
+
+  @@map("delivery_type")
+}
+
+enum PayOption {
+  dp
+  full
+
+  @@map("pay_option")
+}
+
+enum UnitUseStatus {
+  allocated
+  in_use
+  return_pending
+  returned
+  lost_closed
+
+  @@map("unit_use_status")
+}
+
+enum AllocationKind {
+  rental
+  extension_hold
+
+  @@map("allocation_kind")
+}
+
+enum AllocationState {
+  active
+  released
+
+  @@map("allocation_state")
+}
+
+enum ExtensionStatus {
+  draft_quote
+  menunggu_pembayaran
+  menunggu_konfirmasi
+  disetujui
+  ditolak
+  kedaluwarsa
+  dibatalkan
+
+  @@map("extension_status")
+}
+
+enum ReturnStatus {
+  pending
+  verified
+  rejected
+
+  @@map("return_status")
+}
+
+enum ChargeKind {
+  rental
+  delivery
+  extension
+  extra_delivery
+  late
+  damage
+  loss
+  adjustment
+
+  @@map("charge_kind")
+}
+
+enum ChargeDirection {
+  debit
+  credit
+
+  @@map("charge_direction")
+}
+
+enum ObligationPurpose {
+  initial_dp
+  initial_full
+  settlement
+  extension
+
+  @@map("obligation_purpose")
+}
+
+enum ObligationStatus {
+  open
+  proof_pending
+  satisfied
+  closed
+
+  @@map("obligation_status")
+}
+
+enum ProofStatus {
+  pending
+  verified
+  rejected
+
+  @@map("proof_status")
+}
+
+enum MoneyDirection {
+  in
+  out
+
+  @@map("money_direction")
+}
+
+enum PaymentType {
+  dp
+  full
+  settlement
+  extension
+  refund
+  reconciliation
+
+  @@map("payment_type")
+}
+
+enum PaymentMethod {
+  qris
+  cash
+  transfer
+
+  @@map("payment_method")
+}
+
+enum ApplicationState {
+  reserved
+  applied
+  released
+
+  @@map("application_state")
+}
+
+enum RefundStatus {
+  diajukan
+  disetujui
+  ditolak
+  sudah_dikembalikan
+
+  @@map("refund_status")
+}
+
+enum IdempotencyStatus {
+  processing
+  succeeded
+
+  @@map("idempotency_status")
+}
+
+enum NotificationChannel {
+  push
+  whatsapp
+
+  @@map("notification_channel")
+}
+
+enum NotificationStatus {
+  queued
+  sending
+  sent
+  failed
+  skipped
+
+  @@map("notification_status")
+}
+
+model User {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name         String
+  email        String?  @unique
+  phone        String?  @unique
+  passwordHash String   @map("password_hash")
+  authVersion  Int      @default(0) @map("auth_version")
+  role         UserRole @default(customer)
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("created_at") @db.Timestamp(3)
+  updatedAt    DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("updated_at") @db.Timestamp(3)
+
+  profile                              CustomerProfile?       @relation("CustomerProfile_userId")
+  sessions                             AuthSession[]
+  bookings                             Booking[]              @relation("Booking_userId")
+  pushSubscriptions                    PushSubscription[]     @relation("PushSubscription_userId")
+  bookingConfirmedBy                   Booking[]              @relation("Booking_confirmedBy")
+  bookingItemPickedUpBy                BookingItem[]          @relation("BookingItem_pickedUpBy")
+  extensionQuotedBy                    Extension[]            @relation("Extension_quotedBy")
+  extensionApprovedBy                  Extension[]            @relation("Extension_approvedBy")
+  returnRecordVerifiedBy               ReturnRecord[]         @relation("ReturnRecord_verifiedBy")
+  lossRecordVerifiedBy                 LossRecord[]           @relation("LossRecord_verifiedBy")
+  bookingChargeCreatedBy               BookingCharge[]        @relation("BookingCharge_createdBy")
+  paymentProofReviewedBy               PaymentProof[]         @relation("PaymentProof_reviewedBy")
+  paymentRecordedBy                    Payment[]              @relation("Payment_recordedBy")
+  refundRequestApprovedBy              RefundRequest[]        @relation("RefundRequest_approvedBy")
+  bookingStatusLogActorId              BookingStatusLog[]     @relation("BookingStatusLog_actorId")
+  auditLogActorId                      AuditLog[]             @relation("AuditLog_actorId")
+  settingUpdatedBy                     Setting[]              @relation("Setting_updatedBy")
+  idempotencyRequestActorId            IdempotencyRequest[]   @relation("IdempotencyRequest_actorId")
+  notificationDeliveryRecipientAdminId NotificationDelivery[] @relation("NotificationDelivery_recipientAdminId")
+
+  @@map("users")
+}
+
+model CustomerProfile {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId        String   @unique @map("user_id") @db.Uuid
+  fullName      String   @map("full_name")
+  address       String
+  phoneActive   String   @map("phone_active")
+  nikCiphertext String   @map("nik_ciphertext")
+  phoneAlt      String?  @map("phone_alt")
+  instagram     String?
+  emailContact  String?  @map("email_contact")
+  completedAt   DateTime @map("completed_at") @db.Timestamp(3)
+  createdAt     DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("created_at") @db.Timestamp(3)
+  updatedAt     DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("updated_at") @db.Timestamp(3)
+
+  user User @relation("CustomerProfile_userId", fields: [userId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@map("customer_profiles")
+}
+
+model Item {
+  id        String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  category  ItemCategory
+  name      String
+  photoPath String?      @map("photo_path")
+  includes  Json
+  price6h   BigInt       @map("price_6h")
+  price12h  BigInt       @map("price_12h")
+  price24h  BigInt       @map("price_24h")
+  isActive  Boolean      @default(true) @map("is_active")
+  createdAt DateTime     @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("created_at") @db.Timestamp(3)
+  updatedAt DateTime     @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("updated_at") @db.Timestamp(3)
+
+  units        ItemUnit[]    @relation("ItemUnit_itemId")
+  bookingItems BookingItem[] @relation("BookingItem_itemId")
+
+  @@map("items")
+}
+
+model ItemUnit {
+  id                     String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  itemId                 String         @map("item_id") @db.Uuid
+  code                   String         @unique
+  isActive               Boolean        @default(true) @map("is_active")
+  conditionStatus        UnitCondition  @default(layak) @map("condition_status")
+  physicalStatus         PhysicalStatus @default(ready) @map("physical_status")
+  preparationUntil       DateTime?      @map("preparation_until") @db.Timestamp(3)
+  maintenanceCompletedAt DateTime?      @map("maintenance_completed_at") @db.Timestamp(3)
+  notes                  String?
+  createdAt              DateTime       @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("created_at") @db.Timestamp(3)
+  updatedAt              DateTime       @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("updated_at") @db.Timestamp(3)
+
+  item         Item             @relation("ItemUnit_itemId", fields: [itemId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  bookingItems BookingItem[]    @relation("BookingItem_itemUnitId")
+  allocations  UnitAllocation[] @relation("UnitAllocation_itemUnitId")
+
+  @@unique([id, itemId])
+  @@index([itemId, isActive, conditionStatus])
+  @@map("item_units")
+}
+
+model DeliveryZone {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String   @unique
+  fee       BigInt
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("created_at") @db.Timestamp(3)
+  updatedAt DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("updated_at") @db.Timestamp(3)
+
+  bookings Booking[] @relation("Booking_deliveryZoneId")
+
+  @@map("delivery_zones")
+}
+
+model Booking {
+  id                         String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code                       String        @unique
+  userId                     String        @map("user_id") @db.Uuid
+  status                     BookingStatus @default(menunggu_pembayaran)
+  initialStartAt             DateTime      @map("initial_start_at") @db.Timestamp(3)
+  initialEndAt               DateTime      @map("initial_end_at") @db.Timestamp(3)
+  deliveryType               DeliveryType  @map("delivery_type")
+  deliveryZoneId             String?       @map("delivery_zone_id") @db.Uuid
+  deliveryZoneNameSnapshot   String?       @map("delivery_zone_name_snapshot")
+  deliveryAddress            String?       @map("delivery_address")
+  deliveryFeeSnapshot        BigInt        @map("delivery_fee_snapshot")
+  initialRentalTotal         BigInt        @map("initial_rental_total")
+  initialGrandTotal          BigInt        @map("initial_grand_total")
+  dpSnapshot                 BigInt        @map("dp_snapshot")
+  payOption                  PayOption     @map("pay_option")
+  amountDueNow               BigInt        @map("amount_due_now")
+  expiresAt                  DateTime      @map("expires_at") @db.Timestamp(3)
+  uploadedAt                 DateTime?     @map("uploaded_at") @db.Timestamp(3)
+  confirmationDueAt          DateTime?     @map("confirmation_due_at") @db.Timestamp(3)
+  confirmedBy                String?       @map("confirmed_by") @db.Uuid
+  confirmedAt                DateTime?     @map("confirmed_at") @db.Timestamp(3)
+  noShowDueAt                DateTime      @map("no_show_due_at") @db.Timestamp(3)
+  deliveryReadyAt            DateTime?     @map("delivery_ready_at") @db.Timestamp(3)
+  customerFailureConfirmedAt DateTime?     @map("customer_failure_confirmed_at") @db.Timestamp(3)
+  deliveryFailureReason      String?       @map("delivery_failure_reason")
+  shopDelaySeconds           Int           @default(0) @map("shop_delay_seconds")
+  rejectedReason             String?       @map("rejected_reason")
+  cancelReason               String?       @map("cancel_reason")
+  termsVersion               String        @map("terms_version")
+  agreedTermsAt              DateTime      @map("agreed_terms_at") @db.Timestamp(3)
+  rulesSnapshot              Json          @map("rules_snapshot")
+  createdAt                  DateTime      @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("created_at") @db.Timestamp(3)
+  updatedAt                  DateTime      @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("updated_at") @db.Timestamp(3)
+
+  customer       User                @relation("Booking_userId", fields: [userId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  deliveryZone   DeliveryZone?       @relation("Booking_deliveryZoneId", fields: [deliveryZoneId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  items          BookingItem[]       @relation("BookingItem_bookingId")
+  extensions     Extension[]         @relation("Extension_bookingId")
+  charges        BookingCharge[]     @relation("BookingCharge_bookingId")
+  obligations    PaymentObligation[] @relation("PaymentObligation_bookingId")
+  payments       Payment[]           @relation("Payment_bookingId")
+  refunds        RefundRequest[]     @relation("RefundRequest_bookingId")
+  statusLogs     BookingStatusLog[]  @relation("BookingStatusLog_bookingId")
+  confirmedActor User?               @relation("Booking_confirmedBy", fields: [confirmedBy], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@index([status, initialStartAt])
+  @@index([userId, status])
+  @@index([expiresAt])
+  @@index([confirmationDueAt])
+  @@index([noShowDueAt])
+  @@map("bookings")
+}
+
+model BookingItem {
+  id                String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  bookingId         String        @map("booking_id") @db.Uuid
+  itemId            String        @map("item_id") @db.Uuid
+  itemUnitId        String        @map("item_unit_id") @db.Uuid
+  itemNameSnapshot  String        @map("item_name_snapshot")
+  unitCodeSnapshot  String        @map("unit_code_snapshot")
+  initialStartAt    DateTime      @map("initial_start_at") @db.Timestamp(3)
+  startAt           DateTime      @map("start_at") @db.Timestamp(3)
+  initialEndAt      DateTime      @map("initial_end_at") @db.Timestamp(3)
+  currentEndAt      DateTime      @map("current_end_at") @db.Timestamp(3)
+  shopDelaySeconds  Int           @default(0) @map("shop_delay_seconds")
+  unitPriceSnapshot BigInt        @map("unit_price_snapshot")
+  tariff6hSnapshot  BigInt        @map("tariff_6h_snapshot")
+  tariff12hSnapshot BigInt        @map("tariff_12h_snapshot")
+  tariff24hSnapshot BigInt        @map("tariff_24h_snapshot")
+  useStatus         UnitUseStatus @default(allocated) @map("use_status")
+  pickedUpAt        DateTime?     @map("picked_up_at") @db.Timestamp(3)
+  pickedUpBy        String?       @map("picked_up_by") @db.Uuid
+  handoverNote      String?       @map("handover_note")
+  version           Int           @default(0)
+  createdAt         DateTime      @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("created_at") @db.Timestamp(3)
+  updatedAt         DateTime      @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("updated_at") @db.Timestamp(3)
+
+  booking        Booking          @relation("BookingItem_bookingId", fields: [bookingId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  item           Item             @relation("BookingItem_itemId", fields: [itemId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  unit           ItemUnit         @relation("BookingItem_itemUnitId", fields: [itemUnitId, itemId], references: [id, itemId], onDelete: Restrict, onUpdate: Cascade, map: "booking_item_unit_matches_item")
+  allocations    UnitAllocation[] @relation("UnitAllocation_bookingItemId")
+  extensionItems ExtensionItem[]  @relation("ExtensionItem_bookingItemId")
+  returnRecord   ReturnRecord?    @relation("ReturnRecord_bookingItemId")
+  lossRecord     LossRecord?      @relation("LossRecord_bookingItemId")
+  charges        BookingCharge[]  @relation("BookingCharge_bookingItemId")
+  pickedUpActor  User?            @relation("BookingItem_pickedUpBy", fields: [pickedUpBy], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@unique([bookingId, itemUnitId])
+  @@unique([id, bookingId])
+  @@unique([id, itemUnitId])
+  @@index([bookingId, useStatus])
+  @@index([itemUnitId, currentEndAt])
+  @@map("booking_items")
+}
+
+model UnitAllocation {
+  id              String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  bookingItemId   String          @map("booking_item_id") @db.Uuid
+  itemUnitId      String          @map("item_unit_id") @db.Uuid
+  extensionItemId String?         @map("extension_item_id") @db.Uuid
+  allocationKind  AllocationKind  @map("allocation_kind")
+  state           AllocationState @default(active)
+  startAt         DateTime        @map("start_at") @db.Timestamp(3)
+  endAt           DateTime        @map("end_at") @db.Timestamp(3)
+  blockStartAt    DateTime        @map("block_start_at") @db.Timestamp(3)
+  blockEndAt      DateTime        @map("block_end_at") @db.Timestamp(3)
+  holdExpiresAt   DateTime?       @map("hold_expires_at") @db.Timestamp(3)
+  releasedAt      DateTime?       @map("released_at") @db.Timestamp(3)
+  releasedReason  String?         @map("released_reason")
+  createdAt       DateTime        @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("created_at") @db.Timestamp(3)
+  updatedAt       DateTime        @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("updated_at") @db.Timestamp(3)
+
+  bookingItem   BookingItem    @relation("UnitAllocation_bookingItemId", fields: [bookingItemId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  unit          ItemUnit       @relation("UnitAllocation_itemUnitId", fields: [itemUnitId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  extensionItem ExtensionItem? @relation("UnitAllocation_extensionItemId", fields: [extensionItemId, bookingItemId], references: [id, bookingItemId], onDelete: Restrict, onUpdate: Cascade, map: "allocation_extension_matches_item")
+
+  @@index([itemUnitId, state, blockStartAt])
+  @@index([holdExpiresAt])
+  @@map("unit_allocations")
+}
+
+model Extension {
+  id                 String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  bookingId          String          @map("booking_id") @db.Uuid
+  status             ExtensionStatus
+  rentalQuoteTotal   BigInt          @map("rental_quote_total")
+  extraDeliveryQuote BigInt          @default(0) @map("extra_delivery_quote")
+  amountDue          BigInt          @map("amount_due")
+  deliveryQuoteNote  String?         @map("delivery_quote_note")
+  quotedBy           String?         @map("quoted_by") @db.Uuid
+  quotedAt           DateTime?       @map("quoted_at") @db.Timestamp(3)
+  deliveryAgreedAt   DateTime?       @map("delivery_agreed_at") @db.Timestamp(3)
+  submittedAt        DateTime?       @map("submitted_at") @db.Timestamp(3)
+  expiresAt          DateTime?       @map("expires_at") @db.Timestamp(3)
+  uploadedAt         DateTime?       @map("uploaded_at") @db.Timestamp(3)
+  confirmationDueAt  DateTime?       @map("confirmation_due_at") @db.Timestamp(3)
+  approvedBy         String?         @map("approved_by") @db.Uuid
+  approvedAt         DateTime?       @map("approved_at") @db.Timestamp(3)
+  rejectedReason     String?         @map("rejected_reason")
+  cancelReason       String?         @map("cancel_reason")
+  createdAt          DateTime        @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("created_at") @db.Timestamp(3)
+  updatedAt          DateTime        @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("updated_at") @db.Timestamp(3)
+
+  booking       Booking             @relation("Extension_bookingId", fields: [bookingId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  items         ExtensionItem[]     @relation("ExtensionItem_extensionId")
+  charges       BookingCharge[]     @relation("BookingCharge_extensionId")
+  obligations   PaymentObligation[] @relation("PaymentObligation_extensionId")
+  payments      Payment[]           @relation("Payment_extensionId")
+  refunds       RefundRequest[]     @relation("RefundRequest_extensionId")
+  quotedActor   User?               @relation("Extension_quotedBy", fields: [quotedBy], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  approvedActor User?               @relation("Extension_approvedBy", fields: [approvedBy], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@unique([id, bookingId])
+  @@index([status, expiresAt])
+  @@index([confirmationDueAt])
+  @@map("extensions")
+}
+
+model ExtensionItem {
+  id                  String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  extensionId         String    @map("extension_id") @db.Uuid
+  bookingId           String    @map("booking_id") @db.Uuid
+  bookingItemId       String    @map("booking_item_id") @db.Uuid
+  oldEndAt            DateTime  @map("old_end_at") @db.Timestamp(3)
+  proposedEndAt       DateTime  @map("proposed_end_at") @db.Timestamp(3)
+  expectedItemVersion Int       @map("expected_item_version")
+  addedHours          Int       @map("added_hours")
+  unitPriceSnapshot   BigInt    @map("unit_price_snapshot")
+  confirmationDueAt   DateTime? @map("confirmation_due_at") @db.Timestamp(3)
+  createdAt           DateTime  @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("created_at") @db.Timestamp(3)
+  updatedAt           DateTime  @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("updated_at") @db.Timestamp(3)
+
+  allocations UnitAllocation[] @relation("UnitAllocation_extensionItemId")
+  extension   Extension        @relation("ExtensionItem_extensionId", fields: [extensionId, bookingId], references: [id, bookingId], onDelete: Restrict, onUpdate: Cascade, map: "extension_item_matches_parent")
+  bookingItem BookingItem      @relation("ExtensionItem_bookingItemId", fields: [bookingItemId, bookingId], references: [id, bookingId], onDelete: Restrict, onUpdate: Cascade, map: "extension_item_matches_booking")
+
+  @@unique([extensionId, bookingItemId])
+  @@unique([id, bookingItemId])
+  @@index([bookingItemId])
+  @@map("extension_items")
+}
+
+model ReturnRecord {
+  id                           String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  bookingItemId                String       @unique @map("booking_item_id") @db.Uuid
+  status                       ReturnStatus @default(pending)
+  reportedAt                   DateTime?    @map("reported_at") @db.Timestamp(3)
+  receivedByCourierAt          DateTime?    @map("received_by_courier_at") @db.Timestamp(3)
+  receivedAtStore              DateTime?    @map("received_at_store") @db.Timestamp(3)
+  verifiedAt                   DateTime?    @map("verified_at") @db.Timestamp(3)
+  verifiedBy                   String?      @map("verified_by") @db.Uuid
+  feeReturnAt                  DateTime?    @map("fee_return_at") @db.Timestamp(3)
+  conditionNote                String?      @map("condition_note")
+  damageAmount                 BigInt       @default(0) @map("damage_amount")
+  damageNote                   String?      @map("damage_note")
+  lateSeconds                  Int          @default(0) @map("late_seconds")
+  lateFee                      BigInt       @default(0) @map("late_fee")
+  adminDelayExemptionSeconds   Int          @default(0) @map("admin_delay_exemption_seconds")
+  courierDelayExemptionSeconds Int          @default(0) @map("courier_delay_exemption_seconds")
+  exemptionReason              String?      @map("exemption_reason")
+  preparationStartedAt         DateTime?    @map("preparation_started_at") @db.Timestamp(3)
+  createdAt                    DateTime     @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("created_at") @db.Timestamp(3)
+  updatedAt                    DateTime     @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("updated_at") @db.Timestamp(3)
+
+  bookingItem   BookingItem @relation("ReturnRecord_bookingItemId", fields: [bookingItemId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  verifiedActor User?       @relation("ReturnRecord_verifiedBy", fields: [verifiedBy], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@index([status])
+  @@map("return_records")
+}
+
+model LossRecord {
+  id                 String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  bookingItemId      String   @unique @map("booking_item_id") @db.Uuid
+  lostAt             DateTime @map("lost_at") @db.Timestamp(3)
+  verifiedBy         String   @map("verified_by") @db.Uuid
+  verifiedAt         DateTime @map("verified_at") @db.Timestamp(3)
+  lossNote           String   @map("loss_note")
+  compensationAmount BigInt   @map("compensation_amount")
+  lateFee            BigInt   @map("late_fee")
+  policySnapshot     Json     @map("policy_snapshot")
+  createdAt          DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("created_at") @db.Timestamp(3)
+  updatedAt          DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("updated_at") @db.Timestamp(3)
+
+  bookingItem   BookingItem @relation("LossRecord_bookingItemId", fields: [bookingItemId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  verifiedActor User        @relation("LossRecord_verifiedBy", fields: [verifiedBy], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@map("loss_records")
+}
+
+model BookingCharge {
+  id              String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  bookingId       String          @map("booking_id") @db.Uuid
+  bookingItemId   String?         @map("booking_item_id") @db.Uuid
+  extensionId     String?         @map("extension_id") @db.Uuid
+  kind            ChargeKind
+  direction       ChargeDirection
+  amount          BigInt
+  relatedChargeId String?         @map("related_charge_id") @db.Uuid
+  effectiveAt     DateTime        @map("effective_at") @db.Timestamp(3)
+  reason          String?
+  createdBy       String?         @map("created_by") @db.Uuid
+  sourceKey       String          @unique @map("source_key")
+  createdAt       DateTime        @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("created_at") @db.Timestamp(3)
+  updatedAt       DateTime        @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("updated_at") @db.Timestamp(3)
+
+  booking       Booking         @relation("BookingCharge_bookingId", fields: [bookingId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  bookingItem   BookingItem?    @relation("BookingCharge_bookingItemId", fields: [bookingItemId, bookingId], references: [id, bookingId], onDelete: Restrict, onUpdate: Cascade, map: "charge_item_scope")
+  extension     Extension?      @relation("BookingCharge_extensionId", fields: [extensionId, bookingId], references: [id, bookingId], onDelete: Restrict, onUpdate: Cascade, map: "booking_charges_extension_scope")
+  relatedCharge BookingCharge?  @relation("BookingCharge_relatedChargeId", fields: [relatedChargeId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  adjustments   BookingCharge[] @relation("BookingCharge_relatedChargeId")
+  createdActor  User?           @relation("BookingCharge_createdBy", fields: [createdBy], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@index([bookingId, extensionId, effectiveAt])
+  @@map("booking_charges")
+}
+
+model PaymentObligation {
+  id             String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  bookingId      String            @map("booking_id") @db.Uuid
+  extensionId    String?           @map("extension_id") @db.Uuid
+  purpose        ObligationPurpose
+  amountDue      BigInt            @map("amount_due")
+  expiresAt      DateTime?         @map("expires_at") @db.Timestamp(3)
+  status         ObligationStatus  @default(open)
+  pendingProofId String?           @unique @map("pending_proof_id") @db.Uuid
+  createdAt      DateTime          @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("created_at") @db.Timestamp(3)
+  updatedAt      DateTime          @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("updated_at") @db.Timestamp(3)
+
+  booking                Booking              @relation("PaymentObligation_bookingId", fields: [bookingId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  extension              Extension?           @relation("PaymentObligation_extensionId", fields: [extensionId, bookingId], references: [id, bookingId], onDelete: Restrict, onUpdate: Cascade, map: "payment_obligations_extension_scope")
+  proofs                 PaymentProof[]       @relation("PaymentProof_paymentObligationId")
+  pendingProof           PaymentProof?        @relation("PaymentObligation_pendingProofId", fields: [pendingProofId, id], references: [id, paymentObligationId], onDelete: Restrict, onUpdate: Cascade, map: "pending_proof_belongs_to_obligation")
+  payments               Payment[]            @relation("Payment_paymentObligationId")
+  extensionScopePayments Payment[]            @relation("Payment_obligationExtensionScope")
+  applications           PaymentApplication[] @relation("PaymentApplication_paymentObligationId")
+
+  @@unique([id, bookingId])
+  @@unique([id, extensionId])
+  @@unique([pendingProofId, id])
+  @@index([bookingId, status])
+  @@map("payment_obligations")
+}
+
+model PaymentProof {
+  id                  String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  paymentObligationId String      @map("payment_obligation_id") @db.Uuid
+  proofPath           String      @map("proof_path")
+  mime                String
+  size                Int
+  fileHash            String      @map("file_hash") @db.VarChar(64)
+  claimedAmount       BigInt      @map("claimed_amount")
+  uploadedAt          DateTime    @map("uploaded_at") @db.Timestamp(3)
+  status              ProofStatus @default(pending)
+  reviewedBy          String?     @map("reviewed_by") @db.Uuid
+  reviewedAt          DateTime?   @map("reviewed_at") @db.Timestamp(3)
+  rejectedReason      String?     @map("rejected_reason")
+  createdAt           DateTime    @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("created_at") @db.Timestamp(3)
+  updatedAt           DateTime    @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("updated_at") @db.Timestamp(3)
+
+  obligation           PaymentObligation  @relation("PaymentProof_paymentObligationId", fields: [paymentObligationId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  pendingForObligation PaymentObligation? @relation("PaymentObligation_pendingProofId")
+  payments             Payment[]          @relation("Payment_proofId")
+  reviewedActor        User?              @relation("PaymentProof_reviewedBy", fields: [reviewedBy], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@unique([id, paymentObligationId])
+  @@index([paymentObligationId, status])
+  @@map("payment_proofs")
+}
+
+model Payment {
+  id                        String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  bookingId                 String         @map("booking_id") @db.Uuid
+  paymentObligationId       String?        @map("payment_obligation_id") @db.Uuid
+  extensionId               String?        @map("extension_id") @db.Uuid
+  proofId                   String?        @map("proof_id") @db.Uuid
+  refundRequestId           String?        @unique @map("refund_request_id") @db.Uuid
+  direction                 MoneyDirection
+  type                      PaymentType
+  method                    PaymentMethod
+  amount                    BigInt
+  occurredAt                DateTime       @map("occurred_at") @db.Timestamp(3)
+  recordedAt                DateTime       @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("recorded_at") @db.Timestamp(3)
+  recordedBy                String         @map("recorded_by") @db.Uuid
+  receivingAccountReference String?        @map("receiving_account_reference")
+  transactionReference      String?        @map("transaction_reference")
+  attachmentPath            String?        @map("attachment_path")
+  sourceKey                 String         @unique @map("source_key")
+  note                      String?
+  createdAt                 DateTime       @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("created_at") @db.Timestamp(3)
+  updatedAt                 DateTime       @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("updated_at") @db.Timestamp(3)
+
+  booking                  Booking              @relation("Payment_bookingId", fields: [bookingId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  obligation               PaymentObligation?   @relation("Payment_paymentObligationId", fields: [paymentObligationId, bookingId], references: [id, bookingId], onDelete: Restrict, onUpdate: Cascade, map: "payments_obligation_scope")
+  extension                Extension?           @relation("Payment_extensionId", fields: [extensionId, bookingId], references: [id, bookingId], onDelete: Restrict, onUpdate: Cascade, map: "payments_extension_scope")
+  proof                    PaymentProof?        @relation("Payment_proofId", fields: [proofId, paymentObligationId], references: [id, paymentObligationId], onDelete: Restrict, onUpdate: Cascade, map: "payment_proof_scope")
+  refund                   RefundRequest?       @relation("Payment_refundRequestId", fields: [refundRequestId, bookingId], references: [id, bookingId], onDelete: Restrict, onUpdate: Cascade, map: "payment_refund_scope")
+  obligationExtensionScope PaymentObligation?   @relation("Payment_obligationExtensionScope", fields: [paymentObligationId, extensionId], references: [id, extensionId], onDelete: Restrict, onUpdate: Cascade, map: "payment_obligation_extension_scope")
+  applications             PaymentApplication[] @relation("PaymentApplication_incomingPaymentId")
+  refundSources            RefundSource[]       @relation("RefundSource_incomingPaymentId")
+  recordedActor            User                 @relation("Payment_recordedBy", fields: [recordedBy], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@unique([id, bookingId])
+  @@unique([refundRequestId, bookingId])
+  @@index([bookingId, extensionId, occurredAt])
+  @@map("payments")
+}
+
+model PaymentApplication {
+  id                  String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  incomingPaymentId   String           @map("incoming_payment_id") @db.Uuid
+  paymentObligationId String           @map("payment_obligation_id") @db.Uuid
+  bookingId           String           @map("booking_id") @db.Uuid
+  amount              BigInt
+  state               ApplicationState
+  createdAt           DateTime         @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("created_at") @db.Timestamp(3)
+  updatedAt           DateTime         @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("updated_at") @db.Timestamp(3)
+
+  incomingPayment Payment           @relation("PaymentApplication_incomingPaymentId", fields: [incomingPaymentId, bookingId], references: [id, bookingId], onDelete: Restrict, onUpdate: Cascade, map: "payment_applications_incoming_scope")
+  obligation      PaymentObligation @relation("PaymentApplication_paymentObligationId", fields: [paymentObligationId, bookingId], references: [id, bookingId], onDelete: Restrict, onUpdate: Cascade, map: "payment_applications_obligation_scope")
+  refundSources   RefundSource[]    @relation("RefundSource_paymentApplicationId")
+
+  @@unique([incomingPaymentId, paymentObligationId])
+  @@unique([id, incomingPaymentId])
+  @@index([paymentObligationId, state])
+  @@map("payment_applications")
+}
+
+model RefundRequest {
+  id               String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  bookingId        String       @map("booking_id") @db.Uuid
+  extensionId      String?      @map("extension_id") @db.Uuid
+  status           RefundStatus @default(diajukan)
+  reasonCode       String       @map("reason_code")
+  reasonNote       String?      @map("reason_note")
+  requestedAmount  BigInt       @map("requested_amount")
+  approvedAmount   BigInt?      @map("approved_amount")
+  policySnapshot   Json         @map("policy_snapshot")
+  approvedBy       String?      @map("approved_by") @db.Uuid
+  approvedAt       DateTime?    @map("approved_at") @db.Timestamp(3)
+  rejectedReason   String?      @map("rejected_reason")
+  recipientDetails Json         @map("recipient_details")
+  transferredAt    DateTime?    @map("transferred_at") @db.Timestamp(3)
+  createdAt        DateTime     @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("created_at") @db.Timestamp(3)
+  updatedAt        DateTime     @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("updated_at") @db.Timestamp(3)
+
+  outgoingPayment Payment?       @relation("Payment_refundRequestId")
+  booking         Booking        @relation("RefundRequest_bookingId", fields: [bookingId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  extension       Extension?     @relation("RefundRequest_extensionId", fields: [extensionId, bookingId], references: [id, bookingId], onDelete: Restrict, onUpdate: Cascade, map: "refund_requests_extension_scope")
+  sources         RefundSource[] @relation("RefundSource_refundRequestId")
+  approvedActor   User?          @relation("RefundRequest_approvedBy", fields: [approvedBy], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@unique([id, bookingId])
+  @@index([bookingId, status])
+  @@map("refund_requests")
+}
+
+model RefundSource {
+  id                   String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  refundRequestId      String   @map("refund_request_id") @db.Uuid
+  incomingPaymentId    String   @map("incoming_payment_id") @db.Uuid
+  paymentApplicationId String?  @map("payment_application_id") @db.Uuid
+  bookingId            String   @map("booking_id") @db.Uuid
+  amount               BigInt
+  createdAt            DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("created_at") @db.Timestamp(3)
+  updatedAt            DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("updated_at") @db.Timestamp(3)
+
+  refund          RefundRequest       @relation("RefundSource_refundRequestId", fields: [refundRequestId, bookingId], references: [id, bookingId], onDelete: Restrict, onUpdate: Cascade, map: "refund_source_booking_scope")
+  incomingPayment Payment             @relation("RefundSource_incomingPaymentId", fields: [incomingPaymentId, bookingId], references: [id, bookingId], onDelete: Restrict, onUpdate: Cascade, map: "refund_sources_incoming_scope")
+  application     PaymentApplication? @relation("RefundSource_paymentApplicationId", fields: [paymentApplicationId, incomingPaymentId], references: [id, incomingPaymentId], onDelete: Restrict, onUpdate: Cascade, map: "refund_application_payment_scope")
+
+  @@unique([refundRequestId, incomingPaymentId, paymentApplicationId], map: "unique_refund_source_part")
+  @@index([incomingPaymentId])
+  @@map("refund_sources")
+}
+
+model BookingStatusLog {
+  id         String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  bookingId  String         @map("booking_id") @db.Uuid
+  fromStatus BookingStatus? @map("from_status")
+  toStatus   BookingStatus  @map("to_status")
+  actorId    String?        @map("actor_id") @db.Uuid
+  note       String?
+  createdAt  DateTime       @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("created_at") @db.Timestamp(3)
+  updatedAt  DateTime       @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("updated_at") @db.Timestamp(3)
+
+  booking Booking @relation("BookingStatusLog_bookingId", fields: [bookingId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  actor   User?   @relation("BookingStatusLog_actorId", fields: [actorId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@index([bookingId, createdAt])
+  @@map("booking_status_logs")
+}
+
+model AuditLog {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  actorId       String?  @map("actor_id") @db.Uuid
+  action        String
+  entityType    String   @map("entity_type")
+  entityId      String   @map("entity_id") @db.Uuid
+  changes       Json
+  reason        String?
+  correlationId String?  @map("correlation_id")
+  createdAt     DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("created_at") @db.Timestamp(3)
+  updatedAt     DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("updated_at") @db.Timestamp(3)
+
+  actor User? @relation("AuditLog_actorId", fields: [actorId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@index([entityType, entityId, createdAt])
+  @@map("audit_logs")
+}
+
+model Setting {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  key        String   @unique
+  typedValue Json     @map("typed_value")
+  updatedBy  String?  @map("updated_by") @db.Uuid
+  createdAt  DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("created_at") @db.Timestamp(3)
+  updatedAt  DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("updated_at") @db.Timestamp(3)
+
+  updatedActor User? @relation("Setting_updatedBy", fields: [updatedBy], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@map("settings")
+}
+
+model PushSubscription {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  endpoint  String   @unique
+  p256dh    String
+  auth      String
+  userAgent String?  @map("user_agent")
+  createdAt DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("created_at") @db.Timestamp(3)
+  updatedAt DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("updated_at") @db.Timestamp(3)
+
+  user User @relation("PushSubscription_userId", fields: [userId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@map("push_subscriptions")
+}
+
+model IdempotencyRequest {
+  id              String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  actorId         String            @map("actor_id") @db.Uuid
+  operation       String
+  key             String            @db.VarChar(128)
+  requestHash     String            @map("request_hash") @db.VarChar(64)
+  status          IdempotencyStatus @default(processing)
+  resultReference Json?             @map("result_reference")
+  createdAt       DateTime          @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("created_at") @db.Timestamp(3)
+  updatedAt       DateTime          @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("updated_at") @db.Timestamp(3)
+
+  actor User @relation("IdempotencyRequest_actorId", fields: [actorId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@unique([actorId, operation, key])
+  @@map("idempotency_requests")
+}
+
+model OutboxEvent {
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  eventKey      String    @unique @map("event_key")
+  aggregateType String    @map("aggregate_type")
+  aggregateId   String    @map("aggregate_id") @db.Uuid
+  eventType     String    @map("event_type")
+  payload       Json
+  occurredAt    DateTime  @map("occurred_at") @db.Timestamp(3)
+  dispatchedAt  DateTime? @map("dispatched_at") @db.Timestamp(3)
+  attempts      Int       @default(0)
+  error         String?
+  createdAt     DateTime  @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("created_at") @db.Timestamp(3)
+  updatedAt     DateTime  @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("updated_at") @db.Timestamp(3)
+
+  deliveries NotificationDelivery[] @relation("NotificationDelivery_outboxEventId")
+
+  @@index([dispatchedAt, occurredAt])
+  @@map("outbox_events")
+}
+
+model NotificationDelivery {
+  id                String              @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  outboxEventId     String?             @map("outbox_event_id") @db.Uuid
+  sourceType        String              @map("source_type")
+  sourceId          String              @map("source_id") @db.Uuid
+  eventType         String              @map("event_type")
+  recipientAdminId  String              @map("recipient_admin_id") @db.Uuid
+  channel           NotificationChannel
+  dueAt             DateTime            @map("due_at") @db.Timestamp(3)
+  status            NotificationStatus  @default(queued)
+  attempts          Int                 @default(0)
+  retryAt           DateTime?           @map("retry_at") @db.Timestamp(3)
+  providerReference String?             @map("provider_reference")
+  error             String?
+  deduplicationKey  String              @unique @map("deduplication_key")
+  createdAt         DateTime            @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("created_at") @db.Timestamp(3)
+  updatedAt         DateTime            @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("updated_at") @db.Timestamp(3)
+
+  event          OutboxEvent? @relation("NotificationDelivery_outboxEventId", fields: [outboxEventId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  recipientAdmin User         @relation("NotificationDelivery_recipientAdminId", fields: [recipientAdminId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@index([status, retryAt, dueAt])
+  @@map("notification_deliveries")
+}
+
+model AuthSession {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId      String   @map("user_id") @db.Uuid
+  tokenHash   String   @unique @map("token_hash") @db.VarChar(64)
+  authVersion Int      @map("auth_version")
+  expiresAt   DateTime @map("expires_at") @db.Timestamp(3)
+  createdAt   DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("created_at") @db.Timestamp(3)
+  user        User     @relation(fields: [userId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("auth_sessions")
+}
+
+model AuthRateLimit {
+  key     String   @id @db.VarChar(64)
+  count   Int
+  resetAt DateTime @map("reset_at") @db.Timestamp(3)
+
+  @@index([resetAt])
+  @@map("auth_rate_limits")
+}
+
+// Counter rows are locked/UPSERTed atomically, never MAX(code) + 1.
+model BusinessCounter {
+  key   String @id
+  value BigInt @default(0)
+
+  @@map("business_counters")
+}

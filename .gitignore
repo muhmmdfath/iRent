@@ -7,3 +7,12 @@
 *.pem
 *.key
 *.log
+
+# Application dependencies, build output, and private runtime storage
+node_modules/
+dist/
+dist-test/
+coverage/
+backend/src/generated/
+backend/storage/
+*.tsbuildinfo

@@ -3,8 +3,8 @@
 | Atribut | Nilai |
 |---|---|
 | Produk | Website penyewaan iPhone dan aksesori iRent Semarang |
-| Versi | 2.1 — hasil audit requirement, data, dan transaksi |
-| Tanggal | 7 Oktober 2026 |
+| Versi | 2.3 — acuan stack dan struktur kode ditetapkan |
+| Tanggal | 8 Oktober 2026 |
 | Penyusun awal | Fatih |
 | Status | Requirement produk; aplikasi belum diimplementasikan |
 
@@ -43,7 +43,63 @@ Payment gateway, panggilan WhatsApp otomatis, notifikasi email, aplikasi native,
 
 ## 3. Batasan teknis dan arsitektur
 
-Stack, framework, database, dan provider WhatsApp belum dipilih. Kemampuan yang wajib tersedia:
+Stack dan pola organisasi kode mengadaptasi `AGENTS.template.md` dari proyek oppo-project-control, sesuai persetujuan 8 Oktober 2026. Acuan ini hanya untuk teknologi dan arsitektur; domain, identitas, role, serta aturan bisnis mengikuti iRent. Provider WhatsApp dan hosting belum dipilih.
+
+### Stack yang dipilih
+
+| Lapisan | Teknologi dan penggunaan |
+|---|---|
+| Backend | TypeScript, NestJS dengan platform Express; API bisnis menggunakan prefix `/api` |
+| Database | PostgreSQL dengan Prisma; schema dan migrasi berada di backend |
+| Frontend | React, Vite, React Router; website pelanggan dan panel admin `/admin/` dalam satu aplikasi |
+| API dan data server | Axios untuk HTTP client terpusat; TanStack React Query untuk query, mutation, dan invalidasi cache |
+| State dan form | Zustand untuk state global yang diperlukan; state lokal melalui React; React Hook Form untuk form |
+| UI | Tailwind CSS, shadcn/ui, alias `@/` ke src, serta token tema terpusat |
+| Pekerjaan latar belakang | Worker NestJS dan scheduler dengan outbox/antrean persisten PostgreSQL; Redis bukan prasyarat phase 1 |
+| Notifikasi | PWA admin, Web Push dengan VAPID, dan adapter pesan WhatsApp sesuai provider yang nanti dipilih |
+
+Versi dependency ditetapkan dari manifest baseline yang diperiksa kompatibilitasnya saat scaffolding, lalu dikunci dalam `package-lock.json` masing-masing aplikasi. Template tidak menetapkan nomor versi. Library PWA, upload, Excel, dan pengujian dipilih sesuai kebutuhan; keberadaan stack belum berarti aplikasi sudah tersedia.
+
+### Struktur dan tanggung jawab kode
+
+```text
+backend/
+  prisma/schema.prisma
+  prisma/migrations/
+  src/main.ts
+  src/app.module.ts
+  src/auth/
+  src/prisma/
+  src/shared/
+  src/modules/<feature>/
+    <feature>.module.ts
+    <feature>.controller.ts
+    <feature>.service.ts
+    dto/
+    repositories/
+frontend/
+  src/main.tsx
+  src/App.tsx
+  src/index.css
+  src/components/ui/
+  src/services/
+  src/stores/
+  src/<feature>/pages/
+  src/<feature>/components/
+  src/<feature>/hooks/
+```
+
+Backend dan frontend mempunyai manifest, lockfile, `.env.example`, serta install/build terpisah. Nama fitur mengikuti iRent: users, inventory, bookings, availability, pricing, payments, refunds, extensions, returns, notifications, settings, dan reports. Buat folder pendukung hanya ketika dibutuhkan; pembagian modul dapat disederhanakan tanpa menyebarkan aturan bisnis.
+
+Controller menangani HTTP dan guard, service memiliki aturan serta otorisasi entity, repository menangani query/persistence yang bermakna. PrismaService disediakan melalui dependency injection. Modul kecil boleh memakai Prisma langsung jika repository hanya meneruskan query. DTO memakai class-validator/class-transformer dan ValidationPipe global, termasuk validasi nested input, enum, tanggal, dan batas nilai. Identitas pengguna berasal dari sesi yang diverifikasi backend. Daftar paginasi memakai `{ data, meta }` dengan batas limit dan urutan deterministik.
+
+Autentikasi dikelola iRent dengan akun dan password hash di database sendiri; tidak bergantung pada Auth Server ME atau SSO. Mekanisme sesi, cookie/token, refresh/logout, serta CORS/CSRF ditetapkan saat implementasi auth dan harus konsisten antara frontend/backend. Protected route frontend membantu UX; pemeriksaan hak akses tetap di backend.
+
+Keputusan implementasi auth: sesi PostgreSQL dengan token acak yang hanya disimpan sebagai hash, cookie HttpOnly/SameSite=Lax (Secure dan prefix __Host- di produksi), batas absolut delapan jam tanpa refresh token, serta GET session untuk memulihkan konteks/CSRF setelah reload. Mutasi memakai origin allowlist dan CSRF yang terikat sesi; login/registrasi memvalidasi origin dan menerima JSON. Password baru 12–128 karakter di-hash dengan scrypt. Reset password admin menaikkan auth_version dan mencabut semua sesi pelanggan; service mutasi memeriksa ulang otorisasi di bawah user lock. NIK memakai AES-256-GCM dengan keyring/version dan AAD user ID. Kontrak, perintah admin pertama, serta setup kunci di [backend/AUTH.md](backend/AUTH.md).
+
+React Query menjadi sumber data server; mutation menginvalidasi daftar, detail, stok, jadwal, serta agregasi yang terdampak. Zustand tidak menggandakan seluruh data server. HTTP client berada di `services/`, komponen/hook dikelompokkan per fitur, dan type mengikuti response API aktual. UI menggunakan bahasa Indonesia dan satu arah visual Taste yang sesuai iRent.
+
+### Kemampuan wajib
 
 - Transaksi database dan row lock (`SELECT ... FOR UPDATE` atau setara).
 - Scheduler tiap menit serta queue/cron untuk pekerjaan latar belakang.
@@ -70,7 +126,7 @@ Nama modul tambahan merupakan rancangan teknis untuk mendukung perilaku yang dis
 
 Interface perubahan bisnis harus berupa tindakan utuh, misalnya `createBooking`, `approvePaymentAndBooking`, `requestExtension`, `approveExtension`, `verifyReturn`, dan `recordRefundTransfer`. Pemanggil tidak merangkai sendiri perubahan pembayaran, jadwal, dan stok. Perhitungan harga bersifat deterministik; akses waktu, database, storage, dan provider menjadi dependensi yang dapat diganti saat pengujian. Satu tindakan memiliki satu pemilik transaksi, meski implementasinya memanggil beberapa modul internal.
 
-Rincian biaya awal mengasumsikan shared hosting cPanel PHP/MySQL/cron sekitar Rp200.000–Rp500.000 per tahun. Ini asumsi dokumen awal, bukan harga penawaran terverifikasi. Jika runtime, worker, atau integrasi memerlukan hosting berbeda, perbarui rincian biaya klien sebelum deployment. Biaya WhatsApp dihitung terpisah setelah provider dipilih.
+Hosting harus mendukung Node.js untuk API NestJS, PostgreSQL, scheduler dan worker, HTTPS, penyimpanan privat, serta layanan file statis hasil build React. Asumsi biaya shared hosting PHP/MySQL Rp200.000–Rp500.000 per tahun pada dokumen awal tidak menjadi anggaran stack ini. Tetapkan biaya final setelah hosting dipilih; biaya WhatsApp dihitung terpisah.
 
 ## 4. Pengaturan dan snapshot
 
@@ -108,21 +164,25 @@ Perubahan settings tidak mengubah kesepakatan transaksi lama. Simpan harga, ongk
 
 Snapshot mempunyai versi struktur. Tarif dan aturan yang berlaku untuk perpanjangan suatu sewa berasal dari snapshot booking awal; nominal tambahan ongkir disimpan saat pelanggan menyetujui pengajuannya. Settings memvalidasi tipe, nilai nonnegatif, jam buka < jam tutup, rentang tanggal pembukaan 1–28, persentase 0–100, serta hubungan waktu agar deadline tidak terbentuk sebelum pembuatan permintaan. Nilai 1–28 menjaga tanggal pembukaan tetap ada pada setiap bulan. Perubahan key membatalkan cache; rahasia provider/VAPID tetap di environment.
 
+Implementasi settings/katalog/pricing memakai counter revisi settings dan shared/exclusive lock untuk menjaga cache lintas instance. API quote mengembalikan snapshot versi 1 tanpa membuat booking atau hold; alokasi wajib menghitung ulang dan menyimpan snapshot di transaksi booking. Ringkasan unit katalog bukan jaminan kalender. Endpoint dan batas implementasi ada di [backend/INVENTORY_PRICING.md](backend/INVENTORY_PRICING.md).
+
 ## 5. Model data dan integritas database
 
-Ini blueprint logis untuk diterjemahkan menjadi migrasi setelah database dipilih. Gunakan ID konsisten, foreign key, timestamps WIB, serta integer rupiah berkapasitas cukup (BIGINT atau setara), bukan floating point. Semua entitas yang dicatat berulang mempunyai primary key. JSON hanya untuk snapshot/config atau payload; relasi yang menentukan stok dan uang memakai kolom/FK yang dapat divalidasi.
+Ini blueprint logis untuk diterjemahkan menjadi schema Prisma dan migrasi PostgreSQL. Gunakan UUID untuk primary key entity lokal dan FK bertipe sama; kode booking/unit tetap identifier bisnis terpisah. Model Prisma menggunakan PascalCase, field camelCase, serta mapping tabel/kolom snake_case melalui `@@map`/`@map`. Gunakan timestamps WIB serta integer rupiah BIGINT, bukan floating point. Representasi BigInt pada response JSON harus ditetapkan secara eksplisit dan type frontend diselaraskan; hindari kehilangan presisi. JSON hanya untuk snapshot/config atau payload; relasi yang menentukan stok dan uang memakai kolom/FK yang dapat divalidasi.
 
 ### 5.1 Akun, katalog, dan unit fisik
 
 | Entitas | Kolom dan ketentuan utama |
 |---|---|
 | users | id, name, email nullable unique, phone nullable unique, password_hash, role customer/admin, is_active, timestamps; wajib email atau phone |
-| customer_profiles | id, user_id unique FK users, full_name, address, phone_active, phone_alt, nik_ciphertext, instagram, email_contact, completed_at |
+| auth_sessions | id, user_id FK, token_hash unique, auth_version, expires_at, created_at; token mentah hanya berada di cookie |
+| auth_rate_limits | key hash primary, count, reset_at; counter atomic PostgreSQL untuk login/registrasi |
+| customer_profiles | id, user_id unique FK users, full_name/address/phone_active/nik_ciphertext wajib, phone_alt/instagram/email_contact nullable opsional, completed_at |
 | items | id, category iphone/accessory, name, photo_path, includes, price_6h/12h/24h integer >=0, is_active, timestamps |
-| item_units | id, item_id FK items, code unique, is_active, condition_status layak/maintenance, physical_status ready/in_use/awaiting_check/in_transit/preparing, preparation_until nullable, maintenance_completed_at nullable, notes, timestamps |
+| item_units | id, item_id FK items, code unique, is_active, condition_status layak/maintenance/lost, physical_status ready/in_use/awaiting_check/in_transit/preparing/lost, preparation_until nullable, maintenance_completed_at nullable, notes, timestamps |
 | delivery_zones | id, name kecamatan, fee integer >=0 untuk antar-jemput sekaligus, is_active, timestamps |
 
-Normalisasi email dan nomor HP sebelum pengecekan unique; nomor login dan nomor aktif profil berbeda tujuan. Detail mana dari field profil yang wajib belum lengkap ditentukan, lihat bagian 19. `completed_at` diisi oleh validasi server, bukan input pelanggan. NIK terenkripsi membutuhkan kolom teks yang menampung ciphertext, bukan kolom numerik.
+Normalisasi email dan nomor HP sebelum pengecekan unique; nomor login dan nomor aktif profil berbeda tujuan. Users menyimpan auth_version nonnegatif untuk invalidasi sesi. Nama lengkap, alamat, nomor HP aktif, dan NIK wajib. Nomor alternatif, Instagram, dan email kontak opsional; pelanggan tidak diblokir karena field opsional kosong. `completed_at` diisi oleh validasi server, bukan input pelanggan. NIK terenkripsi membutuhkan kolom teks yang menampung ciphertext, bukan kolom numerik.
 
 iPhone dan aksesori mempunyai satu baris per unit fisik, termasuk kode aksesori otomatis seperti PB001. Stok merupakan hitungan unit, bukan counter lain yang dapat berbeda. Pengurangan stok hanya menonaktifkan unit bebas tanpa alokasi mendatang; unit terpakai/terpesan/perawatan tidak dihapus. Foto dan profil dapat berubah, tetapi nama/kode serta harga pada transaksi disnapshot untuk menjaga riwayat.
 
@@ -132,14 +192,15 @@ iPhone dan aksesori mempunyai satu baris per unit fisik, termasuk kode aksesori 
 
 | Entitas | Kolom dan ketentuan utama |
 |---|---|
-| bookings | id, code unique, user_id FK users, status, initial_start_at/end_at, delivery_type pickup/delivery, delivery_zone_id nullable FK, delivery_zone_name_snapshot/address/fee_snapshot, initial_rental_total, initial_grand_total, dp_snapshot, pay_option dp/full, amount_due_now, created_at, expires_at, uploaded_at nullable, confirmation_due_at nullable, confirmed_by/at nullable, no_show_due_at, rejected_reason/cancel_reason nullable, terms_version, agreed_terms_at, rules_snapshot, timestamps |
-| booking_items | id, booking_id FK, item_id FK, item_unit_id FK, item_name/unit_code_snapshot, start_at, initial_end_at, current_end_at, unit_price_snapshot, tariff_6h/12h/24h_snapshot, use_status allocated/in_use/return_pending/returned, picked_up_at/by nullable, handover_note nullable, version, timestamps |
+| bookings | id, code unique, user_id FK users, status, initial_start_at/end_at, delivery_type pickup/delivery, delivery_zone_id nullable FK, delivery_zone_name_snapshot/address/fee_snapshot, initial_rental_total, initial_grand_total, dp_snapshot, pay_option dp/full, amount_due_now, created_at, expires_at, uploaded_at nullable, confirmation_due_at nullable, confirmed_by/at nullable, no_show_due_at, delivery_ready_at/customer_failure_confirmed_at nullable, delivery_failure_reason nullable, shop_delay_seconds, rejected_reason/cancel_reason nullable, terms_version, agreed_terms_at, rules_snapshot, timestamps |
+| booking_items | id, booking_id FK, item_id FK, item_unit_id FK, item_name/unit_code_snapshot, initial_start_at, start_at, initial_end_at, current_end_at, shop_delay_seconds, unit_price_snapshot, tariff_6h/12h/24h_snapshot, use_status allocated/in_use/return_pending/returned/lost_closed, picked_up_at/by nullable, handover_note nullable, version, timestamps |
 | unit_allocations | id, booking_item_id FK, item_unit_id FK, extension_item_id nullable FK, allocation_kind rental/extension_hold, state active/released, start_at/end_at, block_start_at/block_end_at, hold_expires_at nullable, released_at/reason nullable, timestamps |
-| extensions | id, booking_id FK, status menunggu_pembayaran/menunggu_konfirmasi/disetujui/ditolak/kedaluwarsa/dibatalkan, rental_quote_total, extra_delivery_quote, amount_due, delivery_quote_note, delivery_agreed_at nullable, created_at, expires_at, uploaded_at/confirmation_due_at nullable, approved_by/at nullable, rejected_reason nullable, timestamps |
+| extensions | id, booking_id FK, status draft_quote/menunggu_pembayaran/menunggu_konfirmasi/disetujui/ditolak/kedaluwarsa/dibatalkan, rental_quote_total, extra_delivery_quote, amount_due, delivery_quote_note, quoted_by/at nullable, delivery_agreed_at nullable, submitted_at nullable, created_at, expires_at nullable hingga submit, uploaded_at/confirmation_due_at nullable, approved_by/at nullable, rejected_reason/cancel_reason nullable, timestamps |
 | extension_items | id, extension_id FK, booking_item_id FK, old_end_at, proposed_end_at, expected_item_version, added_hours 6/12/24, unit_price_snapshot, confirmation_due_at nullable, timestamps; unique (extension_id, booking_item_id) |
 | return_records | id, booking_item_id unique FK, status pending/verified/rejected, reported_at nullable, received_by_courier_at nullable, received_at_store nullable, verified_at/by nullable, fee_return_at nullable, condition_note, damage_amount/note, late_seconds/fee, admin_delay_exemption_seconds, courier_delay_exemption_seconds, exemption_reason, preparation_started_at nullable, timestamps |
+| loss_records | id, booking_item_id unique FK, lost_at >= picked_up_at dan <= waktu server, verified_by/at, loss_note, compensation_amount, late_fee, policy_snapshot, timestamps; terpisah dari pengembalian fisik |
 
-`initial_*` tetap untuk riwayat; `booking_items.current_end_at` adalah jadwal sah terbaru per unit. Interval blok yang dipakai mesin stok hanya pada `unit_allocations`; kolom jadwal lain adalah input/ringkasan yang diperbarui atomik, bukan sumber pengecekan kedua. Satu alokasi rental aktif per booking_item; hold tambahan menunjuk extension_item sehingga dapat dilepas tanpa menghapus sewa awal. Saat ganti unit, alokasi lama dilepas, alokasi baru dibuat, referensi saat ini diperbarui, dan jejak unit lama tetap tersimpan.
+`initial_*` tetap untuk riwayat; `booking_items.start_at/current_end_at` adalah jadwal sah terbaru per unit. Pergeseran akibat keterlambatan toko menyimpan durasi keterlambatan dan memperbarui start/end serta alokasi secara atomik; harga dan durasi sewa tidak ditambah hanya karena kompensasi waktu toko. Interval blok yang dipakai mesin stok hanya pada `unit_allocations`; kolom jadwal lain adalah input/ringkasan yang diperbarui atomik, bukan sumber pengecekan kedua. Satu alokasi rental aktif per booking_item; hold tambahan menunjuk extension_item sehingga dapat dilepas tanpa menghapus sewa awal. Saat ganti unit, alokasi lama dilepas, alokasi baru dibuat, referensi saat ini diperbarui, dan jejak unit lama tetap tersimpan.
 
 `return_records` membedakan laporan pelanggan, penyerahan ke petugas, penerimaan di toko, verifikasi, waktu untuk denda, serta pengecualian keterlambatan. Admin dapat mencatat pengembalian langsung tanpa menunggu pelanggan menekan tombol. Satu pengembalian final terverifikasi per booking_item; koreksi waktu/kondisi diaudit, mengoreksi tagihan melalui adjustment, bukan memverifikasi ulang dan menggandakan denda.
 
@@ -147,20 +208,25 @@ iPhone dan aksesori mempunyai satu baris per unit fisik, termasuk kode aksesori 
 
 | Entitas | Kolom dan ketentuan utama |
 |---|---|
-| booking_charges | id, booking_id FK, booking_item_id nullable FK, extension_id nullable FK, kind rental/delivery/extension/extra_delivery/late/damage/adjustment, direction debit/credit, amount integer >=0, related_charge_id nullable FK, effective_at, reason, created_by nullable, source_key unique, timestamps |
+| booking_charges | id, booking_id FK, booking_item_id nullable FK, extension_id nullable FK, kind rental/delivery/extension/extra_delivery/late/damage/loss/adjustment, direction debit/credit, amount integer >=0, related_charge_id nullable FK, effective_at, reason, created_by nullable, source_key unique, timestamps |
 | payment_obligations | id, booking_id FK, extension_id nullable FK, purpose initial_dp/initial_full/settlement/extension, amount_due, expires_at nullable, status open/proof_pending/satisfied/closed, pending_proof_id nullable FK, created_at |
 | payment_proofs | id, payment_obligation_id FK, proof_path privat, mime, size, file_hash, claimed_amount, uploaded_at, status pending/verified/rejected, reviewed_by/at nullable, rejected_reason nullable |
 | payments | id, booking_id FK, payment_obligation_id nullable FK, extension_id nullable FK, proof_id nullable FK, refund_request_id nullable unique FK, direction in/out, type dp/full/settlement/extension/refund/reconciliation, method qris/cash/transfer, amount >0, occurred_at, recorded_at, recorded_by FK, receiving_account_reference/transaction_reference nullable, attachment_path nullable privat, source_key unique, note |
+| payment_applications | id, incoming_payment_id FK payments, payment_obligation_id FK, amount >0, state reserved/applied/released, created_at; unique (incoming_payment_id, payment_obligation_id) |
 | refund_requests | id, booking_id FK, extension_id nullable FK, status diajukan/disetujui/ditolak/sudah_dikembalikan, reason_code/note, requested_amount, approved_amount nullable, policy_snapshot, approved_by/at nullable, rejected_reason nullable, recipient_details privat, transferred_at nullable, created_at |
-| refund_sources | id, refund_request_id FK, incoming_payment_id FK payments, amount >0; unique (refund_request_id, incoming_payment_id) |
+| refund_sources | id, refund_request_id FK, incoming_payment_id FK payments, payment_application_id nullable FK, amount >0; sumber terkait penerapan atau dana tidak diterapkan, dengan unique per request/payment/bagian sumber |
 
 Bukti merupakan klaim yang dapat pending/ditolak. `payments` hanya berisi uang aktual yang telah dipastikan admin; tidak ada receipt pending yang sudah ikut saldo. Bukti ditolak tetap dapat mempunyai receipt rekonsiliasi jika uang ternyata masuk. Satu bukti tidak menghasilkan dua receipt atas transaksi yang sama. Pembayaran tunai admin dapat dicatat tanpa bukti pelanggan.
 
 Kewajiban bayar awal dan setiap perpanjangan terpisah. Satu `pending_proof_id` per kewajiban membatasi bukti pending; upload/review mengunci baris kewajiban dan bukti. Pembayaran sah memenuhi kewajiban dan, bila relevan, menyetujui booking/perpanjangan dalam transaksi yang sama. Jumlah kewajiban bukan total tagihan: DP adalah cara membayar sebagian tagihan sewa, bukan charge tambahan.
 
+Receipt menyimpan seluruh uang nyata, sedangkan payment_applications menyimpan bagian yang digunakan untuk kewajiban tertentu. Jumlah penerapan aktif tidak melebihi receipt; dana perpanjangan sebelum approval berstatus reserved, bukan applied ke sewa awal. Dana melebihi kewajiban tidak diterapkan sebagai cicilan diam-diam: selisih menjadi kelebihan yang wajib dikembalikan penuh. Refund atas kelebihan tidak mengurangi pembayaran yang sudah memenuhi kewajiban. Saat approval/rejection/refund, receipt, aplikasi dana, dan source refund dikunci bersama.
+
 Tagihan awal dibuat sekali. Charge perpanjangan/ongkir tambahannya hanya berlaku ketika perpanjangan disetujui; quotation pending disimpan di extensions dan bukan tagihan sah. Denda/kerusakan dibuat saat pengembalian diverifikasi. Koreksi dan penghapusan kewajiban sewa akibat pembatalan memakai charge credit dengan alasan/audit; riwayat charge/receipt sah tidak ditimpa atau dihapus.
 
 Refund mengacu ke receipt masuk melalui refund_sources, termasuk jika dana berasal dari beberapa pembayaran. Saat persetujuan, kunci receipt dan cadangkan nominal agar dua refund tidak memakai uang yang sama. Jumlah refund disetujui belum ditransfer ditambah refund selesai atas satu receipt tidak boleh melebihi receipt tersebut. Menandai sudah dikembalikan membuat satu payment keluar, bukti transfer, dan status akhir secara atomik. Booking/refund_sources/payment keluar wajib konsisten kepemilikannya. Transfer parsial belum ditentukan sebagai fitur; satu pencatatan selesai harus sesuai nominal yang disetujui.
+
+Validasi kapasitas refund dilakukan per receipt dan bagian dana: refund berhubungan dengan payment_application hanya menggunakan dana bagian tersebut; refund kelebihan menggunakan sisa yang tidak diterapkan. Cegah kelebihan yang sama masuk lagi dalam dasar refund pembatalan. Foreign key ke payment_applications wajib sesuai incoming_payment_id dan booking yang sama.
 
 ### 5.4 Log, pekerjaan latar belakang, dan request berulang
 
@@ -181,6 +247,7 @@ Outbox disimpan bersama transaksi bisnis sehingga crash setelah commit tidak men
 - Seluruh `*_by`, `user_id`, dan referensi transaksi adalah FK ke entitas yang sesuai; actor sistem boleh null. Relasi transaksi memakai RESTRICT atau penonaktifan, bukan cascade delete yang menghapus riwayat uang/stok.
 - Enum/status harus dibatasi. CHECK/validasi transaksi memastikan akhir > awal, durasi valid, nominal dan persentase valid, serta field bersyarat: delivery wajib zona/alamat; refund selesai wajib transfer/receipt keluar; pembayaran terverifikasi wajib aktor/waktu.
 - Cross-table invariant: item_unit sesuai item pada booking_item; extension_item milik booking pada extensions; payment/proof/refund dan seluruh source receipt berasal dari booking yang sama. FK sederhana tidak cukup untuk semua aturan ini; tambahkan composite FK/constraint jika didukung dan validasi service dalam transaksi.
+- Payment_application hanya menunjuk payment masuk dan kewajiban dari booking/scope yang sama. Jumlah penerapan awal tidak melebihi receipt; refund bagian penerapan dibatasi bagian tersebut, sedangkan refund dana tidak diterapkan dibatasi sisa receipt. Jangan menjumlahkan aplikasi dan refund atas dana yang sama seolah-olah dua penggunaan berbeda. Loss_record hanya untuk unit yang sedang disewa, tidak boleh bersamaan dengan pengembalian final verified. Nominal dan waktu kehilangan wajib diverifikasi admin.
 - Unique: user email/phone ternormalisasi, unit code, booking code, extension-item pair, return per booking_item, source_key charge/payment, refund payment reference, idempotency key, endpoint, serta notification deduplication key.
 - Satu unit fisik tidak boleh muncul dua kali dalam satu booking awal: unique (booking_id, item_unit_id) pada booking_items. Jumlah aksesori di UI diuraikan menjadi baris per unit; tidak ada quantity >1 yang hanya menunjuk satu item_unit.
 - Referensi transaksi bank/QRIS yang tersedia harus unik dalam rekening/akun sumber yang sesuai. Referensi tidak boleh dibuat-buat untuk menggantikan pencocokan uang aktual; pembayaran tunai menggunakan nomor penerimaan aplikasi. Receipt sah tidak diedit atau dihapus melalui CRUD umum. Mekanisme koreksi kesalahan pencatatan harus diaudit dan mempertahankan riwayat; detailnya lihat bagian 19.
@@ -189,7 +256,7 @@ Outbox disimpan bersama transaksi bisnis sehingga crash setelah commit tidak men
 - Indeks pencarian: bookings `(status, initial_start_at)`, `(user_id, status)`, expires_at, confirmation_due_at, no_show_due_at; booking_items `(booking_id, use_status)`, `(item_unit_id, current_end_at)`; unit_allocations `(item_unit_id, state, block_start_at)`, hold_expires_at; extension status/expiry/deadline; item_units `(item_id, is_active, condition_status)`; charges/payments `(booking_id, extension_id, effective_at/occurred_at)`; refunds `(booking_id, status)` dan incoming_payment_id; outbox dispatch state; notifications `(status, retry_at, due_at)`.
 - Generate kode booking dan kode aksesori secara atomik melalui sequence/counter terkunci atau ID yang unique. Hindari pola membaca MAX kemudian menambah satu tanpa kunci. Jika contoh kode IRN261010001 dipakai, format dan overflow tetap diperiksa.
 
-Constraint kondisional, panjang indeks endpoint, dan indeks rentang final mengikuti kemampuan engine. Uji migration/constraint serta rencana query pada database produksi; blueprint ini belum merupakan DDL siap dijalankan.
+Constraint kondisional dan indeks rentang diterapkan melalui migrasi PostgreSQL yang ditinjau; gunakan SQL migrasi eksplisit bila tidak dapat direpresentasikan oleh schema Prisma. Row lock yang diperlukan menggunakan query berparameter dalam transaksi Prisma dengan urutan lock yang konsisten; ORM tidak menggantikan perlindungan konkurensi. Uji migration/constraint, isolation, dan rencana query pada PostgreSQL; blueprint ini belum merupakan DDL siap dijalankan. Gunakan `prisma migrate dev` untuk membuat migrasi development dan `prisma migrate deploy` saat deployment, serta generate Prisma Client setelah schema berubah. Riwayat transaksi dilindungi dari cascade delete; lifecycle file ditangani terpisah.
 
 ### 5.6 Diagram relasi inti
 
@@ -202,6 +269,7 @@ erDiagram
     item_units ||--o{ booking_items : dialokasikan
     booking_items ||--o{ unit_allocations : memblokir
     booking_items ||--o| return_records : dikembalikan
+    booking_items ||--o| loss_records : kehilangan
     bookings ||--o{ extensions : diperpanjang
     extensions ||--|{ extension_items : memilih
     booking_items ||--o{ extension_items : diperpanjang
@@ -210,10 +278,13 @@ erDiagram
     bookings ||--o{ payment_obligations : wajib_bayar
     payment_obligations ||--o{ payment_proofs : dibuktikan
     payment_obligations o|--o{ payments : dibayar
+    payments ||--o{ payment_applications : diterapkan
+    payment_obligations ||--o{ payment_applications : menerima_dana
     bookings ||--o{ payments : mencatat_uang
     bookings ||--o{ refund_requests : meminta_refund
     refund_requests ||--o{ refund_sources : memakai_dana
     payments ||--o{ refund_sources : sumber_masuk
+    payment_applications o|--o{ refund_sources : bagian_dana
     refund_requests o|--o| payments : transfer_keluar
 ```
 
@@ -275,12 +346,16 @@ Sumber tagihan adalah booking_charges, sumber uang aktual adalah payments. Field
 tagihan_sah(scope) = jumlah charge debit - jumlah charge credit
 dana_bersih(scope) = uang masuk terkonfirmasi - refund keluar yang telah dicatat
 sisa_tagihan(scope) = max(0, tagihan_sah(scope) - dana_yang_diterapkan_ke_scope)
-kelebihan_dana(scope) = max(0, dana_yang_diterapkan_ke_scope - tagihan_sah(scope))
+kelebihan_dana(scope) = dana aktual tidak diterapkan + kelebihan setelah penyesuaian charge
 kas_bersih(periode) = seluruh payment in pada occurred_at periode
                       - seluruh payment out pada occurred_at periode
 ```
 
 Scope membedakan sewa awal/settlement dan setiap perpanjangan. Dana tambahan yang sudah terkonfirmasi tetapi perpanjangannya belum berlaku tidak boleh melunasi sewa awal, denda, atau perpanjangan lain. Dana tersebut tetap muncul sebagai kas masuk dan dana menunggu keputusan. Saat pengajuan disetujui, charge tambahannya diterbitkan dan dana diterapkan ke scope itu; saat ditolak, dana menjadi kewajiban refund tanpa mengurangi tagihan sewa awal. Refund keluar mengikuti scope receipt sumbernya.
+
+Dana yang diterapkan ke scope berasal dari payment_applications berstatus applied, dikurangi refund selesai atas bagian aplikasi tersebut. Gross receipt yang belum diterapkan atau merupakan kelebihan tidak membuat label lunas. Seluruh gross receipt tetap tercatat dalam laporan kas.
+
+Untuk menghitung sisa dana tidak diterapkan setelah refund: mulai dari receipt dikurangi seluruh refund selesai dari receipt itu, lalu kurangi penerapan/reservasi aktif setelah refund atas bagian masing-masing. Refund yang belum ditransfer masih menjadi kewajiban terpisah. Jangan terus menampilkan kelebihan Rp5.000 sesudah refund Rp5.000 benar-benar selesai, atau menghitung refund linked dan unused dua kali.
 
 Pembatalan menutup kewajiban sewa yang tidak jadi berlangsung melalui adjustment charge; jumlah yang ditahan mengikuti kebijakan pembatalan. Pelanggan tidak ditagih seluruh sisa sewa yang sudah dibatalkan. Refund yang disetujui belum keluar tampil sebagai kewajiban pengembalian, bukan pengurang kas. Saldo refund, piutang, dan dana menunggu keputusan tampil terpisah.
 
@@ -288,7 +363,7 @@ Contoh: sewa Rp100.000 dibayar DP Rp20.000, lalu batal lebih awal dengan refund 
 
 Contoh lain: sewa awal Rp100.000 sudah lunas dan dana perpanjangan Rp50.000 masuk. Jika perpanjangan ditolak, refund Rp50.000 tidak membuat sewa awal kurang bayar; scope sewa awal tetap lunas. Laporan kas bersih setelah refund Rp100.000.
 
-Laporan yang disebut pendapatan pada UI mengikuti definisi kas bersih PRD, bukan pengakuan pendapatan akrual. Setiap payment memakai waktu transaksi aktual dan waktu pencatatan terpisah. Koreksi backdate harus beralasan dan diaudit karena dapat mengubah laporan periode sebelumnya. Pembulatan persentase refund ke rupiah dan kasus pembayaran campuran lihat bagian 19.
+Laporan yang disebut pendapatan pada UI mengikuti definisi kas bersih PRD, bukan pengakuan pendapatan akrual. Setiap payment memakai waktu transaksi aktual dan waktu pencatatan terpisah. Koreksi backdate harus beralasan dan diaudit karena dapat mengubah laporan periode sebelumnya. Persentase refund dibulatkan ke rupiah terdekat dengan half-up satu kali pada total eligible; simpan dasar dan hasil, jangan membulatkan per baris lalu menjumlahkan hasil yang berbeda.
 
 ## 7. Ketersediaan, buffer, dan FCFS
 
@@ -343,18 +418,18 @@ Gunakan kode status internal yang konsisten dengan PRD awal, dengan label UI yan
 | menunggu_konfirmasi | Menunggu verifikasi pembayaran | Bukti masuk, belum diverifikasi |
 | dikonfirmasi | Booking dikonfirmasi | Pembayaran awal diverifikasi dan booking disetujui |
 | berjalan | Sedang disewa | Barang telah diserahkan; dapat mencakup pengembalian sebagian |
-| selesai | Selesai | Semua unit sudah diverifikasi kembali; tagihan dapat masih tersisa |
+| selesai | Selesai | Semua unit sudah diverifikasi kembali atau sewanya ditutup karena hilang; tagihan dapat masih tersisa |
 | kedaluwarsa | Kedaluwarsa | Lewat batas upload tanpa bukti yang diterima |
 | ditolak | Ditolak | Admin menolak dengan alasan |
 | dibatalkan | Dibatalkan | Pembatalan pelanggan/admin/no-show |
 
-Laporan pengembalian memiliki status **menunggu verifikasi pengembalian** per unit; tampilkan sebagai label/progres pada booking terkait. Barang yang belum diverifikasi tetap terpakai. Booking selesai saat seluruh unit sudah diverifikasi kembali, sementara kesiapan persiapan/perawatan tetap dicatat terpisah.
+Laporan pengembalian memiliki status **menunggu verifikasi pengembalian** per unit; tampilkan sebagai label/progres pada booking terkait. Barang yang belum diverifikasi tetap terpakai. Booking selesai saat seluruh unit berstatus returned atau lost_closed; label kehilangan tetap terlihat agar penutupan sewa tidak disalahartikan sebagai pengembalian fisik. Kesiapan persiapan/perawatan tetap dicatat terpisah.
 
 ```text
 menunggu_pembayaran --upload--> menunggu_konfirmasi
 menunggu_konfirmasi --verifikasi pembayaran & setujui--> dikonfirmasi
 dikonfirmasi --pelunasan & serah terima--> berjalan
-berjalan --semua pengembalian diverifikasi--> selesai
+berjalan --semua unit returned atau lost_closed--> selesai
 menunggu_pembayaran --expiry--> kedaluwarsa
 menunggu_konfirmasi --tolak booking--> ditolak
 menunggu_pembayaran/menunggu_konfirmasi/dikonfirmasi --batal--> dibatalkan
@@ -374,6 +449,16 @@ Setiap transisi melalui service dan menulis log aktor/waktu/alasan. Terlambat ke
 - Menolak bukti berbeda dari menolak booking. Bukti ditolak kembali ke menunggu pembayaran jika deadline asli belum lewat; jika sudah lewat, booking kedaluwarsa. Alasan wajib.
 - Jika booking kedaluwarsa atau bukti ditolak tetapi uang ternyata sudah masuk, admin merekonsiliasi dan mencatat dana yang benar-benar diterima, lalu memproses refund penuh melalui alur manual. Booking tidak diaktifkan ulang otomatis dan alokasi pelanggan lain tetap dilindungi.
 
+### Pembayaran kurang, lebih, dan pelunasan bertahap
+
+- Admin mencatat nominal aktual, tidak menyesuaikannya agar seolah-olah sama dengan nominal diminta.
+- Kurang bayar tidak membuat kewajiban satisfied atau booking/perpanjangan disetujui. Bagian uang yang masuk ditahan pada kewajiban terkait; tampilkan sisa kekurangan. Pelanggan dapat melengkapi dengan bukti berikutnya, tetap satu bukti pending per kewajiban.
+- Untuk pembayaran awal/perpanjangan, kekurangan wajib dibayar dan buktinya diunggah dalam deadline pembayaran asli. Setelah bukti pertama terbukti kurang, upload ulang tidak mendapat countdown baru. Jika deadline sudah lewat tanpa kelengkapan, booking/pengajuan kedaluwarsa, alokasi terkait dilepas, dan dana kewajiban gagal dikembalikan penuh.
+- Bukti kelengkapan yang diunggah tepat waktu tetap dapat diperiksa setelah deadline; expiry tidak boleh mengalahkan upload lengkap yang telah diterima. Dana yang belum dipastikan admin tetap bukan saldo sah.
+- Pelunasan sebelum serah terima harus memenuhi seluruh sisa tagihan; pembayaran kurang tidak mengizinkan barang diserahkan.
+- Lebih bayar: terapkan hanya bagian yang memenuhi kewajiban, lalu refund seluruh selisih secara manual. Kelebihan tidak mengubah pilihan DP menjadi lunas secara otomatis dan tidak dikurangi persentase pembatalan.
+- Jika nominal diminta Rp20.000 dan receipt Rp25.000, penerapan DP Rp20.000 dan kelebihan Rp5.000. Refund kelebihan Rp5.000 tidak membuat DP kurang bayar. Saat batal lebih awal, dasar refund DP tetap Rp20.000, bukan Rp25.000.
+
 ## 9. Pembatalan, refund, dan no-show
 
 ### Kebijakan nominal
@@ -386,11 +471,14 @@ Setiap transisi melalui service dan menulis log aktor/waktu/alasan. Terlambat ke
 | Pelanggan batal tepat dua hari atau kurang sebelum pengambilan | Tidak ada refund |
 | Perpanjangan ditolak tetapi uang tambahan sudah diterima | Seluruh biaya perpanjangan; booking awal tetap berlaku |
 | Booking kedaluwarsa atau bukti ditolak, tetapi uang ternyata masuk | Seluruh dana terkait yang diterima setelah rekonsiliasi admin; tidak otomatis mengaktifkan booking |
+| Kelebihan pembayaran atau dana kewajiban bayar yang gagal dipenuhi | Bagian dana tersebut dikembalikan penuh; terpisah dari persentase pembatalan |
 | Tidak datang tiga jam setelah jadwal pengambilan | DP hangus; uang di atas DP dikembalikan |
 
 Booking kecil yang wajib bayar penuh mengikuti kategori pembayaran penuh untuk pembatalan lebih awal. Untuk no-show, refund = `max(0, uang terverifikasi − nominal DP snapshot)` dengan memperhitungkan refund sebelumnya. Total kecil yang tidak melebihi DP tidak mendapat refund no-show.
 
-Kategori DP atau lunas untuk refund ditentukan oleh pembayaran sah sebelum pembatalan, bukan hanya pilihan awal pay_option. Pilihan DP yang kemudian dilunasi bukan lagi hanya bayar DP. Snapshot perhitungan menyimpan dana sumber dan total sah sebelum adjustment pembatalan. Dana kurang/lebih dari nominal diminta serta pembayaran campuran yang tidak tepat DP/lunas masih memerlukan aturan pada bagian 19.
+Kategori DP atau lunas untuk refund ditentukan oleh dana sah yang sudah diterapkan pada tagihan sebelum pembatalan, bukan hanya pilihan awal pay_option atau gross receipt. DP yang kemudian dilunasi melalui kewajiban settlement mengikuti refund pembayaran penuh 75%. Jika baru DP yang memenuhi kewajiban, refund 50% DP. Dana tambahan pada kewajiban pelunasan yang belum terpenuhi dikembalikan penuh sebagai dana belum diterapkan, bukan dikenai potongan baru. Kelebihan pembayaran selalu direfund penuh dan tidak dihitung lagi dalam dasar persentase. Snapshot menyimpan aplikasi dana sumber, nominal eligible, kategori, dan total sah sebelum adjustment pembatalan.
+
+Phase 1 tidak menyediakan pembatalan sebagian oleh pelanggan: action membatalkan seluruh booking sebelum serah terima. Perpanjangan dan pengembalian tetap dapat per unit. Untuk kegagalan operasional toko yang tidak dapat diganti/diselesaikan, tawarkan perubahan jadwal atau pembatalan booking penuh, bukan mengurangi item/harga secara diam-diam.
 
 Batas lebih dari dua hari berarti selisih timestamp WIB lebih dari 48 jam sebelum initial_start_at, bukan sekadar beda tanggal kalender. Kebijakan persentase dan batas waktu memakai snapshot booking. Pembatalan mandiri pada alur ini berlaku sebelum serah terima; penyelesaian sewa yang sudah berjalan menggunakan pengembalian dan tagihan, bukan action batal yang melepas barang belum kembali.
 
@@ -408,13 +496,19 @@ Refund tidak melebihi dana diterima setelah refund terdahulu dan cadangan refund
 
 Job membatalkan booking dikonfirmasi yang belum serah terima setelah tiga jam dari jadwal pengambilan. Booking yang masih menunggu konfirmasi admin tidak otomatis dianggap pelanggan no-show. Pembatalan no-show melepaskan alokasi yang belum dipakai, mencatat alasan, dan mengikuti refund di atas.
 
-Job mengunci booking dan membaca ulang status sebelum keputusan agar tidak membatalkan serah terima bersamaan. No-show pada layanan antar-jemput perlu membedakan kegagalan pelanggan dengan keterlambatan toko/petugas; detail pengecualian belum ditetapkan, lihat bagian 19.
+Job mengunci booking dan membaca ulang status sebelum keputusan agar tidak membatalkan serah terima bersamaan. Untuk pickup, kandidat mengikuti no_show_due_at tiga jam dari jadwal sah. Untuk delivery, pembatalan no-show hanya boleh diproses setelah admin mencatat petugas telah siap menyerahkan barang dan gagal karena pelanggan, dengan waktu/alasan. Petugas yang belum mengantar atau keterlambatan toko bukan no-show pelanggan; kandidat tersebut ditandai untuk tindak lanjut admin dan tidak dikenai DP hangus otomatis. Durasi keterlambatan toko yang diverifikasi dikecualikan dari penghitungan batas no-show.
 
 ## 10. Serah terima, pengembalian, dan kesiapan unit
 
 ### Serah terima
 
 Hanya booking dikonfirmasi yang dapat diserahterimakan, setelah admin mencatat pelunasan sewa dan ongkir. Metode pelunasan: tunai, QRIS, atau transfer. Catat waktu dan kondisi unit. Unit harus benar-benar siap, dengan persiapan selesai dan bukan sedang perawatan/terpakai. Verifikasi kesiapan, perubahan use_status/physical_status, dan waktu serah terima atomik. Tidak boleh memakai dana perpanjangan pending untuk memenuhi pelunasan awal.
+
+### Keterlambatan pengantaran oleh toko
+
+Jika keterlambatan penyerahan berasal dari toko/petugas, pelanggan tidak dianggap no-show. Admin mencatat waktu penyerahan dan penyebabnya. Jadwal akhir digeser sebesar keterlambatan sehingga pelanggan tetap mendapat durasi sewa yang dibayar, setelah memeriksa ulang alokasi unit, batas satu iPhone pelanggan, jam operasional, dan buffer. Start/end sah diperbarui bersama alokasi, versi unit, ringkasan jadwal, dan no_show_due_at yang relevan; jadwal awal tetap tersimpan. Kompensasi waktu ini tidak dikenai biaya perpanjangan dan tidak mengurangi sisa batas tujuh hari sebagai tambahan durasi sewa.
+
+Pergeseran tidak boleh menabrak booking berikutnya atau jam operasional. Jika gagal, admin menawarkan unit pengganti yang tersedia atau pembatalan dengan refund penuh. Konfirmasi penanganan sebelum menyerahkan barang; jangan menggeser jadwal secara diam-diam setelah barang diserahkan.
 
 ### Pengembalian per unit
 
@@ -426,7 +520,9 @@ Hanya booking dikonfirmasi yang dapat diserahterimakan, setelah admin mencatat p
 
 Waktu laporan, penerimaan fisik, verifikasi admin, dan selesai persiapan berbeda. Persiapan mengikuti persetujuan admin setelah barang diterima dan diperiksa; untuk unit perawatan mengikuti penyelesaian perawatan. Setelah satu jam berlalu, ketersediaan tetap membutuhkan kondisi layak dan kalender yang tidak bentrok.
 
-Timestamp wajib berurutan secara logis: penerimaan toko tidak sesudah verifikasi; penyerahan petugas tidak sesudah penerimaan toko; waktu kejadian tidak di masa depan. Pengembalian per unit mengunci booking_item, item_unit, alokasi, dan scope tagihan; membuat denda/kerusakan sekali, memperbarui fisik dan status agregat booking sekali, serta menyimpan audit/outbox. Jika ada pengajuan perpanjangan aktif pada unit yang sudah kembali, persetujuan perpanjangan diblokir; cara menutup pengajuan dan dananya lihat bagian 19.
+Timestamp wajib berurutan secara logis: penerimaan toko tidak sesudah verifikasi; penyerahan petugas tidak sesudah penerimaan toko; waktu kejadian tidak di masa depan. Pengembalian per unit mengunci booking_item, item_unit, alokasi, dan scope tagihan; membuat denda/kerusakan sekali, memperbarui fisik dan status agregat booking sekali, serta menyimpan audit/outbox.
+
+Jika pengembalian terverifikasi menyangkut unit pada pengajuan perpanjangan pending, seluruh pengajuan terkait dibatalkan secara atomik dan seluruh hold tambahannya dilepas. Jadwal unit lain dalam sewa awal tetap berlaku. Biaya pengajuan yang sudah diterima dikembalikan penuh lewat refund manual. Persetujuan perpanjangan bersamaan dengan pengembalian wajib diserialisasi sehingga hanya satu hasil sah. Tombol laporan pelanggan saja belum membuktikan barang kembali; admin memeriksa laporan tersebut sebelum memutuskan.
 
 ### Waktu kembali dan antar-jemput
 
@@ -451,6 +547,12 @@ Pengecualian karena petugas atau admin hanya mengurangi waktu yang benar-benar b
 
 Kerusakan/kehilangan diisi admin sebagai tagihan terpisah dengan nominal dan catatan. Pengembalian terverifikasi dapat menyelesaikan booking meski denda belum dibayar; transaksi berhasil hanya yang selesai dan lunas. Pelunasan denda dicatat sebagai settlement. Kesiapan fisik unit terpisah dari saldo pelanggan.
 
+### Barang hilang
+
+Admin menandai unit hilang dengan waktu kejadian yang diverifikasi, alasan, dan nominal ganti rugi manual. Waktu berhenti denda adalah lost_at yang diverifikasi, bukan waktu admin menekan tombol; hitung keterlambatan sampai titik tersebut dengan toleransi dan pengecualian yang berlaku.
+
+Dalam satu transaksi: buat loss_record, tagihan ganti rugi dan denda final sekali, ubah use_status menjadi lost_closed, tandai unit lost dan nonaktif, lepas alokasi sewa unit yang ditutup, tutup pengajuan perpanjangan pending terkait dengan refund dana tambahan, dan simpan audit. Unit tidak menjadi ready dan tidak dibuatkan pengembalian fisik palsu. Booking selesai jika semua unit returned/lost_closed, sementara tagihan tetap terbuka sampai dibayar. Booking mendatang yang memakai unit tersebut ditandai berisiko dan mengikuti penggantian atau pembatalan/refund penuh; tidak otomatis dianggap terpenuhi.
+
 ## 11. Unit terlambat dan booking berikutnya
 
 - Sistem memberi alert admin dan menandai booking berikutnya yang terdampak **berisiko**.
@@ -469,6 +571,7 @@ Kerusakan/kehilangan diisi admin sebagai tagihan terpisah dengan nominal dan cat
 - Tambahan dihitung dari jadwal kembali lama per unit.
 - Harga menggunakan snapshot paket saat booking awal; biaya hanya untuk unit terpilih.
 - Biaya tambahan dibayar lunas tanpa DP baru. Jika perpanjangan sebagian membutuhkan penjemputan terpisah, tambahan ongkir ditampilkan dalam rincian biaya dan wajib disetujui pelanggan sebelum pembayaran. Simpan nominal dan persetujuannya sebagai snapshot; jangan menambahkan biaya tersembunyi setelah pembayaran.
+- Tarif penjemputan terpisah diisi manual oleh admin dengan nominal dan alasan sebelum pelanggan membayar. Jika membutuhkan quotation admin, pilihan pelanggan disimpan sebagai draft_quote tanpa hold/deadline bayar. Setelah tarif tersedia dan pelanggan menyetujuinya, sistem memeriksa ulang waktu/stok dan melakukan submit formal. Hold dan batas 30 menit dimulai dari submitted_at, bukan saat draft dibuat. Batas pengajuan dua jam tetap berlaku saat submit; quotation tidak menjamin stok atau memperpanjang batas pengajuan.
 - Total penggunaan setiap unit sejak awal, termasuk seluruh perpanjangan, maksimal 168 jam.
 - Jadwal kembali baru wajib dalam jam operasional. Tambahan enam jam dari 18.00 berakhir 00.00 sehingga ditolak; tambahan 24 jam dapat dipilih jika tersedia.
 - Pengajuan website paling lambat dua jam sebelum jadwal kembali unit. Setelah itu pelanggan menghubungi admin untuk penanganan manual; aturan bentrok tetap wajib.
@@ -476,7 +579,7 @@ Kerusakan/kehilangan diisi admin sebagai tagihan terpisah dengan nominal dan cat
 ### Hold, pembayaran, dan persetujuan
 
 1. Sistem memeriksa aturan dan kalender, termasuk waktu persiapan, lalu menahan slot tambahan secara atomik saat pengajuan berhasil.
-2. Pelanggan mendapat batas bayar dan upload 30 menit sejak pengajuan.
+2. Pelanggan mendapat batas bayar dan upload 30 menit sejak submit formal; untuk pengajuan tanpa quotation tambahan, submit berlangsung langsung saat pembuatan pengajuan berhasil.
 3. Tidak upload tepat waktu: pengajuan kedaluwarsa, hanya slot tambahan dilepas; sewa awal tetap berlaku.
 4. Upload tepat waktu: slot tambahan tetap ditahan sampai keputusan admin. Jadwal lama belum berubah.
 5. Admin memverifikasi pembayaran; sistem memeriksa ulang ketersediaan dengan mengecualikan hold sendiri. Persetujuan pembayaran, perubahan jadwal unit, harga tambahan, blok kalender, dan audit dilakukan atomik.
@@ -484,13 +587,13 @@ Kerusakan/kehilangan diisi admin sebagai tagihan terpisah dengan nominal dan cat
 
 Review, rejection, expiry, dan approval mempunyai status tersendiri pada extensions, bukan mengubah booking berjalan menjadi menunggu pembayaran. Unit yang sudah kembali tidak dapat diperpanjang. Pengajuan berulang saat satu pengajuan masih aktif ditolak/idempotent. Jadwal tidak boleh dimundurkan atau ditambah secara langsung oleh admin dengan melewati alokasi dan pencatatan harga.
 
-Bukti perpanjangan ditolak sebelum deadline upload mengizinkan upload ulang dengan deadline asli; setelah deadline, hold tambahan dilepas dan pengajuan kedaluwarsa. Uang tambahan yang ternyata diterima tetap dicatat dan direfund penuh melalui rekonsiliasi. Detail penolakan satu pengajuan multi-unit lihat bagian 19.
+Bukti perpanjangan ditolak sebelum deadline upload mengizinkan upload ulang dengan deadline asli; setelah deadline, hold tambahan dilepas dan pengajuan kedaluwarsa. Uang tambahan yang ternyata diterima tetap dicatat dan direfund penuh melalui rekonsiliasi.
 
 Batas konfirmasi = yang lebih awal antara upload + satu jam atau jadwal kembali lama − 30 menit. PWA memberi notifikasi saat upload; WhatsApp mengingatkan 30 menit sebelum deadline, langsung jika saat upload waktu pengingat sudah terlewati. Pengiriman dideduplikasi.
 
 Jika admin terlambat, slot tambahan tetap ditahan dan pengajuan diberi alert mendesak. Jadwal kembali lama tetap berlaku sampai disetujui. Pelanggan yang sudah membayar dan mengunggah bukti tepat waktu tidak dikenai tambahan denda akibat keterlambatan pemeriksaan admin. Catat waktu bayar/upload, deadline, keputusan, dan koreksi denda untuk membedakan keterlambatan admin dari keterlambatan pelanggan; pengecualian ini tidak otomatis menyetujui perpanjangan atau menghapus denda yang tidak terkait keterlambatan admin.
 
-Jadwal, bentrok, deadline, pengembalian, dan persiapan dicatat per unit. Untuk pengajuan berisi beberapa unit dengan jadwal lama berbeda, semua syarat per unit wajib lolos; bentuk satu pengajuan gabungan atau beberapa pengajuan mengikuti keputusan teknis tanpa memperlonggar deadline.
+Jadwal, bentrok, deadline, pengembalian, dan persiapan dicatat per unit. Satu pengajuan multi-unit disetujui atau ditolak seluruhnya, tidak boleh approval sebagian. Validasi dan perubahan seluruh unit atomik; jika satu gagal, jadwal semua unit tetap lama dan dana pengajuan direfund penuh bila telah diterima. Pelanggan boleh membuat pengajuan terpisah per unit, tetap maksimal satu pengajuan aktif per unit. Untuk jadwal lama berbeda, semua batas per unit wajib lolos dan deadline konfirmasi pengajuan memakai yang paling awal.
 
 ## 13. Halaman pelanggan
 
@@ -528,7 +631,7 @@ Path `/admin`, hanya role admin melalui middleware server. Semua admin memiliki 
 | Pembayaran | Bukti privat, preview, verifikasi/tolak, saldo dan pembayaran tambahan |
 | Pengembalian | Laporan pelanggan, penerimaan aktual, verifikasi per unit, kondisi, denda dan kerusakan |
 | Refund | Pengajuan, keputusan, transfer manual, bukti dan status sudah dikembalikan |
-| Transaksi Berhasil | Booking selesai dan lunas |
+| Transaksi Berhasil | Booking selesai dan lunas; label kehilangan tetap terlihat jika ada unit lost_closed |
 | Laporan | Harian/bulanan, uang masuk terverifikasi dikurangi refund selesai, jumlah booking per status, item terpopuler, Excel |
 | Pengaturan Ongkir | CRUD kecamatan, tarif, status aktif |
 | Pengaturan | Aturan sewa, gambar QRIS; konfigurasi notifikasi sesuai provider |
@@ -557,6 +660,7 @@ Cakupan panel `/admin/`, tanpa Play Store/App Store. `/admin` diarahkan ke `/adm
 |---|---|
 | Booking dibuat | Push admin berlangganan |
 | Bukti awal diunggah | Push segera |
+| Draft meminta tarif penjemputan terpisah | Push admin agar quotation diisi sebelum pelanggan submit |
 | 30 menit sebelum batas konfirmasi booking | Push + WhatsApp jika belum diputuskan; langsung saat upload jika sisa waktu <=30 menit |
 | 20 menit sebelum pengambilan | Alert mendesak jika booking belum diputuskan |
 | Bukti perpanjangan diunggah | Push segera |
@@ -586,7 +690,7 @@ Interval job baru adalah rancangan teknis untuk memenuhi alert tepat waktu. Sche
 
 ## 16. Keamanan dan kebutuhan nonfungsional
 
-- Password hash bcrypt/argon2, minimal delapan karakter.
+- Password hash scrypt dengan salt acak dan parameter sesuai §3; password baru 12–128 karakter. Tidak menyimpan password plaintext.
 - NIK terenkripsi, hanya detail penyewa bagi admin; tidak pada tabel atau notifikasi.
 - Bukti pembayaran/refund privat, otorisasi pemilik/admin di server, validasi MIME dan ukuran, nama acak.
 - Throttle login, registrasi, upload; CSRF dan validasi server mengikuti framework.
@@ -597,6 +701,7 @@ Interval job baru adalah rancangan teknis untuk memenuhi alert tepat waktu. Sche
 - Isi audit/notifikasi mengecualikan password, NIK, kunci enkripsi, token, dan file bukti. Backup harus mencakup kunci enkripsi secara aman terpisah agar data NIK dapat dipulihkan; akses backup dan database dibatasi. Reset password admin memutus sesi pelanggan sebelumnya.
 - Responsif untuk HP/komputer, Bahasa Indonesia, WIB.
 - Tema pink pastel: primary `#F28CB1`, aksen `#FBD3E1`, latar pelanggan `#FFF5F8`, sidebar admin `#FFF0F5`, teks `#3A2A33`.
+- Seluruh UI memakai Poppins, termasuk tabel, angka, input, dan tombol. `DESIGN.md` menjadi acuan visual untuk spacing, hierarki, komponen, responsivitas, dan prompt Stitch; aturan bisnis tetap mengikuti PRD ini.
 - Target halaman utama pelanggan/admin di bawah tiga detik pada koneksi seluler normal; profil pengukuran konkret belum ditentukan.
 - Backup database harian, simpan minimal tujuh hari; backup foto/bukti mingguan di lokasi privat.
 
@@ -665,11 +770,23 @@ Tes otomatis wajib untuk aturan bisnis berisiko. Framework dan target persentase
 51. Pelanggan dengan iPhone belum kembali tidak dapat mengambil iPhone lain menggunakan jadwal lama yang sudah berakhir.
 52. Koreksi waktu pengembalian mempertahankan audit dan menyesuaikan charge tanpa menggandakan denda; pengecualian admin/petugas tidak dihitung dua kali.
 53. Manifest start_url berada di scope `/admin/`, `/admin` redirect benar, dan service worker tetap JavaScript ketika sesi login berakhir.
+54. Keterlambatan pengantaran dari toko menggeser jadwal sah dan alokasi tanpa biaya tambahan jika tersedia; initial_start/end dan harga awal tetap tersimpan.
+55. Kompensasi waktu yang menabrak booking lain, batas satu iPhone pelanggan, atau jam operasional ditolak; admin menawarkan pengganti atau refund penuh.
+56. Delivery tanpa bukti petugas siap/gagal karena pelanggan tidak dibatalkan sebagai no-show; durasi keterlambatan toko tidak membuat DP pelanggan hangus.
+57. Barang hilang menutup sewa per unit, menghentikan denda pada lost_at, menonaktifkan unit, dan menyisakan tagihan sampai lunas tanpa membuat pengembalian fisik palsu.
+58. Pengembalian/kehilangan saat perpanjangan pending menutup seluruh pengajuan dan hold terkait, merefund dana tambahan penuh, serta bersaing aman dengan approval.
+59. Tarif penjemputan terpisah manual wajib ditampilkan/disetujui; draft tidak menahan stok, dan submit memeriksa ulang ketersediaan serta batas dua jam.
+60. Pembatalan sebagian pelanggan ditolak pada phase 1; pembatalan penuh tetap mengikuti kebijakan, sementara return/perpanjangan per unit tetap didukung.
+61. Kurang bayar tidak menyetujui booking/pengajuan; kekurangan dapat dilengkapi dalam deadline asli, dan kegagalan membayar lengkap melepas alokasi serta refund penuh dana kewajiban gagal.
+62. Lebih bayar memisahkan gross receipt, penerapan kewajiban, dan kelebihan; refund selisih tidak membuat DP kurang bayar atau menggandakan dasar refund pembatalan.
+63. Satu pengajuan perpanjangan multi-unit disetujui/ditolak seluruhnya secara atomik; pengajuan terpisah per unit tetap diperbolehkan.
+64. Nama/alamat/nomor HP aktif/NIK wajib; nomor alternatif/Instagram/email kontak kosong tidak menghalangi completed_at dan booking.
+65. Refund persentase dibulatkan half-up satu kali pada total eligible; dana DP yang sudah dilunasi mengikuti kategori lunas, dan dana kelebihan/tidak diterapkan direfund penuh secara terpisah.
 
 ### Kriteria selesai
 
 - Seluruh tes relevan di atas lolos dan keputusan terbuka untuk perilaku yang dibangun telah diselesaikan.
-- Alur booking, QRIS, konfirmasi, pelunasan, serah terima, perpanjangan sebagian, pengembalian, denda, perawatan, dan refund berjalan di produksi.
+- Alur booking, QRIS, konfirmasi, pelunasan, serah terima termasuk kompensasi keterlambatan toko, perpanjangan per unit, pengembalian, denda, perawatan, barang hilang, dan refund berjalan di produksi.
 - Tidak ada double booking dalam uji konkurensi dan alokasi tidak dapat dibypass lewat admin.
 - PWA terpasang dan push bekerja di Android/iPhone; pesan WhatsApp pengingat teruji dengan akun produksi.
 - Admin dapat mengubah settings tanpa kode; snapshot booking lama tetap benar.
@@ -683,10 +800,10 @@ Ukuran keberhasilan bisnis kuantitatif, seperti tingkat booking mandiri dan wakt
 ### Persiapan dan deployment
 
 1. Hosting/domain atas nama klien, HTTPS, runtime/database sesuai stack, cron, terminal/SSH, penyimpanan privat, dan koneksi keluar ke provider.
-2. Build produksi dan arahkan domain ke folder publik aplikasi, bukan folder kode.
+2. Build backend NestJS dan frontend Vite secara terpisah, sertai pemeriksaan TypeScript. Layani hasil build frontend sebagai file statis dengan fallback route SPA; reverse proxy `/api` ke backend. Pastikan `/admin/sw.js` tetap dilayani sebagai JavaScript sesuai ketentuan PWA, bukan HTML fallback.
 3. Isi environment: URL HTTPS, timezone, debug off, database, cache/queue, lokasi file publik/privat, VAPID public/private/subject, serta kredensial WhatsApp sesuai provider.
 4. Migrasi dan seeder; buat admin pertama dengan kredensial aman.
-5. Atur izin folder storage/cache, scheduler tiap menit, dan notification worker. Shared hosting tanpa worker permanen dapat memakai cron yang memproses antrean lalu berhenti saat kosong.
+5. Atur izin storage privat, scheduler tiap menit, dan worker outbox PostgreSQL. Jalankan API/worker dengan supervisi proses serta restart otomatis; pisahkan pekerjaan notifikasi dari request HTTP. Alternatif worker berbasis cron hanya dipakai jika hosting mendukung runtime Node.js dan memenuhi frekuensi serta aturan claim/deduplikasi antrean.
 6. Uji registrasi/profil/login, booking iPhone+aksesori, upload, approval, pelunasan, serah terima, perpanjangan per unit, pengembalian/denda, refund, expiry, pengingat, dan no-show.
 7. Uji PWA/push Android/iPhone, pesan WhatsApp, Excel, serta penolakan akses langsung file privat.
 8. Verifikasi backup dan pemulihan. Simpan database harian minimal tujuh hari, file mingguan di lokasi privat.
@@ -712,34 +829,37 @@ Estimasi PRD awal sekitar 22 hari kerja, lalu deployment dan serah terima:
 | Pengujian dan perbaikan | 2 |
 | Total awal | 22 |
 
-Estimasi tersebut belum memasukkan rincian terbaru: WhatsApp, pengajuan perpanjangan dengan hold/payment, jadwal dan pengembalian per unit, workflow refund, persiapan/perawatan, dan rekonsiliasi. Estimasi final perlu diperbarui setelah stack/provider dan keputusan terbuka dipilih.
+Estimasi tersebut belum memasukkan rincian terbaru: WhatsApp, pengajuan perpanjangan dengan hold/payment, jadwal dan pengembalian per unit, workflow refund, persiapan/perawatan, dan rekonsiliasi. Estimasi final perlu diperbarui berdasarkan stack yang dipilih, hosting/provider, dan keputusan terbuka.
 
 Prioritas: mesin alokasi dan aturan, pembayaran, dan operasional tidak boleh dipotong. PWA dan WhatsApp telah disepakati sebagai phase 1; menundanya memerlukan perubahan scope yang eksplisit. Laporan tetap requirement, dengan penjadwalan delivery dapat dibahas jika waktu terbatas.
 
 ## 19. Keputusan yang masih terbuka
 
-Requirement inti dan blueprint database telah diaudit. Poin berikut belum diputuskan; selesaikan sebelum membangun perilaku terkait. Definisi schema dan transaksi di bagian 5 adalah rancangan teknis, bukan bukti bahwa aplikasi telah teruji.
+Aturan operasional yang sebelumnya terbuka telah disetujui dan diterapkan pada bagian terkait: delivery/no-show (9–10), kehilangan (10), pengembalian saat perpanjangan pending (10), tarif penjemputan manual dan approval multi-unit (12), pembatalan penuh serta pembayaran kurang/lebih (8–9), dan profil wajib (5). Pembulatan refund half-up menjadi ketentuan teknis pada bagian 6. Definisi schema tetap blueprint, bukan database yang telah teruji.
 
-### Aturan bisnis yang perlu dikunci
+Yang masih perlu ditentukan sebelum implementasi/deployment terkait:
 
-| Topik | Celah dan dampak |
-|---|---|
-| Antar-jemput dan no-show | Jangan menganggap pelanggan tidak datang jika petugas toko belum mengantar. Tentukan indikator gagal serah terima dan pengecualian no-show akibat toko. Tetapkan juga jadwal akhir jika toko terlambat menyerahkan barang; waktu aktual belum disepakati menggeser jadwal otomatis. |
-| Barang hilang | Biaya kehilangan sudah manual, tetapi unit tidak pernah kembali. Perlu tindakan penutupan sewa dan penonaktifan unit agar booking tidak selamanya berjalan dan unit tidak menjadi ready; jangan menganggap pembayaran ganti rugi sebagai pengembalian fisik. |
-| Barang kembali ketika perpanjangan pending | Approval perpanjangan harus diblokir setelah unit kembali. Tentukan penutupan pengajuan dan refund jika uang sudah masuk, agar hold tidak tertinggal. |
-| Penjemputan terpisah | Ongkir tambahan wajib disetujui sebelum bayar; dasar tarif tambahan belum dipilih. |
-| Pembatalan sebagian dan pembayaran campuran | Tentukan apakah pembatalan sebagian didukung. Jika didukung, tentukan alokasi DP/ongkir/refund per bagian. Refund untuk dana kurang/lebih dari nominal diminta atau pembayaran campuran yang tidak tepat DP/lunas perlu kebijakan eksplisit. |
-| Perpanjangan multi-unit | Tentukan apakah satu pengajuan disetujui seluruhnya atau bisa sebagian; nominal bayar/refund/hold harus sesuai keputusan tersebut. |
-| Data profil wajib | Daftar field sudah ada, tetapi kewajiban nomor alternatif, Instagram, dan email kontak belum tegas; jangan memblokir pelanggan berdasarkan asumsi. |
+1. Hosting Node.js/PostgreSQL, biaya final, serta konfigurasi deployment/scheduler/worker. Stack dan struktur kode sudah ditetapkan pada bagian 3; versi dependency dipastikan saat scaffolding.
+2. Provider/akun/template WhatsApp, penerima, biaya, dan admin penanggung jawab eskalasi.
+3. Target keberhasilan bisnis kuantitatif dan profil pengukuran performa di bawah tiga detik.
+4. Prosedur koreksi receipt manual yang salah tanpa menghapus audit. Sesuaikan DDL, FK dan indeks kondisional dengan engine saat membuat migrasi.
 
-### Rincian teknis dan delivery
-
-- Pilih stack/database/hosting, biaya final, provider/akun/template WhatsApp, penerima dan penanggung jawab admin.
-- Tetapkan pembulatan persen refund ke integer rupiah, format kode dan overflow, batas retry, serta prosedur koreksi receipt manual yang salah tanpa menghapus audit. Struktur FK dan indeks kondisional disesuaikan dengan engine.
-- Tetapkan target keberhasilan bisnis kuantitatif dan profil pengukuran performa di bawah tiga detik.
+Rincian teknis lain dapat ditetapkan saat implementasi: kode booking memakai prefix IRN + tanggal WIB YYMMDD + nomor urut harian minimal tiga digit yang boleh bertambah panjang; counter atomik dan kode unique mencegah overflow/duplikasi. Kode aksesori dibuat melalui counter global dengan prefix ACC dan nomor urut minimal enam digit. Notification retry maksimal tiga percobaan dengan jeda bertahap satu dan lima menit, membaca ulang relevansi sebelum setiap percobaan; error permanen tidak diulang. Ini bukan perubahan kebijakan biaya/durasi pelanggan.
 
 ### Catatan audit versi 2.1
 
 Perbaikan: jadwal/alokasi per unit dengan sumber tunggal; pemisahan bukti dan receipt aktual; rincian charge dan saldo per scope; cadangan dana refund; constraint/FK/idempotency; penguncian lintas action; penggabungan alokasi perpanjangan; kesiapan fisik dan risiko booking berikutnya; deadline pada batas waktu; outbox; serta scope PWA. Rencana pengujian diperluas menjadi 53 skenario. Verifikasi dokumen mencakup urutan bagian/skenario, referensi entitas ER, referensi dokumen lama, dan 13 contoh aritmetika deadline/denda/saldo. Belum ada aplikasi, migrasi, atau tes runtime yang dijalankan.
 
 Ketentuan awal yang belum dibahas ulang tetap dipertahankan sebagai baseline: reset password melalui admin; alokasi unit otomatis dengan ganti unit sebelum serah terima; tidak ada jadwal perawatan masa depan; libur nasional tidak dibedakan untuk aturan sewa awal; denda setelah toleransi satu jam tanpa batas atas.
+
+### Penerapan keputusan versi 2.2
+
+Pada 8 Oktober 2026, seluruh usulan operasional di atas disetujui. PRD, blueprint DB, status, perhitungan saldo, dan rencana pengujian telah diselaraskan; rencana pengujian kini 65 skenario. Loss_records dan payment_applications ditambahkan agar penutupan kehilangan dan pemisahan uang lebih tidak merusak riwayat fisik maupun saldo. Belum ada implementasi aplikasi atau tes runtime.
+
+### Penerapan acuan teknis versi 2.3
+
+Pada 8 Oktober 2026, template oppo-project-control diadopsi untuk stack NestJS/React/PostgreSQL/Prisma dan organisasi kode per fitur. Integrasi identitas/domain proyek acuan tidak disalin. Struktur dirancang untuk iRent, worker memakai outbox PostgreSQL, dan deployment disesuaikan untuk Node.js. Aturan produk versi 2.2 tetap berlaku. Schema, source, manifest, dan pengujian runtime belum dibuat.
+
+### Status implementasi fondasi
+
+Setelah persetujuan urutan data/backend sebelum UI pada 8 Oktober 2026, fondasi tersedia di `backend/`: schema Prisma (26 entitas domain dan counter bisnis), migrasi PostgreSQL, seed settings, konfigurasi/validasi, health API, codec WIB/rupiah, dan tes fondasi/integrasi. Verifikasi rinci dan fitur yang masih harus dikerjakan dilacak di [IMPLEMENTATION.md](IMPLEMENTATION.md); setup di [backend/README.md](backend/README.md). Catatan historis di atas menggambarkan keadaan saat tiap versi dokumen disusun. Requirement bisnis tetap sama; fondasi belum berarti 65 skenario aplikasi sudah diimplementasikan.
