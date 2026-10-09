@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>iRent Semarang - Admin Detail Booking &amp; Pembayaran — v2</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Font Poppins -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS with Forms and Container Queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "secondary-fixed": "#ffd9e4",
+            "urgency-red-ink": "#A12A39",
+            "outline": "#76777b",
+            "surface": "#FFFFFF",
+            "selected-rose": "#F9E8EF",
+            "on-primary-fixed-variant": "#45474d",
+            "on-background": "#1c1b1c",
+            "surface-container-highest": "#e5e2e2",
+            "background": "#fcf8f8",
+            "inverse-primary": "#c5c6ce",
+            "inverse-surface": "#313031",
+            "warning-ink": "#855300",
+            "secondary-fixed-dim": "#ffb0cc",
+            "sidebar": "#F8F9FA",
+            "primary": "#15171c",
+            "surface-container-lowest": "#ffffff",
+            "pastel-blush": "#FBECEE",
+            "error": "#ba1a1a",
+            "surface-container": "#f1eded",
+            "on-secondary-fixed-variant": "#79294e",
+            "urgency-red-bg": "#FFF0F1",
+            "tertiary-fixed-dim": "#d1c5b7",
+            "on-error-container": "#93000a",
+            "pastel-mint": "#E8F5EE",
+            "outline-variant": "#c7c6cb",
+            "canvas": "#F1F2F4",
+            "error-container": "#ffdad6",
+            "muted": "#606570",
+            "workspace": "#FCFCFD",
+            "tertiary-fixed": "#eee0d3",
+            "success-bg": "#EAF6EF",
+            "inverse-on-surface": "#f4f0f0",
+            "on-primary-fixed": "#191b21",
+            "primary-fixed": "#e2e2ea",
+            "pastel-blue": "#EAF1FC",
+            "line": "#E6E8ED",
+            "surface-variant": "#e5e2e2",
+            "primary-container": "#292b31",
+            "on-secondary-fixed": "#3e0021",
+            "on-secondary-container": "#7a2a4e",
+            "on-primary-container": "#919299",
+            "warning-bg": "#FFF5DF",
+            "ink": "#24262B",
+            "success-ink": "#176345",
+            "on-tertiary-container": "#9b9185",
+            "on-surface": "#1c1b1c",
+            "on-primary": "#ffffff",
+            "surface-container-high": "#ebe7e7",
+            "primary-fixed-dim": "#c5c6ce",
+            "tertiary-container": "#312a21",
+            "surface-bright": "#fcf8f8",
+            "on-tertiary-fixed": "#211b12",
+            "pastel-apricot": "#FFF0DE",
+            "surface-container-low": "#f6f3f3",
+            "on-surface-variant": "#46464b",
+            "on-tertiary": "#ffffff",
+            "on-error": "#ffffff",
+            "on-tertiary-fixed-variant": "#4e453b",
+            "surface-tint": "#5c5e65",
+            "secondary-container": "#fe96be",
+            "on-secondary": "#ffffff",
+            "secondary": "#974166",
+            "pastel-lilac": "#F1ECFB",
+            "tertiary": "#1c160e",
+            "surface-dim": "#ddd9d9"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem",
+            "workspace": "20px",
+            "btn": "10px"
+          },
+          "spacing": {
+            "space-xs": "4px",
+            "space-sm": "8px",
+            "space-md": "12px",
+            "space-lg": "16px",
+            "space-xl": "20px",
+            "space-2xl": "24px",
+            "space-3xl": "32px",
+            "space-4xl": "48px",
+            "gutter": "32px",
+            "margin": "32px"
+          },
+          "fontFamily": {
+            "headline-lg": ["Poppins"],
+            "headline-md": ["Poppins"],
+            "label-md": ["Poppins"],
+            "body-md": ["Poppins"],
+            "label-sm": ["Poppins"],
+            "body-sm": ["Poppins"]
+          },
+          "fontSize": {
+            "headline-lg": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+            "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "label-sm": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #F1F2F4;
+      color: #24262B;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      font-size: 20px;
+      line-height: 1;
+    }
+    .material-symbols-outlined.fill {
+      font-variation-settings: 'FILL' 1;
+    }
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+  </style>
+</head>
+<body class="bg-canvas min-h-screen text-ink antialiased p-margin">
+<!-- Desktop Shell Envelope with 20px corners -->
+<div class="mx-auto max-w-[1376px] bg-workspace rounded-workspace overflow-hidden border border-line flex flex-row min-h-[960px]">
+<!-- SideNavBar -->
+<aside class="w-[224px] min-w-[224px] bg-sidebar border-r border-line p-space-lg flex flex-col justify-between shrink-0">
+<div class="flex flex-col gap-y-6">
+<!-- Brand Header -->
+<div class="flex items-center gap-3 px-2 py-1">
+<div class="w-10 h-10 rounded-lg bg-primary-container text-surface flex items-center justify-center font-headline-md text-headline-md font-semibold">
+            iR
+          </div>
+<div class="flex flex-col">
+<span class="text-headline-md font-headline-md font-semibold text-ink leading-tight">iRent Semarang</span>
+<span class="text-body-sm font-body-sm text-muted">Rental Management</span>
+</div>
+</div>
+<!-- Navigation Tabs -->
+<nav class="flex flex-col gap-1">
+<!-- 1. Dashboard -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-muted hover:bg-canvas transition-colors duration-150 rounded-lg font-normal text-label-md font-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<!-- 2. Booking (ACTIVE STATE) -->
+<a class="flex items-center gap-3 px-3 py-2.5 bg-selected-rose text-ink font-medium rounded-lg text-label-md font-label-md transition-colors duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+<span>Booking</span>
+</a>
+<!-- 3. Jadwal -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-muted hover:bg-canvas transition-colors duration-150 rounded-lg font-normal text-label-md font-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="schedule">schedule</span>
+<span>Jadwal</span>
+</a>
+<!-- 4. Data penyewa -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-muted hover:bg-canvas transition-colors duration-150 rounded-lg font-normal text-label-md font-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="people">people</span>
+<span>Data penyewa</span>
+</a>
+<!-- 5. Item & unit -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-muted hover:bg-canvas transition-colors duration-150 rounded-lg font-normal text-label-md font-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span>Item &amp; unit</span>
+</a>
+<!-- 6. Pembayaran -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-muted hover:bg-canvas transition-colors duration-150 rounded-lg font-normal text-label-md font-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span>Pembayaran</span>
+</a>
+<!-- 7. Pengembalian -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-muted hover:bg-canvas transition-colors duration-150 rounded-lg font-normal text-label-md font-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="assignment_return">assignment_return</span>
+<span>Pengembalian</span>
+</a>
+<!-- 8. Refund -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-muted hover:bg-canvas transition-colors duration-150 rounded-lg font-normal text-label-md font-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="currency_exchange">currency_exchange</span>
+<span>Refund</span>
+</a>
+<!-- 9. Transaksi berhasil -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-muted hover:bg-canvas transition-colors duration-150 rounded-lg font-normal text-label-md font-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="check_circle">check_circle</span>
+<span>Transaksi berhasil</span>
+</a>
+</nav>
+</div>
+<!-- SideNav Footer Tabs -->
+<div class="pt-4 border-t border-line flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 text-muted hover:bg-canvas transition-colors duration-150 rounded-lg font-normal text-label-md font-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="bar_chart">bar_chart</span>
+<span>Laporan</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2 text-muted hover:bg-canvas transition-colors duration-150 rounded-lg font-normal text-label-md font-label-md" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Pengaturan</span>
+</a>
+</div>
+</aside>
+<!-- Main Workspace Area -->
+<div class="flex-1 flex flex-col min-w-0 bg-workspace">
+<!-- TopNavBar -->
+<header class="flex justify-between items-center h-[72px] px-gutter w-full border-b border-line bg-workspace shrink-0">
+<!-- Search bar on left -->
+<div class="flex items-center gap-3 w-80">
+<div class="relative w-full">
+<span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-muted">
+<span class="material-symbols-outlined text-[18px]" data-icon="search">search</span>
+</span>
+<input class="w-full pl-9 pr-3 py-2 bg-canvas border border-line rounded-btn text-body-sm font-body-sm text-ink placeholder:text-muted focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-all" placeholder="Cari booking, unit, NIK, atau nama..." type="text"/>
+</div>
+</div>
+<!-- Trailing actions & Profile -->
+<div class="flex items-center gap-4">
+<!-- Simulation badge -->
+<span class="inline-flex items-center px-2.5 py-1 rounded bg-pastel-blush text-urgency-red-ink text-label-md font-label-md border border-line">
+            Data contoh
+          </span>
+<!-- Trailing Action button: Aktifkan suara -->
+<button class="flex items-center gap-1.5 px-3 py-2 rounded-btn border border-line text-ink hover:bg-canvas text-body-sm font-body-sm transition-colors duration-150 min-h-[44px]" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="volume_up">volume_up</span>
+<span>Aktifkan suara</span>
+</button>
+<!-- Trailing Date -->
+<div class="flex items-center gap-1 text-muted text-body-sm font-body-sm">
+<span class="material-symbols-outlined text-[18px]" data-icon="calendar_today">calendar_today</span>
+<span>10 Okt 2026</span>
+</div>
+<!-- Notification Icon Button -->
+<button class="relative p-2 rounded-btn hover:bg-canvas text-muted transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center" title="Notifikasi" type="button">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-secondary"></span>
+</button>
+<div class="h-6 w-px bg-line"></div>
+<!-- Admin Avatar Info -->
+<div class="flex items-center gap-2.5">
+<div class="w-9 h-9 rounded-full bg-primary-container text-surface flex items-center justify-center font-semibold text-label-md">
+              AD
+            </div>
+<div class="flex flex-col">
+<span class="text-label-md font-label-md text-ink font-semibold leading-tight">Admin Toko</span>
+<span class="text-body-sm font-body-sm text-muted">Admin</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Content Canvas: Scrollable Area -->
+<main class="flex-1 p-gutter overflow-y-auto">
+<div class="max-w-[1240px] mx-auto flex flex-col gap-6">
+<!-- 1. Breadcrumb -->
+<nav class="flex items-center gap-2 text-body-sm font-body-sm text-muted">
+<a class="hover:text-ink transition-colors" href="#">Booking</a>
+<span class="text-outline-variant">/</span>
+<span class="text-ink font-medium">#IR-1010-03</span>
+<span class="ml-2 inline-flex items-center px-2 py-0.5 rounded bg-pastel-blush text-urgency-red-ink text-label-md font-label-md border border-line">
+              Data contoh simulasi
+            </span>
+</nav>
+<!-- 2. Page Header & Dual Independent Status Badges -->
+<div class="flex flex-col gap-4 pb-2 border-b border-line">
+<div class="flex flex-wrap items-center justify-between gap-4">
+<div class="flex flex-col gap-1">
+<h1 class="text-headline-lg font-headline-lg text-ink font-semibold tracking-tight">
+                  Detail Booking &amp; Verifikasi Pembayaran <span class="text-muted font-normal">#IR-1010-03</span>
+</h1>
+<p class="text-body-sm font-body-sm text-muted">
+                  Lokasi toko dari konfigurasi • Dibuat 10 Okt 2026, 09.00 WIB
+                </p>
+</div>
+<!-- Dual Independent Status Badges -->
+<div class="flex items-center gap-3 flex-wrap">
+<!-- Status Booking: Menunggu Konfirmasi Admin -->
+<div class="flex items-center gap-2 px-3.5 py-2 rounded-btn bg-pastel-apricot text-warning-ink border border-line">
+<span class="material-symbols-outlined text-[18px]" data-icon="hourglass_top">hourglass_top</span>
+<div class="flex flex-col">
+<span class="text-label-sm font-label-sm uppercase tracking-wide opacity-80">Status Booking</span>
+<span class="text-label-md font-label-md font-semibold">Menunggu Konfirmasi Admin</span>
+</div>
+</div>
+<!-- Status Pembayaran: Bukti Diunggah - Belum Terverifikasi -->
+<div class="flex items-center gap-2 px-3.5 py-2 rounded-btn bg-pastel-lilac text-ink border border-line">
+<span class="material-symbols-outlined text-[18px]" data-icon="receipt_long">receipt_long</span>
+<div class="flex flex-col">
+<span class="text-label-sm font-label-sm uppercase tracking-wide opacity-80">Status Pembayaran</span>
+<span class="text-label-md font-label-md font-semibold">Bukti Diunggah — Belum Terverifikasi</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Banner Peringatan Kritis: Alokasi Tetap Ditahan -->
+<div class="flex items-start gap-3 p-3.5 rounded-btn bg-pastel-blue border border-line">
+<span class="material-symbols-outlined text-ink mt-0.5" data-icon="info">info</span>
+<div class="flex-1 text-body-sm font-body-sm text-ink leading-relaxed">
+<span class="font-semibold">Alokasi unit iPhone 15 Pro (IP-15P-03) tetap ditahan sampai keputusan admin.</span>
+                Keterlambatan verifikasi admin tidak akan membatalkan booking atau melepas alokasi unit secara otomatis ke publik.
+              </div>
+</div>
+</div>
+<!-- 3. Work Area: 2:1 Hybrid Layout (65% Kolom Kiri, 35% Kolom Kanan) -->
+<div class="grid grid-cols-12 gap-6 items-start">
+<!-- LEFT COLUMN - 65% (col-span-8) -->
+<div class="col-span-12 lg:col-span-8 flex flex-col gap-6">
+<!-- Section A: Preview Bukti Transfer & Form Verifikasi Mutasi Bank -->
+<section class="bg-surface rounded-workspace border border-line p-space-2xl flex flex-col gap-6">
+<div class="flex items-center justify-between pb-3 border-b border-line">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-ink" data-icon="receipt">receipt</span>
+<h2 class="text-headline-md font-headline-md font-semibold text-ink">Pemeriksaan Bukti Transfer Pelanggan</h2>
+</div>
+<span class="text-body-sm font-body-sm text-muted">Format: PNG • 1.2 MB • Diunggah 10 Okt 09.15 WIB</span>
+</div>
+<!-- Bento-style Split: Struk Preview & Info Tagihan -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+<!-- Struk Preview Box -->
+<div class="bg-canvas border border-line rounded-btn p-4 flex flex-col items-center justify-center text-center relative overflow-hidden min-h-[260px]">
+<div class="w-full p-4 bg-surface rounded border border-line shadow-none flex flex-col gap-2 max-w-[280px] text-left">
+<div class="flex items-center justify-between border-b border-line pb-2">
+<span class="text-label-md font-label-md font-semibold text-ink">M-BANKING BANK</span>
+<span class="text-body-sm font-body-sm text-success-ink font-medium">BERHASIL</span>
+</div>
+<div class="text-body-sm font-body-sm text-muted">10/10/2026 • 09:12:44 WIB</div>
+<div class="text-body-sm font-body-sm">
+<span class="text-muted block">Kepada:</span>
+<span class="font-medium text-ink">IRENT OPS</span>
+<span class="text-muted block tabular-nums">Rekening dari konfigurasi toko</span>
+</div>
+<div class="border-t border-dashed border-line pt-2 flex justify-between items-baseline">
+<span class="text-body-sm font-body-sm text-muted">Nominal Transfer:</span>
+<span class="text-label-md font-label-md font-semibold text-ink tabular-nums">Rp15.000</span>
+</div>
+<div class="text-body-sm font-body-sm text-muted tabular-nums">Ref: TRF-988310492</div>
+</div>
+<div class="mt-3 text-body-sm font-body-sm text-muted">
+                      Pratinjau Bukti Transfer Pelanggan (Simulasi Data Contoh)
+                    </div>
+</div>
+<!-- Tagihan vs Mutasi Field Inputs -->
+<div class="flex flex-col justify-between gap-4">
+<div class="bg-pastel-mint border border-line p-4 rounded-btn flex flex-col gap-1">
+<span class="text-label-sm font-label-sm text-success-ink font-medium">Tagihan Resmi Sistem</span>
+<div class="flex justify-between items-baseline">
+<span class="text-body-sm font-body-sm text-ink">Total DP Flat Wajib:</span>
+<span class="text-headline-md font-headline-md font-semibold text-ink tabular-nums">Rp20.000</span>
+</div>
+<span class="text-body-sm font-body-sm text-muted">Sewa 24 Jam (iPhone 15 Pro 128GB)</span>
+</div>
+<!-- Input Mutasi Form -->
+<div class="flex flex-col gap-3">
+<div>
+<label class="block text-label-md font-label-md font-medium text-ink mb-1.5" for="nominal-input">
+                          Nominal Diterima Nyata di Rekening (Rp) <span class="text-urgency-red-ink">*</span>
+</label>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-body-sm font-body-sm text-muted font-medium">Rp</span>
+<input class="w-full h-11 pl-11 pr-3 rounded-btn border border-line bg-surface text-body-sm font-body-sm font-semibold tabular-nums text-ink focus:outline-none focus:ring-1 focus:ring-secondary focus:border-secondary" id="nominal-input" type="text" value="15.000"/>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div>
+<label class="block text-label-md font-label-md font-medium text-ink mb-1.5">Waktu Mutasi</label>
+<input class="w-full h-11 px-3 rounded-btn border border-line bg-canvas text-body-sm font-body-sm text-ink" readonly="" type="text" value="10 Okt 2026, 09.12 WIB"/>
+</div>
+<div>
+<label class="block text-label-md font-label-md font-medium text-ink mb-1.5">Rekening Tujuan</label>
+<input class="w-full h-11 px-3 rounded-btn border border-line bg-canvas text-body-sm font-body-sm text-ink" readonly="" type="text" value="Rekening dari konfigurasi toko"/>
+</div>
+</div>
+<div>
+<label class="block text-label-md font-label-md font-medium text-ink mb-1.5">Nomor Referensi Bank</label>
+<input class="w-full h-11 px-3 rounded-btn border border-line bg-canvas text-body-sm font-body-sm text-ink tabular-nums" readonly="" type="text" value="TRF-988310492"/>
+</div>
+</div>
+</div>
+</div>
+<!-- Admin Notes Input -->
+<div class="flex flex-col gap-1.5">
+<label class="block text-label-md font-label-md font-medium text-ink" for="admin-note">
+                    Catatan Verifikasi Admin
+                  </label>
+<textarea class="w-full p-3 rounded-btn border border-line text-body-sm font-body-sm text-ink focus:outline-none focus:ring-1 focus:ring-secondary focus:border-secondary" id="admin-note" rows="2">Dana masuk kurang Rp5.000 dari total DP flat Rp20.000. Mutasi rekening cocok atas nama Rian Pratama.</textarea>
+</div>
+</section>
+<!-- Section B: Kalkulasi Transparansi Dana & Deteksi Short Payment -->
+<section class="bg-surface rounded-workspace border border-line p-space-2xl flex flex-col gap-4">
+<div class="flex items-center justify-between pb-3 border-b border-line">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-ink" data-icon="calculate">calculate</span>
+<h2 class="text-headline-md font-headline-md font-semibold text-ink">Kalkulasi Transparansi Dana (DP Flat)</h2>
+</div>
+<span class="px-2.5 py-1 rounded bg-urgency-red-bg text-urgency-red-ink text-label-md font-label-md font-semibold">
+                    Short Payment Terdeteksi
+                  </span>
+</div>
+<!-- Calculation Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="p-3.5 rounded-btn bg-canvas border border-line flex flex-col gap-1">
+<span class="text-body-sm font-body-sm text-muted">Total Tagihan DP Saat Ini</span>
+<span class="text-headline-md font-headline-md font-semibold text-ink tabular-nums">Rp20.000</span>
+<span class="text-body-sm font-body-sm text-muted">Syarat wajib hold unit</span>
+</div>
+<div class="p-3.5 rounded-btn bg-canvas border border-line flex flex-col gap-1">
+<span class="text-body-sm font-body-sm text-muted">Dana Nyata Terverifikasi</span>
+<span class="text-headline-md font-headline-md font-semibold text-ink tabular-nums">Rp15.000</span>
+<span class="text-body-sm font-body-sm text-success-ink font-medium">Ref: TRF-988310492</span>
+</div>
+<div class="p-3.5 rounded-btn bg-urgency-red-bg border border-urgency-red-ink/20 flex flex-col gap-1">
+<span class="text-body-sm font-body-sm text-urgency-red-ink font-medium">Sisa Tagihan Kurang (Short)</span>
+<span class="text-headline-md font-headline-md font-semibold text-urgency-red-ink tabular-nums">- Rp5.000</span>
+<span class="text-body-sm font-body-sm text-urgency-red-ink">Wajib dilunasi pelanggan</span>
+</div>
+</div>
+<!-- Short Payment Warning Box -->
+<div class="p-4 rounded-btn bg-urgency-red-bg border border-urgency-red-ink/20 flex items-start gap-3 text-body-sm font-body-sm text-urgency-red-ink">
+<span class="material-symbols-outlined text-urgency-red-ink mt-0.5 shrink-0" data-icon="warning">warning</span>
+<div class="leading-relaxed">
+<strong>Peringatan Verifikasi:</strong> Nominal dana masuk kurang Rp5.000 dari total tagihan DP (hanya diterima Rp15.000 dari kewajiban Rp20.000). Tombol 'Verifikasi Pembayaran &amp; Setujui Booking' dinonaktifkan secara permanen dan tidak dapat disetujui sampai kekurangan dana dilunasi sepenuhnya oleh pelanggan dalam batas waktu unggah awal (10 Okt 09.30 WIB). Nominal kewajiban DP tidak dapat diubah secara manual oleh admin.
+                  </div>
+</div>
+<!-- Excess sample reference comparison block -->
+<div class="p-3.5 rounded-btn bg-pastel-blue border border-line flex items-center justify-between text-body-sm font-body-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-ink shrink-0" data-icon="info">info</span>
+<span><strong>Ketentuan Kelebihan Bayar:</strong> Jika pelanggan mentransfer lebih dari DP flat yang dikonfigurasi, kelebihan dana dicatat sebagai <em>'Kelebihan dana yang wajib direfund manual'</em> tanpa menambah nilai DP flat booking.</span>
+</div>
+</div>
+</section>
+<!-- Section C: Aksi Keputusan Admin (Min Height 44px, Explicit Actions) -->
+<section class="bg-surface rounded-workspace border border-line p-space-2xl flex flex-col gap-4">
+<h2 class="text-headline-md font-headline-md font-semibold text-ink pb-2 border-b border-line">
+                  Aksi Keputusan Admin
+                </h2>
+<div class="flex flex-col sm:flex-row gap-3 items-stretch">
+<!-- Primary Action (Disabled due to short payment) -->
+<button class="flex-1 min-h-[44px] px-4 py-2.5 rounded-btn bg-muted text-surface font-label-md text-label-md cursor-not-allowed flex items-center justify-center gap-2 opacity-60" disabled="" title="Tidak dapat disetujui karena pembayaran kurang Rp5.000. DP harus dipenuhi penuh." type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="check_circle">check_circle</span>
+<span>Verifikasi Pembayaran &amp; Setujui Booking</span>
+</button>
+<!-- Secondary Action: Tolak Bukti Transfer (Re-upload allowed within original deadline) -->
+<button class="min-h-[44px] px-4 py-2.5 rounded-btn border border-line bg-surface hover:bg-canvas text-ink font-label-md text-label-md flex items-center justify-center gap-2 transition-colors duration-150" title="Tolak bukti saat ini dan beri kesempatan pelanggan mengunggah ulang bukti valid dalam batas waktu unggah awal" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="receipt_long">receipt_long</span>
+<span>Tolak Bukti Transfer</span>
+</button>
+<!-- Danger Action: Tolak Booking Sepenuhnya (Cancel Booking) -->
+<button class="min-h-[44px] px-4 py-2.5 rounded-btn border border-line bg-pastel-blush hover:bg-urgency-red-bg text-urgency-red-ink font-label-md text-label-md flex items-center justify-center gap-2 transition-colors duration-150" title="Batalkan seluruh pesanan booking dan kembalikan status alokasi unit" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="cancel">cancel</span>
+<span>Tolak Booking Sepenuhnya</span>
+</button>
+</div>
+<div class="text-body-sm font-body-sm text-muted flex items-center gap-2 pt-1">
+<span class="material-symbols-outlined text-[18px]" data-icon="security">security</span>
+<span>'Tolak Bukti Transfer' mengizinkan unggah ulang dalam batas waktu awal (09.30 WIB). 'Tolak Booking Sepenuhnya' membatalkan seluruh reservasi secara permanen.</span>
+</div>
+</section>
+<!-- Section D: Panel Rekonsiliasi Dana Masuk & Kebijakan No-Show -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Panel Rekonsiliasi Dana Masuk -->
+<div class="bg-surface rounded-workspace border border-line p-5 flex flex-col gap-3">
+<div class="flex items-center gap-2 text-ink">
+<span class="material-symbols-outlined" data-icon="account_balance_wallet">account_balance_wallet</span>
+<h3 class="text-label-md font-label-md font-semibold">Panel Rekonsiliasi Dana Masuk</h3>
+</div>
+<p class="text-body-sm font-body-sm text-muted leading-relaxed">
+                    Jika bukti kedaluwarsa atau booking ditolak namun dana nyata telah masuk ke rekening toko dari konfigurasi, dana dicatat secara permanen untuk <strong>Manual Full Refund</strong>. Tidak ada re-aktivasi booking otomatis.
+                  </p>
+<div class="pt-2">
+<button class="min-h-[44px] w-full px-3 py-2 rounded-btn bg-canvas hover:bg-line border border-line text-ink font-label-md text-label-md flex items-center justify-center gap-2 transition-colors" type="button">
+<span class="material-symbols-outlined" data-icon="archive">archive</span>
+<span>Catat ke Antrean Refund Manual</span>
+</button>
+</div>
+</div>
+<!-- Kebijakan No-Show Tepat Pickup + 3 Jam -->
+<div class="bg-surface rounded-workspace border border-line p-5 flex flex-col gap-3">
+<div class="flex items-center gap-2 text-ink">
+<span class="material-symbols-outlined" data-icon="running_with_errors">running_with_errors</span>
+<h3 class="text-label-md font-label-md font-semibold">Kebijakan No-Show (Jadwal Ambil + 3 Jam)</h3>
+</div>
+<p class="text-body-sm font-body-sm text-muted leading-relaxed">
+                    Bila pelanggan belum hadir hingga tepat 3 jam setelah jadwal pengambilan sebelum serah terima fisik (10 Okt 14.00 WIB) tanpa konfirmasi, DP konfigurasi sebesar Rp20.000 <strong>hangus &amp; ditahan toko</strong>. Kelebihan dana nyata yang terverifikasi dikembalikan melalui rekonsiliasi manual. Dikecualikan jika keterlambatan bersumber dari toko.
+                  </p>
+<div class="mt-auto pt-2 flex items-center gap-2 text-body-sm font-body-sm text-urgency-red-ink">
+<span class="material-symbols-outlined text-[18px]" data-icon="policy">policy</span>
+<span>Batas toleransi no-show: 10 Okt 2026, 14.00 WIB</span>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN (Ringkasan Booking, Unit & Timeline SLA) - 35% (col-span-4) -->
+<div class="col-span-12 lg:col-span-4 flex flex-col gap-6">
+<!-- Card A: Kartu Penyewa -->
+<section class="bg-surface rounded-workspace border border-line p-5 flex flex-col gap-4">
+<div class="flex items-center justify-between pb-2 border-b border-line">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-ink" data-icon="person">person</span>
+<h3 class="text-label-md font-label-md font-semibold text-ink">Data Pelanggan</h3>
+</div>
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-pastel-mint text-success-ink text-label-md font-label-md">
+                    Profil lengkap
+                  </span>
+</div>
+<div class="flex flex-col gap-2.5">
+<div class="flex justify-between items-center text-body-sm font-body-sm">
+<span class="text-muted">Nama Penyewa:</span>
+<span class="font-semibold text-ink">Rian Pratama</span>
+</div>
+<div class="flex justify-between items-center text-body-sm font-body-sm">
+<span class="text-muted">Nomor WhatsApp:</span>
+<span class="font-medium text-ink tabular-nums">0812-3456-7890</span>
+</div>
+<div class="flex justify-between items-center text-body-sm font-body-sm">
+<span class="text-muted">NIK KTP (Sensor):</span>
+<span class="font-medium text-ink tabular-nums">3374************6721</span>
+</div>
+<div class="flex justify-between items-center text-body-sm font-body-sm">
+<span class="text-muted">Domisili Kota:</span>
+<span class="font-medium text-ink">Semarang</span>
+</div>
+</div>
+<div class="pt-2 border-t border-line">
+<a class="min-h-[44px] flex items-center justify-center gap-2 px-3 py-2 rounded-btn bg-canvas hover:bg-line border border-line text-ink text-label-md font-label-md transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="account_circle">account_circle</span>
+<span>Lihat profil penyewa</span>
+</a>
+</div>
+</section>
+<!-- Card B: Unit Dipesan -->
+<section class="bg-surface rounded-workspace border border-line p-5 flex flex-col gap-4">
+<div class="flex items-center justify-between pb-2 border-b border-line">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-ink" data-icon="smartphone">smartphone</span>
+<h3 class="text-label-md font-label-md font-semibold text-ink">Unit &amp; Aksesoris</h3>
+</div>
+<span class="px-2 py-0.5 rounded bg-pastel-blue text-ink text-label-md font-label-md">
+                    Unit Ter-Hold
+                  </span>
+</div>
+<div class="flex flex-col gap-3">
+<div class="flex items-start gap-3">
+<div class="w-12 h-12 rounded-btn bg-canvas border border-line flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-[24px]" data-icon="phone_iphone">phone_iphone</span>
+</div>
+<div class="flex flex-col">
+<span class="text-label-md font-label-md font-semibold text-ink">iPhone 15 Pro 128GB</span>
+<span class="text-body-sm font-body-sm text-muted">Kode Fisik: <strong>IP-15P-03</strong></span>
+<span class="text-body-sm font-body-sm text-muted">Warna: Natural Titanium</span>
+</div>
+</div>
+<div class="bg-canvas p-3 rounded-btn border border-line flex flex-col gap-2">
+<div class="flex justify-between text-body-sm font-body-sm">
+<span class="text-muted">Aksesoris Termasuk:</span>
+<span class="font-medium text-ink">Magsafe Case Clear + Kabel USB-C</span>
+</div>
+<div class="flex justify-between text-body-sm font-body-sm">
+<span class="text-muted">Durasi Rental:</span>
+<span class="font-semibold text-ink">24 Jam Penuh</span>
+</div>
+<div class="flex justify-between text-body-sm font-body-sm">
+<span class="text-muted">Jadwal Ambil:</span>
+<span class="font-medium text-ink tabular-nums">10 Okt 2026, 11.00 WIB</span>
+</div>
+<div class="flex justify-between text-body-sm font-body-sm">
+<span class="text-muted">Jadwal Kembali:</span>
+<span class="font-medium text-ink tabular-nums">11 Okt 2026, 11.00 WIB</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Card C: Timeline SLA & Tenggat Waktu Operasional -->
+<section class="bg-surface rounded-workspace border border-line p-5 flex flex-col gap-4">
+<div class="flex items-center justify-between pb-2 border-b border-line">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-ink" data-icon="schedule">schedule</span>
+<h3 class="text-label-md font-label-md font-semibold text-ink">Timeline &amp; SLA Validasi</h3>
+</div>
+<span class="px-2 py-0.5 rounded bg-pastel-blush text-urgency-red-ink font-semibold text-label-md font-label-md">
+                    Urgent (2-3 Jam)
+                  </span>
+</div>
+<!-- SLA Parameter Indicators -->
+<div class="flex flex-col gap-2.5 bg-canvas p-3 rounded-btn border border-line">
+<div class="flex justify-between items-baseline text-body-sm font-body-sm">
+<span class="text-muted">Batas Upload Bukti:</span>
+<span class="font-medium text-ink tabular-nums">10 Okt 2026, 09.30 WIB</span>
+</div>
+<div class="flex justify-between items-baseline text-body-sm font-body-sm">
+<span class="text-muted">Status Unggah:</span>
+<span class="font-semibold text-success-ink">Terunggah (09.15 WIB)</span>
+</div>
+<div class="h-px bg-line my-1"></div>
+<div class="flex justify-between items-baseline text-body-sm font-body-sm">
+<span class="text-muted">Tenggat Konfirmasi Admin:</span>
+<span class="font-semibold text-ink tabular-nums">10 Okt 2026, 10.00 WIB</span>
+</div>
+<span class="text-body-sm font-body-sm text-muted">
+                    Formula: min(upload 09.15 + 1 jam, ambil 11.00 - 1 jam) = 10.00 WIB. Unit tetap di-hold jika konfirmasi tertunda.
+                  </span>
+</div>
+<!-- Timeline Step Progression (Vertical) -->
+<div class="relative pl-6 flex flex-col gap-4 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-line">
+<!-- Step 1: Booking Dibuat (Done) -->
+<div class="relative flex flex-col">
+<span class="absolute -left-6 top-1 w-4 h-4 rounded-full bg-success-ink border-2 border-surface flex items-center justify-center text-surface text-[10px]"></span>
+<span class="text-label-md font-label-md font-semibold text-ink">1. Booking Dibuat</span>
+<span class="text-body-sm font-body-sm text-muted">10 Okt 2026, 09.00 WIB • Pelanggan checkout</span>
+</div>
+<!-- Step 2: Bukti Diunggah (Done) -->
+<div class="relative flex flex-col">
+<span class="absolute -left-6 top-1 w-4 h-4 rounded-full bg-success-ink border-2 border-surface flex items-center justify-center text-surface text-[10px]"></span>
+<span class="text-label-md font-label-md font-semibold text-ink">2. Bukti Diunggah</span>
+<span class="text-body-sm font-body-sm text-muted">10 Okt 2026, 09.15 WIB • Menunggu verifikasi</span>
+</div>
+<!-- Step 3: Verifikasi Mutasi Bank (Current / Short Payment) -->
+<div class="relative flex flex-col">
+<span class="absolute -left-6 top-1 w-4 h-4 rounded-full bg-warning-ink border-2 border-surface flex items-center justify-center text-surface text-[10px]"></span>
+<span class="text-label-md font-label-md font-semibold text-ink">3. Verifikasi Mutasi Bank</span>
+<span class="text-body-sm font-body-sm text-urgency-red-ink font-medium">Dalam proses • Kurang Rp5.000</span>
+</div>
+<!-- Step 4: Booking Disetujui (Pending) -->
+<div class="relative flex flex-col opacity-60">
+<span class="absolute -left-6 top-1 w-4 h-4 rounded-full bg-line border-2 border-surface"></span>
+<span class="text-label-md font-label-md font-medium text-ink">4. Booking Disetujui</span>
+<span class="text-body-sm font-body-sm text-muted">Menunggu pelunasan sisa DP</span>
+</div>
+<!-- Step 5: Persiapan Unit (Pending) -->
+<div class="relative flex flex-col opacity-60">
+<span class="absolute -left-6 top-1 w-4 h-4 rounded-full bg-line border-2 border-surface"></span>
+<span class="text-label-md font-label-md font-medium text-ink">5. Persiapan Unit</span>
+<span class="text-body-sm font-body-sm text-muted">Pemeriksaan kondisi fisik umum &amp; kelengkapan</span>
+</div>
+<!-- Step 6: Serah Terima (Pending) -->
+<div class="relative flex flex-col opacity-60">
+<span class="absolute -left-6 top-1 w-4 h-4 rounded-full bg-line border-2 border-surface"></span>
+<span class="text-label-md font-label-md font-medium text-ink">6. Serah Terima Unit</span>
+<span class="text-body-sm font-body-sm text-muted">Lokasi toko • 10 Okt 2026, 11.00 WIB</span>
+</div>
+</div>
+</section>
+<!-- Card D: Riwayat Pembayaran & Scope Perpanjangan -->
+<section class="bg-surface rounded-workspace border border-line p-5 flex flex-col gap-3">
+<div class="flex items-center justify-between pb-2 border-b border-line">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-ink" data-icon="history">history</span>
+<h3 class="text-label-md font-label-md font-semibold text-ink">Riwayat &amp; Scope Perpanjangan</h3>
+</div>
+</div>
+<div class="flex flex-col gap-2 text-body-sm font-body-sm text-muted">
+<div class="flex justify-between items-center">
+<span class="text-ink font-medium">1. Transaksi DP Awal</span>
+<span class="tabular-nums font-semibold text-ink">Rp15.000 / Rp20.000</span>
+</div>
+<p class="leading-relaxed">
+                    Setiap opsi perpanjangan rental (extension) di hari berikutnya memiliki nomor faktur, scope alokasi, dan tagihan terpisah dari booking awal ini.
+                  </p>
+</div>
+</section>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>

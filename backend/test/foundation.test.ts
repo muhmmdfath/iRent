@@ -75,6 +75,27 @@ test('validates_database_and_port_without_exposing_credentials', () => {
     /PORT/,
   );
 });
+test('keeps_public_media_storage_disjoint_from_private_payment_evidence', () => {
+  const config = {
+    ...testSecrets(),
+    DATABASE_URL: 'postgresql://localhost/irent',
+  };
+  for (const [media, proofs] of [
+    ['storage', 'storage/proofs'],
+    ['storage', 'storage/..proofs'],
+    ['storage/proofs/media', 'storage/proofs'],
+    ['storage/shared', 'storage/shared'],
+  ])
+    assert.throws(
+      () =>
+        validateEnvironment({
+          ...config,
+          MEDIA_STORAGE_DIR: media,
+          PROOF_STORAGE_DIR: proofs,
+        }),
+      /direktori terpisah/,
+    );
+});
 
 test('rejects_wildcard_or_path_based_credentialed_cors_origins', () => {
   assert.deepEqual(

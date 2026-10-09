@@ -65,7 +65,7 @@ test('postgresql_rejects_inconsistent_booking_and_payment_data', async (t) => {
     async function rejects(
       sql: string,
       values: unknown[],
-      code: string,
+      code: string | string[],
       constraint: string,
     ): Promise<void> {
       await client.query('SAVEPOINT invalid_case');
@@ -73,7 +73,10 @@ test('postgresql_rejects_inconsistent_booking_and_payment_data', async (t) => {
         await assert.rejects(client.query(sql, values), (error: unknown) => {
           assert.ok(error instanceof Error);
           const fields = error as Error & { code: string; constraint: string };
-          assert.equal(fields.code, code);
+          assert.ok(
+            (Array.isArray(code) ? code : [code]).includes(fields.code),
+            `Unexpected SQLSTATE ${fields.code}`,
+          );
           assert.equal(fields.constraint, constraint);
           return true;
         });
@@ -135,7 +138,7 @@ test('postgresql_rejects_inconsistent_booking_and_payment_data', async (t) => {
       rejects(
         'DELETE FROM item_units WHERE id=$1',
         [unit],
-        '23503',
+        ['23503', '23001'],
         'booking_item_unit_matches_item',
       ),
     );

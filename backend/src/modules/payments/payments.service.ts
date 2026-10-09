@@ -15,11 +15,13 @@ import { unitAvailable } from '../bookings/bookings.rules';
 import { validateSettings } from '../settings/settings.rules';
 import { rupiah } from '../settings/settings.rules';
 import { PaymentLedgerService } from './payment-ledger.service';
+import { RisksService } from '../risks/risks.service';
 import {
   ReceiptDto,
   ReconcileReceiptDto,
   UploadProofDto,
   VerifyProofDto,
+  SettlementReceiptDto,
 } from './payments.dto';
 import { ProofStorageService, ProofUpload } from './proof-storage.service';
 
@@ -48,6 +50,7 @@ export class PaymentsService {
     private readonly clock: BusinessClock,
     private readonly storage: ProofStorageService,
     private readonly ledger: PaymentLedgerService,
+    private readonly risks: RisksService,
   ) {}
 
   rules(booking: Booking) {
@@ -67,10 +70,12 @@ export class PaymentsService {
     };
   }
 
-  private async lockBooking(
+  /** Internal worker/action lock boundary; callers must own a business transaction. */
+  async lockBooking(
     tx: Prisma.TransactionClient,
     id: string,
     context?: AuthContext,
+    extraUnitIds: string[] = [],
   ): Promise<LockedBooking> {
     const identity = await tx.booking.findUnique({
       where: { id },
@@ -89,10 +94,14 @@ export class PaymentsService {
     const itemIds = [...new Set(items.map((item) => item.itemId))].sort();
     if (itemIds.length) {
       await tx.$queryRaw`SELECT id FROM items WHERE id IN (${Prisma.join(itemIds.map((itemId) => Prisma.sql`${itemId}::uuid`))}) ORDER BY id FOR UPDATE`;
-      const unitIds = [...new Set(items.map((item) => item.itemUnitId))].sort();
+      const unitIds = [
+        ...new Set([...items.map((item) => item.itemUnitId), ...extraUnitIds]),
+      ].sort();
       await tx.$queryRaw`SELECT id FROM item_units WHERE id IN (${Prisma.join(unitIds.map((unitId) => Prisma.sql`${unitId}::uuid`))}) ORDER BY id FOR UPDATE`;
     }
     await tx.$queryRaw`SELECT id FROM bookings WHERE id=${id}::uuid FOR UPDATE`;
+    await tx.$queryRaw`SELECT id FROM booking_items WHERE booking_id=${id}::uuid ORDER BY id FOR UPDATE`;
+    await tx.$queryRaw`SELECT id FROM extensions WHERE booking_id=${id}::uuid ORDER BY id FOR UPDATE`;
     await tx.$queryRaw`SELECT id FROM payment_obligations WHERE booking_id=${id}::uuid ORDER BY id FOR UPDATE`;
     return tx.booking.findUniqueOrThrow({
       where: { id },
@@ -122,6 +131,7 @@ export class PaymentsService {
       booking: LockedBooking,
     ) => Promise<ActionResult>,
     beforeCommit?: (booking: LockedBooking) => void,
+    extraUnitIds: string[] = [],
   ) {
     const validatedKey = this.key(key),
       actorId = context.user.id;
@@ -158,10 +168,15 @@ export class PaymentsService {
             ? { decision: ref.decision }
             : {}),
         };
-        await this.lockBooking(tx, ref.bookingId, context);
+        await this.lockBooking(tx, ref.bookingId, context, extraUnitIds);
         return { ...result, ...(await this.view(tx, ref.bookingId)) };
       }
-      const booking = await this.lockBooking(tx, bookingId, context);
+      const booking = await this.lockBooking(
+        tx,
+        bookingId,
+        context,
+        extraUnitIds,
+      );
       const result = await execute(tx, booking);
       await tx.idempotencyRequest.create({
         data: {
@@ -183,6 +198,8 @@ export class PaymentsService {
     const booking = await tx.booking.findUniqueOrThrow({
       where: { id: bookingId },
       include: {
+        items: { include: { returnRecord: true, lossRecord: true } },
+        extensions: { include: { items: true }, orderBy: { createdAt: 'asc' } },
         obligations: {
           include: {
             proofs: { select: safeProof, orderBy: { uploadedAt: 'asc' } },
@@ -191,6 +208,7 @@ export class PaymentsService {
         refunds: {
           select: {
             id: true,
+            extensionId: true,
             status: true,
             reasonCode: true,
             requestedAmount: true,
@@ -202,6 +220,18 @@ export class PaymentsService {
             approvedAt: true,
             policySnapshot: true,
           },
+        },
+        receiptCorrections: {
+          select: {
+            id: true,
+            originalPaymentId: true,
+            replacementPaymentId: true,
+            reversalAmount: true,
+            reversalEffectiveAt: true,
+            reason: true,
+            createdAt: true,
+          },
+          orderBy: { createdAt: 'asc' },
         },
       },
     });
@@ -219,6 +249,7 @@ export class PaymentsService {
             : 'belum_terverifikasi';
     return {
       booking,
+      risks: await this.risks.bookingRisks(tx, bookingId),
       summary: { ...summary, paymentStatus },
       confirmationOverdue:
         booking.status === 'menunggu_konfirmasi' &&
@@ -424,6 +455,7 @@ export class PaymentsService {
             item.purpose === 'settlement' &&
             ['open', 'proof_pending'].includes(item.status),
         );
+        if (pending) await this.settlementDue(tx, booking, pending);
         if (!pending) {
           const summary = await this.ledger.summary(tx, booking.id);
           if (summary.remaining > 0n) {
@@ -449,7 +481,7 @@ export class PaymentsService {
     );
   }
 
-  private receiptInput(input: ReceiptDto) {
+  receiptInput(input: ReceiptDto) {
     let occurredAt: Date;
     try {
       occurredAt = parseWibDateTime(input.occurredAt);
@@ -485,7 +517,137 @@ export class PaymentsService {
     };
   }
 
-  private async receipt(
+  async recordSettlement(
+    context: AuthContext,
+    bookingId: string,
+    input: SettlementReceiptDto,
+    key?: string,
+  ) {
+    const normalized = this.receiptInput(input);
+    const extensionId = input.extensionId?.toLowerCase() ?? null;
+    return this.action(
+      context,
+      bookingId,
+      key,
+      'payment.admin_settlement',
+      {
+        ...normalized,
+        extensionId,
+        amount: normalized.amount.toString(),
+        occurredAt: normalized.occurredAt.toISOString(),
+      },
+      'admin',
+      async (tx, booking) => {
+        if (!['dikonfirmasi', 'berjalan', 'selesai'].includes(booking.status))
+          throw new ConflictException('Booking belum dapat dilunasi.');
+        if (
+          extensionId &&
+          !(await tx.extension.findFirst({
+            where: {
+              id: extensionId,
+              bookingId: booking.id,
+              status: 'disetujui',
+            },
+          }))
+        )
+          throw new ConflictException(
+            'Scope pelunasan perpanjangan belum disetujui.',
+          );
+        const summary = await this.ledger.summary(tx, booking.id, extensionId);
+        if (summary.remaining <= 0n)
+          throw new ConflictException('Tagihan sudah lunas.');
+        let obligation = booking.obligations.find(
+          (row) =>
+            row.extensionId === extensionId &&
+            row.purpose === (extensionId ? 'extension' : 'settlement') &&
+            ['open', 'proof_pending'].includes(row.status),
+        );
+        if (obligation?.status === 'proof_pending')
+          throw new ConflictException(
+            'Periksa bukti pelunasan yang masih pending terlebih dahulu.',
+          );
+        if (!obligation) {
+          obligation = await tx.paymentObligation.create({
+            data: {
+              bookingId: booking.id,
+              extensionId,
+              purpose: extensionId ? 'extension' : 'settlement',
+              amountDue: summary.remaining,
+            },
+          });
+          booking.obligations.push(obligation);
+        }
+        const existing = await tx.paymentApplication.findMany({
+          where: {
+            paymentObligationId: obligation.id,
+            state: { in: ['reserved', 'applied'] },
+          },
+        });
+        const settlementDue = await this.settlementDue(tx, booking, obligation);
+        const due =
+          settlementDue -
+          existing.reduce((sum, application) => sum + application.amount, 0n);
+        if (due <= 0n)
+          throw new ConflictException('Kewajiban pelunasan sudah terpenuhi.');
+        const receipt = await this.receipt(
+          tx,
+          booking,
+          obligation.id,
+          normalized,
+          context.user.id,
+        );
+        const assigned = normalized.amount < due ? normalized.amount : due;
+        await tx.paymentApplication.create({
+          data: {
+            bookingId: booking.id,
+            paymentObligationId: obligation.id,
+            incomingPaymentId: receipt.id,
+            amount: assigned,
+            state: 'reserved',
+          },
+        });
+        if (assigned === due) {
+          await tx.paymentApplication.updateMany({
+            where: { paymentObligationId: obligation.id, state: 'reserved' },
+            data: { state: 'applied' },
+          });
+          await tx.paymentObligation.update({
+            where: { id: obligation.id },
+            data: { status: 'satisfied' },
+          });
+        }
+        await this.ledger.requestUnusedRefund(
+          tx,
+          receipt,
+          'overpayment',
+          this.clock.now(),
+        );
+        return { bookingId: booking.id };
+      },
+    );
+  }
+
+  private async settlementDue(
+    tx: Prisma.TransactionClient,
+    booking: LockedBooking,
+    obligation: LockedBooking['obligations'][number],
+  ) {
+    if (obligation.purpose !== 'settlement') return obligation.amountDue;
+    const summary = await this.ledger.summary(tx, booking.id);
+    const applied = await tx.paymentApplication.aggregate({
+      where: { paymentObligationId: obligation.id, state: 'applied' },
+      _sum: { amount: true },
+    });
+    const due = summary.remaining + (applied._sum.amount ?? 0n);
+    if (due !== obligation.amountDue)
+      await tx.paymentObligation.update({
+        where: { id: obligation.id },
+        data: { amountDue: due },
+      });
+    return due;
+  }
+
+  async receipt(
     tx: Prisma.TransactionClient,
     booking: LockedBooking,
     obligationId: string,
@@ -505,6 +667,7 @@ export class PaymentsService {
           where: {
             receivingAccountReference: input.receivingAccountReference,
             transactionReference: input.transactionReference,
+            supersededAt: null,
           },
         })
       )
@@ -522,15 +685,18 @@ export class PaymentsService {
         ...input,
         bookingId: booking.id,
         paymentObligationId: obligationId,
+        extensionId: obligation.extensionId,
         proofId,
         direction: 'in',
         type: reconciliation
           ? 'reconciliation'
-          : obligation.purpose === 'settlement'
-            ? 'settlement'
-            : obligation.purpose === 'initial_dp'
-              ? 'dp'
-              : 'full',
+          : obligation.purpose === 'extension'
+            ? 'extension'
+            : obligation.purpose === 'settlement'
+              ? 'settlement'
+              : obligation.purpose === 'initial_dp'
+                ? 'dp'
+                : 'full',
         recordedBy: actorId,
         recordedAt: this.clock.now(),
         sourceKey: 'receipt:' + randomUUID(),
@@ -700,6 +866,7 @@ export class PaymentsService {
           throw new ConflictException(
             'Status booking tidak menerima verifikasi ini.',
           );
+        const settlementDue = await this.settlementDue(tx, booking, obligation);
         const payment = await this.receipt(
           tx,
           booking,
@@ -728,7 +895,7 @@ export class PaymentsService {
           },
         });
         const due =
-          obligation.amountDue -
+          settlementDue -
           existing.reduce((sum, application) => sum + application.amount, 0n);
         const assigned = receiptInput.amount < due ? receiptInput.amount : due;
         if (assigned > 0n)
@@ -929,23 +1096,25 @@ export class PaymentsService {
       },
       'admin',
       async (tx, booking) => {
+        const terminal = ['kedaluwarsa', 'ditolak', 'dibatalkan'].includes(
+          booking.status,
+        );
         const obligation = booking.obligations.find(
           (item) => item.id === input.obligationId.toLowerCase(),
         );
         if (
           !obligation ||
           obligation.extensionId ||
-          obligation.purpose === 'settlement'
+          (obligation.purpose === 'settlement' && !terminal)
         )
-          throw new NotFoundException('Kewajiban awal tidak ditemukan.');
+          throw new NotFoundException(
+            'Kewajiban untuk rekonsiliasi tidak ditemukan.',
+          );
         const proof = input.proofId
           ? await tx.paymentProof.findUnique({
               where: { id: input.proofId.toLowerCase() },
             })
           : null;
-        const terminal = ['kedaluwarsa', 'ditolak', 'dibatalkan'].includes(
-          booking.status,
-        );
         if (
           input.proofId &&
           (!proof ||
@@ -960,10 +1129,7 @@ export class PaymentsService {
           throw new ConflictException(
             'Gunakan bukti ditolak atau bukti belum diperiksa pada booking yang ditutup.',
           );
-        if (
-          !['kedaluwarsa', 'ditolak', 'dibatalkan'].includes(booking.status) &&
-          !proof
-        )
+        if (!terminal && !proof)
           throw new ConflictException(
             'Gunakan verifikasi bukti untuk booking aktif.',
           );

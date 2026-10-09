@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>iRent Semarang - Manajemen Item, Paket &amp; Status Fisik Unit — v2</title>
+<!-- Poppins Font explicitly imported (400, 500, 600) -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "secondary-fixed-dim": "#ffb0cc",
+            "pastel-blush": "#FBECEE",
+            "surface-container": "#f1eded",
+            "on-tertiary": "#ffffff",
+            "warning-ink": "#855300",
+            "background": "#fcf8f8",
+            "tertiary-fixed-dim": "#d1c5b7",
+            "error-container": "#ffdad6",
+            "on-background": "#1c1b1c",
+            "on-tertiary-fixed-variant": "#4e453b",
+            "error": "#ba1a1a",
+            "on-secondary-fixed": "#3e0021",
+            "on-error": "#ffffff",
+            "tertiary-container": "#312a21",
+            "on-secondary-container": "#7a2a4e",
+            "surface-variant": "#e5e2e2",
+            "pastel-lilac": "#F1ECFB",
+            "on-primary": "#ffffff",
+            "primary": "#15171c",
+            "on-secondary-fixed-variant": "#79294e",
+            "primary-fixed-dim": "#c5c6ce",
+            "pastel-apricot": "#FFF0DE",
+            "warning-bg": "#FFF5DF",
+            "success-bg": "#EAF6EF",
+            "selected-rose": "#F9E8EF",
+            "outline": "#76777b",
+            "on-tertiary-fixed": "#211b12",
+            "on-tertiary-container": "#9b9185",
+            "muted": "#606570",
+            "surface-container-highest": "#e5e2e2",
+            "on-surface": "#1c1b1c",
+            "secondary-fixed": "#ffd9e4",
+            "surface-dim": "#ddd9d9",
+            "on-error-container": "#93000a",
+            "secondary-container": "#fe96be",
+            "primary-container": "#292b31",
+            "on-primary-container": "#919299",
+            "on-surface-variant": "#46464b",
+            "pastel-blue": "#EAF1FC",
+            "canvas": "#F1F2F4",
+            "line": "#E6E8ED",
+            "inverse-surface": "#313031",
+            "sidebar": "#F8F9FA",
+            "ink": "#24262B",
+            "tertiary-fixed": "#eee0d3",
+            "inverse-primary": "#c5c6ce",
+            "urgency-red-ink": "#A12A39",
+            "surface-container-high": "#ebe7e7",
+            "surface": "#FFFFFF",
+            "surface-tint": "#5c5e65",
+            "tertiary": "#1c160e",
+            "surface-bright": "#fcf8f8",
+            "inverse-on-surface": "#f4f0f0",
+            "on-primary-fixed-variant": "#45474d",
+            "on-primary-fixed": "#191b21",
+            "primary-fixed": "#e2e2ea",
+            "workspace": "#FCFCFD",
+            "urgency-red-bg": "#FFF0F1",
+            "surface-container-lowest": "#ffffff",
+            "pastel-mint": "#E8F5EE",
+            "outline-variant": "#c7c6cb",
+            "success-ink": "#176345",
+            "secondary": "#974166",
+            "on-secondary": "#ffffff",
+            "surface-container-low": "#f6f3f3"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "space-3xl": "32px",
+            "space-4xl": "48px",
+            "gutter": "32px",
+            "space-xl": "20px",
+            "space-xs": "4px",
+            "space-2xl": "24px",
+            "margin": "32px",
+            "space-sm": "8px",
+            "space-md": "12px",
+            "space-lg": "16px"
+          },
+          "fontFamily": {
+            "headline-md": ["Poppins"],
+            "label-sm": ["Poppins"],
+            "label-md": ["Poppins"],
+            "body-sm": ["Poppins"],
+            "body-md": ["Poppins"],
+            "headline-lg": ["Poppins"]
+          },
+          "fontSize": {
+            "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "label-sm": ["14px", { "lineHeight": "18px", "fontWeight": "500" }],
+            "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "headline-lg": ["28px", { "lineHeight": "36px", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+  </style>
+</head>
+<body class="bg-canvas text-ink antialiased p-space-3xl min-h-screen flex items-center justify-center font-['Poppins']">
+<!-- Desktop App Shell Container (1440px viewport frame, 20px corners) -->
+<div class="w-full max-w-[1376px] h-[920px] bg-workspace rounded-[20px] border border-line flex flex-col overflow-hidden shadow-sm">
+<!-- TopNavBar (Shared Component) -->
+<header class="bg-workspace border-b border-line h-[72px] min-h-[72px] px-gutter w-full flex justify-between items-center z-20">
+<!-- Left: Logo & Search -->
+<div class="flex items-center gap-space-2xl flex-1 max-w-xl">
+<div class="flex items-center gap-space-md">
+<div class="w-9 h-9 rounded-xl bg-primary flex items-center justify-center text-surface shadow-sm">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><rect height="20" rx="3" width="14" x="5" y="2"></rect><circle cx="12" cy="18" fill="currentColor" r="1"></circle></svg>
+</div>
+<span class="font-headline-md text-headline-md font-semibold text-ink tracking-tight">iRent Semarang</span>
+</div>
+<div class="relative w-full max-w-md">
+<svg class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-muted" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+<input class="w-full pl-10 pr-space-md py-2.5 min-h-[44px] bg-white border border-line rounded-[10px] font-body-sm text-body-sm text-ink placeholder:text-muted focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-colors" placeholder="Cari item, nomor seri unit, atau paket..." type="text"/>
+</div>
+</div>
+<!-- Right: Trailing Actions, Status & Admin Profile -->
+<div class="flex items-center gap-space-lg">
+<!-- Badge Data Contoh -->
+<span class="inline-flex items-center gap-1.5 px-3 py-1.5 min-h-[36px] rounded-[8px] bg-pastel-blush border border-line text-urgency-red-ink font-label-md text-label-md">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M6 2v7.2L3.5 15A3 3 0 0 0 6 20h12a3 3 0 0 0 2.5-5L18 9.2V2"></path><path d="M6 14h12"></path></svg>
+<span>Data contoh</span>
+</span>
+<!-- Audio Toggle Action (min 44px clickable target) -->
+<button class="inline-flex items-center gap-1.5 px-3 py-2 min-h-[44px] rounded-[10px] border border-line text-ink hover:bg-canvas transition-colors duration-150 active:scale-95 font-label-md text-label-md">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+<span>Aktifkan suara</span>
+</button>
+<!-- Secondary Date Action -->
+<div class="flex items-center gap-1.5 text-muted font-label-md text-label-md px-2">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><rect height="18" rx="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="18" y1="10" y2="10"></line></svg>
+<span>10 Okt 2026</span>
+</div>
+<!-- Notification Icon (min 44px clickable target) -->
+<button class="w-11 h-11 min-h-[44px] min-w-[44px] rounded-[10px] border border-line flex items-center justify-center text-ink hover:bg-canvas transition-colors duration-150 active:scale-95 relative">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"></path><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"></path></svg>
+<span class="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-error"></span>
+</button>
+<!-- Admin Profile (Equal Admin role, Lokasi toko dari konfigurasi) -->
+<div class="flex items-center gap-space-md pl-space-md border-l border-line min-h-[44px]">
+<div class="w-10 h-10 rounded-full bg-pastel-lilac border border-line flex items-center justify-center text-ink font-label-md text-label-md font-semibold">
+            AD
+          </div>
+<div class="flex flex-col text-left">
+<span class="font-label-md text-label-md text-ink leading-tight font-medium">Admin</span>
+<span class="font-label-md text-label-md text-muted">Lokasi toko dari konfigurasi</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Workspace Container (Sidebar + Content Canvas) -->
+<div class="flex flex-1 overflow-hidden">
+<!-- SideNavBar (Shared Component: Permanent Sidebar w-224px) -->
+<aside class="w-[224px] min-w-[224px] bg-sidebar border-r border-line p-space-lg flex flex-col justify-between select-none">
+<!-- Top Nav Menu -->
+<div class="space-y-6">
+<div class="px-2 py-1">
+<h2 class="font-headline-md text-headline-md font-semibold text-ink">iRent Semarang</h2>
+<p class="font-label-md text-label-md text-muted">Rental Management</p>
+</div>
+<nav class="space-y-1">
+<!-- 1. Dashboard -->
+<a class="w-full min-h-[44px] flex items-center gap-3 px-3 py-2 text-muted font-normal rounded-lg hover:bg-canvas transition-colors duration-150 font-label-md text-label-md" href="#">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><rect height="7" rx="1" width="7" x="3" y="3"></rect><rect height="7" rx="1" width="7" x="14" y="3"></rect><rect height="7" rx="1" width="7" x="14" y="14"></rect><rect height="7" rx="1" width="7" x="3" y="14"></rect></svg>
+<span>Dashboard</span>
+</a>
+<!-- 2. Booking -->
+<a class="w-full min-h-[44px] flex items-center gap-3 px-3 py-2 text-muted font-normal rounded-lg hover:bg-canvas transition-colors duration-150 font-label-md text-label-md" href="#">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><rect height="18" rx="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="18" y1="10" y2="10"></line></svg>
+<span>Booking</span>
+</a>
+<!-- 3. Jadwal -->
+<a class="w-full min-h-[44px] flex items-center gap-3 px-3 py-2 text-muted font-normal rounded-lg hover:bg-canvas transition-colors duration-150 font-label-md text-label-md" href="#">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+<span>Jadwal</span>
+</a>
+<!-- 4. Data penyewa -->
+<a class="w-full min-h-[44px] flex items-center gap-3 px-3 py-2 text-muted font-normal rounded-lg hover:bg-canvas transition-colors duration-150 font-label-md text-label-md" href="#">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+<span>Data penyewa</span>
+</a>
+<!-- 5. Item & unit (ACTIVE TAB) -->
+<a class="w-full min-h-[44px] flex items-center gap-3 px-3 py-2 bg-selected-rose text-ink font-medium rounded-lg transition-colors duration-150 font-label-md text-label-md" href="#">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path><path d="m3.3 7 8.7 5 8.7-5"></path><path d="M12 22V12"></path></svg>
+<span>Item &amp; unit</span>
+</a>
+<!-- 6. Pembayaran -->
+<a class="w-full min-h-[44px] flex items-center gap-3 px-3 py-2 text-muted font-normal rounded-lg hover:bg-canvas transition-colors duration-150 font-label-md text-label-md" href="#">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><rect height="14" rx="2" width="20" x="2" y="5"></rect><line x1="2" x2="22" y1="10" y2="10"></line></svg>
+<span>Pembayaran</span>
+</a>
+<!-- 7. Pengembalian -->
+<a class="w-full min-h-[44px] flex items-center gap-3 px-3 py-2 text-muted font-normal rounded-lg hover:bg-canvas transition-colors duration-150 font-label-md text-label-md" href="#">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><polyline points="9 14 4 9 9 4"></polyline><path d="M20 20v-7a4 4 0 0 0-4-4H4"></path></svg>
+<span>Pengembalian</span>
+</a>
+<!-- 8. Refund -->
+<a class="w-full min-h-[44px] flex items-center gap-3 px-3 py-2 text-muted font-normal rounded-lg hover:bg-canvas transition-colors duration-150 font-label-md text-label-md" href="#">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"></path><path d="M12 6v2m0 8v2"></path></svg>
+<span>Refund</span>
+</a>
+<!-- 9. Transaksi berhasil -->
+<a class="w-full min-h-[44px] flex items-center gap-3 px-3 py-2 text-muted font-normal rounded-lg hover:bg-canvas transition-colors duration-150 font-label-md text-label-md" href="#">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+<span>Transaksi berhasil</span>
+</a>
+</nav>
+</div>
+<!-- Footer Nav Cluster -->
+<div class="pt-4 border-t border-line space-y-1">
+<a class="w-full min-h-[44px] flex items-center gap-3 px-3 py-2 text-muted font-normal rounded-lg hover:bg-canvas transition-colors duration-150 font-label-md text-label-md" href="#">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><line x1="18" x2="18" y1="20" y2="10"></line><line x1="12" x2="12" y1="20" y2="4"></line><line x1="6" x2="6" y1="20" y2="14"></line></svg>
+<span>Laporan</span>
+</a>
+<a class="w-full min-h-[44px] flex items-center gap-3 px-3 py-2 text-muted font-normal rounded-lg hover:bg-canvas transition-colors duration-150 font-label-md text-label-md" href="#">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+<span>Pengaturan</span>
+</a>
+</div>
+</aside>
+<!-- Content Area Layout: Main Catalog + Right Detailed Drawer (Unit Physical Management) -->
+<main class="flex-1 flex overflow-hidden bg-workspace">
+<!-- Left Section: Main Catalog & Table Content -->
+<div class="flex-1 flex flex-col overflow-y-auto px-gutter py-space-xl border-r border-line">
+<!-- Breadcrumb & Top Action -->
+<div class="flex items-center justify-between pb-space-lg border-b border-line">
+<div class="flex items-center gap-2 font-label-md text-label-md text-muted">
+<span>Operasional</span>
+<svg class="w-4 h-4 text-muted" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+<span class="text-ink font-medium">Item &amp; Unit</span>
+</div>
+<!-- Top Primary Action Button (min 44px clickable target) -->
+<button class="inline-flex items-center gap-2 px-4 py-2.5 min-h-[44px] bg-primary-container text-on-primary rounded-[10px] hover:bg-primary transition-all duration-150 active:scale-95 font-label-md text-label-md">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" x2="12" y1="8" y2="16"></line><line x1="8" x2="16" y1="12" y2="12"></line></svg>
+<span>Tambah Item Baru</span>
+</button>
+</div>
+<!-- Page Title & Subtitle -->
+<div class="pt-space-lg pb-space-xl">
+<div class="flex items-center gap-3">
+<h1 class="font-headline-lg text-headline-lg text-ink">A07 — Admin Item &amp; Unit — v3 Foto item</h1>
+</div>
+<p class="font-body-md text-body-md text-muted mt-1 max-w-3xl">
+              Pengelolaan katalog induk, tarif sewa flat tanpa diskriminasi hari kerja/akhir pekan, serta pelacakan kesiapan fisik unit terpisah dari kalender.
+            </p>
+</div>
+<!-- Tab Switcher & Filter Row -->
+<div class="flex items-center justify-between gap-space-lg pb-space-xl">
+<!-- Tabs -->
+<div class="flex items-center p-1 bg-surface-container-low border border-line rounded-[12px]">
+<button class="px-4 py-2 min-h-[44px] rounded-[9px] bg-white text-ink font-label-md text-label-md border border-line">
+                Katalog &amp; Master Unit
+              </button>
+<button class="px-4 py-2 min-h-[44px] rounded-[9px] text-muted hover:text-ink font-label-md text-label-md transition-colors">
+                Riwayat Pemeliharaan &amp; Unit
+              </button>
+</div>
+<!-- Category Filters -->
+<div class="flex items-center gap-2">
+<span class="font-label-md text-label-md text-muted mr-1">Kategori:</span>
+<button class="px-4 py-2 min-h-[44px] rounded-[8px] bg-ink text-surface font-label-md text-label-md">Semua</button>
+<button class="px-4 py-2 min-h-[44px] rounded-[8px] bg-white border border-line text-muted hover:text-ink font-label-md text-label-md">iPhone</button>
+<button class="px-4 py-2 min-h-[44px] rounded-[8px] bg-white border border-line text-muted hover:text-ink font-label-md text-label-md">Aksesoris</button>
+</div>
+</div>
+<!-- Items Stack (Bento/Card Table Hybrid) -->
+<div class="space-y-space-xl pb-space-2xl">
+<!-- Item 1 Card: iPhone 15 Pro Max 256GB (Active Focus) -->
+<div class="bg-white border-2 border-primary/10 rounded-[16px] p-space-xl">
+<!-- Item Header Row -->
+<div class="flex items-start justify-between pb-space-lg border-b border-line gap-4">
+<div class="flex items-start gap-4">
+<div class="w-16 h-16 rounded-[12px] bg-sidebar border border-line flex items-center justify-center overflow-hidden flex-shrink-0 p-1"><img alt="iPhone 15 Pro Max Natural Titanium" class="w-full h-full object-contain rounded-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1tTHD7ectIRTuhNcbbYS4fOPf7vp368tH4jVgK5JUA453EQmcgLTGb-SiGdwAOu-De8cbVXHkKhjCBvQoD_urdltxcjpv2n_sjXK8QsXrWe5kvO1BXPKDnAWecmPmE1nc1IGMulgAVhXkeatRB8s8iNis1Fss1T9-GeUJhgv8SyY3YvSS-RKKlYEJXzjWvLIDOGemLbA4Y1IQdesF8mXCkWx8mJmvDkb5MSFQKPfKjOUtSFdhGk3_XfxndA52nafwofmAYvb2UKM"/></div>
+<div>
+<div class="flex items-center gap-2">
+<h3 class="font-headline-md text-headline-md text-ink">iPhone 15 Pro Max 256GB</h3>
+<span class="px-2.5 py-0.5 rounded-[6px] bg-pastel-blue font-label-md text-label-md text-ink font-medium">iPhone</span>
+<span class="px-2.5 py-0.5 rounded-[6px] bg-pastel-mint text-success-ink font-label-md text-label-md font-medium">Katalog Aktif</span>
+</div>
+<p class="font-body-sm text-body-sm text-muted mt-1">
+<strong class="font-medium text-ink">Kelengkapan item terkonfigurasi:</strong> Box unit, Kabel data bawaan tipe braided, Softcase proteksi, Charger adaptor.
+                    </p>
+</div>
+</div>
+<!-- Right Actions: Kelola, Edit, Disabled Delete with Tooltip (min 44px clickable target) -->
+<div class="flex items-center gap-2">
+<button class="inline-flex items-center gap-1.5 px-3.5 py-2.5 min-h-[44px] bg-pastel-blush text-ink border border-line rounded-[10px] font-label-md text-label-md font-medium hover:bg-selected-rose transition-colors">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><line x1="4" x2="20" y1="21" y2="21"></line><line x1="4" x2="20" y1="14" y2="14"></line><line x1="4" x2="20" y1="7" y2="7"></line></svg>
+<span>Kelola Unit (3)</span>
+</button>
+<button class="inline-flex items-center gap-1.5 px-3.5 py-2.5 min-h-[44px] bg-white text-ink border border-line rounded-[10px] font-label-md text-label-md hover:bg-canvas transition-colors">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>
+<span>Edit Item</span>
+</button>
+<!-- Disabled Delete with strict PRD integrity notice (active or past allocation strictly blocks deletion) -->
+<div class="relative group">
+<button class="cursor-not-allowed opacity-40 px-3 py-2.5 min-h-[44px] min-w-[44px] rounded-[10px] border border-line text-muted bg-surface-container-low flex items-center justify-center" disabled="">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>
+</button>
+<!-- Tooltip -->
+<div class="absolute right-0 bottom-full mb-2 hidden group-hover:flex flex-col w-72 p-2.5 bg-ink text-surface rounded-[8px] text-[14px] leading-tight z-30 pointer-events-none">
+<span class="font-medium">Hapus Unit Dinonaktifkan:</span>
+                      Unit memiliki riwayat alokasi aktif atau terdahulu. Penghapusan dinonaktifkan permanen demi integritas audit &amp; riwayat sewa.
+                    </div>
+</div>
+</div>
+</div>
+<!-- Item Middle Row: Pricing Grid & Unit Status Split -->
+<div class="grid grid-cols-12 gap-space-lg pt-space-lg">
+<!-- Flat Pricing Spec (Identical weekday & weekend flat prices) -->
+<div class="col-span-5 bg-workspace rounded-[12px] p-space-md border border-line">
+<div class="flex items-center justify-between pb-2 mb-2 border-b border-line">
+<span class="font-label-md text-label-md text-ink font-medium">Tarif Sewa Flat</span>
+<span class="font-label-md text-label-md text-muted">Sama hari kerja &amp; akhir pekan tanpa biaya tersembunyi</span>
+</div>
+<div class="grid grid-cols-3 gap-2 text-center">
+<div class="bg-white p-2.5 rounded-[8px] border border-line">
+<span class="block font-label-md text-label-md text-muted mb-0.5">6 Jam</span>
+<span class="font-label-md text-[15px] font-semibold text-ink tabular-nums">Rp90.000</span>
+</div>
+<div class="bg-white p-2.5 rounded-[8px] border border-line">
+<span class="block font-label-md text-label-md text-muted mb-0.5">12 Jam</span>
+<span class="font-label-md text-[15px] font-semibold text-ink tabular-nums">Rp140.000</span>
+</div>
+<div class="bg-white p-2.5 rounded-[8px] border border-line">
+<span class="block font-label-md text-label-md text-muted mb-0.5">24 Jam</span>
+<span class="font-label-md text-[15px] font-semibold text-ink tabular-nums">Rp250.000</span>
+</div>
+</div>
+</div>
+<!-- Physical Units Breakdown -->
+<div class="col-span-7 bg-workspace rounded-[12px] p-space-md border border-line flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md text-ink font-medium">Status Fisik Unit (Total 3 Unit)</span>
+<span class="inline-flex items-center gap-1.5 font-label-md text-label-md text-muted">
+<svg class="w-4 h-4 text-muted" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" x2="12" y1="16" y2="12"></line><line x1="12" x2="12.01" y1="8" y2="8"></line></svg>
+                      Ketersediaan kalender ≠ Kesiapan fisik
+                    </span>
+</div>
+<!-- 3 Units Pills -->
+<div class="grid grid-cols-3 gap-2 mt-2">
+<!-- Unit 1 -->
+<div class="p-2.5 rounded-[8px] bg-pastel-mint border border-line flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md font-semibold text-success-ink">IP-15PM-04</span>
+<span class="w-2.5 h-2.5 rounded-full bg-success-ink"></span>
+</div>
+<span class="font-label-md text-label-md text-success-ink mt-1 font-medium">Siap di Loket</span>
+<span class="font-label-md text-label-md text-muted">Fisik normal &amp; terverifikasi</span>
+</div>
+<!-- Unit 2 -->
+<div class="p-2.5 rounded-[8px] bg-pastel-apricot border border-line flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md font-semibold text-warning-ink">IP-15PM-01</span>
+<span class="w-2.5 h-2.5 rounded-full bg-warning-ink"></span>
+</div>
+<span class="font-label-md text-label-md text-warning-ink mt-1 font-medium">Sedang Disewa</span>
+<span class="font-label-md text-label-md text-muted tabular-nums">Kembali 14:30 WIB</span>
+</div>
+<!-- Unit 3 (Currently selected in Drawer) -->
+<div class="p-2.5 rounded-[8px] bg-pastel-blush border-2 border-secondary/40 flex flex-col justify-between">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md font-semibold text-urgency-red-ink">IP-15PM-03</span>
+<svg class="w-4 h-4 text-urgency-red-ink" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+</div>
+<span class="font-label-md text-label-md text-urgency-red-ink mt-1 font-medium">Buffer Persiapan 1 Jam</span>
+<span class="font-label-md text-label-md text-muted tabular-nums">Sisa 28 menit</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 2 Card: Tripod Wireless Bluetooth & Holder -->
+<div class="bg-white border border-line rounded-[16px] p-space-xl">
+<div class="flex items-start justify-between pb-space-lg border-b border-line gap-4">
+<div class="flex items-start gap-4">
+<div class="w-16 h-16 rounded-[12px] bg-sidebar border border-line flex items-center justify-center overflow-hidden flex-shrink-0 p-1"><img alt="Tripod Wireless Bluetooth &amp; Holder" class="w-full h-full object-contain rounded-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvI4YdOCggqsF_d3-6_iF72-tBkaYo1LsZjQhF648qm-hbvacKwdy5KILp5TGL37Q6iDPCc6z0W0Dj9UI-AWfealJVG89c10EQYT-uB1QQNPaiYSkuFp_S1f4mPMl5ZjbHHy8uBwdwR4lzUrx870QLrmehNpb4a0Cdjm26sMmskqrbOmq3Ufs6GLDmcr2ToccrnyzQMxLH3nTpUxqri0s91Yq1UUskcb2g7NqD5o8QWf0OOnzEA_r7Ez_92xy_umTMaZefzpU9vDY"/></div>
+<div>
+<div class="flex items-center gap-2">
+<h3 class="font-headline-md text-headline-md text-ink">Tripod Wireless Bluetooth &amp; Holder</h3>
+<span class="px-2.5 py-0.5 rounded-[6px] bg-pastel-apricot font-label-md text-label-md text-ink font-medium">Aksesoris</span>
+<span class="px-2.5 py-0.5 rounded-[6px] bg-pastel-mint text-success-ink font-label-md text-label-md font-medium">Katalog Aktif</span>
+</div>
+<p class="font-body-sm text-body-sm text-muted mt-1">
+<strong class="font-medium text-ink">Kelengkapan item:</strong> Tripod aluminium 1.5m, Remote nirkabel bluetooth, Pouch kain.
+                    </p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="inline-flex items-center gap-1.5 px-3.5 py-2.5 min-h-[44px] bg-white text-ink border border-line rounded-[10px] font-label-md text-label-md font-medium hover:bg-canvas transition-colors">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><line x1="4" x2="20" y1="21" y2="21"></line><line x1="4" x2="20" y1="14" y2="14"></line><line x1="4" x2="20" y1="7" y2="7"></line></svg>
+<span>Kelola Unit (5)</span>
+</button>
+<button class="inline-flex items-center gap-1.5 px-3.5 py-2.5 min-h-[44px] bg-white text-ink border border-line rounded-[10px] font-label-md text-label-md hover:bg-canvas transition-colors">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>
+<span>Edit Item</span>
+</button>
+</div>
+</div>
+<!-- Pricing & Inventory Status -->
+<div class="grid grid-cols-12 gap-space-lg pt-space-lg">
+<div class="col-span-5 bg-workspace rounded-[12px] p-space-md border border-line">
+<div class="flex items-center justify-between pb-2 mb-2 border-b border-line">
+<span class="font-label-md text-label-md text-ink font-medium">Tarif Sewa Flat</span>
+<span class="font-label-md text-label-md text-muted">Tanpa perbedaan hari biasa/akhir pekan</span>
+</div>
+<div class="grid grid-cols-3 gap-2 text-center">
+<div class="bg-white p-2.5 rounded-[8px] border border-line">
+<span class="block font-label-md text-label-md text-muted mb-0.5">6 Jam</span>
+<span class="font-label-md text-[15px] font-semibold text-ink tabular-nums">Rp15.000</span>
+</div>
+<div class="bg-white p-2.5 rounded-[8px] border border-line">
+<span class="block font-label-md text-label-md text-muted mb-0.5">12 Jam</span>
+<span class="font-label-md text-[15px] font-semibold text-ink tabular-nums">Rp25.000</span>
+</div>
+<div class="bg-white p-2.5 rounded-[8px] border border-line">
+<span class="block font-label-md text-label-md text-muted mb-0.5">24 Jam</span>
+<span class="font-label-md text-[15px] font-semibold text-ink tabular-nums">Rp40.000</span>
+</div>
+</div>
+</div>
+<div class="col-span-7 bg-workspace rounded-[12px] p-space-md border border-line flex items-center justify-between">
+<div>
+<span class="block font-label-md text-label-md text-ink font-medium">Distribusi Fisik Unit</span>
+<span class="font-body-sm text-body-sm text-muted">Total terdaftar: 5 Unit fisik</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="px-3.5 py-2 min-h-[44px] rounded-[8px] bg-pastel-mint border border-line text-success-ink font-label-md text-label-md font-medium flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-success-ink"></span>
+                      4 Siap di Loket
+                    </div>
+<div class="px-3.5 py-2 min-h-[44px] rounded-[8px] bg-pastel-apricot border border-line text-warning-ink font-label-md text-label-md font-medium flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-warning-ink"></span>
+                      1 Disewa
+                    </div>
+</div>
+</div>
+</div>
+</div>
+<!-- Item 3 Card: Power Bank Anker 10.000mAh PD Fast Charging -->
+<div class="bg-white border border-line rounded-[16px] p-space-xl">
+<div class="flex items-start justify-between pb-space-lg border-b border-line gap-4">
+<div class="flex items-start gap-4">
+<div class="w-16 h-16 rounded-[12px] bg-sidebar border border-line flex items-center justify-center overflow-hidden flex-shrink-0 p-1"><img alt="Apple MagSafe Battery Pack 5000mAh" class="w-full h-full object-contain rounded-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAoWFfd9VW5o4AJDVXhWGjEV8OqtTuBv6maQN4KPfVW1gaBbfOB4eh6gm7h36y4nEpP-9gfOKvA3BeFnhzV1FFzsYMbRB7hyDvWCyHyBDf6q-TI0Ij1WvybPjME4Ax5sMHIR6sFt_-SZr8xfHfp4yqpXKGxINaTi9YQNfMVAchyXMfTaimuMOfvTg2XCDRDFtHDj92TC8aUrIa8BDQyOkI7frtbq05SXcVk1Z1ynng5Aezd6TY5IUY-ctZFQzckWbs-H5xQw8qEScw"/></div>
+<div>
+<div class="flex items-center gap-2">
+<h3 class="font-headline-md text-headline-md text-ink">Power Bank Anker 10.000mAh PD Fast Charging</h3>
+<span class="px-2.5 py-0.5 rounded-[6px] bg-pastel-lilac font-label-md text-label-md text-ink font-medium">Aksesoris</span>
+<span class="px-2.5 py-0.5 rounded-[6px] bg-pastel-mint text-success-ink font-label-md text-label-md font-medium">Katalog Aktif</span>
+</div>
+<p class="font-body-sm text-body-sm text-muted mt-1">
+<strong class="font-medium text-ink">Kelengkapan item:</strong> Unit Powerbank, Kabel Type-C to C pendek, Kantong pouch.
+                    </p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="inline-flex items-center gap-1.5 px-3.5 py-2.5 min-h-[44px] bg-white text-ink border border-line rounded-[10px] font-label-md text-label-md font-medium hover:bg-canvas transition-colors">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><line x1="4" x2="20" y1="21" y2="21"></line><line x1="4" x2="20" y1="14" y2="14"></line><line x1="4" x2="20" y1="7" y2="7"></line></svg>
+<span>Kelola Unit (5)</span>
+</button>
+<button class="inline-flex items-center gap-1.5 px-3.5 py-2.5 min-h-[44px] bg-white text-ink border border-line rounded-[10px] font-label-md text-label-md hover:bg-canvas transition-colors">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 20h9"></path><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"></path></svg>
+<span>Edit Item</span>
+</button>
+</div>
+</div>
+<!-- Pricing & Inventory Status -->
+<div class="grid grid-cols-12 gap-space-lg pt-space-lg">
+<div class="col-span-5 bg-workspace rounded-[12px] p-space-md border border-line">
+<div class="flex items-center justify-between pb-2 mb-2 border-b border-line">
+<span class="font-label-md text-label-md text-ink font-medium">Tarif Sewa Flat</span>
+<span class="font-label-md text-label-md text-muted">Tarif identik setiap hari</span>
+</div>
+<div class="grid grid-cols-3 gap-2 text-center">
+<div class="bg-white p-2.5 rounded-[8px] border border-line">
+<span class="block font-label-md text-label-md text-muted mb-0.5">6 Jam</span>
+<span class="font-label-md text-[15px] font-semibold text-ink tabular-nums">Rp15.000</span>
+</div>
+<div class="bg-white p-2.5 rounded-[8px] border border-line">
+<span class="block font-label-md text-label-md text-muted mb-0.5">12 Jam</span>
+<span class="font-label-md text-[15px] font-semibold text-ink tabular-nums">Rp20.000</span>
+</div>
+<div class="bg-white p-2.5 rounded-[8px] border border-line">
+<span class="block font-label-md text-label-md text-muted mb-0.5">24 Jam</span>
+<span class="font-label-md text-[15px] font-semibold text-ink tabular-nums">Rp35.000</span>
+</div>
+</div>
+</div>
+<div class="col-span-7 bg-workspace rounded-[12px] p-space-md border border-line flex items-center justify-between">
+<div>
+<span class="block font-label-md text-label-md text-ink font-medium">Distribusi Fisik Unit</span>
+<span class="font-body-sm text-body-sm text-muted">Total terdaftar: 5 Unit fisik</span>
+</div>
+<div class="flex items-center gap-3">
+<div class="px-3.5 py-2 min-h-[44px] rounded-[8px] bg-pastel-mint border border-line text-success-ink font-label-md text-label-md font-medium flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-success-ink"></span>
+                      3 Siap di Loket
+                    </div>
+<div class="px-3.5 py-2 min-h-[44px] rounded-[8px] bg-pastel-apricot border border-line text-warning-ink font-label-md text-label-md font-medium flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-warning-ink"></span>
+                      2 Disewa
+                    </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Side/Drawer Panel for Unit Management (Selected: IP-15PM-03) -->
+<aside class="w-[430px] min-w-[430px] bg-white flex flex-col justify-between overflow-y-auto border-l border-line shadow-sm">
+<div class="p-space-xl space-y-space-xl">
+<!-- Drawer Header -->
+<div class="pb-space-md border-b border-line flex items-start justify-between">
+<div>
+<span class="px-2.5 py-1 rounded-[6px] bg-pastel-blush text-urgency-red-ink font-label-md text-label-md font-semibold tracking-wide">
+                  UNIT OPERASIONAL DALAM PENGAWASAN
+                </span>
+<h2 class="font-headline-md text-headline-md text-ink mt-1">IP-15PM-03</h2>
+<p class="font-body-sm text-body-sm text-muted">
+                  Natural Titanium • S/N: <span class="font-medium text-ink">F2LP80J5N70M</span>
+</p>
+</div>
+<button class="w-11 h-11 min-h-[44px] min-w-[44px] rounded-[8px] border border-line text-muted hover:text-ink flex items-center justify-center transition-colors">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><line x1="18" x2="6" y1="6" y2="18"></line><line x1="6" x2="18" y1="6" y2="18"></line></svg>
+</button>
+</div>
+<!-- Current Status Box & Countdown Buffer (1 Hour Mandatori) -->
+<div class="p-space-md rounded-[12px] bg-workspace border border-line space-y-3"><div class="flex items-center justify-between"><div class="flex items-center gap-2"><span class="font-label-md text-label-md font-semibold text-ink">Pengelolaan Foto Produk &amp; Galeri</span><span class="px-2 py-0.5 rounded-[4px] bg-pastel-mint text-success-ink font-label-md text-[12px] font-medium">3 Foto</span></div><span class="px-2 py-0.5 rounded-[4px] bg-pastel-blue text-ink font-label-md text-[12px]">Katalog Induk</span></div><div class="flex gap-3 items-start"><div class="relative w-28 h-28 rounded-xl bg-sidebar border border-line flex items-center justify-center p-1.5 flex-shrink-0 overflow-hidden shadow-sm"><img alt="Foto Sampul iPhone 15 Pro Max" class="w-full h-full object-contain rounded-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1tTHD7ectIRTuhNcbbYS4fOPf7vp368tH4jVgK5JUA453EQmcgLTGb-SiGdwAOu-De8cbVXHkKhjCBvQoD_urdltxcjpv2n_sjXK8QsXrWe5kvO1BXPKDnAWecmPmE1nc1IGMulgAVhXkeatRB8s8iNis1Fss1T9-GeUJhgv8SyY3YvSS-RKKlYEJXzjWvLIDOGemLbA4Y1IQdesF8mXCkWx8mJmvDkb5MSFQKPfKjOUtSFdhGk3_XfxndA52nafwofmAYvb2UKM"/><span class="absolute bottom-1.5 left-1.5 right-1.5 text-center bg-ink/90 text-surface text-[11px] font-medium py-0.5 px-1 rounded">Foto Sampul</span></div><div class="flex-1 space-y-2"><div><span class="block font-label-md text-[13px] font-semibold text-ink">iPhone 15 Pro Max Natural Titanium</span><span class="block font-body-sm text-[12px] text-muted leading-tight">Resolusi 1024x1024px • Format PNG/JPEG studio bersih</span></div><div class="flex items-center gap-1.5"><button class="px-2.5 py-1.5 min-h-[36px] bg-white border border-line rounded-[6px] text-ink font-label-md text-[13px] font-medium hover:bg-canvas transition-colors" type="button">Ganti Foto</button><button class="px-2.5 py-1.5 min-h-[36px] bg-white border border-line rounded-[6px] text-muted hover:text-ink font-label-md text-[13px] transition-colors" type="button">Hapus</button></div></div></div><div class="space-y-1.5 pt-1 border-t border-line"><div class="flex items-center justify-between"><span class="font-label-md text-[13px] font-medium text-ink">Galeri Foto Tambahan &amp; Sudut Pandang</span><span class="font-label-md text-[12px] text-muted">Geser / Atur Urutan</span></div><div class="grid grid-cols-4 gap-2"><div class="relative aspect-square rounded-[8px] bg-sidebar border-2 border-secondary/40 p-1 flex items-center justify-center group cursor-pointer overflow-hidden"><img alt="Foto 1" class="w-full h-full object-contain rounded" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1tTHD7ectIRTuhNcbbYS4fOPf7vp368tH4jVgK5JUA453EQmcgLTGb-SiGdwAOu-De8cbVXHkKhjCBvQoD_urdltxcjpv2n_sjXK8QsXrWe5kvO1BXPKDnAWecmPmE1nc1IGMulgAVhXkeatRB8s8iNis1Fss1T9-GeUJhgv8SyY3YvSS-RKKlYEJXzjWvLIDOGemLbA4Y1IQdesF8mXCkWx8mJmvDkb5MSFQKPfKjOUtSFdhGk3_XfxndA52nafwofmAYvb2UKM"/><span class="absolute top-1 left-1 bg-ink text-surface text-[10px] px-1 rounded font-medium">1</span></div><div class="relative aspect-square rounded-[8px] bg-sidebar border border-line p-1 flex items-center justify-center group cursor-pointer hover:border-outline overflow-hidden"><img alt="Foto 2 Blue Titanium" class="w-full h-full object-contain rounded" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAsBUPE7-TDwVCHt5bc69b70ZWEb2OAdu5rpPcjSEUKSkrBIm4d40nf0Bjv_IHrlv2qB-JIjy-7r-TqS1gA8kbKXd4k4q6cE0pu7Vmc1FWxBTHUZAu3t35qADov9-GFEumRZwbSPZGONMEDxValUUTc9ZVQ83lq0Tn0FCZX0s_d7gL5IK6mwafgO9eC5NuuKCL7rTKV_pc5NdZmN9NEJsThmv39l99KFY8BJTNW1sDWvOIjEp0Uydkb1LnwemwQvvbhJ4FaU--jy2M"/><span class="absolute top-1 left-1 bg-ink text-surface text-[10px] px-1 rounded font-medium">2</span></div><div class="relative aspect-square rounded-[8px] bg-sidebar border border-line p-1 flex items-center justify-center group cursor-pointer hover:border-outline overflow-hidden"><img alt="Foto 3 Aksesoris pendukung" class="w-full h-full object-contain rounded" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvI4YdOCggqsF_d3-6_iF72-tBkaYo1LsZjQhF648qm-hbvacKwdy5KILp5TGL37Q6iDPCc6z0W0Dj9UI-AWfealJVG89c10EQYT-uB1QQNPaiYSkuFp_S1f4mPMl5ZjbHHy8uBwdwR4lzUrx870QLrmehNpb4a0Cdjm26sMmskqrbOmq3Ufs6GLDmcr2ToccrnyzQMxLH3nTpUxqri0s91Yq1UUskcb2g7NqD5o8QWf0OOnzEA_r7Ez_92xy_umTMaZefzpU9vDY"/><span class="absolute top-1 left-1 bg-ink text-surface text-[10px] px-1 rounded font-medium">3</span></div><button class="aspect-square rounded-[8px] border-2 border-dashed border-line hover:border-secondary flex flex-col items-center justify-center text-muted hover:text-ink transition-colors bg-white" type="button"><svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" x2="12" y1="8" y2="16"></line><line x1="8" x2="16" y1="12" y2="12"></line></svg><span class="text-[11px] font-medium leading-none">+ Unggah</span></button></div><div class="flex items-center justify-between text-[12px] text-muted pt-0.5"><button class="hover:text-ink font-medium" type="button">◀ Geser Urutan</button><button class="text-secondary font-medium hover:underline" type="button">Jadikan Sampul Utama</button></div></div><div class="space-y-1 pt-1 border-t border-line"><label class="block font-label-md text-[13px] font-medium text-ink">Alt Teks Aksesibilitas (SEO &amp; Pembaca Layar)</label><input class="w-full px-2.5 py-1.5 min-h-[36px] bg-white border border-line rounded-[6px] font-body-sm text-[13px] text-ink focus:outline-none focus:border-secondary" type="text" value="iPhone 15 Pro Max Natural Titanium tampak depan layar menyala dan belakang bodi frosted glass"/><p class="text-[12px] text-muted leading-tight">UI prototype pengelolaan media lokal (tanpa klaim batas penyimpanan backend).</p></div></div><div class="p-space-lg rounded-[12px] bg-urgency-red-bg border border-urgency-red-ink/20">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md uppercase tracking-wider text-urgency-red-ink font-semibold">Status Saat Ini</span>
+<span class="flex items-center gap-1.5 font-label-md text-label-md text-urgency-red-ink font-semibold bg-white/80 px-2.5 py-1 rounded-[6px]">
+<svg class="w-4 h-4 text-urgency-red-ink" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                  Sisa: 28 menit
+                </span>
+</div>
+<h4 class="font-headline-md text-[17px] font-semibold text-ink mt-1">
+                Dalam Persiapan Pasca-Sewa (Buffer 1 Jam Mandatori)
+              </h4>
+<p class="font-body-sm text-body-sm text-muted mt-1 leading-snug">
+                Unit kembali dari penyewa pukul 10:28. Buffer persiapan 1 jam berlangsung hingga 11:28 WIB sebelum dapat diverifikasi.
+              </p>
+</div>
+<!-- Inspection SOP Rule (Timer alone never auto-completes) -->
+<div class="p-space-md rounded-[12px] bg-warning-bg border border-warning-ink/20 flex gap-3">
+<svg class="w-5 h-5 text-warning-ink flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"></path><line x1="12" x2="12" y1="9" y2="13"></line><line x1="12" x2="12.01" y1="17" y2="17"></line></svg>
+<div class="space-y-1">
+<span class="font-label-md text-label-md font-semibold text-warning-ink">Aturan Siklus &amp; Verifikasi Manual Admin</span>
+<p class="font-body-sm text-body-sm text-muted text-[14px] leading-relaxed">
+                  Timer habis tidak pernah mengubah unit menjadi siap secara otomatis. Admin wajib menyelesaikan pemeriksaan fisik kondisi aktual dan isi kelengkapan paket, lalu menekan tombol verifikasi manual.
+                </p>
+</div>
+</div>
+<!-- Dynamic Physical Inspection Checklist configured per item -->
+<div class="space-y-2">
+<span class="font-label-md text-label-md font-semibold text-ink">Inspeksi Fisik &amp; Kelengkapan Item (Konfigurasi Item)</span>
+<!-- Item Checklist 1 -->
+<label class="flex items-center gap-3 p-3 min-h-[44px] rounded-[8px] border border-line hover:bg-canvas cursor-pointer transition-colors">
+<input checked="" class="rounded-[4px] border-outline text-ink focus:ring-secondary w-5 h-5" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-ink">Pemeriksaan kondisi fisik bodi unit &amp; kebersihan lensa kamera</span>
+</label>
+<!-- Item Checklist 2 -->
+<label class="flex items-center gap-3 p-3 min-h-[44px] rounded-[8px] border border-line hover:bg-canvas cursor-pointer transition-colors">
+<input checked="" class="rounded-[4px] border-outline text-ink focus:ring-secondary w-5 h-5" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-ink">Verifikasi kelengkapan paket: kabel data, softcase, dan adaptor</span>
+</label>
+<!-- Item Checklist 3 -->
+<label class="flex items-center gap-3 p-3 min-h-[44px] rounded-[8px] border border-line hover:bg-canvas cursor-pointer transition-colors">
+<input class="rounded-[4px] border-outline text-ink focus:ring-secondary w-5 h-5" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-ink">Pemeriksaan fungsi perangkat dan kesiapan serah terima loket</span>
+</label>
+</div>
+<!-- Maintenance Log Form (Catatan Pemeliharaan) -->
+<div class="space-y-space-md pt-space-md border-t border-line">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md font-semibold text-ink">Form Catatan Pemeliharaan (Maintenance)</span>
+<span class="font-label-md text-label-md text-muted">Opsional</span>
+</div>
+<!-- Alasan Gangguan -->
+<div>
+<label class="block font-label-md text-label-md text-ink mb-1">Alasan Gangguan Fisik</label>
+<input class="w-full px-3 py-2.5 min-h-[44px] bg-workspace border border-line rounded-[10px] font-body-sm text-body-sm text-ink focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary" type="text" value="Pembersihan lensa kamera khusus &amp; cek konektor port charging"/>
+</div>
+<!-- Estimasi Selesai -->
+<div>
+<label class="block font-label-md text-label-md text-ink mb-1">Estimasi Selesai Pemeliharaan</label>
+<div class="relative">
+<svg class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-muted" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><rect height="18" rx="2" width="18" x="3" y="4"></rect><line x1="16" x2="16" y1="2" y2="6"></line><line x1="8" x2="8" y1="2" y2="6"></line><line x1="3" x2="18" y1="10" y2="10"></line></svg>
+<input class="w-full pl-10 pr-3 py-2.5 min-h-[44px] bg-workspace border border-line rounded-[10px] font-body-sm text-body-sm text-ink tabular-nums focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary" type="text" value="10 Okt 2026, 12:00 WIB"/>
+</div>
+</div>
+<!-- SOP Pipeline Flow Note -->
+<div class="p-3 bg-canvas rounded-[8px] text-[14px] text-muted flex items-start gap-2.5">
+<svg class="w-5 h-5 text-ink flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="18" cy="18" r="3"></circle><circle cx="6" cy="6" r="3"></circle><path d="M13 6h3a2 2 0 0 1 2 2v7"></path><line x1="6" x2="6" y1="9" y2="21"></line></svg>
+<span><strong>Siklus Pemeliharaan:</strong> Status pemeliharaan selesai → Wajib masuk buffer persiapan 1 jam → Verifikasi manual admin untuk status siap.</span>
+</div>
+</div>
+</div>
+<!-- Drawer Action Bottom Footer -->
+<div class="p-space-lg bg-workspace border-t border-line flex flex-col gap-2">
+<!-- Explicit manual completion button (Timer alone never auto-completes ready status) -->
+<button class="w-full py-3 px-4 min-h-[44px] bg-primary text-white rounded-[10px] hover:bg-ink active:scale-[0.98] font-label-md text-label-md flex items-center justify-center gap-2 transition-all shadow-sm">
+<svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+<span>Selesaikan Persiapan &amp; Tandai Siap di Loket</span>
+</button>
+<p class="font-label-md text-label-md text-center text-muted">
+              Penyelesaian status siap memerlukan konfirmasi fisik manual Admin. Timer waktu tidak menyelesaikan secara otomatis.
+            </p>
+</div>
+</aside>
+</main>
+</div>
+</div>
+</body></html>

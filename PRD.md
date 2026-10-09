@@ -3,8 +3,8 @@
 | Atribut | Nilai |
 |---|---|
 | Produk | Website penyewaan iPhone dan aksesori iRent Semarang |
-| Versi | 2.3 — acuan stack dan struktur kode ditetapkan |
-| Tanggal | 8 Oktober 2026 |
+| Versi | 2.4 — phase 1 PWA; WhatsApp ditunda |
+| Tanggal | 9 Oktober 2026 |
 | Penyusun awal | Fatih |
 | Status | Requirement produk; aplikasi belum diimplementasikan |
 
@@ -24,7 +24,7 @@ Pelanggan membuat booking tanpa persetujuan admin terlebih dahulu. Sistem memval
 
 - Website pelanggan: registrasi, login, profil, katalog, booking, upload bukti, riwayat, pengajuan refund, pengajuan perpanjangan per unit, dan laporan pengembalian per unit.
 - Panel admin: booking, jadwal, item dan unit, data penyewa, pembayaran, serah terima, pengembalian, persiapan, perawatan, denda, refund, perpanjangan, zona ongkir, pengaturan, dan laporan Excel.
-- PWA admin dengan Web Push dan pesan WhatsApp untuk pengingat admin.
+- PWA admin dengan Web Push untuk pengingat admin; WhatsApp ditunda dari phase 1 (keputusan 9 Oktober 2026).
 - Deployment ke hosting klien, panduan admin, demo, dan serah terima.
 
 ### Di luar phase 1
@@ -56,7 +56,7 @@ Stack dan pola organisasi kode mengadaptasi `AGENTS.template.md` dari proyek opp
 | State dan form | Zustand untuk state global yang diperlukan; state lokal melalui React; React Hook Form untuk form |
 | UI | Tailwind CSS, shadcn/ui, alias `@/` ke src, serta token tema terpusat |
 | Pekerjaan latar belakang | Worker NestJS dan scheduler dengan outbox/antrean persisten PostgreSQL; Redis bukan prasyarat phase 1 |
-| Notifikasi | PWA admin, Web Push dengan VAPID, dan adapter pesan WhatsApp sesuai provider yang nanti dipilih |
+| Notifikasi | PWA admin, Web Push dengan VAPID, adapter WhatsApp ditunda dari phase 1 |
 
 Versi dependency ditetapkan dari manifest baseline yang diperiksa kompatibilitasnya saat scaffolding, lalu dikunci dalam `package-lock.json` masing-masing aplikasi. Template tidak menetapkan nomor versi. Library PWA, upload, Excel, dan pengujian dipilih sesuai kebutuhan; keberadaan stack belum berarti aplikasi sudah tersedia.
 
@@ -105,7 +105,7 @@ React Query menjadi sumber data server; mutation menginvalidasi daftar, detail, 
 - Scheduler tiap menit serta queue/cron untuk pekerjaan latar belakang.
 - Penyimpanan bukti pembayaran dan refund privat di luar folder publik; foto item publik.
 - Enkripsi NIK di level aplikasi, hash password, otorisasi server, dan perlindungan upload.
-- Web Push dengan VAPID, integrasi pesan WhatsApp, dan ekspor Excel.
+- Web Push dengan VAPID dan ekspor Excel; integrasi WhatsApp ditunda.
 - HTTPS dan zona waktu `Asia/Jakarta`. Mengikuti PRD awal, datetime bisnis disimpan dalam WIB dan tidak dikonversi secara diam-diam.
 
 Semua aturan bisnis ditempatkan dalam lapisan service bersama. Halaman pelanggan dan admin memanggil service yang sama. Scheduler juga menggunakan aturan transisi yang sama.
@@ -120,7 +120,7 @@ Semua aturan bisnis ditempatkan dalam lapisan service bersama. Halaman pelanggan
 | ExtensionService | Pengajuan perpanjangan, hold, verifikasi, dan perubahan jadwal per unit |
 | ReturnService | Laporan pelanggan, penerimaan aktual, verifikasi, persiapan, dan perawatan |
 | Payment/Refund service | Tagihan, kewajiban bayar, bukti, uang aktual, rekonsiliasi, refund, dan saldo |
-| Notification service | Push, WhatsApp, pengingat, deduplikasi, dan pencatatan kegagalan |
+| Notification service | Push, pengingat, deduplikasi, dan pencatatan kegagalan; WhatsApp ditunda |
 
 Nama modul tambahan merupakan rancangan teknis untuk mendukung perilaku yang disepakati; pembagian kelas mengikuti stack. Data awal mencakup admin, settings, zona ongkir, dan contoh item. Sediakan perintah pembuatan admin pertama.
 
@@ -250,7 +250,7 @@ Outbox disimpan bersama transaksi bisnis sehingga crash setelah commit tidak men
 - Payment_application hanya menunjuk payment masuk dan kewajiban dari booking/scope yang sama. Jumlah penerapan awal tidak melebihi receipt; refund bagian penerapan dibatasi bagian tersebut, sedangkan refund dana tidak diterapkan dibatasi sisa receipt. Jangan menjumlahkan aplikasi dan refund atas dana yang sama seolah-olah dua penggunaan berbeda. Loss_record hanya untuk unit yang sedang disewa, tidak boleh bersamaan dengan pengembalian final verified. Nominal dan waktu kehilangan wajib diverifikasi admin.
 - Unique: user email/phone ternormalisasi, unit code, booking code, extension-item pair, return per booking_item, source_key charge/payment, refund payment reference, idempotency key, endpoint, serta notification deduplication key.
 - Satu unit fisik tidak boleh muncul dua kali dalam satu booking awal: unique (booking_id, item_unit_id) pada booking_items. Jumlah aksesori di UI diuraikan menjadi baris per unit; tidak ada quantity >1 yang hanya menunjuk satu item_unit.
-- Referensi transaksi bank/QRIS yang tersedia harus unik dalam rekening/akun sumber yang sesuai. Referensi tidak boleh dibuat-buat untuk menggantikan pencocokan uang aktual; pembayaran tunai menggunakan nomor penerimaan aplikasi. Receipt sah tidak diedit atau dihapus melalui CRUD umum. Mekanisme koreksi kesalahan pencatatan harus diaudit dan mempertahankan riwayat; detailnya lihat bagian 19.
+- Referensi transaksi bank/QRIS yang tersedia harus unik dalam rekening/akun sumber yang sesuai. Referensi tidak boleh dibuat-buat untuk menggantikan pencocokan uang aktual; pembayaran tunai menggunakan nomor penerimaan aplikasi. Receipt sah tidak diedit atau dihapus melalui CRUD umum. Mekanisme koreksi kesalahan pencatatan harus diaudit dan mempertahankan riwayat; prosedur koreksi receipt masuk mengikuti ketentuan di bawah.
 - Maksimal satu pengajuan perpanjangan nonterminal per booking_item. Gunakan constraint aktif jika engine mendukung atau satu referensi aktif yang dikunci; jangan hanya mengecek lewat UI. Maksimal satu alokasi rental aktif per booking_item, tanpa menghapus sejarah released.
 - Unique index tidak mencegah interval waktu bertabrakan. Pemeriksaan overlap tetap wajib di dalam protokol locking yang sama pada seluruh jalur tulis.
 - Indeks pencarian: bookings `(status, initial_start_at)`, `(user_id, status)`, expires_at, confirmation_due_at, no_show_due_at; booking_items `(booking_id, use_status)`, `(item_unit_id, current_end_at)`; unit_allocations `(item_unit_id, state, block_start_at)`, hold_expires_at; extension status/expiry/deadline; item_units `(item_id, is_active, condition_status)`; charges/payments `(booking_id, extension_id, effective_at/occurred_at)`; refunds `(booking_id, status)` dan incoming_payment_id; outbox dispatch state; notifications `(status, retry_at, due_at)`.
@@ -589,7 +589,7 @@ Review, rejection, expiry, dan approval mempunyai status tersendiri pada extensi
 
 Bukti perpanjangan ditolak sebelum deadline upload mengizinkan upload ulang dengan deadline asli; setelah deadline, hold tambahan dilepas dan pengajuan kedaluwarsa. Uang tambahan yang ternyata diterima tetap dicatat dan direfund penuh melalui rekonsiliasi.
 
-Batas konfirmasi = yang lebih awal antara upload + satu jam atau jadwal kembali lama − 30 menit. PWA memberi notifikasi saat upload; WhatsApp mengingatkan 30 menit sebelum deadline, langsung jika saat upload waktu pengingat sudah terlewati. Pengiriman dideduplikasi.
+Batas konfirmasi = yang lebih awal antara upload + satu jam atau jadwal kembali lama − 30 menit. PWA memberi notifikasi saat upload dan pengingat pada 30, 15, serta 5 menit sebelum deadline; jika terlambat, hanya tahap yang masih relevan dikirim. Pengiriman dideduplikasi.
 
 Jika admin terlambat, slot tambahan tetap ditahan dan pengajuan diberi alert mendesak. Jadwal kembali lama tetap berlaku sampai disetujui. Pelanggan yang sudah membayar dan mengunggah bukti tepat waktu tidak dikenai tambahan denda akibat keterlambatan pemeriksaan admin. Catat waktu bayar/upload, deadline, keputusan, dan koreksi denda untuk membedakan keterlambatan admin dari keterlambatan pelanggan; pengecualian ini tidak otomatis menyetujui perpanjangan atau menghapus denda yang tidak terkait keterlambatan admin.
 
@@ -638,7 +638,7 @@ Path `/admin`, hanya role admin melalui middleware server. Semua admin memiliki 
 
 Laporan kas memakai waktu pembayaran/refund sebenarnya. Pembayaran pending dan refund baru disetujui tidak dianggap kas masuk/keluar. Uang perpanjangan yang masih menunggu verifikasi dibedakan dari tambahan tagihan yang resmi berlaku; hindari menghitung uang yang sama dua kali. Dana yang telah direkonsiliasi pada booking kedaluwarsa atau bukti ditolak dicatat sebagai uang masuk yang sah; refund hanya mengurangi kas setelah admin mencatat uang benar-benar dikembalikan.
 
-## 15. PWA, WhatsApp, dan worker
+## 15. PWA dan worker; WhatsApp ditunda
 
 ### PWA admin
 
@@ -661,19 +661,19 @@ Cakupan panel `/admin/`, tanpa Play Store/App Store. `/admin` diarahkan ke `/adm
 | Booking dibuat | Push admin berlangganan |
 | Bukti awal diunggah | Push segera |
 | Draft meminta tarif penjemputan terpisah | Push admin agar quotation diisi sebelum pelanggan submit |
-| 30 menit sebelum batas konfirmasi booking | Push + WhatsApp jika belum diputuskan; langsung saat upload jika sisa waktu <=30 menit |
+| 30, 15, dan 5 menit sebelum batas konfirmasi booking | Push jika belum diputuskan; hanya tahap terbaru yang masih relevan jika worker terlambat |
 | 20 menit sebelum pengambilan | Alert mendesak jika booking belum diputuskan |
 | Bukti perpanjangan diunggah | Push segera |
-| 30 menit sebelum batas konfirmasi perpanjangan | WhatsApp; langsung jika waktu pengingat sudah lewat |
+| 30, 15, dan 5 menit sebelum batas konfirmasi perpanjangan | Push; hanya tahap terbaru yang masih relevan |
 | Batas konfirmasi terlewati | Label/alert mendesak, tetap tahan alokasi |
 | Pelanggan melaporkan pengembalian | Notifikasi admin untuk pemeriksaan |
 | Unit terlambat, rusak, atau persiapannya mengancam booking berikutnya | Alert admin dan label booking berisiko |
 
 Worker membaca ulang status sebelum mengirim, dideduplikasi per sumber/pemicu/admin/channel, mencatat percobaan dan kegagalan, serta tidak menggagalkan booking jika provider sedang bermasalah. Frekuensi retry dan eskalasi harus dibatasi melalui konfigurasi teknis agar tidak spam. Notifikasi bukan satu-satunya sumber: dashboard tetap menampilkan deadline dan tugas.
 
-Simpan due_at dan versi deadline pada delivery record. Jika job terlambat berjalan, kirim pengingat yang masih relevan sekali, bukan melewatkan selamanya atau mengirim semua pengingat lama sekaligus. Ulang upload setelah penolakan menghitung deadline berdasarkan bukti baru yang diterima, dengan expiry pembayaran asli tetap berlaku. Ketika booking/pengajuan diputuskan, task yang belum dikirim dilewati; ketika kanal gagal, task retry tidak membuat transaksi bisnis diulang.
+Simpan due_at dan versi deadline pada delivery record. Jika job terlambat berjalan, lewati tahap yang sudah digantikan: tahap 30 menit berakhir pada H-15 menit, tahap 15 menit pada H-5 menit, dan tahap 5 menit pada deadline. Setelah deadline hanya alert overdue yang dikirim. Ulang upload setelah penolakan menghitung deadline berdasarkan bukti baru yang diterima, dengan expiry pembayaran asli tetap berlaku. Ketika booking/pengajuan diputuskan, task yang belum dikirim dilewati; ketika kanal gagal, task retry tidak membuat transaksi bisnis diulang.
 
-Phase 1 menggunakan pesan WhatsApp, tanpa call. Provider/akun, template pesan, penerima/penanggung jawab admin, dan biaya belum ditetapkan. Jangan mengasumsikan pengiriman bebas persyaratan akun/template. Persiapan provider dilakukan setelah pilihan teknis, tidak memakai kredensial dalam repository.
+Phase 1 hanya memakai PWA; pesan dan panggilan WhatsApp ditunda berdasarkan keputusan 9 Oktober 2026. Jangan membuat antrean WhatsApp baru. Pengingat berhenti setelah keputusan bisnis atau sumber tidak relevan. Bunyi berulang hanya saat dashboard aktif setelah admin menekan "Aktifkan suara"; "Saya tangani" menghentikan bunyi lokal tanpa menyetujui pembayaran. Dashboard menandai tugas terlambat dengan merah. PWA tidak menjamin alarm saat layar terkunci, bunyi/getar, ketepatan waktu push, atau melewati mode senyap/Focus. Provider/akun, template pesan, penerima/penanggung jawab admin, dan biaya belum ditetapkan. Jangan mengasumsikan pengiriman bebas persyaratan akun/template. Persiapan provider dilakukan setelah pilihan teknis, tidak memakai kredensial dalam repository.
 
 ### Scheduler
 
@@ -707,7 +707,7 @@ Interval job baru adalah rancangan teknis untuk memenuhi alert tepat waktu. Sche
 
 ## 17. Pengujian dan kriteria penerimaan
 
-Tes otomatis wajib untuk aturan bisnis berisiko. Framework dan target persentase coverage belum dipilih. Tes konkurensi harus menggunakan database dengan mekanisme lock setara produksi.
+Tes otomatis wajib untuk aturan bisnis berisiko. Implementasi memakai Node test runner untuk tes unit/HTTP/integrasi dan PostgreSQL asli untuk konkurensi; target persentase coverage belum ditetapkan. Tes konkurensi harus menggunakan database dengan mekanisme lock setara produksi.
 
 ### Booking dan alokasi
 
@@ -788,7 +788,7 @@ Tes otomatis wajib untuk aturan bisnis berisiko. Framework dan target persentase
 - Seluruh tes relevan di atas lolos dan keputusan terbuka untuk perilaku yang dibangun telah diselesaikan.
 - Alur booking, QRIS, konfirmasi, pelunasan, serah terima termasuk kompensasi keterlambatan toko, perpanjangan per unit, pengembalian, denda, perawatan, barang hilang, dan refund berjalan di produksi.
 - Tidak ada double booking dalam uji konkurensi dan alokasi tidak dapat dibypass lewat admin.
-- PWA terpasang dan push bekerja di Android/iPhone; pesan WhatsApp pengingat teruji dengan akun produksi.
+- PWA terpasang dan push bekerja di Android/iPhone; kontrol suara diuji ketika dashboard aktif; WhatsApp tidak menjadi acceptance phase 1.
 - Admin dapat mengubah settings tanpa kode; snapshot booking lama tetap benar.
 - Excel, backup dan pemulihan, otorisasi bukti privat, serta panduan admin telah diverifikasi.
 - Panduan dan akses diserahkan setelah pembayaran terakhir sesuai kesepakatan awal.
@@ -801,11 +801,11 @@ Ukuran keberhasilan bisnis kuantitatif, seperti tingkat booking mandiri dan wakt
 
 1. Hosting/domain atas nama klien, HTTPS, runtime/database sesuai stack, cron, terminal/SSH, penyimpanan privat, dan koneksi keluar ke provider.
 2. Build backend NestJS dan frontend Vite secara terpisah, sertai pemeriksaan TypeScript. Layani hasil build frontend sebagai file statis dengan fallback route SPA; reverse proxy `/api` ke backend. Pastikan `/admin/sw.js` tetap dilayani sebagai JavaScript sesuai ketentuan PWA, bukan HTML fallback.
-3. Isi environment: URL HTTPS, timezone, debug off, database, cache/queue, lokasi file publik/privat, VAPID public/private/subject, serta kredensial WhatsApp sesuai provider.
+3. Isi environment: URL HTTPS, timezone, debug off, database, cache/queue, lokasi file publik/privat, VAPID public/private/subject; kredensial WhatsApp belum diperlukan pada phase 1.
 4. Migrasi dan seeder; buat admin pertama dengan kredensial aman.
 5. Atur izin storage privat, scheduler tiap menit, dan worker outbox PostgreSQL. Jalankan API/worker dengan supervisi proses serta restart otomatis; pisahkan pekerjaan notifikasi dari request HTTP. Alternatif worker berbasis cron hanya dipakai jika hosting mendukung runtime Node.js dan memenuhi frekuensi serta aturan claim/deduplikasi antrean.
 6. Uji registrasi/profil/login, booking iPhone+aksesori, upload, approval, pelunasan, serah terima, perpanjangan per unit, pengembalian/denda, refund, expiry, pengingat, dan no-show.
-7. Uji PWA/push Android/iPhone, pesan WhatsApp, Excel, serta penolakan akses langsung file privat.
+7. Uji PWA/push Android/iPhone, kontrol suara dashboard aktif, Excel, serta penolakan akses langsung file privat.
 8. Verifikasi backup dan pemulihan. Simpan database harian minimal tujuh hari, file mingguan di lokasi privat.
 
 Deploy berikutnya: build/upload, migrasi, bersihkan cache; simpan versi sebelumnya untuk rollback dan rencanakan kompatibilitas migrasi/database.
@@ -831,7 +831,7 @@ Estimasi PRD awal sekitar 22 hari kerja, lalu deployment dan serah terima:
 
 Estimasi tersebut belum memasukkan rincian terbaru: WhatsApp, pengajuan perpanjangan dengan hold/payment, jadwal dan pengembalian per unit, workflow refund, persiapan/perawatan, dan rekonsiliasi. Estimasi final perlu diperbarui berdasarkan stack yang dipilih, hosting/provider, dan keputusan terbuka.
 
-Prioritas: mesin alokasi dan aturan, pembayaran, dan operasional tidak boleh dipotong. PWA dan WhatsApp telah disepakati sebagai phase 1; menundanya memerlukan perubahan scope yang eksplisit. Laporan tetap requirement, dengan penjadwalan delivery dapat dibahas jika waktu terbatas.
+Prioritas: mesin alokasi dan aturan, pembayaran, dan operasional tidak boleh dipotong. PWA tetap phase 1; WhatsApp ditunda secara eksplisit pada 9 Oktober 2026. Laporan tetap requirement, dengan penjadwalan delivery dapat dibahas jika waktu terbatas.
 
 ## 19. Keputusan yang masih terbuka
 
@@ -840,9 +840,9 @@ Aturan operasional yang sebelumnya terbuka telah disetujui dan diterapkan pada b
 Yang masih perlu ditentukan sebelum implementasi/deployment terkait:
 
 1. Hosting Node.js/PostgreSQL, biaya final, serta konfigurasi deployment/scheduler/worker. Stack dan struktur kode sudah ditetapkan pada bagian 3; versi dependency dipastikan saat scaffolding.
-2. Provider/akun/template WhatsApp, penerima, biaya, dan admin penanggung jawab eskalasi.
+2. WhatsApp ditunda: provider/akun/template/penerima/biaya ditetapkan saat fitur dilanjutkan; tidak menghambat phase 1 PWA.
 3. Target keberhasilan bisnis kuantitatif dan profil pengukuran performa di bawah tiga detik.
-4. Prosedur koreksi receipt manual yang salah tanpa menghapus audit. Sesuaikan DDL, FK dan indeks kondisional dengan engine saat membuat migrasi.
+Prosedur koreksi receipt masuk disetujui pada 9 Oktober 2026: receipt asli dipertahankan, pembalik pencatatan dan receipt pengganti ditambahkan dengan alasan wajib, dan saldo dihitung ulang tanpa otomatis mengubah jadwal/status booking yang telah berjalan. Koreksi memakai lock/idempotensi dan scope kewajiban yang sama. Receipt yang mendanai refund aktif/selesai harus diperiksa dahulu; transfer refund selesai tidak dibalik lewat endpoint koreksi receipt. Kelebihan menjadi pengajuan refund manual, kekurangan menjadi saldo belum lunas. Rincian implementasi di [backend/RECEIPT_CORRECTIONS.md](backend/RECEIPT_CORRECTIONS.md).
 
 Rincian teknis lain dapat ditetapkan saat implementasi: kode booking memakai prefix IRN + tanggal WIB YYMMDD + nomor urut harian minimal tiga digit yang boleh bertambah panjang; counter atomik dan kode unique mencegah overflow/duplikasi. Kode aksesori dibuat melalui counter global dengan prefix ACC dan nomor urut minimal enam digit. Notification retry maksimal tiga percobaan dengan jeda bertahap satu dan lima menit, membaca ulang relevansi sebelum setiap percobaan; error permanen tidak diulang. Ini bukan perubahan kebijakan biaya/durasi pelanggan.
 
@@ -863,3 +863,7 @@ Pada 8 Oktober 2026, template oppo-project-control diadopsi untuk stack NestJS/R
 ### Status implementasi fondasi
 
 Setelah persetujuan urutan data/backend sebelum UI pada 8 Oktober 2026, fondasi tersedia di `backend/`: schema Prisma (26 entitas domain dan counter bisnis), migrasi PostgreSQL, seed settings, konfigurasi/validasi, health API, codec WIB/rupiah, dan tes fondasi/integrasi. Verifikasi rinci dan fitur yang masih harus dikerjakan dilacak di [IMPLEMENTATION.md](IMPLEMENTATION.md); setup di [backend/README.md](backend/README.md). Catatan historis di atas menggambarkan keadaan saat tiap versi dokumen disusun. Requirement bisnis tetap sama; fondasi belum berarti 65 skenario aplikasi sudah diimplementasikan.
+
+### Penyelesaian backend phase 1
+
+Laporan/Excel, foto item dan QRIS, read-model admin, koreksi receipt masuk dan koreksi pengembalian telah diimplementasikan. Entitas receipt_corrections, superseded_at pada payments, dan manual_exemptions pada return_records melengkapi schema/migrasi runtime. Source dan migrasi menjadi acuan DDL aktual; blueprint historis di atas tetap menjelaskan domain. Cakupan otomatis dan acceptance yang membutuhkan UI/perangkat/hosting dilacak di [backend/ACCEPTANCE.md](backend/ACCEPTANCE.md) serta [IMPLEMENTATION.md](IMPLEMENTATION.md). Tidak ada perubahan tarif weekday/weekend atau kewajiban menunggu admin sebelum upload bukti.

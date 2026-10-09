@@ -24,6 +24,14 @@ export class ReceiptDto {
   transactionReference?: string;
   @IsString() @Length(5, 1000) note!: string;
 }
+export class CorrectReceiptDto extends ReceiptDto {
+  @IsString() @Length(5, 1000) reason!: string;
+}
+export class SettlementReceiptDto extends ReceiptDto {
+  @ValidateIf((_, value: unknown) => value !== undefined)
+  @IsUUID()
+  extensionId?: string;
+}
 export class VerifyProofDto extends ReceiptDto {
   @IsUUID() proofId!: string;
 }

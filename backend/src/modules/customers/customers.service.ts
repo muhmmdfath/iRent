@@ -11,6 +11,7 @@ import { NikCipher } from '../../auth/crypto';
 import { normalizeEmail, normalizePhone } from '../../auth/identity';
 import { wibNow } from '../../shared/time/wib';
 import { ProfileDto } from './profile.dto';
+import { AccountsDto } from './accounts.dto';
 
 const profileFields = {
   fullName: true,
@@ -39,6 +40,47 @@ export class CustomersService {
     return this.prisma.customerProfile.findUnique({
       where: { userId: context.user.id },
       select: profileFields,
+    });
+  }
+  async list(
+    context: AuthContext,
+    role: 'customer' | 'admin',
+    dto: AccountsDto,
+  ) {
+    return this.prisma.$transaction(async (tx) => {
+      await this.auth.authorizeLocked(tx, context, 'admin');
+      const term = dto.search?.trim();
+      const where: Prisma.UserWhereInput = {
+        role,
+        ...(term
+          ? {
+              OR: ['name', 'email', 'phone'].map((field) => ({
+                [field]: { contains: term, mode: 'insensitive' },
+              })),
+            }
+          : {}),
+      };
+      const [data, total] = await Promise.all([
+        tx.user.findMany({
+          where,
+          orderBy: [{ name: 'asc' }, { id: 'asc' }],
+          skip: (dto.page - 1) * dto.limit,
+          take: dto.limit,
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            phone: true,
+            role: true,
+            isActive: true,
+            createdAt: true,
+            profile: { select: { completedAt: true } },
+            _count: { select: { bookings: true } },
+          },
+        }),
+        tx.user.count({ where }),
+      ]);
+      return { data, total, page: dto.page, limit: dto.limit };
     });
   }
   async saveProfile(context: AuthContext, dto: ProfileDto) {

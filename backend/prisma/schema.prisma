@@ -319,6 +319,7 @@ model ItemUnit {
 
   @@unique([id, itemId])
   @@index([itemId, isActive, conditionStatus])
+  @@index([physicalStatus, preparationUntil])
   @@map("item_units")
 }
 
@@ -370,16 +371,17 @@ model Booking {
   createdAt                  DateTime      @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("created_at") @db.Timestamp(3)
   updatedAt                  DateTime      @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("updated_at") @db.Timestamp(3)
 
-  customer       User                @relation("Booking_userId", fields: [userId], references: [id], onDelete: Restrict, onUpdate: Cascade)
-  deliveryZone   DeliveryZone?       @relation("Booking_deliveryZoneId", fields: [deliveryZoneId], references: [id], onDelete: Restrict, onUpdate: Cascade)
-  items          BookingItem[]       @relation("BookingItem_bookingId")
-  extensions     Extension[]         @relation("Extension_bookingId")
-  charges        BookingCharge[]     @relation("BookingCharge_bookingId")
-  obligations    PaymentObligation[] @relation("PaymentObligation_bookingId")
-  payments       Payment[]           @relation("Payment_bookingId")
-  refunds        RefundRequest[]     @relation("RefundRequest_bookingId")
-  statusLogs     BookingStatusLog[]  @relation("BookingStatusLog_bookingId")
-  confirmedActor User?               @relation("Booking_confirmedBy", fields: [confirmedBy], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  customer           User                @relation("Booking_userId", fields: [userId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  deliveryZone       DeliveryZone?       @relation("Booking_deliveryZoneId", fields: [deliveryZoneId], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  items              BookingItem[]       @relation("BookingItem_bookingId")
+  extensions         Extension[]         @relation("Extension_bookingId")
+  charges            BookingCharge[]     @relation("BookingCharge_bookingId")
+  obligations        PaymentObligation[] @relation("PaymentObligation_bookingId")
+  payments           Payment[]           @relation("Payment_bookingId")
+  receiptCorrections ReceiptCorrection[]
+  refunds            RefundRequest[]     @relation("RefundRequest_bookingId")
+  statusLogs         BookingStatusLog[]  @relation("BookingStatusLog_bookingId")
+  confirmedActor     User?               @relation("Booking_confirmedBy", fields: [confirmedBy], references: [id], onDelete: Restrict, onUpdate: Cascade)
 
   @@index([status, initialStartAt])
   @@index([userId, status])
@@ -491,6 +493,7 @@ model Extension {
   @@unique([id, bookingId])
   @@index([status, expiresAt])
   @@index([confirmationDueAt])
+  @@index([status, createdAt, id])
   @@map("extensions")
 }
 
@@ -536,6 +539,7 @@ model ReturnRecord {
   adminDelayExemptionSeconds   Int          @default(0) @map("admin_delay_exemption_seconds")
   courierDelayExemptionSeconds Int          @default(0) @map("courier_delay_exemption_seconds")
   exemptionReason              String?      @map("exemption_reason")
+  manualExemptions             Json         @default("[]") @map("manual_exemptions")
   preparationStartedAt         DateTime?    @map("preparation_started_at") @db.Timestamp(3)
   createdAt                    DateTime     @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("created_at") @db.Timestamp(3)
   updatedAt                    DateTime     @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("updated_at") @db.Timestamp(3)
@@ -544,6 +548,7 @@ model ReturnRecord {
   verifiedActor User?       @relation("ReturnRecord_verifiedBy", fields: [verifiedBy], references: [id], onDelete: Restrict, onUpdate: Cascade)
 
   @@index([status])
+  @@index([status, createdAt, id])
   @@map("return_records")
 }
 
@@ -643,6 +648,7 @@ model PaymentProof {
 
   @@unique([id, paymentObligationId])
   @@index([paymentObligationId, status])
+  @@index([status, uploadedAt, id])
   @@map("payment_proofs")
 }
 
@@ -665,6 +671,7 @@ model Payment {
   attachmentPath            String?        @map("attachment_path")
   sourceKey                 String         @unique @map("source_key")
   note                      String?
+  supersededAt              DateTime?      @map("superseded_at") @db.Timestamp(3)
   createdAt                 DateTime       @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("created_at") @db.Timestamp(3)
   updatedAt                 DateTime       @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("updated_at") @db.Timestamp(3)
 
@@ -677,11 +684,33 @@ model Payment {
   applications             PaymentApplication[] @relation("PaymentApplication_incomingPaymentId")
   refundSources            RefundSource[]       @relation("RefundSource_incomingPaymentId")
   recordedActor            User                 @relation("Payment_recordedBy", fields: [recordedBy], references: [id], onDelete: Restrict, onUpdate: Cascade)
+  correctionAsOriginal     ReceiptCorrection?   @relation("CorrectionOriginal")
+  correctionAsReplacement  ReceiptCorrection?   @relation("CorrectionReplacement")
 
   @@unique([id, bookingId])
   @@unique([refundRequestId, bookingId])
   @@index([bookingId, extensionId, occurredAt])
+  @@index([occurredAt, id])
   @@map("payments")
+}
+
+model ReceiptCorrection {
+  id                   String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  bookingId            String   @map("booking_id") @db.Uuid
+  originalPaymentId    String   @unique @map("original_payment_id") @db.Uuid
+  replacementPaymentId String   @unique @map("replacement_payment_id") @db.Uuid
+  reversalAmount       BigInt   @map("reversal_amount")
+  reversalEffectiveAt  DateTime @map("reversal_effective_at") @db.Timestamp(3)
+  reason               String
+  createdAt            DateTime @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("created_at") @db.Timestamp(3)
+  booking              Booking  @relation(fields: [bookingId], references: [id], onDelete: Restrict)
+  original             Payment  @relation("CorrectionOriginal", fields: [originalPaymentId, bookingId], references: [id, bookingId], onDelete: Restrict, map: "correction_original_scope")
+  replacement          Payment  @relation("CorrectionReplacement", fields: [replacementPaymentId, bookingId], references: [id, bookingId], onDelete: Restrict, map: "correction_replacement_scope")
+
+  @@unique([originalPaymentId, bookingId])
+  @@unique([replacementPaymentId, bookingId])
+  @@index([bookingId, createdAt])
+  @@map("receipt_corrections")
 }
 
 model PaymentApplication {
@@ -730,6 +759,7 @@ model RefundRequest {
 
   @@unique([id, bookingId])
   @@index([bookingId, status])
+  @@index([status, createdAt, id])
   @@map("refund_requests")
 }
 
@@ -867,6 +897,9 @@ model NotificationDelivery {
   providerReference String?             @map("provider_reference")
   error             String?
   deduplicationKey  String              @unique @map("deduplication_key")
+  context           Json                @default("{}")
+  leaseToken        String?             @map("lease_token") @db.Uuid
+  leaseExpiresAt    DateTime?           @map("lease_expires_at") @db.Timestamp(3)
   createdAt         DateTime            @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("created_at") @db.Timestamp(3)
   updatedAt         DateTime            @default(dbgenerated("(CURRENT_TIMESTAMP AT TIME ZONE 'Asia/Jakarta'::text)")) @map("updated_at") @db.Timestamp(3)
 
@@ -874,6 +907,7 @@ model NotificationDelivery {
   recipientAdmin User         @relation("NotificationDelivery_recipientAdminId", fields: [recipientAdminId], references: [id], onDelete: Restrict, onUpdate: Cascade)
 
   @@index([status, retryAt, dueAt])
+  @@index([status, leaseExpiresAt])
   @@map("notification_deliveries")
 }
 

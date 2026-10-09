@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MC04 — Mobile Pelanggan Pembayaran</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-error-container": "#93000a",
+            "pastel-blush": "#FBECEE",
+            "secondary": "#974166",
+            "canvas": "#F1F2F4",
+            "on-tertiary": "#ffffff",
+            "on-secondary": "#ffffff",
+            "pastel-apricot": "#FFF0DE",
+            "on-secondary-fixed": "#3e0021",
+            "primary-fixed": "#e2e2ea",
+            "surface-dim": "#ddd9d9",
+            "on-surface-variant": "#46464b",
+            "sidebar": "#F8F9FA",
+            "pastel-lilac": "#F1ECFB",
+            "on-tertiary-fixed-variant": "#4e453b",
+            "success-bg": "#EAF6EF",
+            "secondary-container": "#fe96be",
+            "inverse-on-surface": "#f4f0f0",
+            "surface-container-highest": "#e5e2e2",
+            "workspace": "#FCFCFD",
+            "outline-variant": "#c7c6cb",
+            "pastel-blue": "#EAF1FC",
+            "on-background": "#1c1b1c",
+            "surface-container": "#f1eded",
+            "tertiary-fixed": "#eee0d3",
+            "muted": "#606570",
+            "on-error": "#ffffff",
+            "on-tertiary-fixed": "#211b12",
+            "surface-container-lowest": "#ffffff",
+            "warning-bg": "#FFF5DF",
+            "on-primary-fixed-variant": "#45474d",
+            "success-ink": "#176345",
+            "error": "#ba1a1a",
+            "surface": "#FFFFFF",
+            "tertiary-container": "#312a21",
+            "surface-tint": "#5c5e65",
+            "surface-container-low": "#f6f3f3",
+            "tertiary-fixed-dim": "#d1c5b7",
+            "on-primary-fixed": "#191b21",
+            "secondary-fixed-dim": "#ffb0cc",
+            "inverse-surface": "#313031",
+            "error-container": "#ffdad6",
+            "selected-rose": "#F9E8EF",
+            "secondary-fixed": "#ffd9e4",
+            "on-primary": "#ffffff",
+            "primary-fixed-dim": "#c5c6ce",
+            "background": "#fcf8f8",
+            "inverse-primary": "#c5c6ce",
+            "on-secondary-container": "#7a2a4e",
+            "outline": "#76777b",
+            "urgency-red-ink": "#A12A39",
+            "tertiary": "#1c160e",
+            "primary": "#15171c",
+            "on-surface": "#1c1b1c",
+            "warning-ink": "#855300",
+            "surface-variant": "#e5e2e2",
+            "surface-container-high": "#ebe7e7",
+            "on-primary-container": "#919299",
+            "ink": "#24262B",
+            "primary-container": "#292b31",
+            "line": "#E6E8ED",
+            "urgency-red-bg": "#FFF0F1",
+            "pastel-mint": "#E8F5EE",
+            "on-tertiary-container": "#9b9185",
+            "on-secondary-fixed-variant": "#79294e",
+            "surface-bright": "#fcf8f8"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "space-4xl": "48px",
+            "space-xl": "20px",
+            "margin": "32px",
+            "space-md": "12px",
+            "space-xs": "4px",
+            "space-3xl": "32px",
+            "space-2xl": "24px",
+            "space-lg": "16px",
+            "space-sm": "8px",
+            "gutter": "32px"
+          },
+          "fontFamily": {
+            "headline-lg": ["Poppins"],
+            "headline-md": ["Poppins"],
+            "label-sm": ["Poppins"],
+            "body-sm": ["Poppins"],
+            "label-md": ["Poppins"],
+            "body-md": ["Poppins"]
+          },
+          "fontSize": {
+            "headline-lg": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+            "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      font-size: 20px;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  </style>
+</head>
+<body class="bg-canvas text-ink antialiased min-h-screen flex justify-center selection:bg-selected-rose selection:text-secondary">
+<!-- Mobile Viewport Container 390px -->
+<div class="w-full max-w-[390px] bg-workspace min-h-screen flex flex-col relative pb-[84px] shadow-sm">
+<!-- TopAppBar (From Shared Component Anchor) -->
+<header class="sticky top-0 z-40 bg-surface h-[56px] flex items-center justify-between px-space-xl border-b border-line">
+<div class="flex items-center gap-space-sm">
+<button aria-label="Kembali" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-canvas text-ink transition-colors active:scale-95" type="button">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<div class="flex items-center gap-2"><h1 class="text-headline-md font-headline-md text-ink tracking-tight">Pembayaran &amp; Unggah Bukti</h1><span class="text-[10px] font-medium px-1.5 py-0.5 rounded bg-line text-muted">Data contoh</span></div>
+</div>
+<div class="flex items-center gap-space-xs">
+<button aria-label="Notifikasi" class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-canvas text-muted transition-colors" type="button">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 px-space-xl pt-space-lg space-y-space-lg">
+<!-- Urgent SLA Banner: 15 Mins Left -->
+<section class="bg-urgency-red-bg border border-urgency-red-ink/20 rounded-xl p-space-md">
+<div class="flex items-start gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-urgency-red-ink/10 flex items-center justify-center shrink-0 text-urgency-red-ink mt-0.5">
+<span class="material-symbols-outlined text-urgency-red-ink" data-icon="timer">timer</span>
+</div>
+<div class="flex-1">
+<div class="flex items-center justify-between mb-1">
+<span class="text-label-sm font-label-sm text-urgency-red-ink uppercase tracking-wider font-semibold">Batas Unggah Bukti</span>
+<span class="text-label-sm font-label-sm px-2 py-0.5 bg-urgency-red-ink text-surface rounded-full font-semibold">Sisa 15 menit</span>
+</div>
+<p class="text-body-sm font-body-sm text-ink leading-tight">
+              Batas transfer &amp; unggah: <strong class="font-semibold text-urgency-red-ink">10.30 WIB</strong>
+</p>
+<div class="mt-2 pt-2 border-t border-urgency-red-ink/15 grid grid-cols-3 gap-1 text-[11px] leading-tight text-muted"><div><span class="block text-muted">Dibuat:</span><span class="font-medium text-ink">10 Okt 2026, 10.00 WIB</span></div><div><span class="block text-muted">Server:</span><span class="font-medium text-ink">10.15 WIB</span></div><div class="text-right"><span class="block text-muted">Jadwal Ambil:</span><span class="font-medium text-ink">10 Okt 2026, 12.30 WIB<br/><span class="text-[10px] text-muted">(Durasi 6 Jam, Kembali 18.30 WIB)</span></span></div></div>
+</div>
+</div>
+</section>
+<!-- Ringkasan Pesanan (Order Items Thumbnail 64px) -->
+<section class="bg-surface rounded-xl border border-line p-space-md space-y-space-md">
+<div class="flex items-center justify-between border-b border-line pb-space-xs">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-secondary" data-icon="shopping_bag">shopping_bag</span>
+<h2 class="text-label-md font-label-md text-ink font-semibold">Ringkasan Pesanan</h2>
+</div>
+<span class="text-label-sm font-label-sm text-muted">#ORD-2410-092</span>
+</div>
+<div class="space-y-space-sm divide-y divide-line/60"><!-- Item 1: iPhone 15 Pro -->
+<div class="flex items-center gap-space-md pt-space-xs first:pt-0">
+<div class="w-16 h-16 rounded-lg bg-surface-container-low border border-line shrink-0 overflow-hidden flex items-center justify-center p-1">
+<img alt="Apple iPhone 15 Pro" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1WVaD1ekzrwEvFxGwsp4FNnqj7mlG7B5DhFRLTYmxYo5Muf64snu7D4-_HJRIf-yyDeMazgdPUW3-yopAIRx-u6Q0Nwm1pc6eNAhp6Xb573h04LKWso3ajC1zd_vJaYQhlv6UNmLQx7hzrmuFvdNq3AwkSPLo5bHeaXT2xB1PRjEYIJUriMExmcS8iKMPWmzjBXrbdJCHXGm4ojjzUn60OVKrRc7LZcHXv6T4Sz7V0RdWw_SR6opuUO0DU"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-start justify-between gap-1">
+<h3 class="text-label-md font-label-md text-ink font-medium truncate">iPhone 15 Pro</h3>
+</div>
+<p class="text-[12px] text-muted">128GB • Unit Utama</p>
+<p class="text-label-sm font-label-sm text-ink font-semibold mt-1">Rp120.000</p>
+</div>
+</div>
+<!-- Item 2: Tripod Stand -->
+<div class="flex items-center gap-space-md pt-space-sm">
+<div class="w-16 h-16 rounded-lg bg-surface-container-low border border-line shrink-0 overflow-hidden flex items-center justify-center p-1">
+<img alt="Tripod Stand" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1UfxKARj_jY0mc3BJWHy4YZyYqnnH1AreqqWUzbP0dIY5oozPQJ10MtqsWztWbV1ILgsayihuPcOaq1GovY7kda2BMG9nE8f96ZKzlN3IljALegKu6eNTCDjJ9BGzgZNhasVz8FE33xBSUVtW43g01nVMhinQCr-yD0EHNZ5t5M-AB6XESRDCFwBM8Vz-3lAD8g-aSJET0cd8kk4tlgjP4L-IwTBZ6GCIbjtkG7LyrmG9feP7rdffTxhNs"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-start justify-between gap-1">
+<h3 class="text-label-md font-label-md text-ink font-medium truncate">Tripod Stand</h3>
+</div>
+<p class="text-[12px] text-muted">Aksesoris Tambahan</p>
+<p class="text-label-sm font-label-sm text-ink font-semibold mt-1">Rp30.000</p>
+</div>
+</div></div>
+</section>
+<!-- Status Finansial (Financial Ledger Block) -->
+<section class="bg-surface rounded-xl border border-line p-space-md space-y-space-sm">
+<div class="flex items-center justify-between border-b border-line pb-space-xs">
+<h2 class="text-label-md font-label-md text-ink font-semibold">Status Finansial</h2>
+<span class="px-2 py-0.5 rounded-full text-label-sm font-label-sm bg-pastel-blush text-secondary font-medium">Tagihan Aktif</span>
+</div>
+<div class="space-y-2 text-body-sm font-body-sm pt-1">
+<div class="flex justify-between items-center text-muted">
+<span>Total Nilai Booking</span>
+<span class="font-medium text-ink tabular-nums">Rp150.000</span>
+</div>
+<div class="flex justify-between items-center text-muted">
+<span>Terverifikasi Bank</span>
+<span class="font-medium text-ink tabular-nums">Rp0</span>
+</div>
+<div class="flex justify-between items-center text-muted">
+<span>Sisa Kewajiban Riil</span>
+<span class="font-medium text-ink tabular-nums">Rp150.000</span>
+</div>
+<!-- Highlight DP Wajib Bayar -->
+<div class="mt-3 p-space-sm rounded-lg bg-selected-rose/40 border border-secondary/20 flex items-center justify-between"><div><span class="block text-label-sm font-label-sm font-medium text-secondary">Wajib Bayar Sekarang (Pilihan DP)</span><span class="text-[11px] text-muted">Uang muka konfirmasi reservasi</span></div><span class="text-headline-md font-headline-md text-secondary font-semibold tabular-nums">Rp20.000</span></div>
+<!-- Pelunasan Label Notice -->
+<div class="p-2.5 rounded-lg bg-canvas text-[12px] text-muted flex items-start gap-2 border border-line"><span class="material-symbols-outlined text-[18px] text-muted shrink-0 mt-0.5" data-icon="info">info</span><p class="leading-relaxed"><strong class="font-medium text-ink">Pelunasan setelah DP Rp20.000 terverifikasi:</strong> <span class="font-semibold text-ink">Rp130.000</span> (dibayarkan saat serah terima fisik).</p></div>
+</div>
+</section>
+<!-- Metode Pembayaran: Rekening Toko & Static QRIS Sample -->
+<section class="bg-surface rounded-xl border border-line p-space-md space-y-space-md">
+<div class="flex items-center justify-between border-b border-line pb-space-xs">
+<h2 class="text-label-md font-label-md text-ink font-semibold">Tujuan Transfer Toko</h2>
+<span class="text-[11px] text-muted bg-sidebar px-2 py-0.5 rounded border border-line">BCA Kasir Toko</span>
+</div>
+<!-- Rekening BCA -->
+<div class="p-space-sm bg-sidebar rounded-lg border border-line space-y-2"><div class="flex items-center justify-between"><div class="flex items-center gap-2"><div class="w-8 h-8 rounded bg-surface border border-line flex items-center justify-center font-bold text-[11px] text-primary">BCA</div><div><p class="text-label-sm font-label-sm font-semibold text-ink">BCA</p><p class="text-[11px] text-muted">a.n Rekening Toko Terkonfigurasi</p></div></div><span class="text-[11px] text-muted bg-surface px-2 py-0.5 rounded border border-line">Rekening toko dari konfigurasi</span></div><div class="bg-surface px-3 py-2 rounded border border-line text-[12px] text-muted flex items-center justify-between"><span class="italic text-ink font-medium">Nomor rekening toko sesuai pengaturan cabang</span><span class="text-[11px] text-muted font-medium bg-canvas px-1.5 py-0.5 rounded">Verifikasi Manual</span></div><p class="text-[11px] text-muted">Catatan: Kasir memverifikasi mutasi bank secara manual.</p></div>
+<!-- QRIS Section (Sample Non-scannable) -->
+<div class="border border-dashed border-line rounded-lg p-space-md text-center bg-sidebar/50 space-y-space-xs">
+<div class="flex items-center justify-center gap-1 text-muted text-label-sm font-medium">
+<span class="material-symbols-outlined text-[16px]" data-icon="qr_code_2">qr_code_2</span>
+<span>QRIS Kasir iRent</span>
+</div>
+<!-- Static Non-scannable QR Illustration Box -->
+<div class="relative w-36 h-36 mx-auto bg-surface p-2 rounded-lg border border-line flex flex-col items-center justify-center group overflow-hidden">
+<div class="w-full h-full bg-line/40 rounded flex flex-col items-center justify-center p-2 relative">
+<div class="grid grid-cols-5 gap-1.5 opacity-30 w-full h-full p-2">
+<div class="bg-ink rounded-xs col-span-2 row-span-2"></div>
+<div class="bg-ink rounded-xs"></div>
+<div class="bg-ink rounded-xs col-span-2 row-span-2"></div>
+<div class="bg-ink rounded-xs"></div>
+<div class="bg-ink rounded-xs"></div>
+<div class="bg-ink rounded-xs"></div>
+<div class="bg-ink rounded-xs"></div>
+<div class="bg-ink rounded-xs"></div>
+<div class="bg-ink rounded-xs col-span-2 row-span-2"></div>
+<div class="bg-ink rounded-xs"></div>
+<div class="bg-ink rounded-xs"></div>
+</div>
+<div class="absolute inset-0 bg-ink/10 backdrop-blur-[1px] flex flex-col items-center justify-center p-2 text-center">
+<span class="material-symbols-outlined text-urgency-red-ink text-[24px]" data-icon="block">block</span>
+<span class="text-[10px] font-semibold text-urgency-red-ink mt-0.5 leading-tight">QRIS CONTOH</span>
+</div>
+</div>
+</div>
+<div class="inline-flex items-center gap-1 px-2.5 py-1 bg-urgency-red-bg border border-urgency-red-ink/20 rounded-full text-urgency-red-ink text-[11px] font-medium">
+<span class="material-symbols-outlined text-[14px]" data-icon="info">info</span>
+<span>QRIS contoh — tidak dapat dibayar</span>
+</div>
+<p class="text-[11px] text-muted">Mohon lakukan transfer manual ke rekening BCA di atas.</p>
+</div>
+</section>
+<!-- Formulir Unggah Bukti Transfer -->
+<section class="bg-surface rounded-xl border border-line p-space-md space-y-space-md">
+<div class="border-b border-line pb-space-xs">
+<h2 class="text-label-md font-label-md text-ink font-semibold">Formulir Unggah Bukti Transfer</h2>
+<p class="text-[12px] text-muted">Lampirkan struk m-banking atau ATM yang sah</p>
+</div>
+<form class="space-y-space-md" onsubmit="event.preventDefault();">
+<!-- Input Nominal Transfer -->
+<div>
+<label class="block text-label-sm font-label-sm text-ink mb-1.5 font-medium" for="transfer-amount">
+              Nominal yang Ditransfer
+            </label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-body-sm font-medium text-muted">Rp</span>
+<input class="w-full pl-9 pr-3 py-2.5 bg-sidebar rounded-[10px] border border-line text-ink font-medium text-body-md focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary/30" id="transfer-amount" readonly="" type="text" value="20.000"/>
+</div>
+<p class="text-[11px] text-muted mt-1">Pastikan nominal transfer sesuai dengan DP yang dipilih.</p>
+</div>
+<!-- Upload Dropzone / Attached State -->
+<div>
+<div class="flex items-center justify-between mb-1.5">
+<label class="block text-label-sm font-label-sm text-ink font-medium">Berkas Bukti Transfer</label>
+<span class="text-[11px] text-muted">JPG, PNG, PDF (Maks 2 MB)</span>
+</div>
+<!-- Attached File Container (Per prompt: 'bukti_transfer_bca_rian.png' 1.2 MB) -->
+<div class="border border-line rounded-xl p-space-sm bg-sidebar flex items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-sm min-w-0">
+<div class="w-10 h-10 rounded-lg bg-surface border border-line flex items-center justify-center shrink-0 text-secondary">
+<span class="material-symbols-outlined" data-icon="image">image</span>
+</div>
+<div class="min-w-0">
+<p class="text-body-sm font-body-sm font-medium text-ink truncate">bukti_transfer_bca_rian.png</p>
+<div class="flex items-center gap-2 text-[11px] text-muted">
+<span>1.2 MB</span>
+<span>•</span>
+<span class="text-success-ink font-medium flex items-center gap-0.5">
+<span class="material-symbols-outlined text-[13px]" data-icon="check_circle">check_circle</span>
+                      Siap unggah
+                    </span>
+</div>
+</div>
+</div>
+<button aria-label="Ganti Berkas" class="text-muted hover:text-urgency-red-ink p-1.5 rounded hover:bg-canvas transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="close">close</span>
+</button>
+</div>
+</div>
+<!-- Primary Submit CTA Button (Min 44px touch height) -->
+<button class="w-full h-11 bg-primary-container text-surface hover:bg-primary font-body-sm font-medium rounded-[10px] flex items-center justify-center gap-2 shadow-sm active:scale-[0.98] transition-all" type="submit">
+<span class="material-symbols-outlined text-[20px]" data-icon="upload_file">upload_file</span>
+<span>Unggah Bukti Pembayaran</span>
+</button>
+</form>
+</section>
+<!-- SLA Rules & Protection Clauses (Accordion / Expandable Cards) -->
+<section class="bg-surface rounded-xl border border-line p-space-md space-y-space-sm">
+<div class="flex items-center gap-1.5 pb-1">
+<span class="material-symbols-outlined text-secondary" data-icon="verified_user">verified_user</span>
+<h2 class="text-label-md font-label-md text-ink font-semibold">Ketentuan &amp; Aturan SLA</h2>
+</div>
+<div class="space-y-2 text-body-sm font-body-sm">
+<!-- Rule 1: Status Flow -->
+<div class="p-2.5 rounded-lg bg-sidebar border border-line flex items-start gap-2.5"><span class="material-symbols-outlined text-muted text-[18px] shrink-0 mt-0.5" data-icon="hourglass_top">hourglass_top</span><div class="text-[12px] leading-relaxed"><strong class="font-medium text-ink">Status Setelah Unggah:</strong><p class="text-muted">Setelah unggah bukti, status berubah menjadi <span class="font-medium text-warning-ink bg-warning-bg px-1 rounded">"Menunggu verifikasi pembayaran"</span> (bukan lunas otomatis).</p></div></div>
+<!-- Rule 2: Limit SLA -->
+<div class="p-2.5 rounded-lg bg-sidebar border border-line flex items-start gap-2.5"><span class="material-symbols-outlined text-muted text-[18px] shrink-0 mt-0.5" data-icon="schedule">schedule</span><div class="text-[12px] leading-relaxed"><strong class="font-medium text-ink">Formula Konfirmasi Admin:</strong><p class="text-muted"><code class="text-[11px] font-mono bg-canvas px-1 rounded">min(upload + 1 jam, 11.30 WIB)</code>. Kasir memverifikasi mutasi bank secara manual.</p></div></div>
+<!-- Rule 3: Protection Clause -->
+<div class="p-2.5 rounded-lg bg-urgency-red-bg/50 border border-urgency-red-ink/20 flex items-start gap-2.5"><span class="material-symbols-outlined text-urgency-red-ink text-[18px] shrink-0 mt-0.5" data-icon="gavel">gavel</span><div class="text-[12px] leading-relaxed"><strong class="font-medium text-urgency-red-ink">Catatan Tegas Klausul Proteksi Waktu:</strong><p class="text-muted">Batas waktu unggah (10.30 WIB) <strong class="text-ink">tidak berubah</strong> jika bukti ditolak atau transfer kurang bayar.</p></div></div>
+</div>
+<!-- Mini Status History / Accordion Drawer Detail -->
+<details class="pt-2 border-t border-line group">
+<summary class="flex items-center justify-between text-label-sm font-label-sm text-muted cursor-pointer hover:text-ink list-none py-1">
+<span class="flex items-center gap-1 font-medium">
+<span class="material-symbols-outlined text-[16px]" data-icon="history">history</span>
+              Riwayat Transaksi &amp; Verifikasi
+            </span>
+<span class="material-symbols-outlined text-[16px] transition-transform group-open:rotate-180" data-icon="expand_more">expand_more</span>
+</summary>
+<div class="pt-2 space-y-2 text-[12px] text-muted border-l-2 border-line ml-2 pl-3">
+<div><span class="material-symbols-outlined text-muted text-[18px] shrink-0 mt-0.5" data-icon="hourglass_top">hourglass_top</span><div class="text-[12px] leading-relaxed"><strong class="font-medium text-ink">Status Setelah Unggah:</strong><p class="text-muted">Setelah unggah bukti, status berubah menjadi <span class="font-medium text-warning-ink bg-warning-bg px-1 rounded">"Menunggu verifikasi pembayaran"</span> (bukan lunas otomatis).</p></div></div>
+<div><span class="material-symbols-outlined text-muted text-[18px] shrink-0 mt-0.5" data-icon="schedule">schedule</span><div class="text-[12px] leading-relaxed"><strong class="font-medium text-ink">Formula Konfirmasi Admin:</strong><p class="text-muted"><code class="text-[11px] font-mono bg-canvas px-1 rounded">min(upload + 1 jam, 11.30 WIB)</code>. Kasir memverifikasi mutasi bank secara manual.</p></div></div>
+</div>
+</details>
+</section>
+</main>
+<!-- Bottom Navigation Bar (Shared Component Anchor) -->
+<!-- Active State: 'Booking Saya' / Cari / Dashboard etc. Exact strings per JSON -->
+<nav class="fixed bottom-0 left-0 right-0 w-full max-w-[390px] mx-auto z-50 flex justify-around items-center px-space-sm bg-surface h-[64px] pb-safe shadow-sm border-t border-line">
+<!-- Destination 1: Dashboard -->
+<a class="flex flex-col items-center justify-center text-muted px-space-sm py-space-xs hover:text-ink transition-colors active:scale-[0.95]" href="#dashboard">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="text-label-sm font-label-sm mt-0.5">Dashboard</span>
+</a>
+<!-- Destination 2: Cari -->
+<a class="flex flex-col items-center justify-center text-muted px-space-sm py-space-xs hover:text-ink transition-colors active:scale-[0.95]" href="#cari">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+<span class="text-label-sm font-label-sm mt-0.5">Cari</span>
+</a>
+<!-- Destination 3: Booking Saya (ACTIVE for payment upload flow) -->
+<a class="flex flex-col items-center justify-center text-secondary bg-selected-rose rounded-full px-space-sm py-space-xs transition-transform active:scale-[0.95]" href="#booking">
+<span class="material-symbols-outlined" data-icon="receipt_long">receipt_long</span>
+<span class="text-label-sm font-label-sm mt-0.5 font-semibold">Booking Saya</span>
+</a>
+<!-- Destination 4: Bantuan -->
+<a class="flex flex-col items-center justify-center text-muted px-space-sm py-space-xs hover:text-ink transition-colors active:scale-[0.95]" href="#bantuan">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+<span class="text-label-sm font-label-sm mt-0.5">Bantuan</span>
+</a>
+<!-- Destination 5: Profil -->
+<a class="flex flex-col items-center justify-center text-muted px-space-sm py-space-xs hover:text-ink transition-colors active:scale-[0.95]" href="#profil">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+<span class="text-label-sm font-label-sm mt-0.5">Profil</span>
+</a>
+</nav>
+</div>
+</body></html>

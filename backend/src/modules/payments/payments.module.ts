@@ -31,9 +31,16 @@ import {
   RejectProofDto,
   UploadProofDto,
   VerifyProofDto,
+  CorrectReceiptDto,
+  SettlementReceiptDto,
 } from './payments.dto';
 import { PaymentExpiryWorker } from './payment-expiry.worker';
 import { RefundsService } from './refunds.service';
+import { NoShowService } from './no-show.service';
+import { ReceiptCorrectionsService } from './receipt-corrections.service';
+import { NoShowWorker } from './no-show.worker';
+import { RisksModule } from '../risks/risks.module';
+import { DeliveryFailureDto } from './no-show.dto';
 import {
   CancelBookingDto,
   RefundRecipientDto,
@@ -144,6 +151,24 @@ export class RefundsController {
   }
 }
 
+@Controller('admin/bookings')
+@Roles('admin')
+export class NoShowController {
+  constructor(private readonly noShow: NoShowService) {}
+
+  @Get('delivery-follow-up') followUp(@Req() req: AuthRequest) {
+    return this.noShow.followUp(req.auth);
+  }
+  @Post(':id/delivery/customer-failure') deliveryFailure(
+    @Req() req: AuthRequest,
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() input: DeliveryFailureDto,
+    @Headers('idempotency-key') key?: string,
+  ) {
+    return this.noShow.deliveryFailure(req.auth, id, input, key);
+  }
+}
+
 @Controller('bookings')
 export class CustomerPaymentsController {
   constructor(private readonly payments: PaymentsService) {}
@@ -215,6 +240,14 @@ export class PrivateProofsController {
 @Roles('admin')
 export class AdminPaymentsController {
   constructor(private readonly payments: PaymentsService) {}
+  @Post(':id/settlement') recordSettlement(
+    @Req() req: AuthRequest,
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() input: SettlementReceiptDto,
+    @Headers('idempotency-key') key?: string,
+  ) {
+    return this.payments.recordSettlement(req.auth, id, input, key);
+  }
   @Post(':id/payments/verify') verify(
     @Req() req: AuthRequest,
     @Param('id', new ParseUUIDPipe()) id: string,
@@ -249,13 +282,30 @@ export class AdminPaymentsController {
   }
 }
 
+@Controller('admin/bookings')
+@Roles('admin')
+class ReceiptCorrectionsController {
+  constructor(private readonly corrections: ReceiptCorrectionsService) {}
+  @Post(':id/payments/:paymentId/correct') correct(
+    @Req() req: AuthRequest,
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Param('paymentId', new ParseUUIDPipe()) paymentId: string,
+    @Body() input: CorrectReceiptDto,
+    @Headers('idempotency-key') key?: string,
+  ) {
+    return this.corrections.correct(req.auth, id, paymentId, input, key);
+  }
+}
+
 @Module({
-  imports: [PrismaModule, AuthModule, PricingModule],
+  imports: [PrismaModule, AuthModule, PricingModule, RisksModule],
   controllers: [
     CustomerPaymentsController,
     PrivateProofsController,
     AdminPaymentsController,
     RefundsController,
+    NoShowController,
+    ReceiptCorrectionsController,
   ],
   providers: [
     PaymentsService,
@@ -263,7 +313,10 @@ export class AdminPaymentsController {
     ProofStorageService,
     PaymentExpiryWorker,
     RefundsService,
+    NoShowService,
+    ReceiptCorrectionsService,
+    NoShowWorker,
   ],
-  exports: [PaymentsService],
+  exports: [PaymentsService, PaymentLedgerService, ProofStorageService],
 })
 export class PaymentsModule {}

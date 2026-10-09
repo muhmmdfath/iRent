@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>iRent Semarang - MA03 Mobile Admin Jadwal Unit</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-secondary-fixed-variant": "#79294e",
+            "error": "#ba1a1a",
+            "success-bg": "#EAF6EF",
+            "primary-container": "#292b31",
+            "selected-rose": "#F9E8EF",
+            "outline-variant": "#c7c6cb",
+            "background": "#fcf8f8",
+            "surface-container-highest": "#e5e2e2",
+            "pastel-mint": "#E8F5EE",
+            "muted": "#606570",
+            "on-secondary-container": "#7a2a4e",
+            "inverse-on-surface": "#f4f0f0",
+            "surface-variant": "#e5e2e2",
+            "ink": "#24262B",
+            "on-primary": "#ffffff",
+            "on-surface": "#1c1b1c",
+            "on-secondary": "#ffffff",
+            "tertiary-fixed": "#eee0d3",
+            "workspace": "#FCFCFD",
+            "on-tertiary": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "pastel-apricot": "#FFF0DE",
+            "on-tertiary-container": "#9b9185",
+            "surface-dim": "#ddd9d9",
+            "pastel-lilac": "#F1ECFB",
+            "surface-container-low": "#f6f3f3",
+            "on-tertiary-fixed": "#211b12",
+            "warning-bg": "#FFF5DF",
+            "tertiary-fixed-dim": "#d1c5b7",
+            "surface": "#FFFFFF",
+            "on-secondary-fixed": "#3e0021",
+            "secondary-container": "#fe96be",
+            "primary": "#15171c",
+            "sidebar": "#F8F9FA",
+            "secondary": "#974166",
+            "outline": "#76777b",
+            "on-primary-fixed-variant": "#45474d",
+            "success-ink": "#176345",
+            "on-surface-variant": "#46464b",
+            "on-error-container": "#93000a",
+            "inverse-surface": "#313031",
+            "pastel-blush": "#FBECEE",
+            "on-primary-container": "#919299",
+            "on-error": "#ffffff",
+            "canvas": "#F1F2F4",
+            "primary-fixed": "#e2e2ea",
+            "warning-ink": "#855300",
+            "surface-tint": "#5c5e65",
+            "surface-container": "#f1eded",
+            "tertiary-container": "#312a21",
+            "inverse-primary": "#c5c6ce",
+            "urgency-red-bg": "#FFF0F1",
+            "secondary-fixed": "#ffd9e4",
+            "error-container": "#ffdad6",
+            "line": "#E6E8ED",
+            "surface-container-high": "#ebe7e7",
+            "pastel-blue": "#EAF1FC",
+            "on-primary-fixed": "#191b21",
+            "urgency-red-ink": "#A12A39",
+            "secondary-fixed-dim": "#ffb0cc",
+            "primary-fixed-dim": "#c5c6ce",
+            "on-tertiary-fixed-variant": "#4e453b",
+            "on-background": "#1c1b1c",
+            "tertiary": "#1c160e",
+            "surface-bright": "#fcf8f8"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem",
+            "card": "16px"
+          },
+          "spacing": {
+            "space-2xl": "24px",
+            "space-lg": "16px",
+            "gutter": "32px",
+            "space-md": "12px",
+            "margin": "32px",
+            "space-xs": "4px",
+            "space-xl": "20px",
+            "space-sm": "8px",
+            "space-4xl": "48px",
+            "space-3xl": "32px"
+          },
+          "fontFamily": {
+            "label-md": ["Poppins"],
+            "label-sm": ["Poppins"],
+            "headline-md": ["Poppins"],
+            "headline-lg": ["Poppins"],
+            "body-sm": ["Poppins"],
+            "body-md": ["Poppins"]
+          },
+          "fontSize": {
+            "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+            "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "headline-lg": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-canvas text-ink font-body-sm text-body-sm antialiased min-h-screen flex justify-center">
+<!-- Mobile Container Wrapper 390px Max -->
+<div class="w-full max-w-[390px] min-h-screen bg-canvas flex flex-col relative pb-[88px]">
+<!-- TopAppBar JSON Anchor Component -->
+<header class="fixed top-0 left-0 w-full z-50 flex items-center justify-between h-[56px] px-space-xl max-w-[390px] mx-auto bg-workspace border-b border-line">
+<div class="flex items-center gap-2">
+<button aria-label="Menu Operasional" class="w-[44px] h-[44px] rounded-lg flex items-center justify-center text-primary hover:bg-sidebar active:opacity-80 transition-colors" type="button">
+<svg class="w-5 h-5 text-ink" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<span class="font-headline-md text-headline-md font-semibold text-ink tracking-tight">iRent Semarang</span>
+</div>
+<div class="flex items-center gap-1">
+<span class="text-[10px] font-label-sm font-semibold tracking-wide px-2 py-0.5 rounded-full bg-pastel-blush text-urgency-red-ink border border-line">ADMIN</span>
+<button aria-label="Notifikasi Operasional" class="w-[44px] h-[44px] rounded-lg flex items-center justify-center text-primary hover:bg-sidebar active:opacity-80 transition-colors relative" type="button">
+<svg class="w-5 h-5 text-ink" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-urgency-red-ink"></span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="pt-[68px] px-space-xl flex-1 flex flex-col gap-5">
+<!-- Screen Header Section -->
+<section class="mt-1">
+<div class="flex items-center justify-between mb-1">
+<span class="text-[11px] font-semibold text-muted uppercase tracking-wider">MA03 • Konsol Kendali Fisik</span>
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-white border border-line text-[11px] font-label-sm text-muted">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            Data contoh
+          </span>
+</div>
+<h1 class="font-headline-md text-headline-md text-ink font-semibold tracking-tight">Jadwal &amp; Risiko Unit Fisik</h1>
+<p class="font-body-sm text-body-sm text-muted mt-0.5">Sinkronisasi Kalender &amp; Kesiapan Toko • Data contoh</p>
+</section>
+<!-- Operational Filters Container -->
+<section class="bg-surface rounded-xl p-3 border border-line flex flex-col gap-2">
+<div class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+<!-- Filter 1: Tanggal -->
+<div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sidebar border border-line min-h-[38px] shrink-0 text-ink font-label-sm text-label-sm">
+<svg class="w-4 h-4 text-muted" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="font-semibold">10 Okt 2026</span>
+</div>
+<!-- Filter 2: Model -->
+<div class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-sidebar border border-line min-h-[38px] shrink-0 text-ink font-label-sm text-label-sm">
+<svg class="w-4 h-4 text-muted" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Semua iPhone</span>
+<svg class="w-3.5 h-3.5 text-muted ml-0.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+</div>
+<!-- Filter 3: Lokasi -->
+<div class="flex items-center justify-between px-3 py-2 rounded-lg bg-sidebar border border-line">
+<div class="flex items-center gap-2 min-w-0">
+<svg class="w-4 h-4 text-muted shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+<path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="font-body-sm text-body-sm text-ink truncate">Lokasi toko dari konfigurasi</span>
+</div>
+<span class="text-[11px] font-label-sm text-secondary font-medium shrink-0 ml-1">Ubah</span>
+</div>
+</section>
+<!-- Banner Peringatan Operasional Mandatori -->
+<section class="bg-pastel-blush border border-secondary-fixed-dim rounded-xl p-3.5 flex gap-3 items-start">
+<div class="w-6 h-6 rounded-full bg-urgency-red-bg flex items-center justify-center shrink-0 mt-0.5 text-urgency-red-ink">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div class="space-y-1">
+<div class="font-label-md text-label-md font-semibold text-urgency-red-ink leading-tight">Protokol Pemisahan Status Fisik</div>
+<p class="font-body-sm text-body-sm text-ink leading-relaxed">
+            Status fisik terpisah dari jadwal kalender. Selesainya timer tidak otomatis membuat unit siap sewa; verifikasi fisik manual oleh admin tetap wajib.
+          </p>
+</div>
+</section>
+<!-- Penjelasan Klasifikasi Warna Pastel (Legend Horizontal / Minimal) -->
+<section class="bg-surface rounded-xl p-3 border border-line">
+<div class="text-[11px] font-semibold text-muted uppercase tracking-wider mb-2">Klasifikasi Blok Status</div>
+<div class="grid grid-cols-2 gap-2 text-[12px] font-label-sm">
+<div class="flex items-center gap-2 p-1.5 rounded-lg bg-pastel-blue">
+<span class="w-2.5 h-2.5 rounded-full bg-[#3B82F6]"></span>
+<span class="text-ink truncate">Biru pastel: Sewa terverifikasi</span>
+</div>
+<div class="flex items-center gap-2 p-1.5 rounded-lg bg-pastel-apricot">
+<span class="w-2.5 h-2.5 rounded-full bg-[#F59E0B]"></span>
+<span class="text-ink truncate">Kuning: Initial Unpaid Hold</span>
+</div>
+<div class="flex items-center gap-2 p-1.5 rounded-lg bg-pastel-lilac">
+<span class="w-2.5 h-2.5 rounded-full bg-[#8B5CF6]"></span>
+<span class="text-ink truncate">Ungu: Extension Hold (30m)</span>
+</div>
+<div class="flex items-center gap-2 p-1.5 rounded-lg bg-pastel-mint">
+<span class="w-2.5 h-2.5 rounded-full bg-[#10B981]"></span>
+<span class="text-ink truncate">Hijau: Buffer Siap (1 Jam)</span>
+</div>
+<div class="col-span-2 flex items-center gap-2 p-1.5 rounded-lg bg-urgency-red-bg border border-error-container">
+<span class="w-2.5 h-2.5 rounded-full bg-urgency-red-ink"></span>
+<span class="text-urgency-red-ink font-medium">Merah pastel: Perawatan / Keterlambatan / Risiko</span>
+</div>
+</div>
+</section>
+<!-- Unit 1: KRITIS / TERLAMBAT FISIK -->
+<article class="bg-surface rounded-card p-space-xl border-2 border-urgency-red-ink/40 shadow-sm relative flex flex-col gap-4">
+<div class="flex items-start justify-between gap-2">
+<div>
+<div class="flex items-center gap-2">
+<span class="font-headline-md text-headline-md font-semibold text-ink">IP-15PM-01</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-urgency-red-bg text-urgency-red-ink border border-urgency-red-ink/30">
+                Kritis / Terlambat Fisik
+              </span>
+</div>
+<div class="font-body-sm text-body-sm text-muted mt-0.5">iPhone 15 Pro Max 256GB - Titan Alami</div>
+</div>
+<span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-urgency-red-bg text-urgency-red-ink shrink-0">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</span>
+</div>
+<!-- Overdue Timeline Strip -->
+<div class="bg-sidebar rounded-xl p-3 border border-line flex flex-col gap-2"><div class="flex items-center justify-between text-ink"><span class="font-label-md text-label-md font-medium">Alokasi: Fajar Nugroho</span><span class="font-label-sm text-label-sm font-semibold text-urgency-red-ink tabular-nums">Overdue +30 menit (Jam server 11.30)</span></div><div class="flex items-center justify-between text-body-sm text-muted"><span>Sewa: 09 Okt 11.00 - 10 Okt 11.00 WIB (24 Jam)</span><span class="text-[12px]">Toleransi s/d 12.00 WIB (Denda saat ini Rp0)</span></div><div class="w-full bg-surface-container-highest h-2 rounded-full overflow-hidden"><div class="bg-urgency-red-ink h-full rounded-full w-[85%]"></div></div></div>
+<!-- Buffer Persiapan 1 Jam Tertunda -->
+<div class="flex items-center gap-2.5 p-2.5 rounded-xl bg-pastel-mint border border-line">
+<svg class="w-5 h-5 text-success-ink shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<div class="text-body-sm font-label-md text-success-ink leading-tight">
+            Buffer Persiapan 1 Jam tertunda karena unit fisik belum kembali ke loket.
+          </div>
+</div>
+<!-- Tag Risiko Booking Masa Depan -->
+<div class="p-3 rounded-xl bg-urgency-red-bg border border-urgency-red-ink/20 flex flex-col gap-1">
+<div class="flex items-center gap-1.5 text-urgency-red-ink font-label-md text-label-md font-semibold">
+<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Tag Risiko Booking Masa Depan</span>
+</div>
+<p class="font-body-sm text-body-sm text-ink leading-snug">
+            Booking Dimas Surya (<span class="font-medium">#BK-2026-1008-33</span>, Ambil 13.00 WIB) berpotensi terdampak!
+          </p>
+</div>
+<!-- Panel Mitigasi Risiko Cepat -->
+<div class="bg-workspace rounded-xl p-3.5 border border-line flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md font-semibold text-ink">Panel Mitigasi Risiko Cepat</span>
+<span class="text-[11px] font-semibold text-secondary px-2 py-0.5 rounded bg-selected-rose">Tindakan Admin</span>
+</div>
+<!-- Tombol Cek Ketersediaan -->
+<button class="w-full min-h-[44px] px-3 rounded-lg border border-line bg-surface hover:bg-sidebar text-ink font-label-md text-label-md flex items-center justify-center gap-2 transition-colors active:scale-[0.99]" type="button">
+<svg class="w-4 h-4 text-muted" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Periksa Ketersediaan Unit Pengganti (Model Identik)</span>
+</button>
+<!-- Pilihan Unit Pengganti -->
+<div class="p-3 rounded-lg bg-white border border-line flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<span class="font-label-md text-label-md font-semibold text-ink">IP-15PM-04</span>
+<span class="text-xs px-2 py-0.5 rounded bg-success-bg text-success-ink font-medium">Ready</span>
+</div>
+<div class="font-body-sm text-body-sm text-muted">Tersedia di loket, kondisi bersih &amp; siap sewa</div>
+</div>
+<!-- Tombol Eksekusi Alihkan -->
+<button class="w-full min-h-[44px] px-4 rounded-lg bg-primary-container hover:bg-black text-white font-label-md text-label-md font-medium flex items-center justify-center gap-2 transition-all active:scale-[0.99]" type="button">
+<svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Alihkan Alokasi ke IP-15PM-04</span>
+</button>
+<!-- Catatan Kebijakan -->
+<p class="text-[12px] text-muted italic leading-relaxed pt-1 border-t border-line">
+            Catatan: Alokasi asli pelanggan tetap dipertahankan; penggantian hanya untuk mitigasi risiko keterlambatan/servis, tidak membatalkan sewa sepihak.
+          </p>
+</div>
+</article>
+<!-- Unit 2: NORMAL / SEDANG DIGUNAKAN -->
+<article class="bg-surface rounded-card p-space-xl border border-line flex flex-col gap-3">
+<div class="flex items-start justify-between">
+<div>
+<div class="flex items-center gap-2">
+<span class="font-headline-md text-headline-md font-semibold text-ink">IP-14P-02</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-pastel-blue text-[#1E40AF]">
+                Sedang Digunakan
+              </span>
+</div>
+<div class="font-body-sm text-body-sm text-muted mt-0.5">iPhone 14 Pro 256GB - Deep Purple</div>
+</div>
+<span class="w-2.5 h-2.5 rounded-full bg-[#3B82F6] mt-2"></span>
+</div>
+<div class="grid grid-cols-2 gap-2 text-body-sm pt-2 border-t border-line">
+<div class="p-2.5 rounded-lg bg-sidebar border border-line">
+<span class="text-[11px] text-muted block">Jadwal Sewa</span>
+<span class="font-label-md font-medium text-ink tabular-nums">10 Okt 12.00 – 18.00 WIB (6 Jam)</span>
+</div>
+<div class="p-2.5 rounded-lg bg-sidebar border border-line">
+<span class="text-[11px] text-muted block">Estimasi Kembali</span>
+<span class="font-label-md font-medium text-ink tabular-nums">18.00 WIB (Tepat Waktu)</span>
+</div>
+</div>
+<div class="flex items-center justify-between px-3 py-2 rounded-lg bg-pastel-mint border border-line">
+<div class="flex items-center gap-2">
+<svg class="w-4 h-4 text-success-ink" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="font-label-sm text-label-sm font-medium text-success-ink">Kesiapan Fisik: Terverifikasi</span>
+</div>
+<span class="text-[11px] text-muted">Admin Check Valid</span>
+</div>
+</article>
+<!-- Unit 3: HOLD / VERIFIKASI MUTASI BANK -->
+<article class="bg-surface rounded-card p-space-xl border border-line flex flex-col gap-3"><div class="flex items-start justify-between"><div><div class="flex items-center gap-2"><span class="font-headline-md text-headline-md font-semibold text-ink">IP-15P-03</span><span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-warning-bg text-warning-ink border border-line">Booking Ditahan (Verifikasi)</span></div><div class="font-body-sm text-body-sm text-muted mt-0.5">iPhone 15 Pro 128GB - Natural Titanium</div></div><span class="w-2.5 h-2.5 rounded-full bg-[#F59E0B] mt-2"></span></div><div class="p-3 rounded-lg bg-sidebar border border-line space-y-1"><div class="flex justify-between items-center text-body-sm"><span class="text-muted">Pelanggan:</span><span class="font-medium text-ink">Rian Pratama</span></div><div class="flex justify-between items-center text-body-sm"><span class="text-muted">Jadwal:</span><span class="font-medium text-ink tabular-nums">11.00 – 17.00 WIB</span></div></div><div class="p-2.5 rounded-lg bg-warning-bg border border-warning-ink/20 flex items-start gap-2"><svg class="w-4 h-4 text-warning-ink mt-0.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path></svg><p class="text-[12px] text-warning-ink leading-relaxed">Catatan: Bukti bayar terunggah tepat waktu menahan slot sampai keputusan verifikasi admin.</p></div></article>
+<!-- Unit 4: TERSEDIA DI LOKET (UNIT CADANGAN) -->
+<article class="bg-surface rounded-card p-space-xl border border-line flex flex-col gap-3">
+<div class="flex items-start justify-between">
+<div>
+<div class="flex items-center gap-2">
+<span class="font-headline-md text-headline-md font-semibold text-ink">IP-15PM-04</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-pastel-mint text-success-ink">
+                Tersedia di Loket
+              </span>
+</div>
+<div class="font-body-sm text-body-sm text-muted mt-0.5">iPhone 15 Pro Max 256GB - Black Titanium</div>
+</div>
+<span class="w-2.5 h-2.5 rounded-full bg-emerald-500 mt-2"></span>
+</div>
+<div class="flex items-center justify-between p-3 rounded-lg bg-sidebar border border-line">
+<div class="flex items-center gap-2">
+<svg class="w-5 h-5 text-success-ink" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<div>
+<span class="font-label-md text-label-md font-semibold text-ink block">Unit Cadangan Siap</span>
+<span class="text-[12px] text-muted">Kondisi fisik 100%, box &amp; kabel siap</span>
+</div>
+</div>
+<span class="font-label-sm text-xs font-bold text-ink">Rak A-02</span>
+</div>
+</article>
+<!-- Bottom Spacer for Floating / Safe Area -->
+<div class="h-4"></div>
+</main>
+<!-- BottomNavBar JSON Anchor Component -->
+<!-- Destination count: 4 | Labels: ["Bayar", "Serah", "Kembali", "Perpanjang"] -->
+<!-- Active mapping logic: Halaman Jadwal Unit & Kesiapan Toko berfokus pada "Serah" (Handover / Kesiapan Fisik Unit) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-[64px] px-space-xl pb-safe max-w-[390px] mx-auto bg-surface border-t border-line">
+<!-- Nav Item 1: Bayar (Inactive) -->
+<button class="flex flex-col items-center justify-center text-muted py-1 px-2 min-h-[44px] transition-all hover:text-ink active:scale-95 duration-150" type="button">
+<span class="material-symbols-outlined text-[22px]">payments</span>
+<span class="font-label-sm text-label-sm">Bayar</span>
+</button>
+<!-- Nav Item 2: Serah (ACTIVE: Sesuai fokus kesiapan penyerahan unit & audit fisik) -->
+<button class="flex flex-col items-center justify-center text-secondary bg-selected-rose rounded-xl py-1 px-3 min-h-[44px] transition-all active:scale-95 duration-150" type="button">
+<span class="material-symbols-outlined text-[22px]" style="font-variation-settings: 'FILL' 1;">assignment_turned_in</span>
+<span class="font-label-sm text-label-sm font-semibold">Serah</span>
+</button>
+<!-- Nav Item 3: Kembali (Inactive) -->
+<button class="flex flex-col items-center justify-center text-muted py-1 px-2 min-h-[44px] transition-all hover:text-ink active:scale-95 duration-150" type="button">
+<span class="material-symbols-outlined text-[22px]">assignment_return</span>
+<span class="font-label-sm text-label-sm">Kembali</span>
+</button>
+<!-- Nav Item 4: Perpanjang (Inactive) -->
+<button class="flex flex-col items-center justify-center text-muted py-1 px-2 min-h-[44px] transition-all hover:text-ink active:scale-95 duration-150" type="button">
+<span class="material-symbols-outlined text-[22px]">update</span>
+<span class="font-label-sm text-label-sm">Perpanjang</span>
+</button>
+</nav>
+</div>
+</body></html>

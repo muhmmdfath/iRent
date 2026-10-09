@@ -7,9 +7,8 @@ import {
 import { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { AuthContext, AuthService } from '../../auth/auth.service';
-import { SettingsService } from '../settings/settings.service';
 import { publicImage, rupiah } from '../settings/settings.rules';
-import { wibNow } from '../../shared/time/wib';
+import { BusinessClock } from '../../shared/time/business-clock';
 import {
   ItemDto,
   ItemPatchDto,
@@ -23,7 +22,7 @@ export class InventoryService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly auth: AuthService,
-    private readonly settings: SettingsService,
+    private readonly clock: BusinessClock,
   ) {}
   async list(page: PageDto, admin = false) {
     const where = admin ? {} : { isActive: true };
@@ -327,17 +326,14 @@ export class InventoryService {
   async finishMaintenance(context: AuthContext, id: string) {
     return this.prisma.$transaction(async (tx) => {
       await this.auth.authorizeLocked(tx, context, 'admin');
-      const rules = await this.settings.read(tx);
       const unit = await this.lockUnit(tx, id);
       if (
         unit.conditionStatus !== 'maintenance' ||
         unit.physicalStatus !== 'awaiting_check'
       )
         throw new ConflictException('Unit tidak sedang perawatan.');
-      const now = wibNow(),
-        preparationUntil = new Date(
-          now.getTime() + rules.values.buffer_minutes * 60000,
-        );
+      const now = this.clock.now(),
+        preparationUntil = new Date(now.getTime() + 60 * 60000);
       const result = await tx.itemUnit.update({
         where: { id },
         data: {
@@ -354,8 +350,7 @@ export class InventoryService {
         'item_unit',
         id,
         {
-          preparationMinutes: rules.values.buffer_minutes,
-          settingsRevision: rules.revision,
+          preparationMinutes: 60,
         },
       );
       return result;
@@ -369,7 +364,7 @@ export class InventoryService {
         unit.conditionStatus !== 'layak' ||
         unit.physicalStatus !== 'preparing' ||
         !unit.preparationUntil ||
-        unit.preparationUntil > wibNow()
+        unit.preparationUntil > this.clock.now()
       )
         throw new ConflictException('Persiapan belum selesai.');
       if (

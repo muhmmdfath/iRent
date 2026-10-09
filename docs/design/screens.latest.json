@@ -1,0 +1,326 @@
+[
+  {
+    "code": "A01",
+    "title": "A01 — Admin Antrean Hari Ini (Reviewed)",
+    "sourceScreen": "projects/7448049823013098704/screens/88d079a9701a40ea9b2fb5ad1cc5f2e3",
+    "canvasInstanceId": "88d079a9701a40ea9b2fb5ad1cc5f2e3",
+    "deviceType": "DESKTOP",
+    "previewHtml": "previews/A01.html",
+    "previewImage": "previews/A01.png"
+  },
+  {
+    "code": "A02",
+    "title": "A02 — Admin Detail Booking & Pembayaran — v2",
+    "sourceScreen": "projects/7448049823013098704/screens/2964cd514f8d4ec8be62858c83a9d3fb",
+    "canvasInstanceId": "c6eee257b4b74d33b8fe92f2f41e2e84",
+    "deviceType": "DESKTOP",
+    "previewHtml": "previews/A02.html",
+    "previewImage": "previews/A02.png"
+  },
+  {
+    "code": "A03",
+    "title": "A03 — Admin Jadwal & Risiko Unit — v2",
+    "sourceScreen": "projects/7448049823013098704/screens/96c48daa4b4542c5baa4d63021db0fed",
+    "canvasInstanceId": "06e4449df7a6497399c9e41f2c67c304",
+    "deviceType": "DESKTOP",
+    "previewHtml": "previews/A03.html",
+    "previewImage": "previews/A03.png"
+  },
+  {
+    "code": "A04",
+    "title": "A04 — Admin Serah Terima & Pengembalian — v2",
+    "sourceScreen": "projects/7448049823013098704/screens/1b3c47d9ac6d40f98bbfb9897829d842",
+    "canvasInstanceId": "32b22400ec5c4ead8dd8ce1f79401f84",
+    "deviceType": "DESKTOP",
+    "previewHtml": "previews/A04.html",
+    "previewImage": "previews/A04.png"
+  },
+  {
+    "code": "A05",
+    "title": "A05 — Admin Perpanjangan Sewa — v2",
+    "sourceScreen": "projects/7448049823013098704/screens/c8d7c3d0b9a249a8976437123f559127",
+    "canvasInstanceId": "afe40c6a100048bdbb09aaed478bc734",
+    "deviceType": "DESKTOP",
+    "previewHtml": "previews/A05.html",
+    "previewImage": "previews/A05.png"
+  },
+  {
+    "code": "A06",
+    "title": "A06 — Admin Refund Manual — v2",
+    "sourceScreen": "projects/7448049823013098704/screens/112b342b7f0f4288a0ce7c6ca7b6fbd3",
+    "canvasInstanceId": "0437ef2fc4fd4be58d39c33704030890",
+    "deviceType": "DESKTOP",
+    "previewHtml": "previews/A06.html",
+    "previewImage": "previews/A06.png"
+  },
+  {
+    "code": "A07",
+    "title": "A07 — Admin Item & Unit — v3 Foto item",
+    "sourceScreen": "projects/7448049823013098704/screens/7de1b417da6c441abe5772d2ab53fc93",
+    "deviceType": "DESKTOP",
+    "previewHtml": "previews/A07.html",
+    "previewImage": "previews/A07.png",
+    "canvasInstanceId": "d10cda3b65aa4f66931b958351aafe07"
+  },
+  {
+    "code": "A08",
+    "title": "A08 — Admin Data penyewa & Akun — v2",
+    "sourceScreen": "projects/7448049823013098704/screens/eb2232deaf45466291459f8bf3f55f0c",
+    "canvasInstanceId": "b4cb5450401741cc90f1bbe50279994d",
+    "deviceType": "DESKTOP",
+    "previewHtml": "previews/A08.html",
+    "previewImage": "previews/A08.png"
+  },
+  {
+    "code": "A09",
+    "title": "A09 — Admin Laporan Kas & Transaksi Berhasil — v2",
+    "sourceScreen": "projects/7448049823013098704/screens/53548e1829d74f4c95aa91c6ab62ca89",
+    "canvasInstanceId": "094fe50cddd8445080909fa1d54539ed",
+    "deviceType": "DESKTOP",
+    "previewHtml": "previews/A09.html",
+    "previewImage": "previews/A09.png"
+  },
+  {
+    "code": "A10",
+    "title": "A10 — Admin Pengaturan, Ongkir & PWA — v3",
+    "sourceScreen": "projects/7448049823013098704/screens/1885c4f810bb4a6783af54414ae3a7b7",
+    "canvasInstanceId": "9a7efffeb58d4aa391da5a0d52621e7e",
+    "deviceType": "DESKTOP",
+    "previewHtml": "previews/A10.html",
+    "previewImage": "previews/A10.png"
+  },
+  {
+    "code": "C01",
+    "title": "C01 — Pelanggan Dashboard & Riwayat — v2",
+    "sourceScreen": "projects/7448049823013098704/screens/cc42e1041ef64ce68347ca1fe0db87cd",
+    "canvasInstanceId": "aa6031a858d04994a9d356b8c2d026b5",
+    "deviceType": "DESKTOP",
+    "previewHtml": "previews/C01.html",
+    "previewImage": "previews/C01.png"
+  },
+  {
+    "code": "C02",
+    "title": "C02 — Pelanggan Katalog & Detail perangkat — v3 Foto item",
+    "sourceScreen": "projects/7448049823013098704/screens/08c87eb080b94606966b464a70adea39",
+    "deviceType": "DESKTOP",
+    "previewHtml": "previews/C02.html",
+    "previewImage": "previews/C02.png",
+    "canvasInstanceId": "43dd022bea504f9180abb67b753d2ed3"
+  },
+  {
+    "code": "C03",
+    "title": "C03 — Pelanggan Buat Booking — Wizard — v2",
+    "sourceScreen": "projects/7448049823013098704/screens/9748befac22e479cba364befbd90cc25",
+    "canvasInstanceId": "4715f0cbb15f4cdab83a61eb16e41bc8",
+    "deviceType": "DESKTOP",
+    "previewHtml": "previews/C03.html",
+    "previewImage": "previews/C03.png"
+  },
+  {
+    "code": "C04",
+    "title": "C04 — Pelanggan Pembayaran & Unggah Bukti — v2",
+    "sourceScreen": "projects/7448049823013098704/screens/1cf60fc3355e431ca132d4b084fba290",
+    "canvasInstanceId": "b4b1bd2f80d547fbba826407121db372",
+    "deviceType": "DESKTOP",
+    "previewHtml": "previews/C04.html",
+    "previewImage": "previews/C04.png"
+  },
+  {
+    "code": "C05",
+    "title": "C05 — Pelanggan Detail Booking, Perpanjangan & Pengembalian — v2",
+    "sourceScreen": "projects/7448049823013098704/screens/4e704d7eed0949c5bfd85a4adb731657",
+    "canvasInstanceId": "2600269c371c4dd698ae07035cae0439",
+    "deviceType": "DESKTOP",
+    "previewHtml": "previews/C05.html",
+    "previewImage": "previews/C05.png"
+  },
+  {
+    "code": "C06",
+    "title": "C06 — Pelanggan Masuk & Daftar — v2",
+    "sourceScreen": "projects/7448049823013098704/screens/73d5d1aacf7644b0aa1e1cc4b925bcb4",
+    "canvasInstanceId": "4d4dadee52a344f6bd8887841d1eeab4",
+    "deviceType": "DESKTOP",
+    "previewHtml": "previews/C06.html",
+    "previewImage": "previews/C06.png"
+  },
+  {
+    "code": "C07",
+    "title": "C07 — Pelanggan Lengkapi Profil & Informasi — v2",
+    "sourceScreen": "projects/7448049823013098704/screens/ce28da70cba44e159fcba2bd766b5dc7",
+    "canvasInstanceId": "0ba01de5722a48d7b08137136f1de8eb",
+    "deviceType": "DESKTOP",
+    "previewHtml": "previews/C07.html",
+    "previewImage": "previews/C07.png"
+  },
+  {
+    "code": "M01",
+    "title": "M01 — Admin Antrean Mobile — v3",
+    "sourceScreen": "projects/7448049823013098704/screens/6b8e1ebda63e46108425425120c6e27a",
+    "canvasInstanceId": "3feca625f7be4214a256fc05bf374980",
+    "deviceType": "MOBILE",
+    "previewHtml": "previews/M01.html",
+    "previewImage": "previews/M01.png"
+  },
+  {
+    "code": "M02",
+    "title": "M02 — Pelanggan Pembayaran Mobile — v2",
+    "sourceScreen": "projects/7448049823013098704/screens/e39a8482089a4315b26dcc67012c0359",
+    "canvasInstanceId": "0468b83eaceb42d7ac051b1b021dee10",
+    "deviceType": "MOBILE",
+    "previewHtml": "previews/M02.html",
+    "previewImage": "previews/M02.png"
+  },
+  {
+    "code": "MA01",
+    "title": "MA01 — Mobile Admin Antrean — v2 Reviewed",
+    "sourceScreen": "projects/7448049823013098704/screens/ab5c524074ca4234ad3de3dea7f604b5",
+    "deviceType": "MOBILE",
+    "previewHtml": "previews/MA01.html",
+    "previewImage": "previews/MA01.png",
+    "canvasInstanceId": "9e6f1271bff04ebfa9f1fef7fd24bab4"
+  },
+  {
+    "code": "MA02",
+    "title": "MA02 — Mobile Admin Booking & Pembayaran — v4 Final",
+    "sourceScreen": "projects/7448049823013098704/screens/05d9a9257e724dda8134ca624c177203",
+    "deviceType": "MOBILE",
+    "previewHtml": "previews/MA02.html",
+    "previewImage": "previews/MA02.png",
+    "canvasInstanceId": "9506bbf6de4a4950b81a6cafe98c3dc6"
+  },
+  {
+    "code": "MA03",
+    "title": "MA03 — Mobile Admin Jadwal Unit — v2 Reviewed",
+    "sourceScreen": "projects/7448049823013098704/screens/b76e20d8f8894307a55c72672f0d6fe0",
+    "deviceType": "MOBILE",
+    "previewHtml": "previews/MA03.html",
+    "previewImage": "previews/MA03.png",
+    "canvasInstanceId": "db0d0a6fd7fd4fb48751e6d5c92b9cea"
+  },
+  {
+    "code": "MA04",
+    "title": "MA04 — Mobile Admin Serah Terima & Pengembalian — v3 Final",
+    "sourceScreen": "projects/7448049823013098704/screens/651cd20931b04c00847b8602c859da08",
+    "deviceType": "MOBILE",
+    "previewHtml": "previews/MA04.html",
+    "previewImage": "previews/MA04.png",
+    "canvasInstanceId": "81f40ce7cc884a46b2f12f2f67061ab3"
+  },
+  {
+    "code": "MA05",
+    "title": "MA05 — Mobile Admin Perpanjangan — v2 Reviewed",
+    "sourceScreen": "projects/7448049823013098704/screens/a589eeb07f814462a30086c981f27d79",
+    "deviceType": "MOBILE",
+    "previewHtml": "previews/MA05.html",
+    "previewImage": "previews/MA05.png",
+    "canvasInstanceId": "32eed2fd0e5d4ca7974a50f3f24fd3f3"
+  },
+  {
+    "code": "MA06",
+    "title": "MA06 — Mobile Admin Refund — v3 Final",
+    "sourceScreen": "projects/7448049823013098704/screens/4727c2d7205e450d83f1162882e8505b",
+    "deviceType": "MOBILE",
+    "previewHtml": "previews/MA06.html",
+    "previewImage": "previews/MA06.png",
+    "canvasInstanceId": "21362ed06ec3406fabdeaaf5c3439453"
+  },
+  {
+    "code": "MA07",
+    "title": "MA07 — Mobile Admin Item & Foto — v2 Reviewed",
+    "sourceScreen": "projects/7448049823013098704/screens/d61507d0eec440658d41f1904856490d",
+    "deviceType": "MOBILE",
+    "previewHtml": "previews/MA07.html",
+    "previewImage": "previews/MA07.png",
+    "canvasInstanceId": "ef72092d938141629ddba736efdbefe7"
+  },
+  {
+    "code": "MA08",
+    "title": "MA08 — Mobile Admin Penyewa & Akun — v3 Final",
+    "sourceScreen": "projects/7448049823013098704/screens/ac0c475548394acc981725c141142272",
+    "deviceType": "MOBILE",
+    "previewHtml": "previews/MA08.html",
+    "previewImage": "previews/MA08.png",
+    "canvasInstanceId": "b05c1a1be8364bdf99f46de500b725de"
+  },
+  {
+    "code": "MA09",
+    "title": "MA09 — Mobile Admin Laporan — v3 Final",
+    "sourceScreen": "projects/7448049823013098704/screens/f9dd2bbd04fd4d5d8afc785502985252",
+    "deviceType": "MOBILE",
+    "previewHtml": "previews/MA09.html",
+    "previewImage": "previews/MA09.png",
+    "canvasInstanceId": "a4defc72c62a49f2b30cfd9405daf728"
+  },
+  {
+    "code": "MA10",
+    "title": "MA10 — Mobile Admin Pengaturan & PWA — v3 Final",
+    "sourceScreen": "projects/7448049823013098704/screens/ff992fe08fd34d4fbf098837eeae8a7c",
+    "deviceType": "MOBILE",
+    "previewHtml": "previews/MA10.html",
+    "previewImage": "previews/MA10.png",
+    "canvasInstanceId": "50cb32a7bcf74c8188ec74e640ff44f9"
+  },
+  {
+    "code": "MC01",
+    "title": "MC01 — Mobile Pelanggan Dashboard — v4 Final",
+    "sourceScreen": "projects/7448049823013098704/screens/f0bbd35014b44733b6b2a5baebf826cc",
+    "deviceType": "MOBILE",
+    "previewHtml": "previews/MC01.html",
+    "previewImage": "previews/MC01.png",
+    "canvasInstanceId": "edca3cfe8fbb4d8b900432c22494102b"
+  },
+  {
+    "code": "MC02",
+    "title": "MC02 — Mobile Pelanggan Katalog & Foto Item — v2 Reviewed",
+    "sourceScreen": "projects/7448049823013098704/screens/5573e2002c974992a5a0c67dc836ce26",
+    "deviceType": "MOBILE",
+    "previewHtml": "previews/MC02.html",
+    "previewImage": "previews/MC02.png",
+    "canvasInstanceId": "bb1abebbfe2243878bc45f729aaa7fd0"
+  },
+  {
+    "code": "MC03",
+    "title": "MC03 — Mobile Pelanggan Booking — v2 Reviewed",
+    "sourceScreen": "projects/7448049823013098704/screens/8379bce0ac2a4eed83b38e090a478360",
+    "deviceType": "MOBILE",
+    "previewHtml": "previews/MC03.html",
+    "previewImage": "previews/MC03.png",
+    "canvasInstanceId": "ec92be8e8a1142048e8793f96cf60feb"
+  },
+  {
+    "code": "MC04",
+    "title": "MC04 — Mobile Pelanggan Pembayaran — v2 Reviewed",
+    "sourceScreen": "projects/7448049823013098704/screens/8ad20b18e1af4ba5a275c09e1be6e402",
+    "deviceType": "MOBILE",
+    "previewHtml": "previews/MC04.html",
+    "previewImage": "previews/MC04.png",
+    "canvasInstanceId": "6476dfb007de4d16b24eec99bd437d0c"
+  },
+  {
+    "code": "MC05",
+    "title": "MC05 — Mobile Pelanggan Detail Booking — v3 Final",
+    "sourceScreen": "projects/7448049823013098704/screens/126afda320204dd58a36bb91fe724138",
+    "deviceType": "MOBILE",
+    "previewHtml": "previews/MC05.html",
+    "previewImage": "previews/MC05.png",
+    "canvasInstanceId": "8e2a523852264be39df48fab94a9e1da"
+  },
+  {
+    "code": "MC06",
+    "title": "MC06 — Mobile Pelanggan Masuk & Daftar — v2 Reviewed",
+    "sourceScreen": "projects/7448049823013098704/screens/98870558a79a4af981aa2704ffce9ad8",
+    "deviceType": "MOBILE",
+    "previewHtml": "previews/MC06.html",
+    "previewImage": "previews/MC06.png",
+    "canvasInstanceId": "e4b52e0c8f8b48c093c8994950155788"
+  },
+  {
+    "code": "MC07",
+    "title": "MC07 — Mobile Pelanggan Profil & Informasi — v3 Final",
+    "sourceScreen": "projects/7448049823013098704/screens/db5337cd943e45349540165f36eb77ee",
+    "deviceType": "MOBILE",
+    "previewHtml": "previews/MC07.html",
+    "previewImage": "previews/MC07.png",
+    "canvasInstanceId": "7b20c2ee1e494234bf2634d621847582"
+  }
+]

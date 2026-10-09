@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MA06 — Mobile Admin Refund — v3 Final</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "on-primary-fixed": "#191b21",
+            "secondary-container": "#fe96be",
+            "primary-fixed-dim": "#c5c6ce",
+            "selected-rose": "#F9E8EF",
+            "on-primary-container": "#919299",
+            "inverse-surface": "#313031",
+            "tertiary-fixed-dim": "#d1c5b7",
+            "muted": "#606570",
+            "surface-container-low": "#f6f3f3",
+            "surface-container-lowest": "#ffffff",
+            "workspace": "#FCFCFD",
+            "line": "#E6E8ED",
+            "urgency-red-ink": "#A12A39",
+            "outline": "#76777b",
+            "on-tertiary-fixed": "#211b12",
+            "secondary": "#974166",
+            "on-primary-fixed-variant": "#45474d",
+            "pastel-mint": "#E8F5EE",
+            "error-container": "#ffdad6",
+            "ink": "#24262B",
+            "surface-variant": "#e5e2e2",
+            "on-background": "#1c1b1c",
+            "surface-container-high": "#ebe7e7",
+            "surface-container": "#f1eded",
+            "on-tertiary-container": "#9b9185",
+            "pastel-blue": "#EAF1FC",
+            "inverse-on-surface": "#f4f0f0",
+            "pastel-blush": "#FBECEE",
+            "primary-container": "#292b31",
+            "error": "#ba1a1a",
+            "success-bg": "#EAF6EF",
+            "tertiary": "#1c160e",
+            "primary-fixed": "#e2e2ea",
+            "tertiary-container": "#312a21",
+            "on-surface-variant": "#46464b",
+            "canvas": "#F1F2F4",
+            "tertiary-fixed": "#eee0d3",
+            "sidebar": "#F8F9FA",
+            "outline-variant": "#c7c6cb",
+            "pastel-lilac": "#F1ECFB",
+            "surface-bright": "#fcf8f8",
+            "surface-tint": "#5c5e65",
+            "on-secondary-container": "#7a2a4e",
+            "on-error": "#ffffff",
+            "primary": "#15171c",
+            "warning-bg": "#FFF5DF",
+            "warning-ink": "#855300",
+            "secondary-fixed": "#ffd9e4",
+            "on-tertiary-fixed-variant": "#4e453b",
+            "on-error-container": "#93000a",
+            "secondary-fixed-dim": "#ffb0cc",
+            "inverse-primary": "#c5c6ce",
+            "urgency-red-bg": "#FFF0F1",
+            "surface-container-highest": "#e5e2e2",
+            "on-primary": "#ffffff",
+            "on-secondary-fixed-variant": "#79294e",
+            "on-tertiary": "#ffffff",
+            "on-secondary": "#ffffff",
+            "surface": "#FFFFFF",
+            "pastel-apricot": "#FFF0DE",
+            "on-surface": "#1c1b1c",
+            "on-secondary-fixed": "#3e0021",
+            "background": "#fcf8f8",
+            "surface-dim": "#ddd9d9",
+            "success-ink": "#176345"
+          },
+          borderRadius: {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          spacing: {
+            "space-4xl": "48px",
+            "space-2xl": "24px",
+            "margin": "32px",
+            "gutter": "32px",
+            "space-sm": "8px",
+            "space-xl": "20px",
+            "space-md": "12px",
+            "space-lg": "16px",
+            "space-xs": "4px",
+            "space-3xl": "32px"
+          },
+          fontFamily: {
+            "body-sm": ["Poppins"],
+            "label-sm": ["Poppins"],
+            "headline-md": ["Poppins"],
+            "label-md": ["Poppins"],
+            "headline-lg": ["Poppins"],
+            "body-md": ["Poppins"]
+          },
+          fontSize: {
+            "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+            "label-sm": ["12px", { lineHeight: "16px", fontWeight: "500" }],
+            "headline-md": ["20px", { lineHeight: "28px", fontWeight: "600" }],
+            "label-md": ["14px", { lineHeight: "20px", fontWeight: "500" }],
+            "headline-lg": ["28px", { lineHeight: "36px", fontWeight: "600" }],
+            "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      background-color: #F1F2F4;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-canvas text-ink antialiased min-h-screen flex justify-center selection:bg-selected-rose selection:text-secondary">
+<!-- Mobile Simulator Frame (390px Max) -->
+<div class="w-full max-w-[390px] min-h-screen bg-canvas flex flex-col relative pb-28">
+<!-- Top App Bar (Shared Anchor Component) -->
+<header class="bg-workspace border-b border-line sticky top-0 z-40 h-[72px]">
+<div class="flex justify-between items-center w-full px-space-xl h-full">
+<!-- Leading Icon: Menu Toggle -->
+<button aria-label="Menu Drawer" class="w-11 h-11 flex items-center justify-center rounded-xl text-ink active:scale-95 transition-transform duration-150 hover:bg-canvas" type="button">
+<svg class="w-6 h-6 stroke-current" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<line x1="3" x2="21" y1="12" y2="12"></line>
+<line x1="3" x2="21" y1="6" y2="6"></line>
+<line x1="3" x2="21" y1="18" y2="18"></line>
+</svg>
+</button>
+<!-- Brand Anchor Headline -->
+<div class="flex flex-col items-center">
+<div class="flex items-center gap-1.5">
+<span class="text-headline-md font-headline-md font-semibold text-ink tracking-tight">iRent Semarang</span>
+<span class="px-2 py-0.5 rounded-full bg-pastel-mint text-success-ink text-[11px] font-label-sm font-semibold tracking-wide">ADMIN</span>
+</div>
+<span class="text-[11px] font-label-sm text-muted">Lokasi toko dari konfigurasi</span>
+</div>
+<!-- Trailing Icon: Notifications -->
+<button aria-label="Notifikasi" class="relative w-11 h-11 flex items-center justify-center rounded-xl text-ink active:scale-95 transition-transform duration-150 hover:bg-canvas" type="button">
+<svg class="w-6 h-6 stroke-current" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+<path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+</svg>
+<span class="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-urgency-red-ink"></span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="px-space-xl pt-4 space-y-4">
+<!-- Breadcrumb / Context Screen Header -->
+<div class="space-y-1">
+<div class="flex items-center justify-between">
+<span class="text-label-sm font-label-sm text-muted">MA06 • Konsol Kasir &amp; Rekonsiliasi</span>
+<span class="px-2 py-0.5 rounded bg-surface border border-line text-[11px] font-label-sm text-muted tracking-tight">Data contoh</span>
+</div>
+<h1 class="text-headline-md font-headline-md text-ink tracking-tight">Tinjauan Refund &amp; Pengembalian Dana</h1>
+</div>
+<!-- Segmented Status Tabs -->
+<div class="overflow-x-auto hide-scrollbar -mx-space-xl px-space-xl py-1">
+<div class="flex items-center gap-2 min-w-max">
+<!-- Active Tab: Disetujui (1) -->
+<button class="px-3.5 py-2 rounded-xl bg-selected-rose border border-secondary/20 text-on-secondary-container font-label-md text-label-md flex items-center gap-1.5 shadow-sm">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+            Disetujui (1)
+          </button>
+<button class="px-3.5 py-2 rounded-xl bg-surface border border-line text-muted font-label-md text-label-md hover:text-ink active:scale-95 transition-transform">
+            Diajukan (2)
+          </button>
+<button class="px-3.5 py-2 rounded-xl bg-surface border border-line text-muted font-label-md text-label-md hover:text-ink active:scale-95 transition-transform">
+            Semua (6)
+          </button>
+<button class="px-3.5 py-2 rounded-xl bg-surface border border-line text-muted font-label-md text-label-md hover:text-ink active:scale-95 transition-transform">
+            Selesai (2)
+          </button>
+<button class="px-3.5 py-2 rounded-xl bg-surface border border-line text-muted font-label-md text-label-md hover:text-ink active:scale-95 transition-transform">
+            Ditolak (1)
+          </button>
+</div>
+</div>
+<!-- Case Identifier & Customer Overview -->
+<section class="bg-surface rounded-xl border border-line p-space-xl space-y-3">
+<div class="flex items-start justify-between">
+<div>
+<span class="text-label-sm font-label-sm text-muted">ID Kasus Kasir</span>
+<div class="flex items-center gap-2">
+<span class="text-label-md font-label-md font-semibold text-ink">RF-2026-1008-01</span>
+<span class="px-1.5 py-0.5 rounded bg-canvas text-muted text-[11px] font-label-sm">BK-2026-1008-22</span>
+</div>
+</div>
+<div class="px-2.5 py-1 rounded-full bg-pastel-lilac text-ink text-[12px] font-label-sm font-medium flex items-center gap-1">
+<svg class="w-3.5 h-3.5 text-secondary" fill="none" stroke="currentColor" stroke-width="2.2" viewbox="0 0 24 24">
+<path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+            Disetujui Admin
+          </div>
+</div>
+<div class="p-3 bg-workspace rounded-lg border border-line/80 flex items-center justify-between">
+<div class="space-y-0.5">
+<p class="text-body-sm font-body-sm font-medium text-ink">Budi Santoso</p>
+<p class="text-[12px] font-label-sm text-muted">NIK: 3374************002</p>
+</div>
+<span class="px-2 py-1 bg-pastel-blue text-ink text-[11px] font-label-sm rounded">Profil Lengkap</span>
+</div>
+<!-- Banner Status Subtitle -->
+<div class="p-2.5 rounded-lg bg-pastel-lilac/70 border border-line flex items-center gap-2">
+<svg class="w-4 h-4 text-secondary flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-label-sm font-label-sm text-ink">Menunggu Realisasi Transfer Kasir Fisik</span>
+</div>
+</section>
+<!-- Financial Principle Box -->
+<section class="bg-pastel-apricot/50 rounded-xl border border-line p-space-xl space-y-2">
+<div class="flex items-center gap-2">
+<svg class="w-5 h-5 text-warning-ink flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<h2 class="text-label-md font-label-md font-semibold text-ink">Persetujuan Administratif ≠ Uang Ditransfer</h2>
+</div>
+<p class="text-body-sm font-body-sm text-muted leading-relaxed">
+          Persetujuan administratif hanya mengesahkan hak tagih penyewa. Kas toko tidak berkurang sebelum kasir mengeksekusi transfer fisik m-Banking/loket, mencatat referensi mutasi riil, dan mengunggah bukti.
+        </p>
+</section>
+<!-- Unit & Perhitungan Hak Refund -->
+<section class="bg-surface rounded-xl border border-line p-space-xl space-y-3">
+<h2 class="text-label-md font-label-md font-semibold text-ink flex items-center gap-1.5">
+<svg class="w-4 h-4 text-muted" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+          Detail Perhitungan Hak Refund
+        </h2>
+<!-- Unit details list -->
+<div class="space-y-2 text-body-sm font-body-sm"><div class="flex justify-between py-1 border-b border-line/60"><span class="text-muted">Unit Disewa</span><span class="font-medium text-ink text-right">iPhone 15 Pro Max 256GB + Tripod</span></div><div class="flex justify-between py-1 border-b border-line/60"><span class="text-muted">Jadwal Sewa</span><span class="font-medium text-ink">10 Okt 2026, 12.00–18.00 WIB (6 Jam)</span></div><div class="flex justify-between py-1 border-b border-line/60"><span class="text-muted">Alasan Refund</span><span class="font-medium text-urgency-red-ink text-right">Kesalahan Toko (Unit Rusak, tidak tersedia pengganti)</span></div><div class="flex justify-between py-1 border-b border-line/60"><span class="text-muted">Dana Riil Masuk (Bank)</span><span class="font-medium text-ink tabular-nums">Rp250.000</span></div><div class="flex justify-between py-1 border-b border-line/60"><span class="text-muted">Dasar Regulasi</span><span class="font-medium text-success-ink">100% Pengembalian Penuh (Rp250.000)</span></div></div>
+<div class="pt-2 flex justify-between items-center bg-selected-rose/50 p-3 rounded-lg border border-secondary/20">
+<div>
+<p class="text-label-sm font-label-sm text-muted">Total Hak Dikembalikan</p>
+<p class="text-headline-md font-headline-md text-ink tabular-nums font-bold">Rp250.000</p>
+</div>
+<span class="px-2.5 py-1 rounded bg-surface border border-line text-[11px] font-label-sm text-muted">Lunas / Non-tunai</span>
+</div>
+</section>
+<!-- Multi-step Verification Process -->
+<section class="space-y-3">
+<h2 class="text-label-md font-label-md font-semibold text-ink px-1">Tahapan Eksekusi Kasir</h2>
+<!-- Step 1: Administratif Selesai -->
+<div class="bg-surface rounded-xl border border-line p-space-xl flex items-start gap-3 opacity-90">
+<div class="w-8 h-8 rounded-full bg-pastel-mint text-success-ink flex items-center justify-center flex-shrink-0 mt-0.5">
+<svg class="w-4 h-4 stroke-current" fill="none" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div class="flex-1 space-y-0.5">
+<div class="flex items-center justify-between">
+<p class="text-label-md font-label-md font-medium text-ink">Tahap 1: Otorisasi Administratif</p>
+<span class="text-[11px] font-label-sm text-success-ink font-medium">Selesai</span>
+</div>
+<p class="text-body-sm font-body-sm text-muted">Disetujui oleh AO Loket Semarang • 10 Okt 2026, 10.30 WIB</p>
+</div>
+</div>
+<!-- Step 2: Form Realisasi Kasir (Aktif) -->
+<div class="bg-surface rounded-xl border-2 border-line p-space-xl space-y-4">
+<div class="flex items-start gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container text-surface flex items-center justify-center flex-shrink-0 mt-0.5 font-label-md">
+              2
+            </div>
+<div>
+<p class="text-label-md font-label-md font-semibold text-ink">Tahap 2: Catat Realisasi Bank Fisik</p>
+<p class="text-body-sm font-body-sm text-muted">Aksi aktif: Verifikasi transfer m-Banking</p>
+</div>
+</div>
+<!-- Input Group: Rekening Nasabah -->
+<div class="space-y-1.5 pt-1">
+<label class="block text-label-sm font-label-sm text-muted">Rekening Tujuan Penyewa</label>
+<div class="p-3 bg-workspace rounded-[10px] border border-line flex items-center justify-between">
+<div>
+<p class="text-label-md font-label-md font-semibold text-ink">Rekening tujuan dari data refund (contoh disamarkan)</p>
+<p class="text-body-sm font-body-sm text-muted">a.n Budi Santoso</p>
+</div>
+<button class="text-label-sm font-label-sm text-secondary font-medium px-2 py-1 rounded hover:bg-canvas" type="button">
+                Salin No. Rek
+              </button>
+</div>
+</div>
+<!-- Input Group: Tanggal & Waktu Transfer -->
+<div class="space-y-1.5">
+<label class="block text-label-sm font-label-sm text-muted" for="tf-time">Waktu Eksekusi Transfer Riil</label>
+<div class="relative">
+<input class="w-full h-11 px-3 bg-surface border border-line rounded-[10px] text-body-sm font-body-sm text-ink focus:border-secondary focus:ring-1 focus:ring-secondary outline-none" id="tf-time" readonly="" type="text" value="10 Okt 2026, 10.45 WIB"/>
+<div class="absolute inset-y-0 right-3 flex items-center pointer-events-none text-muted">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" viewbox="0 0 24 24">
+<path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+</div>
+<!-- Input Group: Nominal -->
+<div class="space-y-1.5">
+<label class="block text-label-sm font-label-sm text-muted" for="tf-amount">Nominal Transfer Riil (Terkunci)</label>
+<input class="w-full h-11 px-3 bg-workspace border border-line rounded-[10px] text-body-sm font-body-sm text-ink font-semibold tabular-nums focus:outline-none" id="tf-amount" readonly="" type="text" value="Rp 250.000"/>
+</div>
+<!-- Input Group: Referensi Transfer Bank -->
+<div class="space-y-1.5">
+<label class="block text-label-sm font-label-sm text-muted" for="tf-ref">Nomor Referensi Transfer Bank (Wajib)</label>
+<input class="w-full h-11 px-3 bg-surface border border-line rounded-[10px] text-body-sm font-body-sm text-ink focus:border-secondary focus:ring-1 focus:ring-secondary outline-none" id="tf-ref" placeholder="Masukkan ID mutasi m-banking" type="text" value="TRFBCA-99201481"/>
+</div>
+<!-- Lampiran Bukti File -->
+<div class="space-y-1.5">
+<label class="block text-label-sm font-label-sm text-muted">Bukti Slip Struk m-Banking</label>
+<div class="p-3 bg-workspace rounded-[10px] border border-line flex items-center justify-between">
+<div class="flex items-center gap-2.5 overflow-hidden">
+<div class="w-8 h-8 rounded bg-pastel-blue text-ink flex items-center justify-center flex-shrink-0">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div class="truncate">
+<p class="text-label-sm font-label-sm font-medium text-ink truncate">lampiran_trfbca_99201481.png</p>
+<p class="text-[11px] font-label-sm text-muted">1.1 MB • Terverifikasi</p>
+</div>
+</div>
+<button class="text-label-sm font-label-sm text-muted hover:text-ink px-2 py-1" type="button">
+                Ganti
+              </button>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="pt-2 space-y-2.5">
+<button class="w-full min-h-[44px] py-3 px-4 rounded-[10px] bg-primary-container text-on-primary font-label-md text-label-md font-semibold active:scale-[0.98] transition-transform flex items-center justify-center gap-2 shadow-sm" type="button">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+<path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+              Catat Uang Telah Dikembalikan (Kurangi Kas)
+            </button>
+</div>
+</div>
+</section>
+<!-- Accordion Kebijakan Refund & Pembatalan -->
+<section class="bg-surface rounded-xl border border-line p-space-xl space-y-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<svg class="w-4 h-4 text-muted" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<h3 class="text-label-md font-label-md font-semibold text-ink">Ringkasan kebijakan refund</h3>
+</div>
+<span class="text-label-sm font-label-sm text-muted">SOP 2026</span>
+</div>
+<div class="divide-y divide-line/70 text-body-sm font-body-sm">
+<div class="py-2 flex justify-between gap-4">
+<span class="text-muted">Pembatalan &gt; 48 Jam:</span>
+<span class="font-medium text-ink text-right">50% DP / 75% Lunas</span>
+</div>
+<div class="py-2 flex justify-between gap-4">
+<span class="text-muted">Pembatalan ≤ 48 Jam:</span>
+<span class="font-medium text-urgency-red-ink text-right">0% (Hangus Total)</span>
+</div>
+<div class="py-2 flex justify-between gap-4">
+<span class="text-muted">Kesalahan Toko / Rusak:</span>
+<span class="font-medium text-success-ink text-right">100% Full Refund</span>
+</div>
+<div class="py-2 flex justify-between gap-4">
+<span class="text-muted">No-Show (&gt; 3 Jam):</span>
+<span class="font-medium text-ink text-right">DP Hangus, Sisa kembali</span>
+</div>
+</div>
+<div class="pt-1">
+<p class="text-[12px] font-label-sm text-muted leading-relaxed">* Pencairan saldo pengembalian wajib dieksekusi kasir secara manual setelah transfer riil diverifikasi serta dicatat mutasinya ke pembukuan kas.</p>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar (Docked 4 Destinasi Admin) -->
+<nav class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[390px] z-50 bg-surface shadow-[0_-2px_10px_rgba(0,0,0,0.03)] px-space-md py-space-xs flex justify-around items-center">
+<!-- Tab 1: Bayar / Kasir (Active Refund View) -->
+<button class="flex flex-col items-center justify-center bg-selected-rose text-ink rounded-xl px-space-md py-space-xs min-h-[44px] transition-transform active:scale-95" type="button">
+<svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-label-sm font-label-sm font-semibold mt-0.5">Bayar</span>
+</button>
+<!-- Tab 2: Serah (Handover) -->
+<button class="flex flex-col items-center justify-center text-muted px-space-md py-space-xs min-h-[44px] hover:text-ink transition-transform active:scale-95" type="button">
+<svg class="w-5 h-5 stroke-current" fill="none" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-label-sm font-label-sm mt-0.5">Serah</span>
+</button>
+<!-- Tab 3: Kembali (Return) -->
+<button class="flex flex-col items-center justify-center text-muted px-space-md py-space-xs min-h-[44px] hover:text-ink transition-transform active:scale-95" type="button">
+<svg class="w-5 h-5 stroke-current" fill="none" stroke-width="2" viewbox="0 0 24 24">
+<path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-label-sm font-label-sm mt-0.5">Kembali</span>
+</button>
+<!-- Tab 4: Perpanjang (Extend) -->
+<button class="flex flex-col items-center justify-center text-muted px-space-md py-space-xs min-h-[44px] hover:text-ink transition-transform active:scale-95" type="button">
+<svg class="w-5 h-5 stroke-current" fill="none" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-label-sm font-label-sm mt-0.5">Perpanjang</span>
+</button>
+</nav>
+</div>
+</body></html>

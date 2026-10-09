@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MA09 — Mobile Admin Laporan — v3 Final</title>
+<!-- Poppins Font -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-primary-fixed": "#191b21",
+            "secondary-container": "#fe96be",
+            "primary-fixed-dim": "#c5c6ce",
+            "selected-rose": "#F9E8EF",
+            "on-primary-container": "#919299",
+            "inverse-surface": "#313031",
+            "tertiary-fixed-dim": "#d1c5b7",
+            "muted": "#606570",
+            "surface-container-low": "#f6f3f3",
+            "surface-container-lowest": "#ffffff",
+            "workspace": "#FCFCFD",
+            "line": "#E6E8ED",
+            "urgency-red-ink": "#A12A39",
+            "outline": "#76777b",
+            "on-tertiary-fixed": "#211b12",
+            "secondary": "#974166",
+            "on-primary-fixed-variant": "#45474d",
+            "pastel-mint": "#E8F5EE",
+            "error-container": "#ffdad6",
+            "ink": "#24262B",
+            "surface-variant": "#e5e2e2",
+            "on-background": "#1c1b1c",
+            "surface-container-high": "#ebe7e7",
+            "surface-container": "#f1eded",
+            "on-tertiary-container": "#9b9185",
+            "pastel-blue": "#EAF1FC",
+            "inverse-on-surface": "#f4f0f0",
+            "pastel-blush": "#FBECEE",
+            "primary-container": "#292b31",
+            "error": "#ba1a1a",
+            "success-bg": "#EAF6EF",
+            "tertiary": "#1c160e",
+            "primary-fixed": "#e2e2ea",
+            "tertiary-container": "#312a21",
+            "on-surface-variant": "#46464b",
+            "canvas": "#F1F2F4",
+            "tertiary-fixed": "#eee0d3",
+            "sidebar": "#F8F9FA",
+            "outline-variant": "#c7c6cb",
+            "pastel-lilac": "#F1ECFB",
+            "surface-bright": "#fcf8f8",
+            "surface-tint": "#5c5e65",
+            "on-secondary-container": "#7a2a4e",
+            "on-error": "#ffffff",
+            "primary": "#15171c",
+            "warning-bg": "#FFF5DF",
+            "warning-ink": "#855300",
+            "secondary-fixed": "#ffd9e4",
+            "on-tertiary-fixed-variant": "#4e453b",
+            "on-error-container": "#93000a",
+            "secondary-fixed-dim": "#ffb0cc",
+            "inverse-primary": "#c5c6ce",
+            "urgency-red-bg": "#FFF0F1",
+            "surface-container-highest": "#e5e2e2",
+            "on-primary": "#ffffff",
+            "on-secondary-fixed-variant": "#79294e",
+            "on-tertiary": "#ffffff",
+            "on-secondary": "#ffffff",
+            "surface": "#FFFFFF",
+            "pastel-apricot": "#FFF0DE",
+            "on-surface": "#1c1b1c",
+            "on-secondary-fixed": "#3e0021",
+            "background": "#fcf8f8",
+            "surface-dim": "#ddd9d9",
+            "success-ink": "#176345"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "space-4xl": "48px",
+            "space-2xl": "24px",
+            "margin": "32px",
+            "gutter": "32px",
+            "space-sm": "8px",
+            "space-xl": "20px",
+            "space-md": "12px",
+            "space-lg": "16px",
+            "space-xs": "4px",
+            "space-3xl": "32px"
+          },
+          "fontFamily": {
+            "body-sm": ["Poppins", "sans-serif"],
+            "label-sm": ["Poppins", "sans-serif"],
+            "headline-md": ["Poppins", "sans-serif"],
+            "label-md": ["Poppins", "sans-serif"],
+            "headline-lg": ["Poppins", "sans-serif"],
+            "body-md": ["Poppins", "sans-serif"]
+          },
+          "fontSize": {
+            "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+            "headline-lg": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+            "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 20px;
+      line-height: 1;
+      display: inline-block;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-canvas text-ink min-h-screen flex justify-center selection:bg-selected-rose selection:text-ink">
+<!-- Artboard Container (390px Mobile Frame) -->
+<main class="w-full max-w-[390px] min-h-screen bg-workspace flex flex-col relative pb-space-4xl shadow-sm border-x border-line">
+<!-- Top Safe Area / Status Bar Mockup -->
+<div class="h-6 w-full flex justify-between items-center px-space-xl pt-2 text-[11px] font-label-md text-muted select-none">
+<span>09:41</span>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined !text-[14px]">signal_cellular_4_bar</span>
+<span class="material-symbols-outlined !text-[14px]">wifi</span>
+<span class="material-symbols-outlined !text-[14px]">battery_full</span>
+</div>
+</div>
+<!-- TopAppBar (JSON Sourced Component) -->
+<header class="docked full-width top-0 h-[72px] bg-workspace text-primary flex justify-between items-center w-full px-space-xl max-w-[390px] mx-auto border-b border-line">
+<div class="flex items-center gap-space-md">
+<button aria-label="Menu" class="w-10 h-10 rounded-xl flex items-center justify-center hover:bg-canvas text-ink active:scale-95 transition-transform duration-150" type="button">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<div>
+<div class="flex items-center gap-2">
+<span class="text-headline-md font-headline-md font-semibold text-ink">iRent Semarang</span>
+<span class="bg-pastel-mint text-success-ink px-1.5 py-0.5 rounded text-[10px] font-label-sm font-semibold tracking-wide">ADMIN</span>
+</div>
+<p class="text-label-sm font-label-sm text-muted">MA09 • Rekonsiliasi &amp; Keuangan</p>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<button aria-label="Notifikasi" class="relative w-10 h-10 rounded-xl flex items-center justify-center hover:bg-canvas text-ink active:scale-95 transition-transform duration-150" type="button">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2.5 right-2.5 w-2 h-2 bg-secondary rounded-full ring-2 ring-workspace"></span>
+</button>
+</div>
+</header>
+<!-- Page Title & Mode Banner -->
+<div class="px-space-xl pt-space-xl pb-space-sm">
+<div class="flex items-center justify-between mb-1">
+<h1 class="text-headline-md font-headline-md text-ink">Laporan Kas &amp; Transaksi</h1>
+<span class="text-[11px] font-label-sm px-2 py-0.5 bg-canvas text-muted border border-line rounded-full font-medium">Data contoh</span>
+</div>
+<p class="text-body-sm font-body-sm text-muted">Rekonsiliasi mutasi kas masuk dan penutupan loket.</p>
+</div>
+<!-- Filter Periode Waktu & Sinkronisasi Bank -->
+<section class="px-space-xl py-space-sm space-y-space-md">
+<!-- Segment Pill Filter -->
+<div class="bg-canvas p-1 rounded-xl flex items-center gap-1 border border-line" role="tablist">
+<button aria-selected="true" class="flex-1 min-h-[38px] rounded-lg bg-surface text-ink font-label-sm text-center shadow-none text-label-sm font-medium border border-line/60" role="tab" type="button">
+          Harian (10 Okt 2026)
+        </button>
+<button aria-selected="false" class="flex-1 min-h-[38px] rounded-lg text-muted hover:text-ink font-label-sm text-center" role="tab" type="button">
+          Bulanan (Okt 2026)
+        </button>
+<button aria-selected="false" class="px-3 min-h-[38px] rounded-lg text-muted hover:text-ink font-label-sm text-center" role="tab" type="button">
+          Tahun 2026
+        </button>
+</div>
+<!-- Sync Status Badge -->
+<div class="flex items-center justify-between px-space-md py-space-sm bg-pastel-mint border border-line rounded-xl"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-success-ink !text-[18px]" data-icon="fact_check">fact_check</span><span class="text-label-sm font-label-sm text-success-ink font-medium">Pencatatan &amp; verifikasi manual admin loket</span></div><span class="text-[11px] font-label-sm text-success-ink/80">Loket Aktif</span></div>
+</section>
+<!-- Ringkasan Arus Kas Riil (Cards Grid) -->
+<section class="px-space-xl pt-space-md space-y-space-md">
+<div class="flex items-center justify-between">
+<h2 class="text-label-md font-label-md text-ink font-semibold flex items-center gap-1.5">
+<span class="material-symbols-outlined !text-[18px] text-muted">account_balance_wallet</span>
+          Ringkasan Arus Kas Riil
+        </h2>
+<span class="text-[11px] font-label-sm text-muted">Audit Loket Harian</span>
+</div>
+<div class="grid grid-cols-2 gap-space-md">
+<!-- Dana Masuk Riil -->
+<div class="bg-surface p-space-md rounded-xl border border-line flex flex-col justify-between"><div><div class="flex items-center justify-between mb-1"><span class="text-label-sm font-label-sm text-muted">Total Dana Masuk</span><span class="bg-pastel-mint text-success-ink text-[10px] px-1.5 py-0.5 rounded font-label-sm font-medium">+Masuk</span></div><div class="text-headline-md font-headline-md text-ink font-bold tabular-nums">Rp390.000</div></div><p class="text-[11px] font-label-sm text-muted mt-2 border-t border-line/60 pt-1.5">3 Transaksi Masuk Loket</p></div>
+<!-- Refund Ditransfer -->
+<div class="bg-surface p-space-md rounded-xl border border-line flex flex-col justify-between"><div><div class="flex items-center justify-between mb-1"><span class="text-label-sm font-label-sm text-muted">Total Refund Ditransfer</span><span class="bg-urgency-red-bg text-urgency-red-ink text-[10px] px-1.5 py-0.5 rounded font-label-sm font-medium">-Keluar</span></div><div class="text-headline-md font-headline-md text-urgency-red-ink font-bold tabular-nums">-Rp250.000</div></div><p class="text-[11px] font-label-sm text-muted mt-2 border-t border-line/60 pt-1.5">1 Transfer Keluar (Kasir)</p></div>
+</div>
+<!-- Net Inflow Riil -->
+<div class="bg-surface p-space-lg rounded-xl border border-line flex items-center justify-between"><div class="space-y-0.5"><span class="text-label-sm font-label-sm text-muted">Kas Bersih Operasional Loket</span><div class="text-headline-lg font-headline-lg text-ink font-bold tabular-nums">Rp140.000</div><span class="text-label-sm font-label-sm text-success-ink font-medium">Net Inflow Riil Valid (Rp390.000 - Rp250.000)</span></div><div class="w-12 h-12 rounded-xl bg-pastel-mint flex items-center justify-center text-success-ink"><span class="material-symbols-outlined !text-[26px]">verified</span></div></div>
+<!-- Kotak Liabilitas & Cadangan Terpisah (Warning / Pending State) -->
+<div class="bg-surface p-space-lg rounded-xl border border-line space-y-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-warning-ink !text-[18px]">pending_actions</span>
+<span class="text-label-md font-label-md text-ink font-semibold">Liabilitas &amp; Pos Menggantung</span>
+</div>
+<span class="bg-warning-bg text-warning-ink text-[10px] font-label-sm px-2 py-0.5 rounded-full font-medium">Di Luar Kas Riil</span>
+</div>
+<div class="space-y-2.5 text-body-sm font-body-sm">
+<div class="flex items-center justify-between pb-2 border-b border-line/50">
+<div class="text-muted text-[13px]">
+<span>Refund Disetujui (Pending)</span>
+<p class="text-[11px] text-muted">Belum memotong kas riil</p>
+</div>
+<span class="font-label-md text-ink font-semibold tabular-nums">Rp200.000</span>
+</div>
+<div class="flex items-center justify-between pb-2 border-b border-line/50">
+<div class="text-muted text-[13px]">
+<span>Bukti Masuk Menunggu Verifikasi</span>
+<p class="text-[11px] text-muted">Belum diakui kas loket</p>
+</div>
+<span class="font-label-md text-ink font-semibold tabular-nums">Rp370.000</span>
+</div>
+<div class="flex items-center justify-between"><div class="text-muted text-[13px]"><span>Tagihan Belum Lunas (Piutang Operasional)</span><p class="text-[11px] text-muted">Denda sewa tertunda (2 jam)</p></div><span class="font-label-md text-urgency-red-ink font-semibold tabular-nums">Rp20.000</span></div>
+</div>
+<div class="p-2.5 bg-canvas rounded-lg flex items-start gap-2 text-[11px] font-label-sm text-muted">
+<span class="material-symbols-outlined !text-[14px] mt-0.5 text-outline">info</span>
+<span>Catatan: Nominal di atas tidak diakui sebagai arus kas sampai mutasi bank sah terverifikasi.</span>
+</div>
+</div>
+</section>
+<!-- Buku Jurnal Mutasi Harian -->
+<section class="px-space-xl pt-space-2xl space-y-space-md">
+<div class="flex items-center justify-between">
+<h2 class="text-label-md font-label-md text-ink font-semibold flex items-center gap-1.5">
+<span class="material-symbols-outlined !text-[18px] text-muted">receipt_long</span>
+          Buku Jurnal Mutasi Harian
+        </h2>
+<span class="text-label-sm font-label-sm text-muted">4 Transaksi</span>
+</div>
+<div class="space-y-2.5">
+<!-- Baris 1 -->
+<article class="bg-surface p-space-md rounded-xl border border-line flex items-center justify-between hover:border-outline-variant transition-colors"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-pastel-mint flex items-center justify-center text-success-ink shrink-0"><span class="material-symbols-outlined !text-[20px]">arrow_downward</span></div><div><h3 class="text-label-md font-label-md text-ink font-semibold leading-tight">Kas Masuk DP</h3><p class="text-[11px] font-label-sm text-muted mt-0.5">Rian Pratama • iPhone 15 Pro</p><div class="flex items-center gap-1.5 mt-1"><span class="text-[10px] font-mono text-muted bg-canvas px-1 rounded">#BK-2026-1008-01</span><span class="text-[10px] font-label-sm text-success-ink font-medium">DP Lunas (Admin Loket)</span></div></div></div><div class="text-right"><span class="text-label-md font-label-md text-success-ink font-bold tabular-nums">+Rp20.000</span><p class="text-[10px] font-label-sm text-muted">14:22</p></div></article>
+<!-- Baris 2 -->
+<article class="bg-surface p-space-md rounded-xl border border-line flex items-center justify-between hover:border-outline-variant transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-pastel-mint flex items-center justify-center text-success-ink shrink-0">
+<span class="material-symbols-outlined !text-[20px]">arrow_downward</span>
+</div>
+<div>
+<h3 class="text-label-md font-label-md text-ink font-semibold leading-tight">Kas Masuk Pelunasan</h3>
+<p class="text-[11px] font-label-sm text-muted mt-0.5">Budi Santoso</p>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="text-[10px] font-mono text-muted bg-canvas px-1 rounded">#BK-2026-1008-22</span>
+<span class="text-[10px] font-label-sm text-success-ink font-medium">Terverifikasi Bank</span>
+</div>
+</div>
+</div>
+<div class="text-right">
+<span class="text-label-md font-label-md text-success-ink font-bold tabular-nums">+Rp250.000</span>
+<p class="text-[10px] font-label-sm text-muted">13:05</p>
+</div>
+</article>
+<!-- Baris 3 -->
+<article class="bg-surface p-space-md rounded-xl border border-line flex items-center justify-between hover:border-outline-variant transition-colors"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-pastel-mint flex items-center justify-center text-success-ink shrink-0"><span class="material-symbols-outlined !text-[20px]">arrow_downward</span></div><div><h3 class="text-label-md font-label-md text-ink font-semibold leading-tight">Kas Masuk Lunas</h3><p class="text-[11px] font-label-sm text-muted mt-0.5">Siti Rahma</p><div class="flex items-center gap-1.5 mt-1"><span class="text-[10px] font-mono text-muted bg-canvas px-1 rounded">#BK-2026-1008-05</span><span class="text-[10px] font-label-sm text-success-ink font-medium">Lunas Terverifikasi</span></div></div></div><div class="text-right"><span class="text-label-md font-label-md text-success-ink font-bold tabular-nums">+Rp120.000</span><p class="text-[10px] font-label-sm text-muted">09:15</p></div></article>
+<!-- Baris 4 -->
+<article class="bg-surface p-space-md rounded-xl border border-line flex items-center justify-between hover:border-outline-variant transition-colors"><div class="flex items-center gap-3"><div class="w-10 h-10 rounded-xl bg-urgency-red-bg flex items-center justify-center text-urgency-red-ink shrink-0"><span class="material-symbols-outlined !text-[20px]">arrow_upward</span></div><div><h3 class="text-label-md font-label-md text-ink font-semibold leading-tight">Refund Kas Keluar</h3><p class="text-[11px] font-label-sm text-muted mt-0.5">Budi Santoso</p><div class="flex items-center gap-1.5 mt-1"><span class="text-[10px] font-mono text-muted bg-canvas px-1 rounded">#RF-2026-1008-01</span><span class="text-[10px] font-label-sm text-urgency-red-ink font-medium">Transfer Kasir Berkurang</span></div></div></div><div class="text-right"><span class="text-label-md font-label-md text-urgency-red-ink font-bold tabular-nums">-Rp250.000</span><p class="text-[10px] font-label-sm text-muted">11:40</p></div></article>
+</div>
+</section>
+<!-- Kriteria Transaksi Berhasil & Penanganan Risiko -->
+<section class="px-space-xl pt-space-2xl space-y-space-md">
+<div class="flex items-center justify-between">
+<h2 class="text-label-md font-label-md text-ink font-semibold flex items-center gap-1.5">
+<span class="material-symbols-outlined !text-[18px] text-muted">verified_user</span>
+          Kriteria Transaksi &amp; Risiko
+        </h2>
+<span class="text-label-sm font-label-sm text-muted">SOP Loket</span>
+</div>
+<!-- Kriteria Box -->
+<div class="bg-pastel-blue p-space-md rounded-xl border border-line space-y-1">
+<div class="flex items-center gap-1.5 text-ink font-label-md font-semibold text-[13px]">
+<span class="material-symbols-outlined !text-[16px] text-muted">rule</span>
+          Kriteria Mutlak Transaksi Berhasil:
+        </div>
+<p class="text-body-sm font-body-sm text-muted text-[13px] leading-relaxed">
+          Booking diserah-terimakan, pengembalian selesai di loket, DAN pembayaran lunas 100% (<span class="text-ink font-medium">Completed &amp; Fully Paid</span>).
+        </p>
+</div>
+<!-- Studi Kasus Operasional -->
+<div class="space-y-space-md">
+<!-- Kasus 1 -->
+<div class="bg-surface p-space-md rounded-xl border border-line space-y-1.5">
+<div class="flex items-center justify-between">
+<span class="text-label-sm font-label-sm font-semibold text-ink">Kasus 1: Berhasil Sempurna</span>
+<span class="bg-pastel-mint text-success-ink text-[10px] px-2 py-0.5 rounded font-label-sm font-medium">Lunas Selesai</span>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-muted">Dimas Surya <span class="text-[11px] font-mono text-outline">(#BK-2026-1005-18)</span></span>
+<span class="font-semibold text-ink tabular-nums">Rp350.000</span>
+</div>
+<p class="text-[11px] font-label-sm text-muted">Unit kembali mulus, inspeksi loket lolos tanpa klaim.</p>
+</div>
+<!-- Kasus 2 -->
+<div class="bg-surface p-space-md rounded-xl border border-line space-y-1.5">
+<div class="flex items-center justify-between">
+<span class="text-label-sm font-label-sm font-semibold text-ink">Kasus 2: Piutang Operasional</span>
+<span class="bg-warning-bg text-warning-ink text-[10px] px-2 py-0.5 rounded font-label-sm font-medium">Bukan Berhasil</span>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-muted">Maya Novita <span class="text-[11px] font-mono text-outline">(#BK-2026-1004-09)</span></span>
+<span class="font-semibold text-urgency-red-ink tabular-nums">Denda Rp35.000</span>
+</div>
+<p class="text-[11px] font-label-sm text-muted">Unit diterima, denda telat belum dibayar (status piutang loket).</p>
+</div>
+<!-- Kasus 3 -->
+<div class="bg-surface p-space-md rounded-xl border border-line space-y-1.5">
+<div class="flex items-center justify-between">
+<span class="text-label-sm font-label-sm font-semibold text-ink">Kasus 3: Tutup Karena Hilang</span>
+<span class="bg-urgency-red-bg text-urgency-red-ink text-[10px] px-2 py-0.5 rounded font-label-sm font-medium">Loss Closure</span>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-muted">Fajar Nugroho <span class="text-[11px] font-mono text-outline">(#BK-2026-0929-02)</span></span>
+<span class="font-semibold text-muted text-[13px]">Klausa Ganti Rugi</span>
+</div>
+<p class="text-[11px] font-label-sm text-muted">Unit hilang dicatat rugi pasar terpisah tanpa pendapatan fiktif sewa.</p>
+</div>
+</div>
+</section>
+<!-- Tombol Ekspor Laporan (Charcoal CTA 44px) -->
+<section class="px-space-xl pt-space-2xl pb-space-md">
+<button class="w-full h-11 bg-primary-container text-on-primary rounded-xl font-label-md font-semibold flex items-center justify-center gap-2 active:scale-[0.98] transition-transform duration-150" type="button"><span class="material-symbols-outlined !text-[20px]" data-icon="download">download</span> Unduh Laporan Excel (.xlsx) — Harian / Bulanan</button>
+<p class="text-center text-[11px] font-label-sm text-muted mt-2">Laporan kas iRent Semarang</p>
+</section>
+<!-- Bottom Navigation Bar (JSON Sourced Semantic Shell) -->
+<nav aria-label="Navigasi Utama" class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-space-md py-space-xs max-w-[390px] mx-auto bg-surface text-primary border-t border-line"><a aria-current="page" class="flex flex-col items-center justify-center bg-selected-rose text-ink rounded-xl px-space-md py-space-xs min-h-[44px] active:scale-95 transition-transform duration-150" href="#bayar"><span class="material-symbols-outlined font-semibold" data-icon="payments">payments</span><span class="text-label-sm font-label-sm font-semibold mt-0.5">Bayar</span></a><a class="flex flex-col items-center justify-center text-muted px-space-md py-space-xs min-h-[44px] active:scale-95 transition-transform duration-150" href="#serah"><span class="material-symbols-outlined" data-icon="handshake">handshake</span><span class="text-label-sm font-label-sm mt-0.5">Serah</span></a><a class="flex flex-col items-center justify-center text-muted px-space-md py-space-xs min-h-[44px] active:scale-95 transition-transform duration-150" href="#kembali"><span class="material-symbols-outlined" data-icon="assignment_return">assignment_return</span><span class="text-label-sm font-label-sm mt-0.5">Kembali</span></a><a class="flex flex-col items-center justify-center text-muted px-space-md py-space-xs min-h-[44px] active:scale-95 transition-transform duration-150" href="#perpanjang"><span class="material-symbols-outlined" data-icon="more_time">more_time</span><span class="text-label-sm font-label-sm mt-0.5">Perpanjang</span></a></nav>
+</main>
+<script>
+    // Lightweight micro-interaction for tab filtering
+    document.querySelectorAll('[role="tablist"] button').forEach(button => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('[role="tablist"] button').forEach(b => {
+          b.setAttribute('aria-selected', 'false');
+          b.className = 'flex-1 min-h-[38px] rounded-lg text-muted hover:text-ink font-label-sm text-center';
+        });
+        button.setAttribute('aria-selected', 'true');
+        button.className = 'flex-1 min-h-[38px] rounded-lg bg-surface text-ink font-label-sm text-center text-label-sm font-medium border border-line/60';
+      });
+    });
+  </script>
+</body></html>

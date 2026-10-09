@@ -1,6 +1,6 @@
 # Pembayaran dan bukti privat
 
-Tahap ini mencakup bukti pembayaran awal/pelunasan, receipt aktual, persetujuan booking, rekonsiliasi dana untuk refund, serta expiry booking. Mengikuti PRD §6–8 dan §15. Pembatalan dan approval/transfer refund tersedia melalui [REFUNDS.md](REFUNDS.md). No-show, pembayaran perpanjangan, dan pengiriman notifikasi belum tersedia.
+Tahap ini mencakup bukti pembayaran awal/pelunasan, receipt aktual, persetujuan booking, rekonsiliasi dana untuk refund, serta expiry booking. Mengikuti PRD §6–8 dan §15. Pembatalan dan approval/transfer refund tersedia melalui [REFUNDS.md](REFUNDS.md). No-show tersedia melalui [NO_SHOW.md](NO_SHOW.md). Pelunasan aktual oleh admin dan serah terima/pengembalian tersedia melalui [OPERATIONS.md](OPERATIONS.md). Perpanjangan/pembayaran tersedia melalui [EXTENSIONS.md](EXTENSIONS.md); backend Web Push tersedia melalui [NOTIFICATIONS.md](NOTIFICATIONS.md); provider WhatsApp dan integrasi panel masih belum selesai.
 
 ## API dan akses
 
@@ -12,9 +12,10 @@ Seluruh route memakai sesi iRent; mutasi memerlukan Origin allowlist, CSRF, dan 
 | `POST /api/bookings/:id/obligations/:obligationId/proofs` | Pelanggan: upload multipart `file` dan `claimedAmount` string rupiah                                                |
 | `GET /api/payment-proofs/:id/file`                        | Download privat dengan otorisasi pemilik/admin                                                                      |
 | `POST /api/bookings/:id/settlement`                       | Pelanggan: body `{}`, membuka kewajiban pelunasan; gunakan ID obligation pada response untuk upload                 |
+| `POST /api/admin/bookings/:id/settlement`                 | Admin: receipt pelunasan aktual tanpa proof, termasuk cash; mengikuti [OPERATIONS.md](OPERATIONS.md)                |
 | `POST /api/admin/bookings/:id/payments/verify`            | Verifikasi receipt aktual dan, untuk pembayaran awal lengkap, setujui booking dalam transaksi yang sama             |
 | `POST /api/admin/bookings/:id/proofs/:proofId/reject`     | Body `{ "reason": "Alasan penolakan yang jelas" }`; menolak bukti tanpa menghapus sejarah                           |
-| `POST /api/admin/bookings/:id/payments/reconcile`         | Catat dana booking terminal atau bukti ditolak; dana untuk refund, tanpa mengaktifkan booking kembali               |
+| `POST /api/admin/bookings/:id/payments/reconcile`         | Catat dana awal atau settlement booking terminal/bukti awal ditolak; dana untuk refund tanpa aktivasi ulang         |
 | `POST /api/admin/bookings/:id/approve`                    | Body `{}`; persetujuan hanya jika dana sah sudah cukup, atau total nol; tidak menggantikan verifikasi pending proof |
 
 Contoh body verifikasi; nominal merupakan uang yang benar-benar masuk, bukan nominal screenshot:
@@ -57,4 +58,8 @@ Jika uang masuk tetapi unit/alokasi gagal memenuhi persetujuan, receipt dan hasi
 
 Expiry hanya ketika `now > expiresAt`, status masih menunggu bayar, dan tidak ada pending proof. Ia menutup kewajiban, melepas application/kalender, membuat adjustment charge sehingga tidak ada piutang sewa yang batal, menyimpan log/audit/outbox, serta mengajukan refund dana yang sudah diterima. Tidak mengubah kesiapan fisik menjadi ready. Tidak melakukan transfer bank.
 
-Urutan lock: aktor → pelanggan pemilik → item UUID → unit UUID → booking → obligations → referensi bank jika diperlukan. Settings/zona/counter dilewati karena tindakan memakai snapshot dan tidak mengubahnya. Sesuai protokol booking/katalog, stock validation memakai `ReadCommitted` dan retry deadlock/lock timeout terbatas. Semua event tersimpan di outbox saat commit; worker Web Push/WhatsApp masih tahap berikutnya.
+Urutan lock: aktor → pelanggan pemilik → item UUID → unit UUID → booking → obligations → referensi bank jika diperlukan. Settings/zona/counter dilewati karena tindakan memakai snapshot dan tidak mengubahnya. Sesuai protokol booking/katalog, stock validation memakai `ReadCommitted` dan retry deadlock/lock timeout terbatas. Semua event tersimpan di outbox saat commit; worker Web Push tersedia melalui NOTIFICATIONS.md; WhatsApp ditunda.
+
+Rekonsiliasi menerima kewajiban awal, serta kewajiban settlement hanya pada booking terminal. Bukti pending pada kewajiban yang sudah ditutup dapat diperiksa admin sebagai bagian rekonsiliasi; receipt tersebut tetap tidak diterapkan dan menjadi permintaan refund penuh.
+
+Koreksi receipt masuk tersedia melalui [RECEIPT_CORRECTIONS.md](RECEIPT_CORRECTIONS.md). Pelunasan pada perpanjangan yang telah disetujui menerima `extensionId` pada endpoint settlement yang sama; nominal/aplikasi/refund tetap berada pada scope extension. Riwayat koreksi tersaji pada financial detail dan laporan.

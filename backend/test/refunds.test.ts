@@ -2,9 +2,34 @@ import { strict as assert } from 'node:assert';
 import { test } from 'node:test';
 import {
   cancellationPolicy,
+  noShowShares,
   refundShares,
 } from '../src/modules/payments/refunds.rules';
 import { settingsDefaults } from '../src/modules/settings/settings.rules';
+
+test('no_show_refunds_only_money_above_snapshot_dp_without_losing_bigint_precision', () => {
+  assert.deepEqual(noShowShares([20000n], 20000n), {
+    total: 20000n,
+    refund: 0n,
+    shares: [0n],
+  });
+  assert.deepEqual(noShowShares([15000n], 20000n), {
+    total: 15000n,
+    refund: 0n,
+    shares: [0n],
+  });
+  const result = noShowShares([20000n, 30001n], 20000n);
+  assert.equal(result.refund, 30001n);
+  assert.equal(
+    result.shares.reduce((sum, amount) => sum + amount, 0n),
+    30001n,
+  );
+  assert.equal(
+    noShowShares([9007199254740993n], 20000n).refund,
+    9007199254720993n,
+  );
+  assert.deepEqual(noShowShares([], 0n), { total: 0n, refund: 0n, shares: [] });
+});
 
 test('cancellation_cutoff_is_strict_timestamp_and_category_uses_applied_funds', () => {
   const start = new Date('2026-10-15T10:00:00.000Z');

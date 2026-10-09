@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>M02 — Pelanggan Pembayaran Mobile — v2</title>
+<!-- Poppins Font Explicit Import -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "canvas": "#F1F2F4",
+            "on-primary-container": "#919299",
+            "on-secondary-fixed-variant": "#79294e",
+            "urgency-red-ink": "#A12A39",
+            "warning-ink": "#855300",
+            "surface-bright": "#fcf8f8",
+            "surface-container-low": "#f6f3f3",
+            "on-primary-fixed": "#191b21",
+            "error": "#ba1a1a",
+            "surface-container": "#f1eded",
+            "surface-dim": "#ddd9d9",
+            "ink": "#24262B",
+            "success-bg": "#EAF6EF",
+            "primary-fixed-dim": "#c5c6ce",
+            "secondary": "#974166",
+            "tertiary-container": "#312a21",
+            "on-secondary-fixed": "#3e0021",
+            "on-secondary-container": "#7a2a4e",
+            "primary": "#15171c",
+            "muted": "#606570",
+            "success-ink": "#176345",
+            "surface-tint": "#5c5e65",
+            "pastel-apricot": "#FFF0DE",
+            "on-tertiary-container": "#9b9185",
+            "primary-fixed": "#e2e2ea",
+            "on-tertiary-fixed": "#211b12",
+            "on-error": "#ffffff",
+            "surface-container-highest": "#e5e2e2",
+            "tertiary": "#1c160e",
+            "on-secondary": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "on-surface": "#1c1b1c",
+            "inverse-on-surface": "#f4f0f0",
+            "inverse-primary": "#c5c6ce",
+            "urgency-red-bg": "#FFF0F1",
+            "surface": "#FFFFFF",
+            "surface-variant": "#e5e2e2",
+            "outline": "#76777b",
+            "inverse-surface": "#313031",
+            "on-primary": "#ffffff",
+            "secondary-fixed-dim": "#ffb0cc",
+            "on-tertiary": "#ffffff",
+            "on-background": "#1c1b1c",
+            "pastel-lilac": "#F1ECFB",
+            "on-primary-fixed-variant": "#45474d",
+            "secondary-container": "#fe96be",
+            "pastel-blush": "#FBECEE",
+            "on-tertiary-fixed-variant": "#4e453b",
+            "primary-container": "#292b31",
+            "tertiary-fixed": "#eee0d3",
+            "background": "#fcf8f8",
+            "surface-container-high": "#ebe7e7",
+            "workspace": "#FCFCFD",
+            "pastel-mint": "#E8F5EE",
+            "tertiary-fixed-dim": "#d1c5b7",
+            "line": "#E6E8ED",
+            "selected-rose": "#F9E8EF",
+            "error-container": "#ffdad6",
+            "warning-bg": "#FFF5DF",
+            "pastel-blue": "#EAF1FC",
+            "outline-variant": "#c7c6cb",
+            "secondary-fixed": "#ffd9e4",
+            "on-surface-variant": "#46464b",
+            "sidebar": "#F8F9FA",
+            "on-error-container": "#93000a"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "space-lg": "16px",
+            "gutter": "20px",
+            "margin": "20px",
+            "space-3xl": "32px",
+            "space-sm": "8px",
+            "space-4xl": "48px",
+            "space-xs": "4px",
+            "space-xl": "20px",
+            "space-md": "12px",
+            "space-2xl": "20px"
+          },
+          "fontFamily": {
+            "sans": ["Poppins", "sans-serif"]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #F1F2F4;
+      margin: 0;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-canvas text-ink flex justify-center min-h-screen">
+<!-- Mobile Viewport Container exactly 390px, no overflow-x -->
+<div class="w-[390px] min-h-screen bg-workspace flex flex-col relative pb-[96px] overflow-x-hidden border-x border-line">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex items-center justify-between h-[56px] px-[20px] max-w-[390px] mx-auto bg-workspace border-b border-line">
+<div class="flex items-center gap-2">
+<button aria-label="Menu" class="hover:bg-sidebar transition-colors duration-150 active:opacity-80 min-h-[44px] min-w-[44px] flex items-center justify-center text-primary" type="button">
+<!-- Inline SVG: Handyman / Tool -->
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<span class="text-[18px] font-semibold text-ink tracking-tight">iRent Semarang</span>
+</div>
+<button aria-label="Notifikasi" class="hover:bg-sidebar transition-colors duration-150 active:opacity-80 min-h-[44px] min-w-[44px] flex items-center justify-center text-primary" type="button">
+<!-- Inline SVG: Notifications -->
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+</header>
+<!-- Content Spacer for Fixed TopAppBar -->
+<div class="h-[56px] w-full shrink-0"></div>
+<!-- Main Content Canvas (20px gutters) -->
+<main class="w-full px-[20px] flex flex-col gap-4 pt-3">
+<!-- Back Navigation & Header Identity -->
+<div class="flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<a class="inline-flex items-center gap-1.5 text-muted hover:text-ink min-h-[44px] py-2 text-[14px] font-medium" href="#booking-saya">
+<!-- Inline SVG: Arrow Back -->
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Booking Saya</span>
+</a>
+<span class="inline-flex items-center px-2.5 py-1 rounded-full bg-pastel-blue text-ink text-[12px] font-medium">
+            Data contoh
+          </span>
+</div>
+<div class="flex items-center justify-between mt-0.5">
+<div>
+<h1 class="text-[20px] leading-[26px] font-semibold text-ink">Pembayaran Uang Muka</h1>
+<p class="text-[14px] text-muted">Pelanggan: Rian Pratama (#IR-7824)</p>
+</div>
+<span class="inline-flex items-center px-2.5 py-1 rounded-full bg-pastel-apricot text-warning-ink text-[12px] font-semibold">
+            Mendesak
+          </span>
+</div>
+</div>
+<!-- Urgency Banner (Deadline fixed 10.30 WIB strictly preserved) -->
+<section class="bg-urgency-red-bg border border-urgency-red-ink/20 rounded-xl p-3 flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-1.5 text-urgency-red-ink">
+<!-- Inline SVG: Timer -->
+<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="9"></circle>
+<path d="M12 7v5l3 3" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-[14px] font-semibold">Batas Upload Bukti: 10.30 WIB</span>
+</div>
+<span class="text-[14px] font-bold text-urgency-red-ink">Sisa 15 Menit</span>
+</div>
+<p class="text-[14px] leading-[20px] text-ink">
+          Booking dibuat 10.00 WIB (Jam server: <strong class="font-semibold">10.15 WIB</strong>). Jadwal ambil <strong class="font-semibold">10 Okt 2026, 12.30 WIB</strong>. Batas upload tetap berlaku meski terjadi penolakan atau kekurangan bayar.
+        </p>
+</section>
+<!-- Jadwal Sewa & Ringkasan Unit -->
+<section class="bg-surface border border-line rounded-xl p-3.5 flex flex-col gap-3">
+<div class="flex items-center justify-between border-b border-line pb-2">
+<span class="text-[14px] font-semibold text-ink">Jadwal Sewa (6 Jam)</span>
+<span class="text-[12px] text-muted">1 Unit iPhone Maks</span>
+</div>
+<div class="flex flex-col gap-1 text-[14px] text-ink">
+<div class="flex justify-between items-center">
+<span class="text-muted">Waktu Ambil:</span>
+<span class="font-medium text-ink">10 Okt 2026, 12.30 WIB</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-muted">Waktu Selesai:</span>
+<span class="font-medium text-ink">10 Okt 2026, 18.30 WIB</span>
+</div>
+</div>
+<div class="border-t border-line pt-2 flex flex-col gap-1.5 text-[14px]">
+<div class="flex justify-between">
+<span class="text-ink">1x iPhone 15 Pro 128GB</span>
+<span class="tabular-nums font-medium text-ink">Rp135.000</span>
+</div>
+<div class="flex justify-between">
+<span class="text-ink">1x Heavy Duty Tripod</span>
+<span class="tabular-nums font-medium text-ink">Rp15.000</span>
+</div>
+<div class="flex justify-between font-semibold pt-1 border-t border-dashed border-line">
+<span class="text-ink">Total Nilai Sewa</span>
+<span class="tabular-nums text-ink">Rp150.000</span>
+</div>
+</div>
+</section>
+<!-- Rincian Finansial PRD Akurat -->
+<section class="bg-surface border border-line rounded-xl p-3.5 flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<span class="text-[14px] font-semibold text-ink">Status Finansial Saat Ini</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full bg-pastel-blush text-secondary text-[12px] font-semibold">
+            Pilihan: Uang Muka (DP)
+          </span>
+</div>
+<div class="flex flex-col gap-2 text-[14px]">
+<div class="flex justify-between items-center bg-selected-rose/60 p-2.5 rounded-lg border border-line">
+<div>
+<p class="text-[14px] font-semibold text-ink">Uang Muka (DP Flat Wajib)</p>
+<p class="text-[12px] text-muted">Tagihan transfer saat ini</p>
+</div>
+<span class="text-[18px] font-bold text-secondary tabular-nums">Rp20.000</span>
+</div>
+<div class="flex justify-between items-center pt-0.5">
+<span class="text-muted">Terverifikasi Bank:</span>
+<span class="text-[14px] font-medium tabular-nums text-ink">Rp0</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-muted">Sisa Kewajiban Riil Saat Ini:</span>
+<span class="text-[14px] font-semibold tabular-nums text-ink">Rp150.000</span>
+</div>
+<div class="border-t border-dashed border-line pt-2 mt-0.5">
+<div class="flex justify-between items-start text-muted">
+<div class="pr-2">
+<p class="text-[14px] text-ink font-medium">Pelunasan setelah DP Rp20.000 terverifikasi:</p>
+<p class="text-[12px] text-muted">Dibayar saat pengambilan di loket</p>
+</div>
+<span class="text-[14px] font-semibold tabular-nums text-ink shrink-0">Rp130.000</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Metode Pembayaran DP: Non-Scannable QR & Configured Bank Placeholder -->
+<section class="bg-surface border border-line rounded-xl p-3.5 flex flex-col items-center text-center gap-3">
+<div class="w-full flex items-center justify-between text-left">
+<div>
+<h2 class="text-[14px] font-semibold text-ink">Metode Pembayaran DP</h2>
+<p class="text-[12px] text-muted">Scan QRIS Kasir atau Transfer Bank</p>
+</div>
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-sidebar border border-line text-ink text-[12px]">
+            QRIS Statik
+          </span>
+</div>
+<!-- Non-scannable QR illustration -->
+<div class="relative w-[190px] h-[190px] bg-sidebar border border-dashed border-line rounded-xl flex flex-col items-center justify-center p-3 overflow-hidden shadow-inner">
+<div class="w-full h-full grid grid-cols-6 grid-rows-6 gap-1.5 opacity-20">
+<div class="bg-ink rounded-[2px]"></div><div class="bg-ink rounded-[2px]"></div><div class="bg-ink rounded-[2px]"></div><div class="bg-ink"></div><div></div><div class="bg-ink"></div>
+<div class="bg-ink rounded-[2px]"></div><div></div><div class="bg-ink rounded-[2px]"></div><div></div><div class="bg-ink"></div><div></div>
+<div class="bg-ink rounded-[2px]"></div><div class="bg-ink rounded-[2px]"></div><div class="bg-ink rounded-[2px]"></div><div class="bg-ink"></div><div></div><div class="bg-ink"></div>
+<div></div><div class="bg-ink"></div><div></div><div class="bg-ink"></div><div class="bg-ink"></div><div></div>
+<div class="bg-ink"></div><div></div><div class="bg-ink"></div><div></div><div class="bg-ink"></div><div class="bg-ink"></div>
+<div class="bg-ink"></div><div class="bg-ink"></div><div></div><div class="bg-ink"></div><div></div><div class="bg-ink"></div>
+</div>
+<!-- Label Non-scannable required by PRD -->
+<div class="absolute inset-0 bg-white/85 flex flex-col items-center justify-center p-3 text-center">
+<!-- Inline SVG: QR Code / Prohibited -->
+<svg class="w-6 h-6 text-muted mb-1" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<rect height="7" width="7" x="3" y="3"></rect>
+<rect height="7" width="7" x="14" y="3"></rect>
+<rect height="7" width="7" x="14" y="14"></rect>
+<rect height="7" width="7" x="3" y="14"></rect>
+</svg>
+<span class="text-[12px] font-semibold text-ink leading-tight">
+              QRIS contoh — tidak dapat dibayar
+            </span>
+<span class="text-[11px] text-muted mt-0.5">Gunakan rekening di bawah</span>
+</div>
+</div>
+<!-- Bank Rekening dari Konfigurasi Toko Placeholder -->
+<div class="w-full bg-sidebar border border-line rounded-lg p-3 flex flex-col gap-1 text-left">
+<div class="flex justify-between items-center">
+<span class="text-[12px] text-muted">Rekening dari konfigurasi toko:</span>
+<span class="text-[13px] font-semibold text-ink">BCA Virtual Account / Kasir</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-[15px] font-semibold text-ink tabular-nums tracking-wide">8035 1928 301</span>
+<button class="text-secondary font-medium text-[13px] hover:underline min-h-[44px] flex items-center px-2" type="button">
+              Salin
+            </button>
+</div>
+<span class="text-[12px] text-muted">a.n. PT iRent Solusi Semarang</span>
+</div>
+</section>
+<!-- Formulir Unggah Bukti Transfer -->
+<section class="bg-surface border border-line rounded-xl p-3.5 flex flex-col gap-3">
+<div class="flex flex-col gap-0.5">
+<h2 class="text-[14px] font-semibold text-ink">Unggah Bukti Transfer</h2>
+<p class="text-[12px] text-muted">Mendukung format JPG, PNG, PDF (Maks. 2 MB)</p>
+</div>
+<!-- Input Nominal -->
+<div class="flex flex-col gap-1 text-left">
+<label class="text-[13px] font-medium text-ink" for="nominal-transfer">
+            Nominal yang Ditransfer
+          </label>
+<div class="relative">
+<input class="w-full h-[44px] rounded-[10px] border border-line bg-sidebar px-3 text-[14px] font-medium text-ink focus:ring-1 focus:ring-secondary focus:outline-none" id="nominal-transfer" readonly="" type="text" value="Rp 20.000"/>
+<span class="absolute right-3 top-1/2 -translate-y-1/2 text-[13px] font-medium text-success-ink flex items-center gap-1">
+<!-- Inline SVG: Check Circle -->
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+              Tepat DP
+            </span>
+</div>
+</div>
+<!-- File Upload Box / Pratinjau Terunggah -->
+<div class="border border-line rounded-xl p-3 bg-sidebar flex flex-col gap-2">
+<div class="flex items-center gap-2.5">
+<div class="w-10 h-10 rounded-lg bg-selected-rose text-secondary flex items-center justify-center shrink-0">
+<!-- Inline SVG: File Text -->
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</div>
+<div class="flex flex-col overflow-hidden text-left">
+<span class="text-[13px] font-semibold text-ink truncate">bukti_transfer_bca_rian.png</span>
+<span class="text-[12px] text-muted">1.2 MB — Siap Diverifikasi</span>
+</div>
+</div>
+<div class="flex items-center justify-end gap-2 pt-1.5 border-t border-line">
+<button class="min-h-[44px] px-3 text-[13px] font-medium text-ink hover:text-secondary flex items-center" type="button">
+              Ganti File
+            </button>
+<button class="min-h-[44px] px-3 text-[13px] font-medium text-urgency-red-ink hover:underline flex items-center" type="button">
+              Hapus
+            </button>
+</div>
+</div>
+<!-- Primary Upload Action Button -->
+<button class="w-full min-h-[44px] bg-primary-container text-surface rounded-[10px] text-[14px] font-medium hover:opacity-95 active:scale-95 transition-all flex items-center justify-center gap-2" type="button">
+<!-- Inline SVG: Upload -->
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span>Unggah Bukti Pembayaran</span>
+</button>
+</section>
+<!-- Status & SLA PRD Ringkas & Humanis -->
+<section class="bg-surface border border-line rounded-xl p-3.5 flex flex-col gap-3">
+<div class="flex items-center gap-2">
+<!-- Inline SVG: Verified Shield -->
+<svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<h2 class="text-[14px] font-semibold text-ink">Status Verifikasi &amp; SLA</h2>
+</div>
+<!-- Post-Upload Status Chip -->
+<div class="bg-pastel-blue p-3 rounded-lg flex flex-col gap-1">
+<div class="flex items-center justify-between">
+<span class="text-[13px] font-medium text-ink">Status Dokumen:</span>
+<span class="text-[12px] px-2.5 py-0.5 rounded-full bg-white text-ink border border-line font-medium">
+              Menunggu verifikasi pembayaran
+            </span>
+</div>
+<p class="text-[12px] text-muted">Status belum lunas penuh sampai pembayaran dikonfirmasi oleh kasir.</p>
+</div>
+<!-- SLA Formula Calculation Dynamic min(upload + 1 jam, pickup - 1 jam) -->
+<div class="border border-line rounded-lg p-3 flex flex-col gap-1 text-[13px]">
+<div class="flex justify-between items-center">
+<span class="text-muted">Batas SLA Verifikasi Admin:</span>
+<span class="text-[14px] font-semibold text-ink">min(upload + 1 jam, 11.30 WIB)</span>
+</div>
+<p class="text-[12px] text-muted leading-relaxed">
+            Admin memverifikasi maks. 1 jam setelah Anda mengunggah atau paling lambat 1 jam sebelum waktu ambil (11.30 WIB).
+          </p>
+</div>
+<!-- Klausul Proteksi PRD -->
+<div class="bg-pastel-mint border border-success-ink/20 rounded-lg p-3 flex items-start gap-2 text-left">
+<!-- Inline SVG: Shield -->
+<svg class="w-4 h-4 text-success-ink shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<p class="text-[13px] text-success-ink leading-relaxed">
+<strong class="font-semibold">Proteksi Unit:</strong> Alokasi unit Anda tetap aman dan tidak akan dibatalkan otomatis jika tim kami terlambat memverifikasi bukti yang telah diunggah tepat waktu.
+          </p>
+</div>
+</section>
+<!-- Simulasi Status Alternatif: Compact Interactive Tab Selector -->
+<section class="bg-surface border border-line rounded-xl p-3.5 flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<h2 class="text-[14px] font-semibold text-ink">Preview Kasus Status Lain</h2>
+<span class="text-[12px] text-muted">Simulasi</span>
+</div>
+<!-- Status Tabs Selector -->
+<div class="flex rounded-lg bg-canvas p-1 gap-1" role="tablist">
+<button class="flex-1 py-1.5 px-2 rounded-md text-[12px] font-medium text-center bg-white shadow-sm text-ink transition-all min-h-[38px] flex items-center justify-center" id="tab-btn-pending" onclick="showStatusTab('pending')">
+            Pending
+          </button>
+<button class="flex-1 py-1.5 px-2 rounded-md text-[12px] font-medium text-center text-muted hover:text-ink transition-all min-h-[38px] flex items-center justify-center" id="tab-btn-kurang" onclick="showStatusTab('kurang')">
+            Kurang Bayar
+          </button>
+<button class="flex-1 py-1.5 px-2 rounded-md text-[12px] font-medium text-center text-muted hover:text-ink transition-all min-h-[38px] flex items-center justify-center" id="tab-btn-ditolak" onclick="showStatusTab('ditolak')">
+            Bukti Ditolak
+          </button>
+</div>
+<!-- Tab 1: Pending -->
+<div class="flex flex-col gap-2 text-left pt-1" id="tab-panel-pending">
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center gap-1.5 text-[13px] font-medium text-warning-ink">
+<!-- Inline SVG: Hourglass -->
+<svg class="w-4 h-4 text-warning-ink" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+              Status: Menunggu Pemeriksaan
+            </span>
+<span class="text-[12px] px-2 py-0.5 rounded bg-warning-bg text-warning-ink font-medium">Pengecekan Mutasi</span>
+</div>
+<p class="text-[13px] text-muted leading-relaxed">
+            Kasir loket sedang mencocokkan mutasi rekening bank BCA. Waktu verifikasi mengikuti formula SLA.
+          </p>
+</div>
+<!-- Tab 2: Kurang Bayar -->
+<div class="hidden flex-col gap-2 text-left pt-1" id="tab-panel-kurang">
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center gap-1.5 text-[13px] font-medium text-urgency-red-ink">
+<!-- Inline SVG: Alert Triangle -->
+<svg class="w-4 h-4 text-urgency-red-ink" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+              Status: Kurang Bayar (&lt; Rp20.000)
+            </span>
+<span class="text-[12px] px-2 py-0.5 rounded bg-urgency-red-bg text-urgency-red-ink font-medium">Short Payment</span>
+</div>
+<p class="text-[13px] text-muted leading-relaxed">
+            Nominal transfer kurang dari DP. Unggah bukti sisa kekurangan sebelum batas waktu awal <strong>10.30 WIB</strong>.
+          </p>
+<div class="pt-1">
+<button class="w-full min-h-[44px] px-3 border border-line rounded-lg text-[13px] font-medium text-ink hover:bg-sidebar flex items-center justify-center gap-1.5" type="button">
+<!-- Inline SVG: Plus -->
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+              Unggah Kekurangan Dana
+            </button>
+</div>
+</div>
+<!-- Tab 3: Bukti Ditolak (Deadine strictly 10.30 WIB, no 15 min extension) -->
+<div class="hidden flex-col gap-2 text-left pt-1" id="tab-panel-ditolak">
+<div class="flex items-center justify-between">
+<span class="inline-flex items-center gap-1.5 text-[13px] font-medium text-error">
+<!-- Inline SVG: X Circle -->
+<svg class="w-4 h-4 text-error" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+              Status: Bukti Ditolak Kasir
+            </span>
+<span class="text-[12px] px-2 py-0.5 rounded bg-error-container text-on-error-container font-medium">Gagal Verifikasi</span>
+</div>
+<p class="text-[13px] text-muted leading-relaxed">
+            Struk buram atau transaksi tidak valid. Anda wajib mengunggah ulang sebelum batas waktu asli berakhir pada <strong>10.30 WIB</strong>.
+          </p>
+<div class="pt-1">
+<button class="w-full min-h-[44px] px-3 bg-sidebar border border-line rounded-lg text-[13px] font-medium text-ink hover:bg-canvas flex items-center justify-center gap-1.5" type="button">
+<!-- Inline SVG: Refresh -->
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+              Unggah Ulang Bukti Jelas
+            </button>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar (Bayar is ACTIVE destination) with Inline SVGs and 44px min touch -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center h-[64px] px-[20px] pb-safe max-w-[390px] mx-auto bg-surface border-t border-line">
+<!-- 1: Bayar (Active) -->
+<a class="flex flex-col items-center justify-center text-secondary bg-selected-rose rounded-xl py-1 px-3 min-h-[44px] min-w-[56px] transition-all" href="#bayar">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<rect height="14" rx="2" width="20" x="2" y="5"></rect>
+<line x1="2" x2="22" y1="10" y2="10"></line>
+</svg>
+<span class="text-[12px] font-semibold mt-0.5">Bayar</span>
+</a>
+<!-- 2: Serah (Inactive) -->
+<a class="flex flex-col items-center justify-center text-muted py-1 px-2 min-h-[44px] min-w-[56px] transition-all hover:text-ink" href="#serah">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-[12px] font-medium mt-0.5">Serah</span>
+</a>
+<!-- 3: Kembali (Inactive) -->
+<a class="flex flex-col items-center justify-center text-muted py-1 px-2 min-h-[44px] min-w-[56px] transition-all hover:text-ink" href="#kembali">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-[12px] font-medium mt-0.5">Kembali</span>
+</a>
+<!-- 4: Perpanjang (Inactive) -->
+<a class="flex flex-col items-center justify-center text-muted py-1 px-2 min-h-[44px] min-w-[56px] transition-all hover:text-ink" href="#perpanjang">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-[12px] font-medium mt-0.5">Perpanjang</span>
+</a>
+</nav>
+</div>
+<!-- Interactive script for Status Tab Switcher -->
+<script>
+    function showStatusTab(tabName) {
+      const tabs = ['pending', 'kurang', 'ditolak'];
+      tabs.forEach(t => {
+        const panel = document.getElementById('tab-panel-' + t);
+        const btn = document.getElementById('tab-btn-' + t);
+        if (t === tabName) {
+          panel.classList.remove('hidden');
+          panel.classList.add('flex');
+          btn.classList.add('bg-white', 'shadow-sm', 'text-ink');
+          btn.classList.remove('text-muted');
+        } else {
+          panel.classList.add('hidden');
+          panel.classList.remove('flex');
+          btn.classList.remove('bg-white', 'shadow-sm', 'text-ink');
+          btn.classList.add('text-muted');
+        }
+      });
+    }
+  </script>
+</body></html>

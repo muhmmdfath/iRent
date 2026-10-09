@@ -1,6 +1,6 @@
 # Pembatalan dan refund manual
 
-Implementasi PRD §9 untuk pembatalan seluruh booking sebelum serah terima dan refund awal/pelunasan. No-show, refund perpanjangan, dan koreksi receipt belum tersedia.
+Implementasi PRD §9 untuk pembatalan seluruh booking sebelum serah terima dan refund awal/pelunasan. No-show tersedia melalui [NO_SHOW.md](NO_SHOW.md). Refund aktual ketika pengembalian membatalkan proposal perpanjangan pending tersedia melalui [OPERATIONS.md](OPERATIONS.md), menggunakan review/transfer manual yang sama. Perpanjangan lengkap tersedia melalui [EXTENSIONS.md](EXTENSIONS.md); koreksi receipt umum belum tersedia.
 
 ## Kontrak API
 

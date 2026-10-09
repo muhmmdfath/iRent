@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>C06 — Pelanggan Masuk &amp; Daftar — v2</title>
+<!-- Google Fonts: Poppins -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "inverse-surface": "#313031",
+            "on-surface": "#1c1b1c",
+            "tertiary-fixed": "#eee0d3",
+            "sidebar": "#F8F9FA",
+            "on-surface-variant": "#46464b",
+            "surface-variant": "#e5e2e2",
+            "success-bg": "#EAF6EF",
+            "secondary-container": "#fe96be",
+            "pastel-mint": "#E8F5EE",
+            "on-tertiary-fixed": "#211b12",
+            "on-secondary-container": "#7a2a4e",
+            "primary-container": "#292b31",
+            "on-secondary": "#ffffff",
+            "on-tertiary-fixed-variant": "#4e453b",
+            "pastel-apricot": "#FFF0DE",
+            "on-primary-fixed": "#191b21",
+            "warning-bg": "#FFF5DF",
+            "on-tertiary": "#ffffff",
+            "pastel-blue": "#EAF1FC",
+            "inverse-on-surface": "#f4f0f0",
+            "urgency-red-bg": "#FFF0F1",
+            "primary-fixed-dim": "#c5c6ce",
+            "on-background": "#1c1b1c",
+            "tertiary-fixed-dim": "#d1c5b7",
+            "workspace": "#FCFCFD",
+            "surface-tint": "#5c5e65",
+            "selected-rose": "#F9E8EF",
+            "surface": "#FFFFFF",
+            "outline": "#76777b",
+            "error": "#ba1a1a",
+            "background": "#fcf8f8",
+            "on-tertiary-container": "#9b9185",
+            "surface-dim": "#ddd9d9",
+            "ink": "#24262B",
+            "error-container": "#ffdad6",
+            "on-secondary-fixed": "#3e0021",
+            "on-error": "#ffffff",
+            "inverse-primary": "#c5c6ce",
+            "on-error-container": "#93000a",
+            "on-secondary-fixed-variant": "#79294e",
+            "success-ink": "#176345",
+            "muted": "#606570",
+            "surface-container": "#f1eded",
+            "primary-fixed": "#e2e2ea",
+            "pastel-lilac": "#F1ECFB",
+            "canvas": "#F1F2F4",
+            "outline-variant": "#c7c6cb",
+            "tertiary": "#1c160e",
+            "surface-container-lowest": "#ffffff",
+            "tertiary-container": "#312a21",
+            "primary": "#15171c",
+            "line": "#E6E8ED",
+            "surface-container-low": "#f6f3f3",
+            "on-primary-container": "#919299",
+            "on-primary-fixed-variant": "#45474d",
+            "surface-container-highest": "#e5e2e2",
+            "secondary-fixed-dim": "#ffb0cc",
+            "on-primary": "#ffffff",
+            "secondary-fixed": "#ffd9e4",
+            "secondary": "#974166",
+            "pastel-blush": "#FBECEE",
+            "surface-container-high": "#ebe7e7",
+            "warning-ink": "#855300",
+            "urgency-red-ink": "#A12A39",
+            "surface-bright": "#fcf8f8"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "2xl": "1.25rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "space-xl": "20px",
+            "space-3xl": "32px",
+            "margin": "32px",
+            "space-md": "12px",
+            "space-xs": "4px",
+            "space-sm": "8px",
+            "gutter": "32px",
+            "space-2xl": "24px",
+            "space-lg": "16px",
+            "space-4xl": "48px"
+          },
+          "fontFamily": {
+            "headline-md": ["Poppins", "sans-serif"],
+            "label-sm": ["Poppins", "sans-serif"],
+            "body-sm": ["Poppins", "sans-serif"],
+            "body-md": ["Poppins", "sans-serif"],
+            "headline-lg": ["Poppins", "sans-serif"],
+            "label-md": ["Poppins", "sans-serif"]
+          },
+          "fontSize": {
+            "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "headline-lg": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+            "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+  </style>
+</head>
+<body class="bg-canvas text-ink antialiased min-h-screen p-space-3xl flex flex-col justify-between">
+<!-- Exterior App Shell Enclosure (Desktop 1440px context with 32px inset) -->
+<div class="w-full max-w-[1376px] mx-auto bg-workspace rounded-2xl border border-line flex flex-col min-h-[calc(100vh-64px)] overflow-hidden">
+<!-- Top Header Bar (Calm, Restrained Portal Bar) -->
+<header class="flex justify-between items-center h-[72px] px-gutter border-b border-line bg-surface">
+<!-- Left Branding Cluster -->
+<div class="flex items-center gap-space-md">
+<div class="flex items-center justify-center w-9 h-9 rounded-xl bg-primary-container text-surface"><svg class="w-5 h-5 text-surface" fill="none" stroke="currentColor" stroke-width="1.75" viewbox="0 0 24 24"><rect height="12" rx="2" width="18" x="3" y="4"></rect><line x1="2" x2="22" y1="20" y2="20"></line></svg></div>
+<div class="flex items-center gap-2.5">
+<span class="text-headline-md font-headline-md text-ink tracking-tight">iRent Semarang</span>
+<span class="px-2 py-0.5 rounded-md bg-canvas border border-line text-label-sm font-label-sm text-muted">Customer Portal</span>
+</div>
+</div>
+<!-- Center & Trailing Information Links -->
+<div class="flex items-center gap-space-2xl">
+<nav class="hidden md:flex items-center gap-space-lg text-body-sm font-body-sm text-muted">
+<a class="hover:text-ink transition-colors" href="#">Tentang Layanan</a>
+<span class="text-line">|</span>
+<a class="hover:text-ink transition-colors" href="#">Syarat &amp; Ketentuan</a>
+<span class="text-line">|</span>
+<a class="hover:text-ink transition-colors flex items-center gap-1" href="#"><svg class="w-4 h-4 text-muted" fill="none" stroke="currentColor" stroke-width="1.75" viewbox="0 0 24 24"><path d="M18 18.72a9.094 9.094 0 003.741-.479 3 3 0 00-4.682-2.72m.94 3.198l.001.031c0 .225-.012.447-.037.666A11.944 11.944 0 0112 21c-2.17 0-4.207-.576-5.963-1.584A6.062 6.062 0 016 18.719m12 0a5.971 5.971 0 00-.941-3.197m0 0A5.995 5.995 0 0012 12.75a5.995 5.995 0 00-5.058 2.772m0 0a3 3 0 00-4.681 2.72 8.986 8.986 0 003.74.477m.999-3.199a5.971 5.971 0 01-.94-3.197M15 6.75a3 3 0 11-6 0 3 3 0 016 0zm6 3a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0zm-13.5 0a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Bantuan Loket</span></a>
+</nav>
+<div class="flex items-center gap-2 pl-4 border-l border-line">
+<span class="px-2.5 py-1 rounded-md bg-pastel-mint text-success-ink text-label-sm font-label-sm border border-[#D5EEDB] flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-[#176345]"></span>
+            Data contoh
+          </span>
+<span class="text-label-sm font-label-sm text-muted">10 Okt 2026</span>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas: Centered Calm Authentication Card -->
+<main class="flex-1 flex flex-col justify-center items-center py-12 px-6">
+<div class="w-full max-w-xl bg-surface rounded-2xl border border-line p-10 flex flex-col gap-8 shadow-none">
+<!-- Header Section Inside Card -->
+<div class="flex flex-col gap-2.5 text-left">
+<div class="flex items-center justify-between">
+<span class="px-3 py-1 rounded-full bg-pastel-blue text-ink text-label-sm font-label-sm border border-line inline-flex items-center gap-1.5"><svg class="w-4 h-4 text-ink" fill="none" stroke="currentColor" stroke-width="1.75" viewbox="0 0 24 24"><path d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Otorisasi Pelanggan</span></span>
+<span class="text-label-sm font-label-sm text-muted">Kode Layanan: SMG-CUST</span>
+</div>
+<h1 class="text-headline-lg font-headline-lg text-ink pt-1">Masuk ke Akun Pelanggan</h1>
+<p class="text-body-sm font-body-sm text-muted">
+            Kelola reservasi perangkat, unggah bukti pembayaran DP, dan pantau status sewa di iRent Semarang.
+          </p>
+</div>
+<!-- Mode Toggle Tabs -->
+<div class="flex p-1 bg-sidebar border border-line rounded-xl">
+<button class="flex-1 py-2 rounded-xl text-label-md font-label-md bg-selected-rose text-secondary transition-colors text-center" id="tab-login" onclick="switchTab('login')" type="button">
+            Masuk Akun
+          </button>
+<button class="flex-1 py-2 rounded-xl text-label-md font-label-md text-muted hover:text-ink transition-colors text-center" id="tab-register" onclick="switchTab('register')" type="button">
+            Daftar Baru
+          </button>
+</div>
+<!-- FORM 1: MASUK (ACTIVE DEFAULT) -->
+<div class="flex flex-col gap-5" id="section-login">
+<!-- Field 1 -->
+<div class="flex flex-col gap-2">
+<label class="text-label-md font-label-md text-ink flex items-center justify-between" for="login-identifier">
+<span>Email atau Nomor WhatsApp Aktif</span>
+<span class="text-label-sm font-label-sm text-muted">Wajib diisi</span>
+</label>
+<div class="relative">
+<input class="w-full min-h-[44px] rounded-xl border border-line px-4 text-body-md font-body-md text-ink bg-surface focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-colors" id="login-identifier" placeholder="contoh: rian.pratama@email.com atau 081234567890" type="text" value="rian.pratama@email.com"/>
+</div>
+</div>
+<!-- Field 2 -->
+<div class="flex flex-col gap-2">
+<label class="text-label-md font-label-md text-ink flex items-center justify-between" for="login-password">
+<span>Kata Sandi</span>
+<span class="text-label-sm font-label-sm text-muted">Minimal 8 karakter</span>
+</label>
+<div class="relative flex items-center">
+<input class="w-full min-h-[44px] rounded-xl border border-line pl-4 pr-11 text-body-md font-body-md text-ink bg-surface focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-colors" id="login-password" placeholder="••••••••••••" type="password" value="secretpassword123"/>
+<button aria-label="Tampilkan atau sembunyikan kata sandi" class="absolute right-3 text-muted hover:text-ink transition-colors p-1" onclick="togglePasswordVisibility('login-password', 'eye-icon-login')" type="button"><svg class="w-5 h-5 text-muted" fill="none" stroke="currentColor" stroke-width="1.75" viewbox="0 0 24 24"><path d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
+</div>
+</div>
+<!-- State Alert Panel: Rate Limit Protection -->
+<div class="bg-pastel-apricot border border-warning-ink/30 p-3.5 rounded-xl flex items-start gap-3"><svg class="w-5 h-5 text-warning-ink shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="1.75" viewbox="0 0 24 24"><path d="M12 9v3.75m0-10.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285zM12 15.75h.007v.008H12v-.008z" stroke-linecap="round" stroke-linejoin="round"></path></svg><div class="text-body-sm font-body-sm text-ink leading-snug"><span class="font-medium">Perlindungan Akun:</span> Pembatasan percobaan login diatur oleh sistem keamanan server untuk mencegah akses tanpa izin.</div></div>
+<!-- Action: Masuk Sekarang Button -->
+<button class="w-full min-h-[44px] rounded-xl bg-primary-container hover:bg-ink text-surface text-label-md font-label-md transition-colors flex items-center justify-center gap-2" type="button"><span>Masuk Sekarang</span><svg class="w-4 h-4 text-surface" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
+<!-- Forgot Password Note (Explicit PRD rule) -->
+<div class="p-3 bg-canvas rounded-xl border border-line text-body-sm font-body-sm text-muted flex items-start gap-2.5"><svg class="w-5 h-5 text-muted shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="1.75" viewbox="0 0 24 24"><path d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" stroke-linecap="round" stroke-linejoin="round"></path></svg><p class="leading-relaxed"><span class="text-ink font-medium">Lupa kata sandi?</span> Reset kata sandi tidak menggunakan kode OTP SMS maupun email. Silakan hubungi admin operasional secara langsung di toko untuk pemulihan kredensial manual.</p></div>
+</div>
+<!-- FORM 2: PENDAFTARAN BARU (TOGGLEABLE) -->
+<div class="hidden flex flex-col gap-5" id="section-register">
+<div class="border-b border-line pb-3"><h2 class="text-headline-md font-headline-md text-ink">Buat akun pelanggan</h2><p class="text-body-sm font-body-sm text-muted">Kelengkapan profil wajib diisi sebelum reservasi perangkat dapat diproses oleh sistem.</p></div>
+<!-- Input Nama Lengkap -->
+<div class="flex flex-col gap-1.5">
+<label class="text-label-md font-label-md text-ink" for="reg-name">Nama Lengkap (Sesuai KTP)</label>
+<input class="w-full min-h-[44px] rounded-xl border border-line px-4 text-body-md font-body-md text-ink bg-surface focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-colors" id="reg-name" placeholder="contoh: Rian Pratama Putra" type="text"/>
+</div>
+<!-- Input WhatsApp Aktif -->
+<div class="flex flex-col gap-1.5">
+<label class="text-label-md font-label-md text-ink flex items-center justify-between" for="reg-wa">
+<span>Nomor WhatsApp Aktif</span>
+<span class="text-label-sm font-label-sm text-muted">Koordinasi loket</span>
+</label>
+<input class="w-full min-h-[44px] rounded-xl border border-line px-4 text-body-md font-body-md text-ink bg-surface focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-colors" id="reg-wa" placeholder="contoh: 081234567890" type="tel"/>
+</div>
+<!-- Input NIK 16 Digit -->
+<div class="flex flex-col gap-1.5">
+<label class="text-label-md font-label-md text-ink flex items-center justify-between" for="reg-nik">
+<span>NIK 16 Digit</span>
+<span class="text-label-sm font-label-sm text-muted">Validasi sebelum checkout</span>
+</label>
+<input class="w-full min-h-[44px] rounded-xl border border-line px-4 text-body-md font-body-md text-ink bg-surface focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-colors tabular-nums" id="reg-nik" maxlength="16" placeholder="3374xxxxxxxxxxxx" type="text"/>
+</div>
+<!-- Input Alamat Domisili Semarang -->
+<div class="flex flex-col gap-1.5">
+<label class="text-label-md font-label-md text-ink" for="reg-address">Alamat Domisili Semarang</label>
+<input class="w-full min-h-[44px] rounded-xl border border-line px-4 text-body-md font-body-md text-ink bg-surface focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-colors" id="reg-address" placeholder="contoh: Jl. Pandanaran No. 45, Mugassari, Semarang Selatan" type="text"/>
+</div>
+<!-- Kata Sandi Akun Baru -->
+<div class="flex flex-col gap-1.5">
+<label class="text-label-md font-label-md text-ink" for="reg-password">Kata Sandi Baru</label>
+<div class="relative flex items-center">
+<input class="w-full min-h-[44px] rounded-xl border border-line pl-4 pr-11 text-body-md font-body-md text-ink bg-surface focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-colors" id="reg-password" placeholder="Minimal 8 karakter kombinasi" type="password"/>
+<button aria-label="Tampilkan atau sembunyikan kata sandi baru" class="absolute right-3 text-muted hover:text-ink transition-colors p-1" onclick="togglePasswordVisibility('reg-password', 'eye-icon-reg')" type="button"><svg class="w-5 h-5 text-muted" fill="none" stroke="currentColor" stroke-width="1.75" viewbox="0 0 24 24"><path d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
+</div>
+</div>
+<!-- Explicit PRD Rule Badge -->
+<div class="bg-pastel-mint border border-[#CDE5D5] p-3 rounded-xl flex items-start gap-2.5"><svg class="w-5 h-5 text-success-ink shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="1.75" viewbox="0 0 24 24"><path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path></svg><p class="text-body-sm font-body-sm text-ink leading-snug"><span class="font-medium text-success-ink">Ketentuan Pendaftaran:</span> Tidak ada unggah swafoto atau verifikasi identitas instan di aplikasi. Kelengkapan data profil diperlukan sebelum reservasi, sedangkan pengecekan identitas fisik dilakukan langsung di loket.</p></div>
+<!-- Action: Daftar Akun Baru Button -->
+<button class="w-full min-h-[44px] rounded-xl border border-ink text-ink hover:bg-canvas text-label-md font-label-md transition-colors flex items-center justify-center gap-2" type="button"><span>Daftar Akun Baru</span><svg class="w-4 h-4 text-ink" fill="none" stroke="currentColor" stroke-width="1.75" viewbox="0 0 24 24"><path d="M19 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM4 19.235v-.11a6.375 6.375 0 0112.75 0v.11A.765.765 0 0116 20H4.765A.765.765 0 014 19.235z" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
+</div>
+<!-- Card Footer Operational Note -->
+<div class="pt-4 border-t border-line text-center">
+<p class="text-body-sm font-body-sm text-muted">
+            Peran akun pelanggan dan staf operasional ditentukan oleh hak akses server. Seluruh data dilindungi enkripsi standar operasional iRent Semarang.
+          </p>
+</div>
+</div>
+</main>
+<!-- Bottom Utility Footer -->
+<footer class="h-14 border-t border-line px-gutter bg-surface flex justify-between items-center text-label-sm font-label-sm text-muted"><div class="flex items-center gap-3"><span>© 2026 iRent Semarang. Portal Reservasi Pelanggan.</span><span class="text-line">•</span><span>Lokasi toko dari konfigurasi</span></div><div class="flex items-center gap-4"><span class="flex items-center gap-1.5"><svg class="w-4 h-4 text-success-ink" fill="none" stroke="currentColor" stroke-width="1.75" viewbox="0 0 24 24"><path d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Koneksi Aman</span></span><span class="text-line">•</span><span>Zona Waktu: WIB (GMT+7)</span></div></footer>
+</div>
+<!-- Micro-interactions: Tab Switch & Password Toggle -->
+<script>
+    function switchTab(mode) {
+      const loginSection = document.getElementById('section-login');
+      const registerSection = document.getElementById('section-register');
+      const tabLogin = document.getElementById('tab-login');
+      const tabRegister = document.getElementById('tab-register');
+
+      if (mode === 'login') {
+        loginSection.classList.remove('hidden');
+        registerSection.classList.add('hidden');
+        tabLogin.className = 'flex-1 py-2 rounded-xl text-label-md font-label-md bg-selected-rose text-secondary transition-colors text-center';
+        tabRegister.className = 'flex-1 py-2 rounded-xl text-label-md font-label-md text-muted hover:text-ink transition-colors text-center';
+      } else {
+        loginSection.classList.add('hidden');
+        registerSection.classList.remove('hidden');
+        tabRegister.className = 'flex-1 py-2 rounded-xl text-label-md font-label-md bg-selected-rose text-secondary transition-colors text-center';
+        tabLogin.className = 'flex-1 py-2 rounded-xl text-label-md font-label-md text-muted hover:text-ink transition-colors text-center';
+      }
+    }
+
+    function togglePasswordVisibility(inputId, iconId) {
+      const input = document.getElementById(inputId);
+      const icon = document.getElementById(iconId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.innerText = 'visibility';
+      } else {
+        input.type = 'password';
+        icon.innerText = 'visibility_off';
+      }
+    }
+  </script>
+</body></html>

@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>A09 — Admin Laporan Kas &amp; Transaksi Berhasil — v2 | iRent Semarang</title>
+<!-- Google Fonts: Poppins (400, 500, 600 explicitly) -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "secondary-fixed-dim": "#ffb0cc",
+            "pastel-blush": "#FBECEE",
+            "surface-container": "#f1eded",
+            "on-tertiary": "#ffffff",
+            "warning-ink": "#855300",
+            "background": "#fcf8f8",
+            "tertiary-fixed-dim": "#d1c5b7",
+            "error-container": "#ffdad6",
+            "on-background": "#1c1b1c",
+            "on-tertiary-fixed-variant": "#4e453b",
+            "error": "#ba1a1a",
+            "on-secondary-fixed": "#3e0021",
+            "on-error": "#ffffff",
+            "tertiary-container": "#312a21",
+            "on-secondary-container": "#7a2a4e",
+            "surface-variant": "#e5e2e2",
+            "pastel-lilac": "#F1ECFB",
+            "on-primary": "#ffffff",
+            "primary": "#15171c",
+            "on-secondary-fixed-variant": "#79294e",
+            "primary-fixed-dim": "#c5c6ce",
+            "pastel-apricot": "#FFF0DE",
+            "warning-bg": "#FFF5DF",
+            "success-bg": "#EAF6EF",
+            "selected-rose": "#F9E8EF",
+            "outline": "#76777b",
+            "on-tertiary-fixed": "#211b12",
+            "on-tertiary-container": "#9b9185",
+            "muted": "#606570",
+            "surface-container-highest": "#e5e2e2",
+            "on-surface": "#1c1b1c",
+            "secondary-fixed": "#ffd9e4",
+            "surface-dim": "#ddd9d9",
+            "on-error-container": "#93000a",
+            "secondary-container": "#fe96be",
+            "primary-container": "#292b31",
+            "on-primary-container": "#919299",
+            "on-surface-variant": "#46464b",
+            "pastel-blue": "#EAF1FC",
+            "canvas": "#F1F2F4",
+            "line": "#E6E8ED",
+            "inverse-surface": "#313031",
+            "sidebar": "#F8F9FA",
+            "ink": "#24262B",
+            "tertiary-fixed": "#eee0d3",
+            "inverse-primary": "#c5c6ce",
+            "urgency-red-ink": "#A12A39",
+            "surface-container-high": "#ebe7e7",
+            "surface": "#FFFFFF",
+            "surface-tint": "#5c5e65",
+            "tertiary": "#1c160e",
+            "surface-bright": "#fcf8f8",
+            "inverse-on-surface": "#f4f0f0",
+            "on-primary-fixed-variant": "#45474d",
+            "on-primary-fixed": "#191b21",
+            "primary-fixed": "#e2e2ea",
+            "workspace": "#FCFCFD",
+            "urgency-red-bg": "#FFF0F1",
+            "surface-container-lowest": "#ffffff",
+            "pastel-mint": "#E8F5EE",
+            "outline-variant": "#c7c6cb",
+            "success-ink": "#176345",
+            "secondary": "#974166",
+            "on-secondary": "#ffffff",
+            "surface-container-low": "#f6f3f3"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "space-3xl": "32px",
+            "space-4xl": "48px",
+            "gutter": "32px",
+            "space-xl": "20px",
+            "space-xs": "4px",
+            "space-2xl": "24px",
+            "margin": "32px",
+            "space-sm": "8px",
+            "space-md": "12px",
+            "space-lg": "16px"
+          },
+          "fontFamily": {
+            "headline-md": ["Poppins", "sans-serif"],
+            "label-sm": ["Poppins", "sans-serif"],
+            "label-md": ["Poppins", "sans-serif"],
+            "body-sm": ["Poppins", "sans-serif"],
+            "body-md": ["Poppins", "sans-serif"],
+            "headline-lg": ["Poppins", "sans-serif"]
+          },
+          "fontSize": {
+            "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "label-sm": ["14px", { "lineHeight": "18px", "fontWeight": "500" }],
+            "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "headline-lg": ["28px", { "lineHeight": "36px", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #F1F2F4;
+      color: #24262B;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      font-size: 20px;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+  </style>
+</head>
+<body class="bg-canvas text-ink antialiased">
+<!-- Desktop App Shell Container (1440px viewport centered with 32px inset) -->
+<div class="min-h-screen p-space-3xl flex justify-center items-start">
+<div class="w-full max-w-[1376px] bg-workspace border border-line rounded-[20px] overflow-hidden flex flex-row min-h-[920px]">
+<!-- SideNavBar (JSON Component Anchor) -->
+<aside class="w-[224px] min-w-[224px] bg-sidebar border-r border-line p-space-lg flex flex-col justify-between select-none">
+<!-- Sidebar Brand Header -->
+<div class="flex flex-col gap-space-xl">
+<div class="flex items-center gap-space-md px-space-xs py-space-sm">
+<div class="w-9 h-9 rounded-xl bg-primary-container text-surface flex items-center justify-center font-headline-md text-headline-md font-semibold">
+<span class="material-symbols-outlined text-surface" data-icon="inventory_2">inventory_2</span>
+</div>
+<div>
+<div class="text-headline-md font-headline-md font-semibold text-ink leading-tight">iRent Semarang</div>
+<div class="text-label-sm font-label-sm text-muted">Rental Management</div>
+</div>
+</div>
+<!-- Main Nav Tabs (Exact labels & icons from JSON) -->
+<nav class="flex flex-col gap-1">
+<a class="flex items-center gap-space-md px-space-md py-space-sm text-label-md font-label-md text-muted font-normal rounded-lg hover:bg-canvas transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-space-md px-space-md py-space-sm text-label-md font-label-md text-muted font-normal rounded-lg hover:bg-canvas transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+<span>Booking</span>
+</a>
+<a class="flex items-center gap-space-md px-space-md py-space-sm text-label-md font-label-md text-muted font-normal rounded-lg hover:bg-canvas transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined" data-icon="schedule">schedule</span>
+<span>Jadwal</span>
+</a>
+<a class="flex items-center gap-space-md px-space-md py-space-sm text-label-md font-label-md text-muted font-normal rounded-lg hover:bg-canvas transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined" data-icon="people">people</span>
+<span>Data penyewa</span>
+</a>
+<a class="flex items-center gap-space-md px-space-md py-space-sm text-label-md font-label-md text-muted font-normal rounded-lg hover:bg-canvas transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span>Item &amp; unit</span>
+</a>
+<a class="flex items-center gap-space-md px-space-md py-space-sm text-label-md font-label-md text-muted font-normal rounded-lg hover:bg-canvas transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined" data-icon="payments">payments</span>
+<span>Pembayaran</span>
+</a>
+<a class="flex items-center gap-space-md px-space-md py-space-sm text-label-md font-label-md text-muted font-normal rounded-lg hover:bg-canvas transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined" data-icon="assignment_return">assignment_return</span>
+<span>Pengembalian</span>
+</a>
+<a class="flex items-center gap-space-md px-space-md py-space-sm text-label-md font-label-md text-muted font-normal rounded-lg hover:bg-canvas transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined" data-icon="currency_exchange">currency_exchange</span>
+<span>Refund</span>
+</a>
+<a class="flex items-center gap-space-md px-space-md py-space-sm text-label-md font-label-md text-muted font-normal rounded-lg hover:bg-canvas transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined" data-icon="check_circle">check_circle</span>
+<span>Transaksi berhasil</span>
+</a>
+</nav>
+</div>
+<!-- Sidebar Footer Tabs (Exact labels from JSON, 'Laporan' active) -->
+<div class="flex flex-col gap-1 border-t border-line pt-space-md">
+<a class="flex items-center gap-space-md px-space-md py-space-sm text-label-md font-label-md bg-selected-rose text-ink font-medium rounded-lg" href="#">
+<span class="material-symbols-outlined text-secondary" data-icon="bar_chart">bar_chart</span>
+<span>Laporan</span>
+</a>
+<a class="flex items-center gap-space-md px-space-md py-space-sm text-label-md font-label-md text-muted font-normal rounded-lg hover:bg-canvas transition-colors duration-150 active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Pengaturan</span>
+</a>
+</div>
+</aside>
+<!-- Main Workspace Canvas -->
+<div class="flex-1 flex flex-col min-w-0 bg-workspace">
+<!-- TopNavBar (JSON Component Anchor) -->
+<header class="h-[72px] px-gutter border-b border-line flex items-center justify-between bg-workspace w-full select-none">
+<!-- Search Bar on Left -->
+<div class="flex items-center gap-space-md w-80">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-muted" data-icon="search">search</span>
+<input class="w-full pl-9 pr-3 py-2 bg-surface border border-line rounded-[10px] text-body-sm font-body-sm text-ink placeholder-muted focus:outline-none focus:ring-1 focus:ring-secondary focus:border-secondary transition-all" placeholder="Cari transaksi, mutasi bank, atau ID..." type="text"/>
+</div>
+</div>
+<!-- Trailing Actions & User Cluster -->
+<div class="flex items-center gap-space-lg">
+<!-- Data Contoh Badge -->
+<div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] bg-pastel-apricot text-warning-ink border border-line text-label-sm font-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-warning-ink"></span>
+<span>Data contoh</span>
+</div>
+<!-- Trailing Action: Volume / Suara -->
+<button class="flex items-center gap-1.5 px-3 py-2 text-label-md font-label-md text-ink hover:bg-canvas rounded-lg border border-line transition-all duration-150 active:scale-95">
+<span class="material-symbols-outlined text-muted" data-icon="volume_up">volume_up</span>
+<span>Aktifkan suara</span>
+</button>
+<!-- Date Indicator -->
+<div class="flex items-center gap-1.5 text-label-md font-label-md text-muted px-2 py-1">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+<span>10 Okt 2026</span>
+</div>
+<!-- Notifications Icon Button -->
+<button aria-label="Notifikasi" class="w-9 h-9 flex items-center justify-center rounded-lg border border-line text-ink hover:bg-canvas transition-all duration-150 active:scale-95 relative">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-secondary"></span>
+</button>
+<!-- User Profile Avatar Pill -->
+<div class="flex items-center gap-2 pl-2 border-l border-line">
+<div class="w-8 h-8 rounded-full bg-pastel-blush border border-line flex items-center justify-center text-secondary font-label-md font-semibold">
+                AO
+              </div>
+<div class="text-left">
+<div class="text-label-md font-label-md font-semibold text-ink leading-none">Admin Operasional</div>
+<div class="text-label-sm font-label-sm text-muted">Super Loket</div>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Scroll Area -->
+<main class="flex-1 px-gutter py-space-2xl overflow-y-auto">
+<!-- Breadcrumb & Primary Action Bar -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-lg mb-space-xl">
+<div class="flex flex-col gap-1">
+<div class="flex items-center gap-2 text-label-sm font-label-sm text-muted">
+<span>Keuangan</span>
+<span class="material-symbols-outlined text-[16px]" data-icon="chevron_right">chevron_right</span>
+<span class="text-ink font-medium">Laporan Kas &amp; Rekonsiliasi</span>
+</div>
+<h1 class="text-headline-lg font-headline-lg text-ink font-semibold tracking-tight">A09 — Admin Laporan Kas &amp; Transaksi Berhasil — v2</h1>
+<p class="text-body-sm font-body-sm text-muted">
+                Pencatatan arus kas riil berdasarkan mutasi masuk terverifikasi dan transfer keluar nyata. Menjaga integritas tanpa proyeksi fiktif.
+              </p>
+</div>
+<!-- Action Button Cluster -->
+<div class="flex items-center gap-space-md self-start md:self-auto">
+<button class="inline-flex items-center gap-2 px-space-lg py-2.5 bg-primary-container text-surface rounded-[10px] text-label-md font-label-md font-medium hover:bg-ink transition-colors duration-150 active:scale-[0.98]">
+<span class="material-symbols-outlined text-surface" data-icon="download">download</span>
+<span>Export Laporan Excel (.xlsx)</span>
+</button>
+</div>
+</div>
+<!-- Filter Periode Bar (Pill / Segment Controls) -->
+<div class="bg-surface border border-line rounded-[12px] p-2 flex flex-wrap items-center justify-between gap-space-md mb-space-2xl">
+<div aria-label="Filter Periode" class="flex items-center gap-1.5" role="tablist">
+<button class="px-space-md py-1.5 rounded-[8px] bg-primary-container text-surface text-label-md font-label-md font-medium transition-all">
+                Harian (10 Okt 2026)
+              </button>
+<button class="px-space-md py-1.5 rounded-[8px] text-muted hover:bg-canvas hover:text-ink text-label-md font-label-md font-normal transition-all">
+                Bulanan (Oktober 2026)
+              </button>
+<button class="px-space-md py-1.5 rounded-[8px] text-muted hover:bg-canvas hover:text-ink text-label-md font-label-md font-normal transition-all">
+                Tahun 2026
+              </button>
+</div>
+<div class="flex items-center gap-space-md text-label-sm font-label-sm text-muted pr-2">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-success-ink" data-icon="sync">sync</span>
+                Sinkronisasi Bank BCA: Otomatis (10 menit lalu)
+              </span>
+<button class="inline-flex items-center gap-1 text-ink hover:underline font-medium">
+<span class="material-symbols-outlined text-[16px]" data-icon="tune">tune</span>
+                Kustom Rentang Tanggal
+              </button>
+</div>
+</div>
+<!-- Section 3: Restrained Typographic Financial Summary (No Garish Oversized Cards) -->
+<section class="mb-space-2xl">
+<div class="text-label-md font-label-md font-semibold text-ink uppercase tracking-wider mb-space-md flex items-center gap-2">
+<span class="material-symbols-outlined text-muted" data-icon="account_balance">account_balance</span>
+              Ringkasan Rekonsiliasi Kas Riil Loket
+            </div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-space-lg">
+<!-- Column 1: Kas Riil Masuk & Keluar -->
+<div class="bg-surface border border-line rounded-[16px] p-space-xl flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="text-label-md font-label-md text-muted">Total Dana Masuk Riil</span>
+<span class="px-2 py-0.5 rounded-[6px] bg-success-bg text-success-ink text-label-sm font-label-sm">Terverifikasi BCA</span>
+</div>
+<div class="text-headline-lg font-headline-lg font-semibold text-ink tabular-nums">
+                    Rp3.420.000
+                  </div>
+<p class="text-body-sm font-body-sm text-muted mt-1">
+                    Hanya mutasi bank yang telah diverifikasi struk fisik &amp; nomor referensinya oleh admin loket.
+                  </p>
+</div>
+<div class="mt-space-lg pt-space-md border-t border-line flex items-center justify-between text-body-sm font-body-sm">
+<span class="text-muted">Total Transaksi Valid</span>
+<span class="font-medium text-ink tabular-nums">4 Mutasi Masuk</span>
+</div>
+</div>
+<!-- Column 2: Pengurangan Transfer Keluar & Saldo Kas Bersih -->
+<div class="bg-surface border border-line rounded-[16px] p-space-xl flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="text-label-md font-label-md text-muted">Refund Nyata Ditransfer</span>
+<span class="px-2 py-0.5 rounded-[6px] bg-urgency-red-bg text-urgency-red-ink text-label-sm font-label-sm">Kas Berkurang</span>
+</div>
+<div class="text-headline-lg font-headline-lg font-semibold text-urgency-red-ink tabular-nums">
+                    -Rp250.000
+                  </div>
+<p class="text-body-sm font-body-sm text-muted mt-1">
+                    Eksekusi transfer bank keluar yang sudah tercatat bukti mutasi fisiknya ke rekening penyewa.
+                  </p>
+</div>
+<div class="mt-space-lg pt-space-md border-t border-line flex items-center justify-between">
+<span class="text-label-md font-label-md font-medium text-ink">Kas Bersih Operasional Loket</span>
+<span class="text-headline-md font-headline-md font-semibold text-ink tabular-nums">Rp3.170.000</span>
+</div>
+</div>
+<!-- Column 3: Liabilitas Terpisah (Pemisahan Akuntansi PRD) -->
+<div class="bg-surface border border-line rounded-[16px] p-space-xl flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="text-label-md font-label-md font-semibold text-ink">Liabilitas &amp; Cadangan Terpisah</span>
+<span class="px-2 py-0.5 rounded-[6px] bg-pastel-lilac text-ink text-label-sm font-label-sm">Non-Arus Kas</span>
+</div>
+<p class="text-body-sm font-body-sm text-muted mb-space-md">
+                    Pos akuntansi yang belum mempengaruhi kas riil saat ini (prinsip integritas pembukuan):
+                  </p>
+<ul class="flex flex-col gap-2.5">
+<li class="flex items-start justify-between gap-2 text-body-sm font-body-sm">
+<div class="flex items-center gap-1.5 text-muted">
+<span class="material-symbols-outlined text-[16px] text-warning-ink" data-icon="pending">pending</span>
+<span>Refund Disetujui (Pending Transfer):</span>
+</div>
+<span class="font-medium text-ink tabular-nums">Rp200.000</span>
+</li>
+<li class="flex items-start justify-between gap-2 text-body-sm font-body-sm">
+<div class="flex items-center gap-1.5 text-muted">
+<span class="material-symbols-outlined text-[16px] text-muted" data-icon="hourglass_top">hourglass_top</span>
+<span>Bukti Masuk Menunggu Verifikasi:</span>
+</div>
+<span class="font-medium text-ink tabular-nums">Rp370.000</span>
+</li>
+<li class="flex items-start justify-between gap-2 text-body-sm font-body-sm">
+<div class="flex items-center gap-1.5 text-muted">
+<span class="material-symbols-outlined text-[16px] text-urgency-red-ink" data-icon="receipt_long">receipt_long</span>
+<span>Tagihan Sewa Belum Lunas (Piutang):</span>
+</div>
+<span class="font-medium text-ink tabular-nums">Rp185.000</span>
+</li>
+</ul>
+</div>
+<div class="mt-space-md pt-space-sm border-t border-line text-label-sm font-label-sm text-muted italic">
+                  *Tidak diakui sebagai kas masuk sampai ada mutasi rekening valid.
+                </div>
+</div>
+</div>
+</section>
+<!-- Section 4: Tab Switcher Data Laporan -->
+<div class="border-b border-line mb-space-lg flex items-center justify-between">
+<div class="flex items-center gap-space-lg">
+<button class="pb-3 text-label-md font-label-md font-semibold text-ink border-b-2 border-primary transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="account_balance_wallet">account_balance_wallet</span>
+<span>Mutasi Kas Masuk &amp; Keluar Riil</span>
+<span class="px-2 py-0.5 rounded-full bg-pastel-blush text-secondary text-label-sm font-label-sm">4 baris</span>
+</button>
+<button class="pb-3 text-label-md font-label-md font-normal text-muted hover:text-ink transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="verified">verified</span>
+<span>Transaksi Berhasil (Completed &amp; Fully Paid)</span>
+<span class="px-2 py-0.5 rounded-full bg-canvas text-muted text-label-sm font-label-sm">3 kriteria</span>
+</button>
+<button class="pb-3 text-label-md font-label-md font-normal text-muted hover:text-ink transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]" data-icon="trending_up">trending_up</span>
+<span>Popularitas Item &amp; Sewa</span>
+</button>
+</div>
+<div class="text-label-sm font-label-sm text-muted pb-3">Kanal: Lokasi toko dari konfigurasi</div>
+</div>
+<!-- Section 5: Log Mutasi Kas Riil (Under Tab A) -->
+<section class="mb-space-3xl">
+<div class="bg-surface border border-line rounded-[16px] overflow-hidden">
+<div class="px-space-xl py-space-md border-b border-line flex items-center justify-between bg-workspace">
+<div>
+<h3 class="text-label-md font-label-md font-semibold text-ink">Buku Jurnal Mutasi Kas Harian (10 Okt 2026)</h3>
+<p class="text-label-sm font-label-sm text-muted">Rekonsiliasi langsung terhadap nomor transaksi mutasi BCA operasional.</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center gap-1 text-label-sm font-label-sm text-success-ink px-2.5 py-1 rounded-[6px] bg-success-bg">
+<span class="material-symbols-outlined text-[16px]" data-icon="check_circle">check_circle</span>
+                    Balance Terkonfirmasi
+                  </span>
+</div>
+</div>
+<!-- Table Data View -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-line bg-canvas/60 text-label-sm font-label-sm text-muted">
+<th class="py-3 px-space-xl font-medium">Waktu Transaksi</th>
+<th class="py-3 px-space-md font-medium">Jenis &amp; Keterangan</th>
+<th class="py-3 px-space-md font-medium">Penyewa</th>
+<th class="py-3 px-space-md font-medium">No. Referensi Bank</th>
+<th class="py-3 px-space-md font-medium text-right">Nominal Arus Kas</th>
+<th class="py-3 px-space-xl font-medium text-right">Status Verifikasi Rekonsiliasi</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-line text-body-sm font-body-sm">
+<!-- Baris 1 -->
+<tr class="hover:bg-canvas/30 transition-colors"><td class="py-3.5 px-space-xl text-ink whitespace-nowrap">10 Okt 2026, 09.15 WIB</td><td class="py-3.5 px-space-md"><div class="font-medium text-ink">Kas Masuk (DP Sewa #BK-2026-1008-01)</div><div class="text-label-sm font-label-sm text-muted">Sewa iPhone 15 Pro Max 256GB (Durasi 2 Hari)</div></td><td class="py-3.5 px-space-md text-ink font-medium">Rian Pratama</td><td class="py-3.5 px-space-md font-mono text-label-sm font-label-sm text-muted">TRFBCA-988310492</td><td class="py-3.5 px-space-md text-right font-semibold text-success-ink tabular-nums whitespace-nowrap">+Rp15.000</td><td class="py-3.5 px-space-xl text-right"><span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] bg-pastel-mint text-success-ink text-label-sm font-label-sm font-medium"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg><span>Terverifikasi Admin Loket</span></span></td></tr>
+<!-- Baris 2 -->
+<tr class="hover:bg-canvas/30 transition-colors"><td class="py-3.5 px-space-xl text-ink whitespace-nowrap">10 Okt 2026, 10.15 WIB</td><td class="py-3.5 px-space-md"><div class="font-medium text-ink">Kas Masuk (Pelunasan Sewa #BK-2026-1008-22)</div><div class="text-label-sm font-label-sm text-muted">Sewa iPhone 14 Pro 128GB + Tripod Stand</div></td><td class="py-3.5 px-space-md text-ink font-medium">Budi Santoso</td><td class="py-3.5 px-space-md font-mono text-label-sm font-label-sm text-muted">TRFBCA-7718291</td><td class="py-3.5 px-space-md text-right font-semibold text-success-ink tabular-nums whitespace-nowrap">+Rp250.000</td><td class="py-3.5 px-space-xl text-right"><span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] bg-pastel-mint text-success-ink text-label-sm font-label-sm font-medium"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><polyline points="9 12 11 14 15 10"></polyline></svg><span>Terverifikasi Bank (Kas Riil)</span></span></td></tr>
+<!-- Baris 3 -->
+<tr class="hover:bg-canvas/30 transition-colors bg-urgency-red-bg/20">
+<td class="py-3.5 px-space-xl text-ink whitespace-nowrap">
+                        10 Okt 2026, 10.45 WIB
+                      </td>
+<td class="py-3.5 px-space-md">
+<div class="font-medium text-urgency-red-ink">Kas Keluar (Refund Benturan Unit #RF-2026-1008-01)</div>
+<div class="text-label-sm font-label-sm text-muted">Pengembalian kelebihan bayar deposit atas pembatalan parsial</div>
+</td>
+<td class="py-3.5 px-space-md text-ink font-medium">
+                        Budi Santoso
+                      </td>
+<td class="py-3.5 px-space-md font-mono text-label-sm font-label-sm text-muted">
+                        TRFBCA-99201481
+                      </td>
+<td class="py-3.5 px-space-md text-right font-semibold text-urgency-red-ink tabular-nums whitespace-nowrap">
+                        -Rp250.000
+                      </td>
+<td class="py-3.5 px-space-xl text-right">
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-[6px] bg-urgency-red-bg text-urgency-red-ink text-label-sm font-label-sm font-medium">
+<span class="material-symbols-outlined text-[14px]" data-icon="outbox">outbox</span>
+                          Transfer Kasir Selesai &amp; Berkurang
+                        </span>
+</td>
+</tr>
+<!-- Baris 4 -->
+<tr class="hover:bg-canvas/30 transition-colors"><td class="py-3.5 px-space-xl text-ink whitespace-nowrap">10 Okt 2026, 11.00 WIB</td><td class="py-3.5 px-space-md"><div class="font-medium text-ink">Kas Masuk (DP Sewa #BK-2026-1008-05)</div><div class="text-label-sm font-label-sm text-muted">Aksesoris Apple MagSafe Battery Pack Duo</div></td><td class="py-3.5 px-space-md text-ink font-medium">Siti Rahma</td><td class="py-3.5 px-space-md font-mono text-label-sm font-label-sm text-muted">TRFBCA-1192840</td><td class="py-3.5 px-space-md text-right font-semibold text-success-ink tabular-nums whitespace-nowrap">+Rp120.000</td><td class="py-3.5 px-space-xl text-right"><span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] bg-pastel-mint text-success-ink text-label-sm font-label-sm font-medium"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="9 12 11 14 15 10"></polyline></svg><span>Lunas Terverifikasi</span></span></td></tr>
+</tbody>
+<tfoot>
+<tr class="bg-workspace border-t border-line text-label-md font-label-md">
+<td class="py-3 px-space-xl text-ink font-semibold text-right" colspan="4">
+                        Total Perubahan Kas Bersih (Net Inflow Hari Ini):
+                      </td>
+<td class="py-3 px-space-md text-right font-semibold text-ink tabular-nums text-headline-md">
+                        +Rp3.170.000
+                      </td>
+<td class="py-3 px-space-xl text-right text-label-sm font-label-sm text-muted">
+                        Semua mutasi telah tervalidasi bank
+                      </td>
+</tr>
+</tfoot>
+</table>
+</div>
+</div>
+</section>
+<!-- Section 6: Tab B & Kriteria PRD (Edukasi Transaksi Berhasil vs Piutang & Loss Closure) -->
+<section class="mb-space-2xl">
+<div class="flex items-center justify-between mb-space-md">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary" data-icon="verified">verified</span>
+<h2 class="text-headline-md font-headline-md font-semibold text-ink">
+                  Kriteria PRD: Audit Transaksi Berhasil &amp; Status Unit
+                </h2>
+</div>
+<span class="text-label-sm font-label-sm text-muted">Standar Operasional Prosedur (SOP) Loket</span>
+</div>
+<!-- Kotak Edukasi Syarat Transaksi Berhasil (PRD Mandatory Notice) -->
+<div class="bg-pastel-blue border border-line rounded-[12px] p-space-lg mb-space-lg flex items-start gap-space-md">
+<span class="material-symbols-outlined text-primary text-[24px] mt-0.5" data-icon="info">info</span>
+<div class="text-body-sm font-body-sm text-ink leading-relaxed">
+<strong class="font-semibold text-ink">Kriteria Mutlak Transaksi Berhasil:</strong>
+                Booking telah diserah-terimakan, pengembalian selesai di loket (completed),
+                <span class="underline decoration-secondary font-medium">DAN pembayaran telah lunas 100% (fully paid)</span>.
+                Booking yang selesai secara fisik tapi masih menyisakan denda keterlambatan/kurang bayar dicatat sebagai <strong class="text-urgency-red-ink">Piutang Unit</strong>.
+                Unit yang tidak kembali dicatat dengan klausul <strong class="text-muted">Tutup Karena Hilang (Loss Closure)</strong> tanpa diakui sebagai pendapatan sewa berhasil.
+              </div>
+</div>
+<!-- Ringkasan Transaksi Kriteria PRD (Asymmetric Bento List) -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-lg">
+<!-- Case 1: Selesai & Lunas 100% -->
+<div class="bg-surface border border-line rounded-[16px] p-space-xl flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-2">
+<span class="font-mono text-label-sm font-label-sm text-muted">#BK-2026-1005-18</span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-[6px] bg-pastel-mint text-success-ink text-label-sm font-label-sm font-medium">
+<span class="material-symbols-outlined text-[14px]" data-icon="verified">verified</span>
+                      Transaksi Berhasil Sempurna
+                    </span>
+</div>
+<h4 class="text-label-md font-label-md font-semibold text-ink mb-1">Dimas Surya</h4>
+<div class="text-body-sm font-body-sm text-muted mb-space-md">
+                    iPhone 14 Pro 256GB + Tripod Stand
+                  </div>
+</div>
+<div class="pt-space-md border-t border-line">
+<div class="flex justify-between items-baseline mb-1">
+<span class="text-label-sm font-label-sm text-muted">Kondisi Loket</span>
+<span class="text-label-sm font-label-sm font-medium text-success-ink">Selesai &amp; Lunas 100%</span>
+</div>
+<div class="flex justify-between items-baseline">
+<span class="text-label-sm font-label-sm text-muted">Total Pembayaran</span>
+<span class="text-label-md font-label-md font-semibold text-ink tabular-nums">Rp350.000</span>
+</div>
+</div>
+</div>
+<!-- Case 2: Selesai Fisik tapi Denda Belum Bayar (Piutang) -->
+<div class="bg-surface border border-line rounded-[16px] p-space-xl flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-2">
+<span class="font-mono text-label-sm font-label-sm text-muted">#BK-2026-1004-09</span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-[6px] bg-pastel-apricot text-warning-ink text-label-sm font-label-sm font-medium">
+<span class="material-symbols-outlined text-[14px]" data-icon="pending_actions">pending_actions</span>
+                      Piutang Operasional (Belum Berhasil)
+                    </span>
+</div>
+<h4 class="text-label-md font-label-md font-semibold text-ink mb-1">Maya Novita</h4>
+<div class="text-body-sm font-body-sm text-muted mb-space-md">
+                    iPhone 15 Pro 128GB (Fisik Diterima Loket)
+                  </div>
+</div>
+<div class="pt-space-md border-t border-line">
+<div class="flex justify-between items-baseline mb-1">
+<span class="text-label-sm font-label-sm text-muted">Kendala Loket</span>
+<span class="text-label-sm font-label-sm font-medium text-urgency-red-ink">Denda Telat Rp35.000 Belum Bayar</span>
+</div>
+<div class="flex justify-between items-baseline">
+<span class="text-label-sm font-label-sm text-muted">Status Akuntansi</span>
+<span class="text-label-sm font-label-sm text-ink font-medium">Bukan Transaksi Berhasil</span>
+</div>
+</div>
+</div>
+<!-- Case 3: Unit Hilang (Loss Closure) -->
+<div class="bg-surface border border-line rounded-[16px] p-space-xl flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-2">
+<span class="font-mono text-label-sm font-label-sm text-muted">#BK-2026-0929-02</span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-[6px] bg-canvas text-muted text-label-sm font-label-sm font-medium">
+<span class="material-symbols-outlined text-[14px]" data-icon="cancel">cancel</span>
+                      Loss Closure Terarsip
+                    </span>
+</div>
+<h4 class="text-label-md font-label-md font-semibold text-ink mb-1">Fajar Nugroho</h4>
+<div class="text-body-sm font-body-sm text-muted mb-space-md">
+                    iPhone 13 Pro 128GB (Hilang Saat Sewa)
+                  </div>
+</div>
+<div class="pt-space-md border-t border-line">
+<div class="flex justify-between items-baseline mb-1">
+<span class="text-label-sm font-label-sm text-muted">Penyelesaian</span>
+<span class="text-label-sm font-label-sm font-medium text-muted">Klausa Ganti Rugi Pasar</span>
+</div>
+<div class="flex justify-between items-baseline">
+<span class="text-label-sm font-label-sm text-muted">Perlakuan Laporan</span>
+<span class="text-label-sm font-label-sm text-ink font-medium">Tutup Karena Hilang (Bukan Kas Sewa)</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Audit Metadata Footer Note -->
+<div class="pt-space-lg border-t border-line flex flex-col sm:flex-row items-center justify-between text-label-sm font-label-sm text-muted gap-2"><div>Dicatat oleh Sistem Operasional iRent Semarang pada 10 Okt 2026, 11.20 WIB.</div><div class="flex items-center gap-4"><span>Audit Internal Lokasi Toko</span><span>Halaman 1 dari 1</span></div></div>
+</main>
+</div>
+</div>
+</div>
+</body></html>

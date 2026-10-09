@@ -1,3 +1,4 @@
+import { BadRequestException } from '@nestjs/common';
 const WIB_OFFSET_MS = 7 * 60 * 60 * 1000;
 
 /** Database Timestamp(3) represents WIB wall time in the Date's UTC fields. */
@@ -13,14 +14,17 @@ export function parseWibDateTime(value: string): Date {
     /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})(?:\.(\d{1,3}))?\+07:00$/.exec(
       value,
     );
-  if (!match) throw new Error('Waktu harus ISO 8601 dengan offset WIB +07:00.');
+  if (!match)
+    throw new BadRequestException(
+      'Waktu harus ISO 8601 dengan offset WIB +07:00.',
+    );
   const canonical = `${match[1]}.${(match[2] ?? '').padEnd(3, '0')}Z`;
   const wallTime = new Date(canonical);
   if (
     !Number.isFinite(wallTime.getTime()) ||
     wallTime.toISOString() !== canonical
   ) {
-    throw new Error('Tanggal atau jam tidak valid.');
+    throw new BadRequestException('Tanggal atau jam tidak valid.');
   }
   return wallTime;
 }

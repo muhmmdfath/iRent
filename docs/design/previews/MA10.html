@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MA10 — Mobile Admin Pengaturan &amp; PWA — v3 Final</title>
+<!-- Poppins Font from Design System -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined (Mandatory Link) -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 with Container Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Verbatim Tailwind Config from Design System -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-primary-fixed": "#191b21",
+            "secondary-container": "#fe96be",
+            "primary-fixed-dim": "#c5c6ce",
+            "selected-rose": "#F9E8EF",
+            "on-primary-container": "#919299",
+            "inverse-surface": "#313031",
+            "tertiary-fixed-dim": "#d1c5b7",
+            "muted": "#606570",
+            "surface-container-low": "#f6f3f3",
+            "surface-container-lowest": "#ffffff",
+            "workspace": "#FCFCFD",
+            "line": "#E6E8ED",
+            "urgency-red-ink": "#A12A39",
+            "outline": "#76777b",
+            "on-tertiary-fixed": "#211b12",
+            "secondary": "#974166",
+            "on-primary-fixed-variant": "#45474d",
+            "pastel-mint": "#E8F5EE",
+            "error-container": "#ffdad6",
+            "ink": "#24262B",
+            "surface-variant": "#e5e2e2",
+            "on-background": "#1c1b1c",
+            "surface-container-high": "#ebe7e7",
+            "surface-container": "#f1eded",
+            "on-tertiary-container": "#9b9185",
+            "pastel-blue": "#EAF1FC",
+            "inverse-on-surface": "#f4f0f0",
+            "pastel-blush": "#FBECEE",
+            "primary-container": "#292b31",
+            "error": "#ba1a1a",
+            "success-bg": "#EAF6EF",
+            "tertiary": "#1c160e",
+            "primary-fixed": "#e2e2ea",
+            "tertiary-container": "#312a21",
+            "on-surface-variant": "#46464b",
+            "canvas": "#F1F2F4",
+            "tertiary-fixed": "#eee0d3",
+            "sidebar": "#F8F9FA",
+            "outline-variant": "#c7c6cb",
+            "pastel-lilac": "#F1ECFB",
+            "surface-bright": "#fcf8f8",
+            "surface-tint": "#5c5e65",
+            "on-secondary-container": "#7a2a4e",
+            "on-error": "#ffffff",
+            "primary": "#15171c",
+            "warning-bg": "#FFF5DF",
+            "warning-ink": "#855300",
+            "secondary-fixed": "#ffd9e4",
+            "on-tertiary-fixed-variant": "#4e453b",
+            "on-error-container": "#93000a",
+            "secondary-fixed-dim": "#ffb0cc",
+            "inverse-primary": "#c5c6ce",
+            "urgency-red-bg": "#FFF0F1",
+            "surface-container-highest": "#e5e2e2",
+            "on-primary": "#ffffff",
+            "on-secondary-fixed-variant": "#79294e",
+            "on-tertiary": "#ffffff",
+            "on-secondary": "#ffffff",
+            "surface": "#FFFFFF",
+            "pastel-apricot": "#FFF0DE",
+            "on-surface": "#1c1b1c",
+            "on-secondary-fixed": "#3e0021",
+            "background": "#fcf8f8",
+            "surface-dim": "#ddd9d9",
+            "success-ink": "#176345"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "space-4xl": "48px",
+            "space-2xl": "24px",
+            "margin": "32px",
+            "gutter": "32px",
+            "space-sm": "8px",
+            "space-xl": "20px",
+            "space-md": "12px",
+            "space-lg": "16px",
+            "space-xs": "4px",
+            "space-3xl": "32px"
+          },
+          "fontFamily": {
+            "body-sm": ["Poppins"],
+            "label-sm": ["Poppins"],
+            "headline-md": ["Poppins"],
+            "label-md": ["Poppins"],
+            "headline-lg": ["Poppins"],
+            "body-md": ["Poppins"]
+          },
+          "fontSize": {
+            "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+            "headline-lg": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+            "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      background-color: #F1F2F4;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-canvas text-ink flex justify-center min-h-screen antialiased select-none">
+<!-- Mobile Viewport Wrapper (390px capped, fluid on smaller screens) -->
+<div class="w-full max-w-[390px] min-h-screen bg-canvas flex flex-col relative pb-[92px] shadow-sm">
+<!-- TOP APP BAR (from Shared Component JSON: docked full-width top-0 h-[72px] with border-b) -->
+<header class="sticky top-0 z-40 bg-workspace h-[72px] border-b border-line px-space-xl flex justify-between items-center">
+<div class="flex items-center gap-space-md">
+<button aria-label="Menu navigasi" class="w-[44px] h-[44px] flex items-center justify-center rounded-xl text-ink hover:bg-canvas active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[24px]">menu</span>
+</button>
+<div>
+<span class="font-headline-md text-headline-md font-semibold text-ink leading-tight block">iRent Semarang</span>
+<div class="flex items-center gap-1.5 mt-0.5">
+<span class="inline-block w-1.5 h-1.5 rounded-full bg-success-ink"></span>
+<span class="font-label-sm text-[11px] font-medium text-muted">Admin Loket Operasional</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-label-sm text-[11px] font-medium px-2 py-0.5 rounded-full bg-pastel-blush text-on-secondary-container border border-selected-rose">Data contoh</span>
+<button aria-label="Notifikasi" class="relative w-[44px] h-[44px] flex items-center justify-center rounded-xl text-ink hover:bg-canvas active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-[24px]">notifications</span>
+<span class="absolute top-2.5 right-2.5 w-2 h-2 bg-urgency-red-ink rounded-full"></span>
+</button>
+</div>
+</header>
+<!-- SUB-HEADER TITLE BLOCK -->
+<section class="px-space-xl pt-5 pb-3">
+<p class="font-label-sm text-label-sm text-muted tracking-wide">MA10 • Konfigurasi Sistem &amp; PWA</p>
+<h1 class="font-headline-md text-[20px] font-semibold text-ink mt-0.5">Pengaturan, Zonasi Ongkir &amp; PWA</h1>
+</section>
+<!-- HORIZONTAL TAB NAVIGATION (44px min tap height) -->
+<nav class="px-space-xl mb-4 overflow-x-auto hide-scrollbar flex gap-2">
+<a class="whitespace-nowrap px-3.5 h-[44px] flex items-center justify-center rounded-xl bg-primary-container text-on-primary font-label-md text-label-md font-semibold shadow-sm transition-all active:scale-95" href="#aturan">
+        Aturan Sewa
+      </a>
+<a class="whitespace-nowrap px-3.5 h-[44px] flex items-center justify-center rounded-xl bg-surface text-ink border border-line font-label-md text-label-md font-medium hover:bg-workspace active:scale-95 transition-all" href="#zonasi">
+        Zonasi Ongkir
+      </a>
+<a class="whitespace-nowrap px-3.5 h-[44px] flex items-center justify-center rounded-xl bg-surface text-ink border border-line font-label-md text-label-md font-medium hover:bg-workspace active:scale-95 transition-all" href="#notifikasi">
+        Notifikasi &amp; PWA
+      </a>
+<a class="whitespace-nowrap px-3.5 h-[44px] flex items-center justify-center rounded-xl bg-surface-container text-muted border border-line font-label-md text-label-md font-medium opacity-85 active:scale-95" href="#wa">
+        Integrasi WA <span class="ml-1 text-[10px] py-0.5 px-1.5 rounded bg-surface text-muted border border-line">Ditunda</span>
+</a>
+</nav>
+<!-- MAIN SCROLL CONTENT -->
+<main class="px-space-xl flex flex-col gap-5">
+<!-- SEKSI 1: ATURAN SEWA & PARAMETER KEUANGAN -->
+<section class="bg-surface rounded-2xl p-5 border border-line flex flex-col gap-4" id="aturan">
+<div class="flex items-center justify-between border-b border-line pb-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-ink text-[22px]">lock_clock</span>
+<h2 class="font-headline-md text-[17px] font-semibold text-ink">Aturan Sewa &amp; Parameter</h2>
+</div>
+<span class="font-label-sm text-[11px] bg-pastel-mint text-success-ink px-2 py-0.5 rounded-full font-medium">Snapshot Terkunci</span>
+</div>
+<!-- Rule items -->
+<div class="space-y-3.5">
+<!-- Jam Operasional -->
+<div class="flex items-start justify-between bg-workspace p-3 rounded-xl border border-line">
+<div>
+<p class="font-label-md text-label-md text-ink font-semibold">Jam Operasional Loket</p>
+<p class="font-body-sm text-[13px] text-muted mt-0.5">Pelayanan fisik unit rental</p>
+</div>
+<div class="text-right">
+<span class="font-label-md text-[14px] font-semibold text-ink tabular-nums">08.00 - 22.00</span>
+<p class="font-label-sm text-[11px] text-muted">WIB</p>
+</div>
+</div>
+<!-- Batas awal sewa 12 jam -->
+<div class="flex items-start justify-between bg-workspace p-3 rounded-xl border border-line">
+<div>
+<p class="font-label-md text-label-md text-ink font-semibold">Batas Awal Sewa 12 Jam</p>
+<p class="font-body-sm text-[12px] text-muted mt-0.5">Wajib kembali sebelum 22.00 WIB</p>
+</div>
+<div class="text-right">
+<span class="font-label-md text-[14px] font-semibold text-ink tabular-nums">Maks. 10.00</span>
+<p class="font-label-sm text-[11px] text-muted">WIB pagi</p>
+</div>
+</div>
+<!-- DP Flat -->
+<div class="flex items-start justify-between bg-workspace p-3 rounded-xl border border-line">
+<div>
+<p class="font-label-md text-label-md text-ink font-semibold">Uang Muka (DP Flat)</p>
+<p class="font-body-sm text-[12px] text-muted mt-0.5">Pilihan DP flat atau lunas; total sewa ≤ Rp 20.000 wajib lunas</p>
+</div>
+<div class="text-right">
+<span class="font-label-md text-[14px] font-semibold text-ink tabular-nums">Rp 20.000</span>
+<p class="font-label-sm text-[11px] text-success-ink font-medium">Wajib bayar</p>
+</div>
+</div>
+<!-- Denda Keterlambatan -->
+<div class="flex items-start justify-between bg-workspace p-3 rounded-xl border border-line">
+<div>
+<p class="font-label-md text-label-md text-ink font-semibold">Denda Keterlambatan</p>
+<p class="font-body-sm text-[12px] text-muted mt-0.5">Toleransi keterlambatan 1 jam</p>
+</div>
+<div class="text-right">
+<span class="font-label-md text-[14px] font-semibold text-urgency-red-ink tabular-nums">Rp 10.000</span>
+<p class="font-label-sm text-[11px] text-muted">/ jam / unit</p>
+</div>
+</div>
+<!-- Buffer Persiapan Fisik -->
+<div class="flex items-start justify-between bg-workspace p-3 rounded-xl border border-line">
+<div>
+<p class="font-label-md text-label-md text-ink font-semibold">Buffer Persiapan Fisik</p>
+<p class="font-body-sm text-[12px] text-muted mt-0.5">Sanitasi &amp; inspeksi (verifikasi manual admin)</p>
+</div>
+<div class="text-right">
+<span class="font-label-md text-[14px] font-semibold text-ink tabular-nums">1 Jam</span>
+<p class="font-label-sm text-[11px] text-muted">Mandatori</p>
+</div>
+</div>
+</div>
+<!-- QRIS Statis Preview Area -->
+<div class="mt-1 pt-3 border-t border-line">
+<div class="flex justify-between items-center mb-2">
+<span class="font-label-md text-[13px] font-semibold text-ink">Pratinjau QRIS Kasir</span>
+<span class="font-label-sm text-[11px] text-muted">Statis Mock</span>
+</div>
+<div class="bg-workspace border border-line rounded-xl p-3.5 flex items-center gap-3.5">
+<!-- Simulated QRIS Mock graphic -->
+<div class="w-16 h-16 bg-surface border border-line rounded-lg p-1.5 flex flex-col justify-between items-center shrink-0 shadow-sm relative overflow-hidden">
+<div class="w-full flex justify-between">
+<div class="w-3.5 h-3.5 bg-primary-container rounded-sm"></div>
+<div class="w-3.5 h-3.5 bg-primary-container rounded-sm"></div>
+</div>
+<div class="grid grid-cols-3 gap-0.5 w-6 h-6 my-auto">
+<div class="bg-primary-container"></div><div></div><div class="bg-primary-container"></div>
+<div></div><div class="bg-primary-container"></div><div></div>
+<div class="bg-primary-container"></div><div class="bg-primary-container"></div><div></div>
+</div>
+<div class="w-full flex justify-between">
+<div class="w-3.5 h-3.5 bg-primary-container rounded-sm"></div>
+<div class="w-2.5 h-2.5 bg-line rounded-sm"></div>
+</div>
+<!-- Watermark line -->
+<div class="absolute inset-0 bg-white/40 flex items-center justify-center">
+<span class="material-symbols-outlined text-[18px] text-urgency-red-ink">do_not_disturb_on</span>
+</div>
+</div>
+<div class="flex-1">
+<div class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-warning-bg text-warning-ink border border-warning-ink/20 text-[11px] font-medium">
+<span class="material-symbols-outlined text-[13px]">info</span>
+<span>QRIS contoh — tidak dapat dibayar</span>
+</div>
+<p class="font-body-sm text-[12px] text-muted mt-1 leading-snug">
+                Mockup display operasional internal. Tidak menyimpan token merchant atau kredensial API.
+              </p>
+</div>
+</div>
+</div>
+</section>
+<!-- SEKSI 2: ZONASI ONGKIR KURIR & PEMENUHAN PESANAN -->
+<section class="bg-surface rounded-2xl p-5 border border-line flex flex-col gap-4" id="zonasi">
+<div class="flex items-center justify-between border-b border-line pb-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-ink text-[22px]">local_shipping</span>
+<h2 class="font-headline-md text-[17px] font-semibold text-ink">Zonasi Ongkir Kurir</h2>
+</div>
+<span class="font-label-sm text-[11px] bg-pastel-blue text-ink px-2 py-0.5 rounded-full font-medium">Kota Semarang</span>
+</div>
+<!-- Mode Khusus Toko -->
+<div class="bg-selected-rose border border-secondary-container/40 rounded-xl p-3 flex items-center justify-between">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-on-secondary-container text-[20px]">storefront</span>
+<div>
+<p class="font-label-md text-label-md text-ink font-semibold">Ambil Sendiri di Toko</p>
+<p class="font-body-sm text-[11px] text-muted">Mode pemenuhan (Bukan zona kecamatan)</p>
+</div>
+</div>
+<span class="font-label-md text-label-md font-semibold text-on-secondary-container">Rp 0</span>
+</div>
+<!-- Daftar Kecamatan & Tarif Kurir -->
+<div class="space-y-2">
+<p class="font-label-sm text-label-sm text-muted font-medium">Tarif Ongkir Terkonfigurasi</p>
+<!-- Semarang Selatan -->
+<div class="flex items-center justify-between p-3 bg-workspace rounded-xl border border-line">
+<div class="flex items-center gap-2.5">
+<span class="w-2 h-2 rounded-full bg-success-ink"></span>
+<div>
+<p class="font-label-md text-label-md font-medium text-ink">Semarang Selatan</p>
+<p class="font-label-sm text-[11px] text-muted">Tarif flat kecamatan (Aktif)</p>
+</div>
+</div>
+<span class="font-label-md text-label-md font-semibold text-ink tabular-nums">Rp 10.000</span>
+</div>
+<!-- Semarang Barat -->
+<div class="flex items-center justify-between p-3 bg-workspace rounded-xl border border-line">
+<div class="flex items-center gap-2.5">
+<span class="w-2 h-2 rounded-full bg-success-ink"></span>
+<div>
+<p class="font-label-md text-label-md font-medium text-ink">Semarang Barat</p>
+<p class="font-label-sm text-[11px] text-muted">Tarif flat kecamatan (Aktif)</p>
+</div>
+</div>
+<span class="font-label-md text-label-md font-semibold text-ink tabular-nums">Rp 15.000</span>
+</div>
+<!-- Tembalang -->
+<div class="flex items-center justify-between p-3 bg-workspace rounded-xl border border-line">
+<div class="flex items-center gap-2.5">
+<span class="w-2 h-2 rounded-full bg-success-ink"></span>
+<div>
+<p class="font-label-md text-label-md font-medium text-ink">Tembalang</p>
+<p class="font-label-sm text-[11px] text-muted">Tarif flat kecamatan (Aktif)</p>
+</div>
+</div>
+<span class="font-label-md text-label-md font-semibold text-ink tabular-nums">Rp 20.000</span>
+</div>
+<!-- Banyumanik -->
+<div class="flex items-center justify-between p-3 bg-workspace rounded-xl border border-line">
+<div class="flex items-center gap-2.5">
+<span class="w-2 h-2 rounded-full bg-success-ink"></span>
+<div>
+<p class="font-label-md text-label-md font-medium text-ink">Banyumanik</p>
+<p class="font-label-sm text-[11px] text-muted">Tarif flat kecamatan (Aktif)</p>
+</div>
+</div>
+<span class="font-label-md text-label-md font-semibold text-ink tabular-nums">Rp 25.000</span>
+</div>
+</div>
+<!-- Tombol Tambah / Edit Zona -->
+<button class="w-full h-[44px] flex items-center justify-center gap-2 bg-surface border border-line hover:bg-canvas text-ink font-label-md text-label-md font-semibold rounded-xl active:scale-[0.98] transition-all">
+<span class="material-symbols-outlined text-[18px]">add</span>
+          Tambah / Edit Zona Ongkir
+        </button>
+</section>
+<!-- SEKSI 3: KONFIGURASI NOTIFIKASI PWA & SUARA LOKET -->
+<section class="bg-surface rounded-2xl p-5 border border-line flex flex-col gap-4" id="notifikasi">
+<div class="flex items-center justify-between border-b border-line pb-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-ink text-[22px]">volume_up</span>
+<h2 class="font-headline-md text-[17px] font-semibold text-ink">Notifikasi PWA &amp; Suara</h2>
+</div>
+<span class="font-label-sm text-[11px] bg-pastel-mint text-success-ink px-2 py-0.5 rounded-full font-medium">Service Worker Aktif</span>
+</div>
+<!-- Izin Web Push Status -->
+<div class="bg-workspace p-3.5 rounded-xl border border-line flex flex-col gap-2.5"><div class="flex items-center justify-between"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-lg bg-pastel-mint text-success-ink flex items-center justify-center"><span class="material-symbols-outlined text-[20px]">notifications_active</span></div><div><p class="font-label-md text-label-md font-semibold text-ink">Status Web Push</p><p class="font-body-sm text-[11px] text-muted">Granted • Fallback offline siap</p></div></div><span class="font-label-sm text-[11px] font-medium text-success-ink bg-success-bg px-2.5 py-1 rounded-lg">Granted</span></div><div class="flex items-center justify-between pt-1 border-t border-line text-[11px] text-muted"><span>Status: Granted / Denied / Unsupported / Offline</span><button class="h-[44px] px-3 bg-surface border border-line rounded-xl text-ink font-label-md text-[12px] font-medium flex items-center gap-1.5 hover:bg-canvas active:scale-95 transition-all"><span class="material-symbols-outlined text-[16px]">volume_up</span>Aktifkan Suara</button></div></div>
+<!-- Alarm Tab Depan & Mute Cepat -->
+<div class="p-3.5 rounded-xl bg-pastel-blush/60 border border-secondary-container/30 flex flex-col gap-2.5">
+<div class="flex justify-between items-start">
+<div>
+<p class="font-label-md text-label-md font-semibold text-ink">Alarm Tab Depan (Loop 10 Detik)</p>
+<p class="font-body-sm text-[12px] text-muted mt-0.5">Nada seragam konstan (tidak eskalasi)</p>
+</div>
+<span class="material-symbols-outlined text-secondary text-[22px]">ring_volume</span>
+</div>
+<div class="pt-1 flex items-center justify-between gap-3">
+<div class="text-[12px] text-muted leading-tight">
+              Bunyi ketika ada pesanan baru tiba di antrean loket.
+            </div>
+<button class="shrink-0 h-[44px] px-3.5 bg-primary-container text-on-primary font-label-md text-[13px] font-medium rounded-xl flex items-center gap-1.5 active:scale-95 transition-all shadow-sm">
+<span class="material-symbols-outlined text-[16px]">volume_off</span>
+              Saya tangani
+            </button>
+</div>
+<p class="text-[11px] text-muted italic">
+            *Tombol "Saya tangani" mematikan suara browser lokal saja, tanpa menyetujui atau mengubah data pesanan.
+          </p>
+</div>
+<!-- Pengingat Otomatis Jadwal -->
+<div class="space-y-2">
+<p class="font-label-sm text-label-sm text-muted font-medium">Jadwal Pengingat Otomatis</p>
+<div class="grid grid-cols-2 gap-2">
+<div class="bg-workspace p-2.5 rounded-xl border border-line flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-muted">schedule</span>
+<div>
+<p class="font-label-md text-[13px] font-semibold text-ink">H-30 Menit</p>
+<p class="text-[11px] text-muted">30 menit sebelum batas konfirmasi</p>
+</div>
+</div>
+<div class="bg-workspace p-2.5 rounded-xl border border-line flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-muted">schedule</span>
+<div>
+<p class="font-label-md text-[13px] font-semibold text-ink">H-15 Menit</p>
+<p class="text-[11px] text-muted">15 menit sebelum batas konfirmasi</p>
+</div>
+</div>
+<div class="bg-workspace p-2.5 rounded-xl border border-line flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-muted">schedule</span>
+<div>
+<p class="font-label-md text-[13px] font-semibold text-ink">H-5 Menit</p>
+<p class="text-[11px] text-muted">5 menit sebelum batas konfirmasi</p>
+</div>
+</div>
+<div class="bg-urgency-red-bg p-2.5 rounded-xl border border-urgency-red-ink/20 flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-urgency-red-ink">warning</span>
+<div>
+<p class="font-label-md text-[13px] font-semibold text-urgency-red-ink">Overdue</p>
+<p class="text-[11px] text-muted">Konfirmasi melewati batas; alokasi tetap ditahan</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Batasan Teknis PWA Notice -->
+<div class="bg-workspace p-3 rounded-xl border border-line flex items-start gap-2.5">
+<span class="material-symbols-outlined text-[18px] text-muted mt-0.5">info</span>
+<p class="font-body-sm text-[12px] text-muted leading-relaxed">
+<strong class="text-ink">Batasan Teknis PWA:</strong> Audio web berdering di latar depan saat tab aktif setelah interaksi pertama pengguna. Push di background OS bergantung pada kebijakan baterai dan tidak menembus Do Not Disturb (DND).
+          </p>
+</div>
+</section>
+<!-- SEKSI 4: INTEGRASI WHATSAPP ADMIN ALERTS -->
+<section class="bg-surface rounded-2xl p-5 border border-line flex flex-col gap-3.5 mb-2" id="wa">
+<div class="flex items-center justify-between border-b border-line pb-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-muted text-[22px]">chat_bubble_outline</span>
+<h2 class="font-headline-md text-[17px] font-semibold text-ink">Integrasi WhatsApp</h2>
+</div>
+<!-- Badge status netral/abu sesuai prompt -->
+<span class="font-label-sm text-[11px] bg-canvas text-muted border border-line px-2.5 py-0.5 rounded-full font-medium">
+            Ditunda; belum dijadwalkan
+          </span>
+</div>
+<div class="bg-workspace p-3.5 rounded-xl border border-dashed border-line">
+<div class="flex items-start gap-2.5">
+<span class="material-symbols-outlined text-[20px] text-muted shrink-0 mt-0.5">assignment_late</span>
+<div>
+<p class="font-label-md text-label-md font-semibold text-ink">Klausul Dokumen Perencanaan</p>
+<p class="font-body-sm text-[12px] text-muted mt-1 leading-relaxed">Notifikasi darurat WhatsApp ditunda; belum dijadwalkan. Tidak ada janji rilis masa depan. Operasional loket sepenuhnya mandiri secara lokal via antarmuka PWA web internal tanpa webhook ke nomor seluler pelanggan.</p>
+</div>
+</div>
+</div>
+<!-- Input Disabled / Mock Parameter -->
+</section>
+</main>
+<!-- BOTTOM APP BAR (Docked full-width bottom-0, 4 menu: Bayar, Serah, Kembali, Perpanjang) -->
+<!-- Prohibiting border-t as requested in the design anchor; utilizing subtle tonal shadow & background -->
+<nav aria-label="Navigasi Bawah" class="fixed bottom-0 left-0 w-full z-50 bg-surface shadow-[0_-4px_16px_rgba(0,0,0,0.04)] max-w-[390px] mx-auto right-0 px-2 py-1.5 flex justify-around items-center">
+<!-- 1: Bayar -->
+<a class="flex flex-col items-center justify-center text-muted px-2 py-1 min-h-[44px] min-w-[64px] rounded-xl hover:bg-canvas active:scale-95 transition-all" href="#bayar">
+<span class="material-symbols-outlined text-[22px]">payments</span>
+<span class="font-label-sm text-[11px] font-medium mt-0.5">Bayar</span>
+</a>
+<!-- 2: Serah -->
+<a class="flex flex-col items-center justify-center text-muted px-2 py-1 min-h-[44px] min-w-[64px] rounded-xl hover:bg-canvas active:scale-95 transition-all" href="#serah">
+<span class="material-symbols-outlined text-[22px]">front_hand</span>
+<span class="font-label-sm text-[11px] font-medium mt-0.5">Serah</span>
+</a>
+<!-- 3: Kembali -->
+<a class="flex flex-col items-center justify-center text-muted px-2 py-1 min-h-[44px] min-w-[64px] rounded-xl hover:bg-canvas active:scale-95 transition-all" href="#kembali">
+<span class="material-symbols-outlined text-[22px]">assignment_return</span>
+<span class="font-label-sm text-[11px] font-medium mt-0.5">Kembali</span>
+</a>
+<!-- 4: Perpanjang -->
+<a class="flex flex-col items-center justify-center text-muted px-2 py-1 min-h-[44px] min-w-[64px] rounded-xl hover:bg-canvas active:scale-95 transition-all" href="#perpanjang">
+<span class="material-symbols-outlined text-[22px]">update</span>
+<span class="font-label-sm text-[11px] font-medium mt-0.5">Perpanjang</span>
+</a>
+</nav>
+</div>
+</body></html>

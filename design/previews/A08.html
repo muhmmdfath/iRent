@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>A08 — Admin Data penyewa &amp; Akun | iRent Semarang — v2</title>
+<!-- Google Fonts: Poppins (400, 500, 600) exclusively -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Exact Tailwind Configuration from Theme Specs -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "secondary-fixed-dim": "#ffb0cc",
+            "pastel-blush": "#FBECEE",
+            "surface-container": "#f1eded",
+            "on-tertiary": "#ffffff",
+            "warning-ink": "#855300",
+            "background": "#fcf8f8",
+            "tertiary-fixed-dim": "#d1c5b7",
+            "error-container": "#ffdad6",
+            "on-background": "#1c1b1c",
+            "on-tertiary-fixed-variant": "#4e453b",
+            "error": "#ba1a1a",
+            "on-secondary-fixed": "#3e0021",
+            "on-error": "#ffffff",
+            "tertiary-container": "#312a21",
+            "on-secondary-container": "#7a2a4e",
+            "surface-variant": "#e5e2e2",
+            "pastel-lilac": "#F1ECFB",
+            "on-primary": "#ffffff",
+            "primary": "#15171c",
+            "on-secondary-fixed-variant": "#79294e",
+            "primary-fixed-dim": "#c5c6ce",
+            "pastel-apricot": "#FFF0DE",
+            "warning-bg": "#FFF5DF",
+            "success-bg": "#EAF6EF",
+            "selected-rose": "#F9E8EF",
+            "outline": "#76777b",
+            "on-tertiary-fixed": "#211b12",
+            "on-tertiary-container": "#9b9185",
+            "muted": "#606570",
+            "surface-container-highest": "#e5e2e2",
+            "on-surface": "#1c1b1c",
+            "secondary-fixed": "#ffd9e4",
+            "surface-dim": "#ddd9d9",
+            "on-error-container": "#93000a",
+            "secondary-container": "#fe96be",
+            "primary-container": "#292b31",
+            "on-primary-container": "#919299",
+            "on-surface-variant": "#46464b",
+            "pastel-blue": "#EAF1FC",
+            "canvas": "#F1F2F4",
+            "line": "#E6E8ED",
+            "inverse-surface": "#313031",
+            "sidebar": "#F8F9FA",
+            "ink": "#24262B",
+            "tertiary-fixed": "#eee0d3",
+            "inverse-primary": "#c5c6ce",
+            "urgency-red-ink": "#A12A39",
+            "surface-container-high": "#ebe7e7",
+            "surface": "#FFFFFF",
+            "surface-tint": "#5c5e65",
+            "tertiary": "#1c160e",
+            "surface-bright": "#fcf8f8",
+            "inverse-on-surface": "#f4f0f0",
+            "on-primary-fixed-variant": "#45474d",
+            "on-primary-fixed": "#191b21",
+            "primary-fixed": "#e2e2ea",
+            "workspace": "#FCFCFD",
+            "urgency-red-bg": "#FFF0F1",
+            "surface-container-lowest": "#ffffff",
+            "pastel-mint": "#E8F5EE",
+            "outline-variant": "#c7c6cb",
+            "success-ink": "#176345",
+            "secondary": "#974166",
+            "on-secondary": "#ffffff",
+            "surface-container-low": "#f6f3f3"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "space-3xl": "32px",
+            "space-4xl": "48px",
+            "gutter": "32px",
+            "space-xl": "20px",
+            "space-xs": "4px",
+            "space-2xl": "24px",
+            "margin": "32px",
+            "space-sm": "8px",
+            "space-md": "12px",
+            "space-lg": "16px"
+          },
+          "fontFamily": {
+            "headline-md": ["Poppins"],
+            "label-sm": ["Poppins"],
+            "label-md": ["Poppins"],
+            "body-sm": ["Poppins"],
+            "body-md": ["Poppins"],
+            "headline-lg": ["Poppins"]
+          },
+          "fontSize": {
+            "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "label-sm": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+            "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "headline-lg": ["28px", { "lineHeight": "36px", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    * {
+      font-family: 'Poppins', sans-serif !important;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #F1F2F4;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #E6E8ED;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="bg-canvas text-ink antialiased min-h-screen p-margin flex justify-center text-[14px]">
+<!-- Desktop Outer App Shell Container -->
+<div class="w-full max-w-[1376px] bg-workspace border border-line rounded-xl flex overflow-hidden shadow-none min-h-[960px]">
+<!-- SHARED COMPONENT: SideNavBar -->
+<aside class="w-[224px] min-w-[224px] h-full p-space-lg flex flex-col justify-between bg-sidebar border-r border-line">
+<!-- Header Brand -->
+<div class="flex flex-col gap-space-md">
+<div class="flex items-center gap-space-md px-space-xs py-space-xs">
+<div class="w-10 h-10 rounded-xl bg-primary text-surface flex items-center justify-center font-headline-md text-headline-md font-semibold">
+            iR
+          </div>
+<div class="flex flex-col">
+<span class="text-headline-md font-headline-md font-semibold text-ink leading-tight">iRent Semarang</span>
+<span class="text-[14px] text-muted leading-none">Rental Management</span>
+</div>
+</div>
+<!-- Core Navigation Tabs -->
+<nav class="flex flex-col gap-1 mt-space-md">
+<!-- 1. Dashboard -->
+<a class="flex items-center gap-space-md px-space-md min-h-[44px] text-muted font-normal rounded-lg hover:bg-canvas transition-colors duration-150" href="#">
+<svg class="w-5 h-5 flex-shrink-0 text-muted" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24"><path d="M3 3h7v9H3V3zm11 0h7v5h-7V3zm0 9h7v9h-7v-9zM3 16h7v5H3v-5z"></path></svg>
+<span class="text-[14px]">Dashboard</span>
+</a>
+<!-- 2. Booking -->
+<a class="flex items-center gap-space-md px-space-md min-h-[44px] text-muted font-normal rounded-lg hover:bg-canvas transition-colors duration-150" href="#">
+<svg class="w-5 h-5 flex-shrink-0 text-muted" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24"><rect height="18" rx="2" width="18" x="3" y="4"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg>
+<span class="text-[14px]">Booking</span>
+</a>
+<!-- 3. Jadwal -->
+<a class="flex items-center gap-space-md px-space-md min-h-[44px] text-muted font-normal rounded-lg hover:bg-canvas transition-colors duration-150" href="#">
+<svg class="w-5 h-5 flex-shrink-0 text-muted" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 3"></path></svg>
+<span class="text-[14px]">Jadwal</span>
+</a>
+<!-- 4. Data penyewa (ACTIVE TAB) -->
+<a class="flex items-center gap-space-md px-space-md min-h-[44px] bg-selected-rose text-ink font-medium rounded-lg transition-colors duration-150" href="#">
+<svg class="w-5 h-5 flex-shrink-0 text-ink" fill="currentColor" viewbox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"></path></svg>
+<span class="text-[14px] font-medium">Data penyewa</span>
+</a>
+<!-- 5. Item & unit -->
+<a class="flex items-center gap-space-md px-space-md min-h-[44px] text-muted font-normal rounded-lg hover:bg-canvas transition-colors duration-150" href="#">
+<svg class="w-5 h-5 flex-shrink-0 text-muted" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path><path d="m3.3 7 8.7 5 8.7-5M12 22V12"></path></svg>
+<span class="text-[14px]">Item &amp; unit</span>
+</a>
+<!-- 6. Pembayaran -->
+<a class="flex items-center gap-space-md px-space-md min-h-[44px] text-muted font-normal rounded-lg hover:bg-canvas transition-colors duration-150" href="#">
+<svg class="w-5 h-5 flex-shrink-0 text-muted" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24"><rect height="16" rx="2" width="20" x="2" y="4"></rect><line x1="2" x2="22" y1="10" y2="10"></line></svg>
+<span class="text-[14px]">Pembayaran</span>
+</a>
+<!-- 7. Pengembalian -->
+<a class="flex items-center gap-space-md px-space-md min-h-[44px] text-muted font-normal rounded-lg hover:bg-canvas transition-colors duration-150" href="#">
+<svg class="w-5 h-5 flex-shrink-0 text-muted" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24"><path d="M9 14 4 9l5-5"></path><path d="M4 9h11a5 5 0 0 1 5 5v5"></path></svg>
+<span class="text-[14px]">Pengembalian</span>
+</a>
+<!-- 8. Refund -->
+<a class="flex items-center gap-space-md px-space-md min-h-[44px] text-muted font-normal rounded-lg hover:bg-canvas transition-colors duration-150" href="#">
+<svg class="w-5 h-5 flex-shrink-0 text-muted" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24"><path d="M17 1l4 4-4 4"></path><path d="M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4"></path><path d="M21 13v2a4 4 0 0 1-4 4H3"></path></svg>
+<span class="text-[14px]">Refund</span>
+</a>
+<!-- 9. Transaksi berhasil -->
+<a class="flex items-center gap-space-md px-space-md min-h-[44px] text-muted font-normal rounded-lg hover:bg-canvas transition-colors duration-150" href="#">
+<svg class="w-5 h-5 flex-shrink-0 text-muted" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><path d="m9 12 2 2 4-4"></path></svg>
+<span class="text-[14px]">Transaksi berhasil</span>
+</a>
+</nav>
+</div>
+<!-- Footer Tabs -->
+<div class="flex flex-col gap-1 pt-space-md border-t border-line">
+<a class="flex items-center gap-space-md px-space-md min-h-[44px] text-muted font-normal rounded-lg hover:bg-canvas transition-colors duration-150" href="#">
+<svg class="w-5 h-5 flex-shrink-0 text-muted" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24"><line x1="18" x2="18" y1="20" y2="10"></line><line x1="12" x2="12" y1="20" y2="4"></line><line x1="6" x2="6" y1="20" y2="14"></line></svg>
+<span class="text-[14px]">Laporan</span>
+</a>
+<a class="flex items-center gap-space-md px-space-md min-h-[44px] text-muted font-normal rounded-lg hover:bg-canvas transition-colors duration-150" href="#">
+<svg class="w-5 h-5 flex-shrink-0 text-muted" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+<span class="text-[14px]">Pengaturan</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col min-w-0 bg-workspace">
+<!-- SHARED COMPONENT: TopNavBar -->
+<header class="h-[72px] px-gutter border-b border-line flex justify-between items-center w-full bg-workspace">
+<!-- Search bar on left -->
+<div class="flex items-center gap-space-lg w-96">
+<div class="relative w-full">
+<svg class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-muted pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+<input class="w-full min-h-[44px] bg-canvas border border-line rounded-xl pl-10 pr-4 py-2 text-[14px] text-ink placeholder-muted focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-all" placeholder="Cari data sewa, invoice, NIK..." type="text"/>
+</div>
+</div>
+<!-- Trailing action cluster -->
+<div class="flex items-center gap-space-lg">
+<!-- Tag status operasional: Single branch config -->
+<div class="hidden lg:flex items-center gap-2 px-3 py-1.5 bg-pastel-mint text-success-ink rounded-lg border border-line min-h-[44px]">
+<span class="w-2 h-2 rounded-full bg-success-ink animate-pulse"></span>
+<span class="text-[14px] font-medium">Sistem Operasional Tunggal</span>
+</div>
+<!-- Trailing action: Aktifkan suara -->
+<button class="flex items-center gap-2 px-3 py-2 rounded-lg border border-line text-ink hover:bg-canvas transition-colors text-[14px] font-medium min-h-[44px] active:scale-95" type="button">
+<svg class="w-5 h-5 text-ink" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+<span>Aktifkan suara</span>
+</button>
+<!-- Trailing action: Date -->
+<div class="flex items-center gap-1.5 text-muted text-[14px] px-2 py-1 min-h-[44px]">
+<svg class="w-5 h-5 text-muted" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24"><rect height="18" rx="2" width="18" x="3" y="4"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg>
+<span>10 Okt 2026</span>
+</div>
+<!-- Notification Bell -->
+<button class="relative p-2.5 text-muted hover:text-ink hover:bg-canvas rounded-lg transition-colors min-h-[44px] min-w-[44px] flex items-center justify-center active:scale-95" type="button">
+<svg class="w-5 h-5 text-muted" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<!-- Admin Operasional Profile -->
+<div class="flex items-center gap-space-md pl-space-md border-l border-line min-h-[44px]">
+<div class="flex flex-col text-right">
+<span class="text-[14px] font-medium text-ink leading-tight">Bambang H.</span>
+<span class="text-[14px] text-muted">Admin Operasional</span>
+</div>
+<img alt="Foto profil admin operasional" class="w-10 h-10 rounded-xl object-cover border border-line" data-alt="Close-up portrait of an Indonesian operational admin wearing a neat dark charcoal collared shirt against a clean light matte workspace backdrop, captured with balanced studio lighting in a professional minimal corporate aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCqk7RTTSXq2eEQm6aDPFOvfp1VpbkQ2S1fm77IKPb3Y26NGsLxnPZWj9IvkA0T7cVyov_Abe4fACs4bJ28Jmgc_QixmuNfuQyk3hYfMRW0Rcu6599lbjGsQVz-kVs0zKpdu7HR9yto3y0L2ZrBlMsgjgEO9LwcAkPEqyNY6qLExc_veeoKtNE1H8OF69zZ6EgUNi3AhxpLsvcrSc8P--zuyVG4KHPRfynAvLJO0gFZUxsUeKbtHdoIMfzaEVdDZvFcaCGKgcpvTFw"/>
+</div>
+</div>
+</header>
+<!-- Scrollable Main Content Body -->
+<main class="flex-1 overflow-y-auto px-gutter py-space-2xl custom-scroll">
+<!-- Breadcrumb & Page Title -->
+<div class="flex flex-col gap-2 mb-space-2xl">
+<nav class="flex items-center gap-2 text-[14px] text-muted">
+<span>Operasional</span>
+<svg class="w-4 h-4 text-muted" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
+<span class="text-ink font-medium">Data Penyewa &amp; Akun</span>
+</nav>
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div>
+<h1 class="text-headline-lg font-headline-lg text-ink">A08 — Data Penyewa &amp; Manajemen Akun Admin</h1>
+<p class="text-[14px] text-muted mt-1">Data profil penyewa, proteksi privasi NIK, serta administrasi akun admin operasional dengan hak akses setara.</p>
+</div>
+<div class="flex items-center gap-2">
+<span class="px-3.5 py-2 bg-pastel-blue text-ink rounded-lg text-[14px] font-medium border border-line flex items-center gap-2 min-h-[44px]">
+<svg class="w-4 h-4 text-ink flex-shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+<span>Lokasi toko dari konfigurasi</span>
+</span>
+</div>
+</div>
+</div>
+<!-- Tab Switcher (State Toggle) -->
+<div class="flex items-center gap-2 border-b border-line mb-space-2xl">
+<button class="flex items-center gap-2 pb-3 px-4 min-h-[44px] border-b-2 border-primary text-ink font-semibold text-[16px] transition-colors" id="tab-cust-btn" onclick="switchMainTab('customers')">
+<svg class="w-5 h-5 text-ink" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+<span>Data Penyewa Terdaftar</span>
+<span class="ml-1.5 px-2.5 py-0.5 rounded-full bg-pastel-blush text-ink text-[14px] font-medium">1.248</span>
+</button>
+<button class="flex items-center gap-2 pb-3 px-4 min-h-[44px] border-b-2 border-transparent text-muted hover:text-ink text-[16px] transition-colors" id="tab-admin-btn" onclick="switchMainTab('admins')">
+<svg class="w-5 h-5 text-muted" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24"><rect height="11" rx="2" ry="2" width="18" x="3" y="11"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+<span>Manajemen Akun Admin</span>
+<span class="ml-1.5 px-2.5 py-0.5 rounded-full bg-canvas text-muted text-[14px] font-medium">6 Petugas</span>
+</button>
+</div>
+<!-- ============================================== -->
+<!-- TAB 1: DATA PENYEWA TERDAFTAR (ACTIVE)        -->
+<!-- ============================================== -->
+<div class="space-y-space-2xl" id="section-customers">
+<!-- Callout Edukasi Keamanan Data -->
+<div class="bg-pastel-lilac border border-line rounded-xl p-space-xl flex items-start gap-space-lg">
+<div class="p-2.5 bg-surface rounded-lg border border-line text-secondary flex-shrink-0">
+<svg class="w-6 h-6 text-secondary" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+</div>
+<div class="flex-1">
+<h3 class="text-[16px] font-semibold text-ink">Kebijakan Privasi &amp; Ketentuan NIK (PRD Fase 1)</h3>
+<p class="text-[14px] text-ink mt-1 leading-relaxed">
+        Status 'Profil lengkap' menandakan nama, domisili, nomor WhatsApp aktif, dan format NIK telah diinput oleh penyewa. Sistem tidak menyediakan alur upload foto fisik KTP mandiri oleh pelanggan. Demi kepatuhan privasi, NIK tidak ditampilkan pada tabel daftar umum dan hanya dapat diakses melalui panel rincian berotorisasi admin.
+      </p>
+</div>
+<div class="hidden lg:flex items-center gap-2 px-3.5 py-2 bg-surface text-muted border border-line rounded-lg text-[14px] font-medium flex-shrink-0 min-h-[44px]">
+<svg class="w-4 h-4 text-muted" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><rect height="11" rx="2" ry="2" width="18" x="3" y="11"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+      Akses Terotorisasi
+    </div>
+</div>
+<!-- Filter, Search & Status Bar -->
+<div class="bg-surface border border-line rounded-xl p-space-lg flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-space-lg">
+<div class="flex flex-1 items-center gap-space-md">
+<div class="relative flex-1 max-w-md">
+<svg class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-muted pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+<input class="w-full min-h-[44px] bg-workspace border border-line rounded-lg pl-10 pr-4 py-2.5 text-[14px] text-ink placeholder-muted focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary" placeholder="Cari nama, WhatsApp aktif, ID penyewa..." type="text"/>
+</div>
+<!-- Filter Profil Status -->
+<div class="flex items-center gap-2">
+<button class="flex items-center gap-2 px-3.5 py-2.5 min-h-[44px] border border-line rounded-lg bg-surface hover:bg-canvas text-[14px] text-ink transition-colors" type="button">
+<svg class="w-4 h-4 text-muted" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon></svg>
+<span>Filter: <b>Semua</b></span>
+<svg class="w-4 h-4 text-muted" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><polyline points="6 9 12 15 18 9"></polyline></svg>
+</button>
+<div class="hidden sm:flex items-center gap-1.5 bg-canvas p-1 rounded-lg border border-line min-h-[44px]">
+<button class="px-3 py-2 text-[14px] rounded bg-surface text-ink font-medium shadow-none" type="button">Semua</button>
+<button class="px-3 py-2 text-[14px] rounded text-muted hover:text-ink" type="button">Lengkap</button>
+<button class="px-3 py-2 text-[14px] rounded text-muted hover:text-ink" type="button">Belum Lengkap</button>
+</div>
+</div>
+</div>
+<!-- Export Ringkas -->
+<div class="flex items-center gap-space-md">
+<button class="flex items-center gap-2 px-4 py-2.5 min-h-[44px] border border-line rounded-lg bg-workspace hover:bg-canvas text-[14px] text-ink transition-colors active:scale-95" type="button">
+<svg class="w-4 h-4 text-ink" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>
+<span>Export CSV Ringkas</span>
+</button>
+</div>
+</div>
+<!-- Split Layout: Table of Customers & Detail Drawer / Panel -->
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-space-2xl items-start">
+<!-- Left / Main: Table of Customers (NIK is ABSENT from list per PRD privacy logic) -->
+<div class="xl:col-span-7 bg-surface border border-line rounded-xl overflow-hidden">
+<div class="px-space-xl py-space-md border-b border-line flex items-center justify-between">
+<div>
+<h2 class="text-[16px] font-semibold text-ink">Daftar Pelanggan Terdaftar</h2>
+<p class="text-[14px] text-muted">Pilih baris penyewa untuk memeriksa rincian profil dan otorisasi NIK.</p>
+</div>
+<span class="text-[14px] text-muted">Menampilkan 4 dari 1.248</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-sidebar border-b border-line text-muted text-[14px]">
+<th class="py-3 px-4 font-medium">Nama Penyewa</th>
+<th class="py-3 px-4 font-medium">Nomor WhatsApp</th>
+<th class="py-3 px-4 font-medium">Kelengkapan Data</th>
+<th class="py-3 px-4 font-medium text-right">Selesai</th>
+<th class="py-3 px-4 font-medium text-right">Kewajiban</th>
+<th class="py-3 px-4 font-medium text-center">Tindakan</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-line text-[14px]">
+<!-- Row 1 (Selected): Budi Santoso -->
+<tr class="bg-selected-rose/40 hover:bg-selected-rose/70 transition-colors">
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-secondary text-surface flex items-center justify-center font-medium text-[14px]">
+                    BS
+                  </div>
+<div>
+<p class="font-medium text-ink leading-tight">Budi Santoso</p>
+<span class="text-[14px] text-muted">#CUST-1049</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4 font-medium text-ink whitespace-nowrap">
+<a class="inline-flex items-center gap-1.5 text-ink hover:text-success-ink transition-colors min-h-[44px]" href="https://wa.me/6281298761122" target="_blank">
+<svg class="w-4 h-4 text-success-ink" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                  0812-9876-1122
+                </a>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-pastel-mint text-success-ink text-[14px] font-medium">
+<svg class="w-3.5 h-3.5 text-success-ink" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  Profil lengkap
+                </span>
+<p class="text-[14px] text-muted mt-0.5">Semarang Selatan</p>
+</td>
+<td class="py-3.5 px-4 text-right font-medium text-ink">
+                4 Selesai
+              </td>
+<td class="py-3.5 px-4 text-right">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-pastel-mint text-success-ink text-[14px] font-medium">
+                  Rp0 (Bersih)
+                </span>
+</td>
+<td class="py-3.5 px-4 text-center">
+<button class="px-3.5 py-2 min-h-[44px] bg-primary text-surface rounded-lg text-[14px] font-medium hover:bg-primary-container transition-all active:scale-95 whitespace-nowrap shadow-none" type="button">
+                  Terpilih
+                </button>
+</td>
+</tr>
+<!-- Row 2: Rian Pratama -->
+<tr class="hover:bg-canvas transition-colors">
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-canvas text-muted border border-line flex items-center justify-center font-medium text-[14px]">
+                    RP
+                  </div>
+<div>
+<p class="font-medium text-ink leading-tight">Rian Pratama</p>
+<span class="text-[14px] text-muted">#CUST-1048</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4 font-medium text-ink whitespace-nowrap">
+<a class="inline-flex items-center gap-1.5 text-ink hover:text-success-ink transition-colors min-h-[44px]" href="https://wa.me/6281234567890" target="_blank">
+<svg class="w-4 h-4 text-success-ink" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                  0812-3456-7890
+                </a>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-pastel-mint text-success-ink text-[14px] font-medium">
+<svg class="w-3.5 h-3.5 text-success-ink" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  Profil lengkap
+                </span>
+<p class="text-[14px] text-muted mt-0.5">Semarang</p>
+</td>
+<td class="py-3.5 px-4 text-right font-medium text-ink">
+                2 Selesai
+              </td>
+<td class="py-3.5 px-4 text-right">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-warning-bg text-warning-ink text-[14px] font-medium">
+                  Rp5.000 (Kurang Bayar DP)
+                </span>
+</td>
+<td class="py-3.5 px-4 text-center">
+<button class="px-3.5 py-2 min-h-[44px] border border-line bg-surface text-ink rounded-lg text-[14px] font-medium hover:bg-canvas transition-all active:scale-95 whitespace-nowrap" type="button">
+                  Lihat Rincian
+                </button>
+</td>
+</tr>
+<!-- Row 3: Siti Rahma -->
+<tr class="hover:bg-canvas transition-colors">
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-canvas text-muted border border-line flex items-center justify-center font-medium text-[14px]">
+                    SR
+                  </div>
+<div>
+<p class="font-medium text-ink leading-tight">Siti Rahma</p>
+<span class="text-[14px] text-muted">#CUST-1045</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4 font-medium text-ink whitespace-nowrap">
+<a class="inline-flex items-center gap-1.5 text-ink hover:text-success-ink transition-colors min-h-[44px]" href="https://wa.me/6281388776655" target="_blank">
+<svg class="w-4 h-4 text-success-ink" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                  0813-8877-6655
+                </a>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-pastel-mint text-success-ink text-[14px] font-medium">
+<svg class="w-3.5 h-3.5 text-success-ink" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                  Profil lengkap
+                </span>
+<p class="text-[14px] text-muted mt-0.5">Semarang Timur</p>
+</td>
+<td class="py-3.5 px-4 text-right font-medium text-ink">
+                1 Selesai
+              </td>
+<td class="py-3.5 px-4 text-right">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-pastel-mint text-success-ink text-[14px] font-medium">
+                  Rp0
+                </span>
+</td>
+<td class="py-3.5 px-4 text-center">
+<button class="px-3.5 py-2 min-h-[44px] border border-line bg-surface text-ink rounded-lg text-[14px] font-medium hover:bg-canvas transition-all active:scale-95 whitespace-nowrap" type="button">
+                  Lihat Rincian
+                </button>
+</td>
+</tr>
+<!-- Row 4: Maya Novita -->
+<tr class="hover:bg-canvas transition-colors">
+<td class="py-3.5 px-4">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-urgency-red-bg text-urgency-red-ink flex items-center justify-center font-medium text-[14px]">
+                    MN
+                  </div>
+<div>
+<p class="font-medium text-ink leading-tight">Maya Novita</p>
+<span class="text-[14px] text-muted">#CUST-1042</span>
+</div>
+</div>
+</td>
+<td class="py-3.5 px-4 font-medium text-ink whitespace-nowrap">
+<a class="inline-flex items-center gap-1.5 text-ink hover:text-success-ink transition-colors min-h-[44px]" href="https://wa.me/6281122334455" target="_blank">
+<svg class="w-4 h-4 text-success-ink" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                  0811-2233-4455
+                </a>
+</td>
+<td class="py-3.5 px-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-urgency-red-bg text-urgency-red-ink text-[14px] font-medium">
+<svg class="w-3.5 h-3.5 text-urgency-red-ink" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="9"></circle><line x1="12" x2="12" y1="8" y2="12"></line><line x1="12" x2="12.01" y1="16" y2="16"></line></svg>
+                  Belum Lengkap
+                </span>
+<p class="text-[14px] text-muted mt-0.5">Alamat / NIK Kosong</p>
+</td>
+<td class="py-3.5 px-4 text-right font-medium text-ink">
+                0 Selesai
+              </td>
+<td class="py-3.5 px-4 text-right">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-canvas text-muted text-[14px] font-medium">
+                  Rp0
+                </span>
+</td>
+<td class="py-3.5 px-4 text-center">
+<button class="px-3.5 py-2 min-h-[44px] border border-line bg-surface text-ink rounded-lg text-[14px] font-medium hover:bg-canvas transition-all active:scale-95 whitespace-nowrap" type="button">
+                  Lihat Rincian
+                </button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Pagination Footer -->
+<div class="px-space-xl py-space-md bg-sidebar border-t border-line flex items-center justify-between text-[14px]">
+<span class="text-muted">Halaman 1 dari 125</span>
+<div class="flex items-center gap-1.5">
+<button class="px-3 py-2 min-h-[44px] border border-line rounded bg-surface text-muted disabled:opacity-40" disabled="" type="button">Sebelumnya</button>
+<button class="px-3.5 py-2 min-h-[44px] border border-line rounded bg-primary text-surface font-medium" type="button">1</button>
+<button class="px-3.5 py-2 min-h-[44px] border border-line rounded bg-surface text-ink hover:bg-canvas" type="button">2</button>
+<button class="px-3.5 py-2 min-h-[44px] border border-line rounded bg-surface text-ink hover:bg-canvas" type="button">3</button>
+<button class="px-3 py-2 min-h-[44px] border border-line rounded bg-surface text-ink hover:bg-canvas" type="button">Berikutnya</button>
+</div>
+</div>
+</div>
+<!-- Right: Drawer / Side Panel (Detail Penyewa: Budi Santoso) -->
+<div class="xl:col-span-5 flex flex-col gap-space-2xl">
+<!-- Inspector Card -->
+<div class="bg-surface border border-line rounded-xl p-space-xl flex flex-col gap-space-xl relative">
+<!-- Panel Header -->
+<div class="flex items-start justify-between border-b border-line pb-space-lg">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-xl bg-secondary text-surface flex items-center justify-center font-headline-md text-headline-md font-semibold">
+                BS
+              </div>
+<div>
+<div class="flex items-center gap-2">
+<h3 class="text-headline-md font-headline-md text-ink">Budi Santoso</h3>
+<span class="px-2 py-0.5 rounded bg-pastel-mint text-success-ink text-[14px] font-medium">Profil lengkap</span>
+</div>
+<p class="text-[14px] text-muted">Profil Penyewa #CUST-1049 • Terdaftar sejak 12 Mar 2026</p>
+</div>
+</div>
+<span class="px-3 py-1.5 bg-selected-rose text-ink text-[14px] font-medium rounded-lg">
+              Lokasi toko dari konfigurasi
+            </span>
+</div>
+<!-- Section NIK with Authorized Unmask Toggle -->
+<div class="bg-workspace border border-line rounded-xl p-space-lg flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="text-[14px] font-medium text-muted flex items-center gap-1.5">
+<svg class="w-4 h-4 text-muted" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><rect height="14" rx="2" width="20" x="2" y="5"></rect><line x1="2" x2="22" y1="10" y2="10"></line></svg>
+                Nomor Induk Kependudukan (NIK)
+              </span>
+<span class="text-[14px] font-medium px-2.5 py-0.5 rounded bg-pastel-mint text-success-ink">Format Valid</span>
+</div>
+<!-- Display NIK State -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-md bg-surface p-space-md rounded-lg border border-line">
+<div class="flex flex-col">
+<span class="font-mono text-[16px] text-ink font-semibold tracking-wider" id="nik-display">
+                  3374**********002
+                </span>
+<span class="text-[14px] text-muted mt-0.5">Status: Terproteksi sensor privasi</span>
+</div>
+<button class="px-3.5 py-2.5 min-h-[44px] bg-primary text-surface rounded-lg text-[14px] font-medium hover:bg-primary-container transition-colors active:scale-95 flex items-center gap-2 whitespace-nowrap shadow-none" id="btn-toggle-nik" onclick="toggleNikSensor()" type="button">
+<svg class="w-4 h-4 text-surface" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+<span id="btn-toggle-text">Buka Sensor NIK (Otorisasi Admin)</span>
+</button>
+</div>
+<!-- Audit Log Card -->
+<div class="p-space-md rounded-lg bg-pastel-apricot border border-line flex items-start gap-2.5" id="nik-audit-log">
+<svg class="w-5 h-5 text-warning-ink flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+<div class="text-[14px] text-ink leading-relaxed">
+<p class="font-medium text-warning-ink">Catatan Otorisasi Akses Internal:</p>
+<p id="audit-text">Sensor aktif. Data NIK hanya dapat dibuka oleh admin berwenang.</p>
+</div>
+</div>
+</div>
+<!-- Kontak & Domisili -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+<div class="p-space-md bg-workspace rounded-lg border border-line">
+<span class="text-[14px] text-muted block mb-1">WhatsApp Aktif</span>
+<p class="text-[16px] font-semibold text-ink flex items-center gap-1.5">
+<svg class="w-4 h-4 text-success-ink" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                0812-9876-1122
+              </p>
+</div>
+<div class="p-space-md bg-workspace rounded-lg border border-line">
+<span class="text-[14px] text-muted block mb-1">Pekerjaan / Instansi</span>
+<p class="text-[16px] font-semibold text-ink">Pegawai Swasta (IT)</p>
+</div>
+<div class="sm:col-span-2 p-space-md bg-workspace rounded-lg border border-line">
+<span class="text-[14px] text-muted block mb-1">Alamat Domisili KTP</span>
+<p class="text-[14px] text-ink">
+                Semarang Selatan, Kota Semarang, Jawa Tengah (Lokasi toko dari konfigurasi)
+              </p>
+</div>
+</div>
+<!-- Riwayat Sewa -->
+<div class="border-t border-line pt-space-md">
+<div class="flex items-center justify-between mb-space-md">
+<h4 class="text-[16px] font-semibold text-ink flex items-center gap-2">
+<svg class="w-5 h-5 text-muted" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path><line x1="3" x2="21" y1="6" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+                Riwayat Sewa (4 Transaksi)
+              </h4>
+<span class="text-[14px] text-success-ink font-medium">3 Sukses • 1 Berjalan</span>
+</div>
+<div class="space-y-2">
+<!-- Current active booking -->
+<div class="p-space-md rounded-lg border border-line bg-selected-rose/30 flex items-center justify-between">
+<div>
+<div class="flex items-center gap-2">
+<span class="text-[14px] font-medium text-ink">#BK-2026-1008-22</span>
+<span class="px-2 py-0.5 rounded bg-pastel-blue text-ink text-[14px] font-medium">Unit Berjalan</span>
+</div>
+<p class="text-[14px] text-muted mt-0.5">Sony FX3 Cinema Line + Lensa 24-70mm GM II</p>
+</div>
+<div class="text-right">
+<span class="text-[14px] font-medium text-ink block">Jatuh Tempo: 11 Okt 18:00</span>
+<span class="text-[14px] text-muted">Lokasi toko dari konfigurasi</span>
+</div>
+</div>
+<!-- Past Completed -->
+<div class="p-space-md rounded-lg border border-line bg-workspace flex items-center justify-between">
+<div>
+<div class="flex items-center gap-2">
+<span class="text-[14px] font-medium text-ink">#BK-2026-0920-14</span>
+<span class="px-2 py-0.5 rounded bg-pastel-mint text-success-ink text-[14px] font-medium">Selesai</span>
+</div>
+<p class="text-[14px] text-muted mt-0.5">DJI Mic 2 Set + Wireless Kit</p>
+</div>
+<div class="text-right">
+<span class="text-[14px] text-muted block">22 Sep 2026</span>
+<span class="text-[14px] text-success-ink font-medium">Unit Kembali Utuh</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Sub-Panel: Reset Password Manual Langsung (Tanpa OTP Email / SMS) -->
+<div class="mt-space-md bg-canvas border border-line rounded-xl p-space-lg flex flex-col gap-space-md">
+<div class="flex items-start justify-between">
+<div class="flex items-center gap-2">
+<svg class="w-6 h-6 text-ink flex-shrink-0" fill="none" stroke="currentColor" stroke-width="1.8" viewbox="0 0 24 24"><path d="M21 2l-2 2m-1-1l-3 3 2 2 3-3-2-2zM3 14v7h7l9-9-7-7-9 9z"></path></svg>
+<div>
+<h4 class="text-[16px] font-semibold text-ink">Reset Password Manual (Langsung Tanpa OTP)</h4>
+<p class="text-[14px] text-muted mt-0.5">Prosedur Admin Operasional iRent Semarang</p>
+</div>
+</div>
+</div>
+<div class="bg-surface border border-line rounded-lg p-space-md text-[14px] text-muted">
+<span class="font-medium text-ink">Ketentuan PRD:</span> Admin mereset password pelanggan secara langsung tanpa pengiriman OTP email atau SMS. Password sementara diserahkan langsung kepada pelanggan.
+            </div>
+<!-- Reset Password Form -->
+<form class="space-y-space-md" onsubmit="handleResetPassword(event)">
+<div>
+<label class="block text-[14px] font-medium text-ink mb-1">Password Baru Sementara</label>
+<div class="relative">
+<input class="w-full min-h-[44px] bg-surface border border-line rounded-lg px-3 py-2 text-[14px] text-ink font-mono focus:border-secondary focus:ring-1 focus:ring-secondary" id="temporary-password" type="text" value="iRentSMG#2026"/>
+<button class="absolute right-2 top-1/2 -translate-y-1/2 min-h-[44px] text-[14px] text-secondary hover:underline px-3 py-1 font-medium flex items-center" onclick="generateRandomPass()" type="button">Acak</button>
+</div>
+</div>
+<div>
+<label class="block text-[14px] font-medium text-ink mb-1">Alasan Reset Administratif (Wajib diisi)</label>
+<input class="w-full min-h-[44px] bg-surface border border-line rounded-lg px-3 py-2 text-[14px] text-ink focus:border-secondary focus:ring-1 focus:ring-secondary" id="reset-reason" placeholder="Contoh: Permintaan langsung pelanggan di toko..." required="" type="text" value="Permintaan langsung pelanggan di toko"/>
+</div>
+<div>
+<label class="block text-[14px] font-medium text-ink mb-1">Konfirmasi Password Sementara</label>
+<input class="w-full min-h-[44px] bg-surface border border-line rounded-lg px-3 py-2 text-[14px] text-ink focus:border-secondary focus:ring-1 focus:ring-secondary" type="password" value="iRentSMG#2026"/>
+</div>
+<div class="pt-1 flex items-center justify-between">
+<span class="hidden text-[14px] text-success-ink items-center gap-1.5 font-medium" id="reset-success-alert">
+<svg class="w-4 h-4 text-success-ink" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Password baru langsung aktif!
+              </span>
+<button class="ml-auto px-4 py-2.5 min-h-[44px] bg-primary text-surface rounded-lg text-[14px] font-medium hover:bg-primary-container transition-all active:scale-95 shadow-none" type="submit">
+                Simpan &amp; Reset Password Langsung
+              </button>
+</div>
+</form>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- ============================================== -->
+<!-- TAB 2: MANAJEMEN AKUN ADMIN (SWITCHABLE)      -->
+<!-- ============================================== -->
+<div class="hidden space-y-space-2xl" id="section-admins">
+<!-- Equal Access Policy Card -->
+<div class="bg-pastel-mint border border-line rounded-xl p-space-xl flex items-start gap-space-lg">
+<div class="p-2.5 bg-surface rounded-lg border border-line text-success-ink flex-shrink-0">
+<svg class="w-6 h-6 text-success-ink" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+</div>
+<div class="flex-1">
+<h3 class="text-[16px] font-semibold text-ink">Prinsip Hak Akses Operasional Setara</h3>
+<p class="text-[14px] text-ink mt-1 leading-relaxed">
+        Sistem iRent Semarang beroperasi dengan model cabang tunggal (single branch). Seluruh akun admin memiliki hak operasional setara (verifikasi pembayaran, serah terima unit, dan administrasi penyewa) tanpa hierarki super admin.
+      </p>
+</div>
+<div class="hidden md:flex items-center gap-2 px-3.5 py-2 bg-surface text-ink border border-line rounded-lg text-[14px] font-medium flex-shrink-0 min-h-[44px]">
+<svg class="w-4 h-4 text-ink" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+      Total 6 Akun Setara
+    </div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-2xl items-start">
+<!-- Left: Form Pembuatan Admin Baru (Takes 5 cols) -->
+<div class="lg:col-span-5 bg-surface border border-line rounded-xl p-space-xl flex flex-col gap-space-lg">
+<div class="border-b border-line pb-space-md">
+<h3 class="text-[16px] font-semibold text-ink">Tambah Akun Admin Operasional</h3>
+<p class="text-[14px] text-muted mt-0.5">Daftarkan petugas baru dengan hak akses operasional setara.</p>
+</div>
+<form class="space-y-space-md" onsubmit="handleCreateAdmin(event)">
+<div>
+<label class="block text-[14px] font-medium text-ink mb-1">Nama Lengkap Petugas</label>
+<input class="w-full min-h-[44px] bg-workspace border border-line rounded-lg px-3.5 py-2.5 text-[14px] text-ink focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary" placeholder="Contoh: Farhan Maulana" required="" type="text"/>
+</div>
+<div>
+<label class="block text-[14px] font-medium text-ink mb-1">Username / Email Login</label>
+<input class="w-full min-h-[44px] bg-workspace border border-line rounded-lg px-3.5 py-2.5 text-[14px] text-ink focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary" placeholder="farhan.operasional@irentsemarang.id" required="" type="email"/>
+</div>
+<div>
+<label class="block text-[14px] font-medium text-ink mb-1">Penugasan Operasional</label>
+<div class="w-full min-h-[44px] bg-workspace border border-line rounded-lg px-3.5 py-2.5 text-[14px] text-ink flex items-center">
+        Lokasi toko dari konfigurasi (Cabang Tunggal)
+      </div>
+</div>
+<div>
+<label class="block text-[14px] font-medium text-ink mb-1">Password Awal Akun</label>
+<input class="w-full min-h-[44px] bg-workspace border border-line rounded-lg px-3.5 py-2.5 text-[14px] text-ink focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary" placeholder="••••••••••••" required="" type="password"/>
+</div>
+<div>
+<label class="block text-[14px] font-medium text-ink mb-1">Konfirmasi Password</label>
+<input class="w-full min-h-[44px] bg-workspace border border-line rounded-lg px-3.5 py-2.5 text-[14px] text-ink focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary" placeholder="••••••••••••" required="" type="password"/>
+</div>
+<!-- Hak Akses Banner inside Form -->
+<div class="p-3 bg-canvas rounded-lg border border-line text-[14px] text-muted">
+<span class="font-medium text-ink">Catatan Sistem:</span> Semua admin memiliki hak setara (tidak ada akun super admin). Setiap tindakan dicatat dalam riwayat audit.
+    </div>
+<div class="pt-2">
+<button class="w-full min-h-[44px] py-2.5 bg-primary text-surface rounded-lg text-[14px] font-medium hover:bg-primary-container transition-all active:scale-[0.98] shadow-none flex items-center justify-center gap-2" type="submit">
+<svg class="w-5 h-5 text-surface" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="8.5" cy="7" r="4"></circle><line x1="20" x2="20" y1="8" y2="14"></line><line x1="23" x2="17" y1="11" y2="11"></line></svg>
+<span>Buat Akun Admin Operasional</span>
+</button>
+</div>
+</form>
+</div>
+<!-- Right: Daftar Admin Aktif (Takes 7 cols) -->
+<div class="lg:col-span-7 bg-surface border border-line rounded-xl overflow-hidden">
+<div class="p-space-xl border-b border-line flex items-center justify-between">
+<div>
+<h3 class="text-[16px] font-semibold text-ink">Daftar Admin Aktif</h3>
+<p class="text-[14px] text-muted mt-0.5">Petugas dengan otoritas akses setara pada sistem operasional.</p>
+</div>
+<span class="px-3 py-1 bg-pastel-mint text-success-ink rounded-lg text-[14px] font-medium">6 Petugas Aktif</span>
+</div>
+<div class="divide-y divide-line">
+<!-- Admin 1 -->
+<div class="p-space-lg flex items-center justify-between hover:bg-workspace transition-colors min-h-[64px]">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-primary text-surface flex items-center justify-center font-semibold text-[14px]">
+            BH
+          </div>
+<div>
+<div class="flex items-center gap-2">
+<span class="text-[14px] font-semibold text-ink">Bambang Haryanto</span>
+<span class="px-2 py-0.5 bg-selected-rose text-ink text-[14px] font-medium rounded">Anda (Sedang Login)</span>
+</div>
+<span class="text-[14px] text-muted">bambang.ao@irentsemarang.id • Lokasi toko dari konfigurasi</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<span class="px-3 py-1.5 bg-pastel-mint text-success-ink rounded text-[14px] font-medium">Hak Akses Setara</span>
+</div>
+</div>
+<!-- Admin 2 -->
+<div class="p-space-lg flex items-center justify-between hover:bg-workspace transition-colors min-h-[64px]">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-canvas border border-line text-ink flex items-center justify-center font-semibold text-[14px]">
+            DA
+          </div>
+<div>
+<div class="flex items-center gap-2">
+<span class="text-[14px] font-semibold text-ink">Dewi Anggraini</span>
+<span class="px-2 py-0.5 bg-pastel-blue text-ink text-[14px] font-medium rounded">Petugas Operasional</span>
+</div>
+<span class="text-[14px] text-muted">dewi.ao@irentsemarang.id • Lokasi toko dari konfigurasi</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-3.5 py-2 min-h-[44px] text-muted hover:text-ink hover:bg-canvas rounded border border-line text-[14px] font-medium transition-colors">Audit Aktivitas</button>
+</div>
+</div>
+<!-- Admin 3 -->
+<div class="p-space-lg flex items-center justify-between hover:bg-workspace transition-colors min-h-[64px]">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-canvas border border-line text-ink flex items-center justify-center font-semibold text-[14px]">
+            RA
+          </div>
+<div>
+<div class="flex items-center gap-2">
+<span class="text-[14px] font-semibold text-ink">Rizky Aditya</span>
+<span class="px-2 py-0.5 bg-pastel-apricot text-warning-ink text-[14px] font-medium rounded">Petugas Operasional</span>
+</div>
+<span class="text-[14px] text-muted">rizky.ao@irentsemarang.id • Lokasi toko dari konfigurasi</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-3.5 py-2 min-h-[44px] text-muted hover:text-ink hover:bg-canvas rounded border border-line text-[14px] font-medium transition-colors">Audit Aktivitas</button>
+</div>
+</div>
+<!-- Admin 4 -->
+<div class="p-space-lg flex items-center justify-between hover:bg-workspace transition-colors min-h-[64px]">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-canvas border border-line text-ink flex items-center justify-center font-semibold text-[14px]">
+            TW
+          </div>
+<div>
+<div class="flex items-center gap-2">
+<span class="text-[14px] font-semibold text-ink">Tri Wahyuni</span>
+<span class="px-2 py-0.5 bg-pastel-lilac text-secondary text-[14px] font-medium rounded">Petugas Operasional</span>
+</div>
+<span class="text-[14px] text-muted">tri.ao@irentsemarang.id • Lokasi toko dari konfigurasi</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-3.5 py-2 min-h-[44px] text-muted hover:text-ink hover:bg-canvas rounded border border-line text-[14px] font-medium transition-colors">Audit Aktivitas</button>
+</div>
+</div>
+</div>
+<!-- Footer Audit Notice -->
+<div class="p-space-lg bg-sidebar border-t border-line text-[14px] text-muted flex items-center justify-between">
+<span>Seluruh admin memiliki wewenang operasional setara tanpa akun super admin.</span>
+<span class="text-ink font-medium">Log Sinkronisasi: 10.32 WIB</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Sub-footer Info Ribbon -->
+<footer class="h-14 border-t border-line px-gutter bg-workspace flex items-center justify-between text-[14px] text-muted">
+<div class="flex items-center gap-space-lg">
+<span class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-success-ink"></span>
+        Sistem Tunggal: Terhubung Operasional (Lokasi toko dari konfigurasi)
+      </span>
+<span class="hidden md:inline">•</span>
+<span class="hidden md:inline">Proteksi Privasi NIK Sesuai PRD</span>
+</div>
+<div>
+<span>iRent Semarang v2.4 — Modul Data Penyewa</span>
+</div>
+</footer>
+</div>
+</div>
+<!-- Inline Interaction Logic (Tabs, NIK Unmasking, Reset Password) -->
+<script>
+    let isNikUnmasked = false;
+
+    // Tab Switcher between Customer Data and Admin Management
+    function switchMainTab(tab) {
+      const custBtn = document.getElementById('tab-cust-btn');
+      const adminBtn = document.getElementById('tab-admin-btn');
+      const custSection = document.getElementById('section-customers');
+      const adminSection = document.getElementById('section-admins');
+
+      if (tab === 'customers') {
+        custBtn.className = "flex items-center gap-2 pb-3 px-4 min-h-[44px] border-b-2 border-primary text-ink font-semibold text-[16px] transition-colors";
+        adminBtn.className = "flex items-center gap-2 pb-3 px-4 min-h-[44px] border-b-2 border-transparent text-muted hover:text-ink text-[16px] transition-colors";
+        custSection.classList.remove('hidden');
+        adminSection.classList.add('hidden');
+      } else {
+        adminBtn.className = "flex items-center gap-2 pb-3 px-4 min-h-[44px] border-b-2 border-primary text-ink font-semibold text-[16px] transition-colors";
+        custBtn.className = "flex items-center gap-2 pb-3 px-4 min-h-[44px] border-b-2 border-transparent text-muted hover:text-ink text-[16px] transition-colors";
+        adminSection.classList.remove('hidden');
+        custSection.classList.add('hidden');
+      }
+    }
+
+    // NIK Unmasking with Audit Log Requirement in detail inspector
+    function toggleNikSensor() {
+      const nikDisplay = document.getElementById('nik-display');
+      const btnToggle = document.getElementById('btn-toggle-text');
+      const auditLog = document.getElementById('audit-text');
+      const auditBox = document.getElementById('nik-audit-log');
+
+      if (!isNikUnmasked) {
+        nikDisplay.innerText = "3374021509920002";
+        nikDisplay.classList.add('text-secondary');
+        btnToggle.innerText = "Tutup Sensor NIK";
+        auditLog.innerHTML = "<span class='font-medium text-ink'>Diakses oleh Admin Bambang H. pada 10 Okt 2026 10.30 WIB</span>";
+        auditBox.classList.remove('bg-pastel-apricot');
+        auditBox.classList.add('bg-pastel-blush');
+        isNikUnmasked = true;
+      } else {
+        nikDisplay.innerText = "3374**********002";
+        nikDisplay.classList.remove('text-secondary');
+        btnToggle.innerText = "Buka Sensor NIK (Otorisasi Admin)";
+        auditLog.innerText = "Sensor aktif. Data NIK hanya dapat dibuka oleh admin berwenang.";
+        auditBox.classList.add('bg-pastel-apricot');
+        auditBox.classList.remove('bg-pastel-blush');
+        isNikUnmasked = false;
+      }
+    }
+
+    // Direct Manual Password Reset (No Email / SMS OTP)
+    function handleResetPassword(e) {
+      e.preventDefault();
+      const alertBadge = document.getElementById('reset-success-alert');
+      alertBadge.classList.remove('hidden');
+      alertBadge.classList.add('inline-flex');
+
+      setTimeout(() => {
+        alertBadge.classList.add('hidden');
+        alertBadge.classList.remove('inline-flex');
+      }, 4000);
+    }
+
+    // Admin Creation simulation (Equal Permissions)
+    function handleCreateAdmin(e) {
+      e.preventDefault();
+      alert("Akun Admin Operasional baru berhasil dibuat dengan hak operasional setara.");
+      e.target.reset();
+    }
+
+    // Helper random pass
+    function generateRandomPass() {
+      const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789#@!";
+      let res = "iRent-";
+      for (let i = 0; i < 6; i++) {
+        res += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      document.getElementById('temporary-password').value = res;
+    }
+  </script>
+</body></html>

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MC03 — Formulir Booking Perangkat | iRent Semarang</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-error-container": "#93000a",
+            "pastel-blush": "#FBECEE",
+            "secondary": "#974166",
+            "canvas": "#F1F2F4",
+            "on-tertiary": "#ffffff",
+            "on-secondary": "#ffffff",
+            "pastel-apricot": "#FFF0DE",
+            "on-secondary-fixed": "#3e0021",
+            "primary-fixed": "#e2e2ea",
+            "surface-dim": "#ddd9d9",
+            "on-surface-variant": "#46464b",
+            "sidebar": "#F8F9FA",
+            "pastel-lilac": "#F1ECFB",
+            "on-tertiary-fixed-variant": "#4e453b",
+            "success-bg": "#EAF6EF",
+            "secondary-container": "#fe96be",
+            "inverse-on-surface": "#f4f0f0",
+            "surface-container-highest": "#e5e2e2",
+            "workspace": "#FCFCFD",
+            "outline-variant": "#c7c6cb",
+            "pastel-blue": "#EAF1FC",
+            "on-background": "#1c1b1c",
+            "surface-container": "#f1eded",
+            "tertiary-fixed": "#eee0d3",
+            "muted": "#606570",
+            "on-error": "#ffffff",
+            "on-tertiary-fixed": "#211b12",
+            "surface-container-lowest": "#ffffff",
+            "warning-bg": "#FFF5DF",
+            "on-primary-fixed-variant": "#45474d",
+            "success-ink": "#176345",
+            "error": "#ba1a1a",
+            "surface": "#FFFFFF",
+            "tertiary-container": "#312a21",
+            "surface-tint": "#5c5e65",
+            "surface-container-low": "#f6f3f3",
+            "tertiary-fixed-dim": "#d1c5b7",
+            "on-primary-fixed": "#191b21",
+            "secondary-fixed-dim": "#ffb0cc",
+            "inverse-surface": "#313031",
+            "error-container": "#ffdad6",
+            "selected-rose": "#F9E8EF",
+            "secondary-fixed": "#ffd9e4",
+            "on-primary": "#ffffff",
+            "primary-fixed-dim": "#c5c6ce",
+            "background": "#fcf8f8",
+            "inverse-primary": "#c5c6ce",
+            "on-secondary-container": "#7a2a4e",
+            "outline": "#76777b",
+            "urgency-red-ink": "#A12A39",
+            "tertiary": "#1c160e",
+            "primary": "#15171c",
+            "on-surface": "#1c1b1c",
+            "warning-ink": "#855300",
+            "surface-variant": "#e5e2e2",
+            "surface-container-high": "#ebe7e7",
+            "on-primary-container": "#919299",
+            "ink": "#24262B",
+            "primary-container": "#292b31",
+            "line": "#E6E8ED",
+            "urgency-red-bg": "#FFF0F1",
+            "pastel-mint": "#E8F5EE",
+            "on-tertiary-container": "#9b9185",
+            "on-secondary-fixed-variant": "#79294e",
+            "surface-bright": "#fcf8f8"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "space-4xl": "48px",
+            "space-xl": "20px",
+            "margin": "32px",
+            "space-md": "12px",
+            "space-xs": "4px",
+            "space-3xl": "32px",
+            "space-2xl": "24px",
+            "space-lg": "16px",
+            "space-sm": "8px",
+            "gutter": "32px"
+          },
+          "fontFamily": {
+            "headline-lg": ["Poppins"],
+            "headline-md": ["Poppins"],
+            "label-sm": ["Poppins"],
+            "body-sm": ["Poppins"],
+            "label-md": ["Poppins"],
+            "body-md": ["Poppins"]
+          },
+          "fontSize": {
+            "headline-lg": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+            "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #F1F2F4;
+      color: #24262B;
+    }
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 20px;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      display: inline-block;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      -webkit-font-feature-settings: 'liga';
+      -webkit-font-smoothing: antialiased;
+    }
+    input[type="checkbox"]:focus,
+    input[type="radio"]:focus {
+      outline: none;
+      --tw-ring-color: #974166;
+      --tw-ring-offset-width: 1px;
+    }
+    /* Hide scrollbar for step pill scroll */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex justify-center items-start py-0 sm:py-6 bg-canvas text-ink antialiased">
+<!-- Mobile Container Shell (390px spec) -->
+<main class="w-full max-w-[390px] min-h-screen bg-workspace sm:rounded-[20px] shadow-sm border border-line flex flex-col relative pb-safe">
+<!-- Top Navigation Header (56px) - Task-focused with back button -->
+<header class="sticky top-0 z-40 bg-surface/95 backdrop-blur-sm border-b border-line px-space-xl h-[56px] flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<button aria-label="Kembali" class="w-9 h-9 -ml-1 rounded-full flex items-center justify-center text-ink hover:bg-canvas active:scale-[0.95] transition-all duration-150" type="button">
+<span class="material-symbols-outlined text-[22px]">arrow_back</span>
+</button>
+<div>
+<h1 class="text-headline-md font-headline-md text-ink tracking-tight">Formulir Booking</h1>
+</div>
+</div>
+<div class="flex items-center gap-1">
+<span class="text-label-sm font-label-sm text-secondary bg-selected-rose px-2 py-0.5 rounded-full font-medium">Langkah 4/5</span>
+</div>
+</header>
+<!-- Wizard Step Indicator -->
+<section class="bg-surface border-b border-line px-space-xl py-space-sm">
+<div class="flex items-center justify-between gap-1 overflow-x-auto no-scrollbar py-1">
+<!-- Step 1 Done -->
+<div class="flex items-center gap-1 shrink-0">
+<span class="w-5 h-5 rounded-full bg-success-bg text-success-ink flex items-center justify-center text-[11px] font-bold">✓</span>
+<span class="text-[11px] font-medium text-muted">Jadwal</span>
+</div>
+<span class="text-outline-variant text-[10px]">›</span>
+<!-- Step 2 Done -->
+<div class="flex items-center gap-1 shrink-0">
+<span class="w-5 h-5 rounded-full bg-success-bg text-success-ink flex items-center justify-center text-[11px] font-bold">✓</span>
+<span class="text-[11px] font-medium text-muted">Perangkat</span>
+</div>
+<span class="text-outline-variant text-[10px]">›</span>
+<!-- Step 3 Done -->
+<div class="flex items-center gap-1 shrink-0">
+<span class="w-5 h-5 rounded-full bg-success-bg text-success-ink flex items-center justify-center text-[11px] font-bold">✓</span>
+<span class="text-[11px] font-medium text-muted">Antar</span>
+</div>
+<span class="text-outline-variant text-[10px]">›</span>
+<!-- Step 4 Active (Current) -->
+<div class="flex items-center gap-1.5 shrink-0 bg-selected-rose px-2.5 py-1 rounded-full border border-secondary/20">
+<span class="w-5 h-5 rounded-full bg-secondary text-surface flex items-center justify-center text-[11px] font-bold">4</span>
+<span class="text-[11px] font-semibold text-secondary">Ringkasan</span>
+</div>
+<span class="text-outline-variant text-[10px]">›</span>
+<!-- Step 5 Future -->
+<div class="flex items-center gap-1 shrink-0 opacity-50">
+<span class="w-5 h-5 rounded-full bg-canvas text-muted flex items-center justify-center text-[11px] font-medium">5</span>
+<span class="text-[11px] font-normal text-muted">Bayar</span>
+</div>
+</div>
+</section>
+<!-- Scrollable Content Canvas -->
+<div class="flex-1 px-space-xl py-space-xl space-y-5 pb-32">
+<!-- Section 1: Review Jadwal Sewa -->
+<section class="bg-surface rounded-xl p-space-lg border border-line">
+<div class="flex items-center justify-between pb-3 mb-3 border-b border-line">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]">calendar_clock</span>
+<h2 class="text-label-md font-label-md font-semibold text-ink">Review Jadwal</h2>
+</div>
+<span class="text-[11px] font-medium text-success-ink bg-success-bg px-2 py-0.5 rounded-full">Durasi 6 Jam</span>
+</div>
+<div class="grid grid-cols-2 gap-3 text-body-sm"><div class="bg-canvas/60 p-2.5 rounded-lg border border-line/60"><span class="text-[11px] text-muted block mb-0.5">Waktu Ambil</span><p class="font-semibold text-ink text-[13px] leading-tight">11 Okt 2026</p><p class="text-[12px] text-secondary font-medium">11.30 WIB</p></div><div class="bg-canvas/60 p-2.5 rounded-lg border border-line/60"><span class="text-[11px] text-muted block mb-0.5">Waktu Kembali</span><p class="font-semibold text-ink text-[13px] leading-tight">11 Okt 2026</p><p class="text-[12px] text-secondary font-medium">17.30 WIB</p></div></div>
+<div class="mt-3 flex items-center gap-1.5 text-[11px] text-muted bg-pastel-mint/70 px-2.5 py-1.5 rounded-lg text-success-ink">
+<span class="material-symbols-outlined text-[16px] shrink-0">check_circle</span>
+<span>Aman: Pengembalian tuntas sebelum loket tutup pukul 22.00 WIB</span>
+</div>
+</section>
+<!-- Section 2: Review Unit Sewa -->
+<section class="bg-surface rounded-xl p-space-lg border border-line space-y-3">
+<div class="flex items-center justify-between"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-secondary text-[20px]">devices</span><h2 class="text-label-md font-label-md font-semibold text-ink">Unit Sewa (2 Item)</h2></div><span class="text-[11px] text-muted">Maks 1 iPhone • Data contoh</span></div>
+<!-- Item 1: iPhone 15 Pro -->
+<article class="p-2.5 rounded-lg bg-workspace border border-line flex items-center gap-3">
+<img alt="Apple iPhone 15 Pro Blue Titanium" class="w-16 h-16 rounded-lg object-cover bg-surface shrink-0 border border-line/80" src="https://lh3.googleusercontent.com/aida/AEtjO1VVqqV4PvlhpGOUynz8sjBPJbMMJo69JmM0yoLy-kReUc4rMX26vOjJJcm7Gydfwak6rkBZehhsplQOXJ7Cz_UwbEcxivvoS1BQDXRQCD0sb8VBsHzKroFK2IEnktk5ZHruRQ3Y3ZKtD9uOVpSZUuV0sZ3iOUqam0J4hyNN98oKk3iTWhGvBGbArdU4tfwvnxRXRzfX7iG-JBpbFn0NkSyszyXn6GPcbpPfazi2TMqBFmQm5NT-yGTjVw"/>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-1">
+<span class="text-[11px] font-medium bg-pastel-blue text-primary px-1.5 py-0.2 rounded">1x</span>
+<h3 class="text-body-sm font-semibold text-ink truncate">iPhone 15 Pro 128GB</h3>
+</div>
+<p class="text-[11px] text-muted mt-0.5">Blue Titanium • iOS Siap Pakai</p>
+<div class="flex items-center justify-between mt-1">
+<span class="text-[12px] font-semibold text-ink">Rp120.000 <span class="text-[10px] text-muted font-normal">/ 6 Jam</span></span>
+<span class="text-[10px] font-medium text-urgency-red-ink bg-urgency-red-bg px-1.5 py-0.5 rounded">Maks 1 iPhone tercapai</span>
+</div>
+</div>
+</article>
+<!-- Item 2: Tripod Monopod -->
+<article class="p-2.5 rounded-lg bg-workspace border border-line flex items-center gap-3">
+<img alt="Tripod Monopod Wireless Selfie Stick" class="w-16 h-16 rounded-lg object-cover bg-surface shrink-0 border border-line/80" src="https://lh3.googleusercontent.com/aida/AEtjO1UfxKARj_jY0mc3BJWHy4YZyYqnnH1AreqqWUzbP0dIY5oozPQJ10MtqsWztWbV1ILgsayihuPcOaq1GovY7kda2BMG9nE8f96ZKzlN3IljALegKu6eNTCDjJ9BGzgZNhasVz8FE33xBSUVtW43g01nVMhinQCr-yD0EHNZ5t5M-AB6XESRDCFwBM8Vz-3lAD8g-aSJET0cd8kk4tlgjP4L-IwTBZ6GCIbjtkG7LyrmG9feP7rdffTxhNs"/>
+<div class="flex-1 min-w-0">
+<div class="flex items-center gap-1">
+<span class="text-[11px] font-medium bg-pastel-blue text-primary px-1.5 py-0.2 rounded">1x</span>
+<h3 class="text-body-sm font-semibold text-ink truncate">Tripod Monopod Bluetooth</h3>
+</div>
+<p class="text-[11px] text-muted mt-0.5">Foldable Stand + Remote Shutter</p>
+<div class="flex items-center justify-between mt-1">
+<span class="text-[12px] font-semibold text-ink">Rp30.000 <span class="text-[10px] text-muted font-normal">/ 6 Jam</span></span>
+<span class="text-[10px] font-medium text-success-ink bg-pastel-mint px-1.5 py-0.5 rounded">Tersedia</span>
+</div>
+</div>
+</article>
+</section>
+<!-- Section 3: Metode Serah Terima -->
+<section class="bg-surface rounded-xl p-space-lg border border-line">
+<div class="flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-secondary text-[20px]">local_shipping</span>
+<h2 class="text-label-md font-label-md font-semibold text-ink">Metode Serah Terima</h2>
+</div>
+<div class="space-y-2.5" id="handover-options"><label class="flex items-start justify-between p-3 rounded-lg border border-line bg-selected-rose/40 cursor-pointer transition-colors has-[:checked]:border-secondary has-[:checked]:bg-selected-rose/40"><div class="flex items-start gap-2.5"><input checked="" class="mt-0.5 text-secondary focus:ring-secondary border-outline" name="delivery_method" onchange="updateHandoverCost(0)" type="radio" value="pickup"/><div><span class="text-body-sm font-medium text-ink block leading-snug">Ambil Sendiri di Lokasi Toko</span><span class="text-[11px] text-muted block mt-0.5">Lokasi toko dari konfigurasi</span></div></div><span class="text-[12px] font-semibold text-success-ink bg-success-bg px-2 py-0.5 rounded-full shrink-0">Gratis</span></label><label class="flex items-start justify-between p-3 rounded-lg border border-line hover:bg-canvas/50 cursor-pointer transition-colors has-[:checked]:border-secondary has-[:checked]:bg-selected-rose/40"><div class="flex items-start gap-2.5"><input class="mt-0.5 text-secondary focus:ring-secondary border-outline" name="delivery_method" onchange="updateHandoverCost(15000)" type="radio" value="courier"/><div><span class="text-body-sm font-medium text-ink block leading-snug">Pengantaran Kurir Toko</span><span class="text-[11px] text-muted block mt-0.5">Pilih kecamatan terkonfigurasi (Tarif Rp15.000)</span></div></div><span class="text-[12px] font-semibold text-ink shrink-0">Rp15.000</span></label></div>
+</section>
+<!-- Section 4: Data Profil Terverifikasi -->
+<section class="bg-surface rounded-xl p-space-lg border border-line space-y-2.5">
+<div class="flex items-center justify-between"><div class="flex items-center gap-2"><span class="material-symbols-outlined text-secondary text-[20px]">badge</span><h2 class="text-label-md font-label-md font-semibold text-ink">Data Profil Pelanggan</h2></div><span class="text-[11px] font-medium text-success-ink bg-success-bg px-2 py-0.5 rounded-full flex items-center gap-1"><span class="material-symbols-outlined text-[13px]">check_circle</span> Lengkap</span></div>
+<div class="bg-workspace p-3 rounded-lg border border-line space-y-2">
+<div class="flex justify-between items-center text-body-sm">
+<span class="text-muted text-[12px]">Nama Lengkap</span>
+<span class="font-medium text-ink">Rian Pratama</span>
+</div>
+<div class="flex justify-between items-center text-body-sm border-t border-line/60 pt-2">
+<span class="text-muted text-[12px]">Nomor WhatsApp</span>
+<span class="font-medium text-ink tabular-nums">0812-3456-7890</span>
+</div>
+<div class="flex justify-between items-center text-body-sm border-t border-line/60 pt-2">
+<span class="text-muted text-[12px]">NIK Terdaftar</span>
+<span class="font-medium text-ink font-mono text-[13px]">3374************6721</span>
+</div>
+</div>
+<div class="flex items-start gap-2 bg-canvas p-2.5 rounded-lg text-[11px] text-muted"><span class="material-symbols-outlined text-[16px] text-primary shrink-0 mt-0.5">lock</span><p>Profil Lengkap, NIK tersimpan privat. <strong class="text-ink font-medium">Tidak ada upload KTP mandiri</strong> pada tahapan ini demi perlindungan privasi data.</p></div>
+</section>
+<!-- Section 5: Empat Persetujuan Wajib (Checkboxes Default Unchecked) -->
+<section class="bg-surface rounded-xl p-space-lg border border-line space-y-3">
+<div class="flex items-center justify-between pb-2 border-b border-line">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-urgency-red-ink text-[20px]">gavel</span>
+<h2 class="text-label-md font-label-md font-semibold text-ink">Persetujuan Wajib</h2>
+</div>
+<span class="text-[11px] font-medium text-urgency-red-ink bg-urgency-red-bg px-2 py-0.5 rounded-full" id="agreed-counter">0/4 Dicentang</span>
+</div>
+<p class="text-[11px] text-muted">Beri centang pada seluruh ketentuan di bawah ini untuk mengaktifkan pemesanan:</p>
+<div class="space-y-3 text-body-sm"><label class="flex items-start gap-2.5 p-2.5 rounded-lg border border-line hover:bg-canvas/40 transition-colors cursor-pointer group"><input class="agreement-checkbox mt-0.5 w-4 h-4 rounded text-secondary focus:ring-secondary border-outline" onchange="checkAllAgreements()" type="checkbox"/><span class="text-[12px] leading-relaxed text-ink group-hover:text-primary">Saya menyetujui syarat &amp; ketentuan sewa iRent Semarang, termasuk kebijakan denda, pembatalan, dan perpanjangan sewa.</span></label><label class="flex items-start gap-2.5 p-2.5 rounded-lg border border-line hover:bg-canvas/40 transition-colors cursor-pointer group"><input class="agreement-checkbox mt-0.5 w-4 h-4 rounded text-secondary focus:ring-secondary border-outline" onchange="checkAllAgreements()" type="checkbox"/><span class="text-[12px] leading-relaxed text-ink group-hover:text-primary">Saya bersedia membawa identitas fisik resmi (KTP/SIM asli) saat serah terima untuk pencocokan data profil.</span></label><label class="flex items-start gap-2.5 p-2.5 rounded-lg border border-line hover:bg-canvas/40 transition-colors cursor-pointer group"><input class="agreement-checkbox mt-0.5 w-4 h-4 rounded text-secondary focus:ring-secondary border-outline" onchange="checkAllAgreements()" type="checkbox"/><span class="text-[12px] leading-relaxed text-ink group-hover:text-primary">Saya memahami bahwa booking menahan unit sampai batas pembayaran; pembayaran dan bukti harus diselesaikan tepat waktu agar tidak kedaluwarsa.</span></label><label class="flex items-start gap-2.5 p-2.5 rounded-lg border border-line hover:bg-canvas/40 transition-colors cursor-pointer group"><input class="agreement-checkbox mt-0.5 w-4 h-4 rounded text-secondary focus:ring-secondary border-outline" onchange="checkAllAgreements()" type="checkbox"/><span class="text-[12px] leading-relaxed text-ink group-hover:text-primary">Saya memahami jam operasional fisik loket adalah 08.00 – 22.00 WIB untuk layanan serah terima dan pengembalian unit.</span></label></div>
+</section>
+<!-- Section 6: Ringkasan Biaya & Skema Pembayaran -->
+<section class="bg-surface rounded-xl p-space-lg border border-line space-y-3">
+<div class="flex items-center gap-2 pb-2 border-b border-line">
+<span class="material-symbols-outlined text-secondary text-[20px]">payments</span>
+<h2 class="text-label-md font-label-md font-semibold text-ink">Ringkasan Biaya</h2>
+</div>
+<div class="space-y-1.5 text-body-sm text-ink">
+<div class="flex justify-between items-center text-[13px]">
+<span class="text-muted">Sewa iPhone 15 Pro (6 Jam)</span>
+<span class="font-medium tabular-nums">Rp120.000</span>
+</div>
+<div class="flex justify-between items-center text-[13px]">
+<span class="text-muted">Sewa Tripod Monopod (6 Jam)</span>
+<span class="font-medium tabular-nums">Rp30.000</span>
+</div>
+<div class="flex justify-between items-center text-[13px]">
+<span class="text-muted">Biaya Pengantaran</span>
+<span class="font-medium tabular-nums text-success-ink" id="delivery-fee-label">Gratis</span>
+</div>
+<div class="pt-2 border-t border-line flex justify-between items-center">
+<span class="font-semibold text-ink text-[14px]">Total Nilai Sewa</span>
+<span class="font-bold text-ink text-[16px] tabular-nums" id="total-rental-val">Rp150.000</span>
+</div>
+</div>
+<!-- Payment Scheme Selector -->
+<div class="mt-3 pt-3 border-t border-line/80">
+<span class="text-[11px] font-semibold text-ink block mb-2 uppercase tracking-wider text-muted">Pilih Skema Bayar Sekarang:</span>
+<div class="grid grid-cols-2 gap-2" id="payment-scheme-tabs">
+<button class="py-2.5 px-3 rounded-lg border-2 border-secondary bg-selected-rose/50 text-left transition-all flex flex-col justify-between" id="btn-scheme-dp" onclick="setScheme('dp')" type="button">
+<div class="flex items-center justify-between w-full">
+<span class="text-[12px] font-semibold text-secondary">DP Booking</span>
+<span class="material-symbols-outlined text-[16px] text-secondary">check_circle</span>
+</div>
+<span class="text-[14px] font-bold text-ink mt-1 tabular-nums">Rp20.000</span>
+<span class="text-[10px] text-muted mt-0.5">Sisa Rp130.000 di lokasi</span>
+</button>
+<button class="py-2.5 px-3 rounded-lg border border-line bg-surface text-left transition-all hover:bg-canvas/50 flex flex-col justify-between" id="btn-scheme-full" onclick="setScheme('full')" type="button">
+<div class="flex items-center justify-between w-full">
+<span class="text-[12px] font-medium text-muted">Bayar Lunas</span>
+<span class="w-4 h-4 rounded-full border border-outline-variant inline-block"></span>
+</div>
+<span class="text-[14px] font-bold text-ink mt-1 tabular-nums" id="full-amount-preview">Rp150.000</span>
+<span class="text-[10px] text-success-ink mt-0.5">Bebas antrean kasir</span>
+</button>
+</div>
+</div>
+</section>
+</div>
+<!-- Fixed Bottom Sticky Bar with Price and CTA (Docked, min 44px targets) -->
+<footer class="fixed bottom-0 left-0 right-0 w-full max-w-[390px] mx-auto z-50 bg-surface/95 backdrop-blur-md border-t border-line px-space-xl py-3 shadow-lg">
+<div class="flex items-center justify-between gap-3">
+<div>
+<span class="text-[11px] text-muted block leading-none" id="footer-pay-label">Bayar DP Sekarang:</span>
+<div class="flex items-baseline gap-1 mt-0.5">
+<span class="text-[18px] font-bold text-ink tabular-nums tracking-tight" id="footer-pay-amount">Rp20.000</span>
+</div>
+<span class="text-[10px] text-muted block" id="footer-balance-note">Sisa bayar di lokasi</span>
+</div>
+<button class="flex-1 h-[46px] min-h-[44px] bg-primary-container disabled:bg-surface-variant disabled:text-outline-variant disabled:cursor-not-allowed text-surface rounded-xl font-medium text-[13px] flex items-center justify-center gap-1.5 shadow-sm active:scale-[0.98] transition-all" disabled="" id="submit-booking-cta" type="button">
+<span>Buat booking &amp; lanjut bayar</span>
+<span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+<!-- Unchecked feedback hint -->
+<p class="text-[10px] text-urgency-red-ink text-center mt-1.5 font-medium" id="agreement-hint">
+        Centang ke-4 persetujuan di atas untuk melanjutkan
+      </p>
+</footer>
+</main>
+<script>
+    let deliveryCost = 0;
+    let selectedScheme = 'dp'; // 'dp' | 'full'
+    const baseRentalTotal = 150000;
+
+    function updateHandoverCost(fee) {
+      deliveryCost = fee;
+      const total = baseRentalTotal + deliveryCost;
+
+      const label = document.getElementById('delivery-fee-label');
+      if (fee === 0) {
+        label.textContent = 'Gratis';
+        label.className = 'font-medium tabular-nums text-success-ink';
+      } else {
+        label.textContent = `Rp${fee.toLocaleString('id-ID')}`;
+        label.className = 'font-medium tabular-nums text-ink';
+      }
+
+      document.getElementById('total-rental-val').textContent = `Rp${total.toLocaleString('id-ID')}`;
+      document.getElementById('full-amount-preview').textContent = `Rp${total.toLocaleString('id-ID')}`;
+      refreshPaymentDisplay();
+    }
+
+    function setScheme(scheme) {
+      selectedScheme = scheme;
+      const btnDp = document.getElementById('btn-scheme-dp');
+      const btnFull = document.getElementById('btn-scheme-full');
+
+      if (scheme === 'dp') {
+        btnDp.className = 'py-2.5 px-3 rounded-lg border-2 border-secondary bg-selected-rose/50 text-left transition-all flex flex-col justify-between';
+        btnDp.querySelector('.material-symbols-outlined').className = 'material-symbols-outlined text-[16px] text-secondary';
+
+        btnFull.className = 'py-2.5 px-3 rounded-lg border border-line bg-surface text-left transition-all hover:bg-canvas/50 flex flex-col justify-between';
+        btnFull.innerHTML = `
+          <div class="flex items-center justify-between w-full">
+            <span class="text-[12px] font-medium text-muted">Bayar Lunas</span>
+            <span class="w-4 h-4 rounded-full border border-outline-variant inline-block"></span>
+          </div>
+          <span class="text-[14px] font-bold text-ink mt-1 tabular-nums">Rp${(baseRentalTotal + deliveryCost).toLocaleString('id-ID')}</span>
+          <span class="text-[10px] text-success-ink mt-0.5">Bebas antrean kasir</span>
+        `;
+      } else {
+        btnFull.className = 'py-2.5 px-3 rounded-lg border-2 border-secondary bg-selected-rose/50 text-left transition-all flex flex-col justify-between';
+        btnFull.innerHTML = `
+          <div class="flex items-center justify-between w-full">
+            <span class="text-[12px] font-semibold text-secondary">Bayar Lunas</span>
+            <span class="material-symbols-outlined text-[16px] text-secondary">check_circle</span>
+          </div>
+          <span class="text-[14px] font-bold text-ink mt-1 tabular-nums">Rp${(baseRentalTotal + deliveryCost).toLocaleString('id-ID')}</span>
+          <span class="text-[10px] text-success-ink mt-0.5">Bebas antrean kasir</span>
+        `;
+
+        btnDp.className = 'py-2.5 px-3 rounded-lg border border-line bg-surface text-left transition-all hover:bg-canvas/50 flex flex-col justify-between';
+        btnDp.querySelector('.material-symbols-outlined').className = 'hidden';
+      }
+      refreshPaymentDisplay();
+    }
+
+    function refreshPaymentDisplay() {
+      const footerPayLabel = document.getElementById('footer-pay-label');
+      const footerPayAmount = document.getElementById('footer-pay-amount');
+      const footerBalanceNote = document.getElementById('footer-balance-note');
+      const total = baseRentalTotal + deliveryCost;
+
+      if (selectedScheme === 'dp') {
+        footerPayLabel.textContent = 'Bayar DP Sekarang:';
+        footerPayAmount.textContent = 'Rp20.000';
+        const remaining = total - 20000;
+        footerBalanceNote.textContent = `Sisa Rp${remaining.toLocaleString('id-ID')} di lokasi`;
+      } else {
+        footerPayLabel.textContent = 'Pelunasan Penuh:';
+        footerPayAmount.textContent = `Rp${total.toLocaleString('id-ID')}`;
+        footerBalanceNote.textContent = 'Lunas tuntas (Langsung ambil)';
+      }
+    }
+
+    function checkAllAgreements() {
+      const checkboxes = document.querySelectorAll('.agreement-checkbox');
+      const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+      const counter = document.getElementById('agreed-counter');
+      const submitBtn = document.getElementById('submit-booking-cta');
+      const hint = document.getElementById('agreement-hint');
+
+      counter.textContent = `${checkedCount}/4 Dicentang`;
+
+      if (checkedCount === 4) {
+        counter.className = 'text-[11px] font-medium text-success-ink bg-success-bg px-2 py-0.5 rounded-full';
+        submitBtn.removeAttribute('disabled');
+        submitBtn.className = 'flex-1 h-[46px] min-h-[44px] bg-primary text-surface rounded-xl font-medium text-[13px] flex items-center justify-center gap-1.5 shadow-sm active:scale-[0.98] transition-all cursor-pointer hover:bg-ink';
+        hint.classList.add('hidden');
+      } else {
+        counter.className = 'text-[11px] font-medium text-urgency-red-ink bg-urgency-red-bg px-2 py-0.5 rounded-full';
+        submitBtn.setAttribute('disabled', 'true');
+        submitBtn.className = 'flex-1 h-[46px] min-h-[44px] bg-surface-variant text-outline-variant disabled:cursor-not-allowed rounded-xl font-medium text-[13px] flex items-center justify-center gap-1.5 shadow-sm transition-all';
+        hint.classList.remove('hidden');
+        hint.textContent = `Centang ${4 - checkedCount} persetujuan lagi untuk lanjut bayar`;
+      }
+    }
+
+    // Initialize state
+    document.addEventListener('DOMContentLoaded', () => {
+      checkAllAgreements();
+      refreshPaymentDisplay();
+    });
+  </script>
+</body></html>

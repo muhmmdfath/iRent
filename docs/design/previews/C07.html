@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>iRent Semarang — Pelanggan Lengkapi Profil &amp; Informasi — v2</title>
+<!-- Google Fonts: Poppins -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "inverse-surface": "#313031",
+            "on-surface": "#1c1b1c",
+            "tertiary-fixed": "#eee0d3",
+            "sidebar": "#F8F9FA",
+            "on-surface-variant": "#46464b",
+            "surface-variant": "#e5e2e2",
+            "success-bg": "#EAF6EF",
+            "secondary-container": "#fe96be",
+            "pastel-mint": "#E8F5EE",
+            "on-tertiary-fixed": "#211b12",
+            "on-secondary-container": "#7a2a4e",
+            "primary-container": "#292b31",
+            "on-secondary": "#ffffff",
+            "on-tertiary-fixed-variant": "#4e453b",
+            "pastel-apricot": "#FFF0DE",
+            "on-primary-fixed": "#191b21",
+            "warning-bg": "#FFF5DF",
+            "on-tertiary": "#ffffff",
+            "pastel-blue": "#EAF1FC",
+            "inverse-on-surface": "#f4f0f0",
+            "urgency-red-bg": "#FFF0F1",
+            "primary-fixed-dim": "#c5c6ce",
+            "on-background": "#1c1b1c",
+            "tertiary-fixed-dim": "#d1c5b7",
+            "workspace": "#FCFCFD",
+            "surface-tint": "#5c5e65",
+            "selected-rose": "#F9E8EF",
+            "surface": "#FFFFFF",
+            "outline": "#76777b",
+            "error": "#ba1a1a",
+            "background": "#fcf8f8",
+            "on-tertiary-container": "#9b9185",
+            "surface-dim": "#ddd9d9",
+            "ink": "#24262B",
+            "error-container": "#ffdad6",
+            "on-secondary-fixed": "#3e0021",
+            "on-error": "#ffffff",
+            "inverse-primary": "#c5c6ce",
+            "on-error-container": "#93000a",
+            "on-secondary-fixed-variant": "#79294e",
+            "success-ink": "#176345",
+            "muted": "#606570",
+            "surface-container": "#f1eded",
+            "primary-fixed": "#e2e2ea",
+            "pastel-lilac": "#F1ECFB",
+            "canvas": "#F1F2F4",
+            "outline-variant": "#c7c6cb",
+            "tertiary": "#1c160e",
+            "surface-container-lowest": "#ffffff",
+            "tertiary-container": "#312a21",
+            "primary": "#15171c",
+            "line": "#E6E8ED",
+            "surface-container-low": "#f6f3f3",
+            "on-primary-container": "#919299",
+            "on-primary-fixed-variant": "#45474d",
+            "surface-container-highest": "#e5e2e2",
+            "secondary-fixed-dim": "#ffb0cc",
+            "on-primary": "#ffffff",
+            "secondary-fixed": "#ffd9e4",
+            "secondary": "#974166",
+            "pastel-blush": "#FBECEE",
+            "surface-container-high": "#ebe7e7",
+            "warning-ink": "#855300",
+            "urgency-red-ink": "#A12A39",
+            "surface-bright": "#fcf8f8"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "2xl": "1rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "space-xl": "20px",
+            "space-3xl": "32px",
+            "margin": "32px",
+            "space-md": "12px",
+            "space-xs": "4px",
+            "space-sm": "8px",
+            "gutter": "32px",
+            "space-2xl": "24px",
+            "space-lg": "16px",
+            "space-4xl": "48px"
+          },
+          "fontFamily": {
+            "headline-md": ["Poppins", "sans-serif"],
+            "label-sm": ["Poppins", "sans-serif"],
+            "body-sm": ["Poppins", "sans-serif"],
+            "body-md": ["Poppins", "sans-serif"],
+            "headline-lg": ["Poppins", "sans-serif"],
+            "label-md": ["Poppins", "sans-serif"]
+          },
+          "fontSize": {
+            "headline-md": [
+              "20px",
+              {
+                "lineHeight": "28px",
+                "fontWeight": "600"
+              }
+            ],
+            "label-sm": [
+              "14px",
+              {
+                "lineHeight": "20px",
+                "fontWeight": "500"
+              }
+            ],
+            "body-sm": [
+              "14px",
+              {
+                "lineHeight": "20px",
+                "fontWeight": "400"
+              }
+            ],
+            "body-md": [
+              "16px",
+              {
+                "lineHeight": "24px",
+                "fontWeight": "400"
+              }
+            ],
+            "headline-lg": [
+              "28px",
+              {
+                "lineHeight": "36px",
+                "fontWeight": "600"
+              }
+            ],
+            "label-md": [
+              "14px",
+              {
+                "lineHeight": "20px",
+                "fontWeight": "500"
+              }
+            ]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #F1F2F4;
+      margin: 0;
+      padding: 0;
+      color: #24262B;
+    }
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px #F9E8EF;
+      border-color: #974166 !important;
+    }
+  </style>
+</head>
+<body class="bg-canvas min-h-screen p-space-3xl flex justify-center items-start text-ink">
+<!-- Desktop App Shell Container (1440px wide max, 20px radius) -->
+<div class="w-full max-w-[1440px] bg-surface rounded-[20px] overflow-hidden border border-line flex min-h-[920px]">
+<!-- Shared Component: SideNavBar -->
+<aside class="w-56 h-full flex flex-col shrink-0 bg-sidebar border-r border-line p-space-lg justify-between select-none min-h-[920px]">
+<div class="flex flex-col gap-space-xl">
+<!-- Brand Header -->
+<div class="flex items-center gap-3 px-2 pt-1 pb-2">
+<div class="w-10 h-10 rounded-xl bg-primary-container text-surface flex items-center justify-center font-bold text-headline-md tracking-tight">
+            iR
+          </div>
+<div class="flex flex-col">
+<span class="text-headline-md font-headline-md text-ink font-semibold tracking-tight leading-5">iRent Semarang</span>
+<span class="text-body-sm text-muted">Customer Portal</span>
+</div>
+</div>
+<!-- CTA Sewa Baru -->
+<div>
+<button class="w-full h-11 min-h-[44px] flex items-center justify-center gap-2 bg-primary-container text-surface rounded-xl font-label-md text-body-sm hover:opacity-95 transition-all duration-150" type="button">
+<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" x2="12" y1="8" y2="16"></line><line x1="8" x2="16" y1="12" y2="12"></line></svg>
+<span>Sewa Baru</span>
+</button>
+</div>
+<!-- Navigation Tabs -->
+<nav aria-label="Main Navigation" class="flex flex-col gap-1.5">
+<!-- Dashboard (Inactive) -->
+<a class="flex items-center gap-space-md px-space-md py-space-sm min-h-[44px] rounded-xl text-muted hover:text-ink hover:bg-surface-container transition-colors" href="#">
+<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><rect height="7" width="7" x="3" y="3"></rect><rect height="7" width="7" x="14" y="3"></rect><rect height="7" width="7" x="14" y="14"></rect><rect height="7" width="7" x="3" y="14"></rect></svg>
+<span class="text-body-sm font-label-md">Dashboard</span>
+</a>
+<!-- Cari perangkat (Inactive) -->
+<a class="flex items-center gap-space-md px-space-md py-space-sm min-h-[44px] rounded-xl text-muted hover:text-ink hover:bg-surface-container transition-colors" href="#">
+<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" x2="16.65" y1="21" y2="16.65"></line></svg>
+<span class="text-body-sm font-label-md">Cari perangkat</span>
+</a>
+<!-- Booking saya (Inactive) -->
+<a class="flex items-center gap-space-md px-space-md py-space-sm min-h-[44px] rounded-xl text-muted hover:text-ink hover:bg-surface-container transition-colors" href="#">
+<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1-2-1z"></path><line x1="8" x2="16" y1="8" y2="8"></line><line x1="8" x2="16" y1="12" y2="12"></line><line x1="8" x2="12" y1="16" y2="16"></line></svg>
+<span class="text-body-sm font-label-md">Booking saya</span>
+</a>
+<!-- Profil (ACTIVE - exact semantic match) -->
+<a aria-current="page" class="flex items-center gap-space-md px-space-md py-space-sm min-h-[44px] rounded-xl bg-selected-rose text-secondary font-label-md" href="#">
+<svg class="w-5 h-5 shrink-0 fill-current" viewbox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"></path></svg>
+<span class="text-body-sm font-label-md font-semibold">Profil</span>
+</a>
+<!-- Bantuan (Inactive) -->
+<a class="flex items-center gap-space-md px-space-md py-space-sm min-h-[44px] rounded-xl text-muted hover:text-ink hover:bg-surface-container transition-colors" href="#">
+<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" x2="12.01" y1="17" y2="17"></line></svg>
+<span class="text-body-sm font-label-md">Bantuan</span>
+</a>
+</nav>
+</div>
+<!-- Footer SideNav -->
+<div class="pt-4 border-t border-line">
+<a class="flex items-center gap-space-md px-space-md py-space-sm min-h-[44px] rounded-xl text-muted hover:text-ink hover:bg-surface-container transition-colors" href="#">
+<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" x2="9" y1="12" y2="12"></line></svg>
+<span class="text-body-sm font-label-md">Keluar</span>
+</a>
+</div>
+</aside>
+<!-- Main Shell Area (Header + Scrollable Canvas) -->
+<div class="flex-1 flex flex-col min-w-0 bg-workspace">
+<!-- Shared Component: TopNavBar -->
+<header class="flex justify-between items-center h-[72px] px-gutter w-full bg-surface border-b border-line shrink-0">
+<!-- Search bar on left -->
+<div class="flex items-center gap-3 w-80">
+<div class="relative w-full">
+<svg class="w-5 h-5 absolute left-3 top-1/2 -translate-y-1/2 text-muted" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" x2="16.65" y1="21" y2="16.65"></line></svg>
+<input class="w-full h-11 pl-10 pr-3 text-body-sm font-body-sm bg-canvas border border-line rounded-xl text-ink placeholder-muted focus:bg-surface transition-colors" placeholder="Cari unit atau informasi rental..." type="text"/>
+</div>
+</div>
+<!-- Trailing Actions & Profile -->
+<div class="flex items-center gap-4">
+<!-- Trailing Primary Action Badge: Data contoh -->
+<span class="px-3 py-1 text-body-sm font-medium rounded-full bg-pastel-mint text-success-ink border border-emerald-100 min-h-[32px] inline-flex items-center">
+            Data contoh
+          </span>
+<!-- Trailing Secondary Action: 10 Okt 2026 -->
+<span class="text-body-sm font-medium text-muted">
+            10 Okt 2026
+          </span>
+<div class="h-5 w-px bg-line"></div>
+<!-- Notification Icon Button -->
+<button aria-label="Notifikasi" class="w-11 h-11 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl text-muted hover:text-ink hover:bg-canvas transition-colors relative" type="button">
+<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+<span class="w-2 h-2 rounded-full bg-secondary absolute top-2.5 right-2.5"></span>
+</button>
+<!-- User Profile Brief -->
+<div class="flex items-center gap-3 pl-2">
+<div class="w-10 h-10 rounded-full bg-pastel-lilac border border-line flex items-center justify-center text-ink font-semibold text-body-sm overflow-hidden">
+<span class="text-body-sm font-medium text-secondary">RP</span>
+</div>
+<div class="flex flex-col text-left">
+<span class="text-body-sm font-semibold text-ink leading-tight">Rian Pratama</span>
+<span class="text-body-sm text-muted leading-tight">Pelanggan Aktif</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Canvas Content (max 1200px, 32px gutters) -->
+<main class="flex-1 overflow-y-auto px-gutter py-space-3xl">
+<div class="max-w-[1200px] mx-auto space-y-space-3xl">
+<!-- Page Headline Section -->
+<div>
+<h1 class="text-headline-lg font-headline-lg text-ink font-semibold tracking-tight">Profil Pelanggan &amp; Informasi Layanan</h1>
+<p class="text-body-md font-body-md text-muted mt-1">Kelengkapan data identitas wajib diisi sebelum melakukan booking sewa perangkat iPhone dan aksesori.</p>
+</div>
+<!-- Two Calm Columns Layout -->
+<div class="grid grid-cols-12 gap-space-2xl items-start">
+<!-- LEFT COLUMN (Wider: 8 Cols) -->
+<div class="col-span-8 space-y-space-2xl">
+<!-- PANEL 1: Form Identitas Diri -->
+<section class="bg-surface rounded-2xl border border-line p-6 space-y-space-xl">
+<!-- Header & Status -->
+<div class="flex items-center justify-between pb-4 border-b border-line">
+<div class="flex items-center gap-2">
+<svg class="w-6 h-6 text-secondary shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><rect height="14" rx="2" width="20" x="2" y="5"></rect><line x1="2" x2="22" y1="10" y2="10"></line></svg>
+<h2 class="text-headline-md font-headline-md text-ink font-semibold">Data Diri Penyewa (Wajib Lengkap Sebelum Booking)</h2>
+</div>
+<!-- Inline Status: Updated badge text to Profil lengkap -->
+<div class="flex items-center gap-1.5 px-3 py-1.5 bg-pastel-mint border border-emerald-200 rounded-full text-success-ink text-body-sm font-medium min-h-[32px]">
+<svg class="w-4 h-4 text-success-ink shrink-0 fill-current" viewbox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path></svg>
+<span>Profil lengkap</span>
+</div>
+</div>
+<!-- Info Banner (Pastel Blue) - Strict PRD update: NIK operational validation policy -->
+<div class="bg-pastel-blue border border-blue-200 rounded-xl p-4 flex gap-3 text-body-sm font-body-sm text-ink leading-relaxed">
+<svg class="w-5 h-5 text-blue-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+<p>
+<strong class="font-semibold text-blue-900">Kebijakan Privasi &amp; Validasi NIK:</strong> NIK merupakan data terlindungi dan hanya digunakan untuk validasi operasional internal yang berwenang. Sistem tidak memuat atau meminta unggah foto dokumen identitas mandiri secara daring.
+</p>
+</div>
+<!-- Form Fields Grid -->
+<form class="space-y-4" onsubmit="event.preventDefault();">
+<div class="grid grid-cols-2 gap-4">
+<!-- Nama Lengkap -->
+<div class="flex flex-col gap-1.5">
+<label class="text-body-sm font-medium text-ink" for="nama">Nama Lengkap (Sesuai KTP)</label>
+<input class="h-11 min-h-[44px] px-3.5 rounded-xl border border-line bg-surface text-ink text-body-md font-body-md transition-colors" id="nama" type="text" value="Rian Pratama"/>
+</div>
+<!-- Nomor WhatsApp (Placeholder input value, no invented links) -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<label class="text-body-sm font-medium text-ink" for="wa">Nomor WhatsApp Aktif</label>
+<span class="text-body-sm text-muted">Aktif untuk konfirmasi reservasi</span>
+</div>
+<input class="h-11 min-h-[44px] px-3.5 rounded-xl border border-line bg-surface text-ink text-body-md font-body-md transition-colors" id="wa" placeholder="08xxxxxxxxxx" type="text" value="0812-3456-7890"/>
+</div>
+</div>
+<!-- NIK -->
+<div class="flex flex-col gap-1.5">
+<div class="flex items-center justify-between">
+<label class="text-body-sm font-medium text-ink" for="nik">Nomor Induk Kependudukan (NIK)</label>
+<span class="text-body-sm text-success-ink flex items-center gap-1 font-medium">
+<svg class="w-4 h-4 text-success-ink shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><rect height="11" rx="2" ry="2" width="18" x="3" y="11"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                      Tersimpan aman &amp; tersensor
+</span>
+</div>
+<div class="relative">
+<input class="w-full h-11 min-h-[44px] px-3.5 pr-28 rounded-xl border border-line bg-canvas text-ink text-body-md font-body-md transition-colors font-mono cursor-not-allowed" id="nik" readonly="" type="text" value="3374************6721"/>
+<span class="absolute right-3 top-1/2 -translate-y-1/2 text-body-sm font-medium text-muted bg-surface border border-line px-2.5 py-1 rounded-lg">Terkunci</span>
+</div>
+</div>
+<!-- Alamat Domisili -->
+<div class="flex flex-col gap-1.5">
+<label class="text-body-sm font-medium text-ink" for="alamat">Alamat Domisili / Tempat Tinggal</label>
+<input class="h-11 min-h-[44px] px-3.5 rounded-xl border border-line bg-surface text-ink text-body-md font-body-md transition-colors" id="alamat" type="text" value="Jl. Singosari Raya No. 14, Pleburan, Semarang Selatan"/>
+</div>
+<!-- Kota / Area -->
+<div class="flex flex-col gap-1.5">
+<label class="text-body-sm font-medium text-ink" for="kota">Kota / Area Operasional</label>
+<input class="h-11 min-h-[44px] px-3.5 rounded-xl border border-line bg-canvas text-ink text-body-md font-body-md transition-colors" id="kota" readonly="" type="text" value="Kota Semarang (Lokasi toko dari konfigurasi)"/>
+</div>
+<!-- Action Button -->
+<div class="pt-3 flex items-center justify-between">
+<span class="text-body-sm text-muted">Perubahan data instan terverifikasi di pangkalan data internal operasional.</span>
+<button class="h-11 min-h-[44px] px-6 bg-primary-container text-surface rounded-xl font-label-md text-body-sm hover:bg-ink transition-colors flex items-center gap-2 font-medium" type="submit">
+<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+<span>Simpan Pembaruan Profil</span>
+</button>
+</div>
+</form>
+</section>
+<!-- PANEL 2: Informasi Operasional & Regulasi Rental (PRD) -->
+<section class="bg-surface rounded-2xl border border-line p-6 space-y-5">
+<div class="flex items-center justify-between pb-3 border-b border-line">
+<div class="flex items-center gap-2">
+<svg class="w-6 h-6 text-secondary shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" x2="8" y1="13" y2="13"></line><line x1="16" x2="8" y1="17" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+<h2 class="text-headline-md font-headline-md text-ink font-semibold">Informasi Operasional &amp; Regulasi Rental (PRD)</h2>
+</div>
+<span class="text-body-sm text-muted">Versi Ketentuan: 2.4 / 2026</span>
+</div>
+<!-- Tab Navigasi -->
+<div class="flex border-b border-line gap-2">
+<button class="pb-2.5 px-3 min-h-[44px] border-b-2 border-secondary text-secondary font-label-md text-body-sm font-semibold flex items-center gap-2" type="button">
+<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+<span>Syarat &amp; Ketentuan Sewa</span>
+</button>
+<button class="pb-2.5 px-3 min-h-[44px] border-b-2 border-transparent text-muted hover:text-ink font-label-md text-body-sm transition-colors flex items-center gap-2" type="button">
+<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+<span>Tentang iRent Semarang</span>
+</button>
+<button class="pb-2.5 px-3 min-h-[44px] border-b-2 border-transparent text-muted hover:text-ink font-label-md text-body-sm transition-colors flex items-center gap-2" type="button">
+<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><polyline points="9 11 12 14 22 4"></polyline><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+<span>SOP Lokasi Operasional</span>
+</button>
+</div>
+<!-- Tab Content: Syarat & Ketentuan Sewa -->
+<div class="space-y-4 pt-1">
+<!-- Regulasi Card Grid -->
+<div class="grid grid-cols-2 gap-4">
+<!-- Tarif Flat -->
+<div class="p-4 rounded-xl bg-canvas border border-line flex flex-col gap-1.5">
+<div class="flex items-center gap-2 text-ink font-semibold text-body-sm">
+<svg class="w-5 h-5 text-muted shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" x2="7.01" y1="7" y2="7"></line></svg>
+<span>Tarif Flat Tanpa Diskriminasi</span>
+</div>
+<p class="text-body-sm text-muted leading-relaxed">
+                        Tarif durasi 6 Jam, 12 Jam, dan 24 Jam berlaku flat seragam tanpa diskriminasi antara hari kerja maupun akhir pekan/libur nasional.
+                      </p>
+</div>
+<!-- Jam Operasional -->
+<div class="p-4 rounded-xl bg-canvas border border-line flex flex-col gap-1.5">
+<div class="flex items-center gap-2 text-ink font-semibold text-body-sm">
+<svg class="w-5 h-5 text-muted shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+<span>Jam Operasional &amp; Lead Time</span>
+</div>
+<p class="text-body-sm text-muted leading-relaxed">
+                        Pengambilan dan pengembalian unit mengacu pada informasi operasional penyedia. Reservasi minimal lead time 2 jam sebelumnya.
+                      </p>
+</div>
+<!-- Batasan Unit -->
+<div class="p-4 rounded-xl bg-canvas border border-line flex flex-col gap-1.5">
+<div class="flex items-center gap-2 text-ink font-semibold text-body-sm">
+<svg class="w-5 h-5 text-muted shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><rect height="14" rx="2" width="18" x="3" y="4"></rect><line x1="12" x2="12" y1="18" y2="20"></line></svg>
+<span>Batasan Unit Per Booking</span>
+</div>
+<p class="text-body-sm text-muted leading-relaxed">
+                        Maksimal 1 unit iPhone per booking transaksi untuk melindungi rotasi ketersediaan. Aksesori tambahan (MagSafe, Tripod, Mic) dapat disewa bebas.
+                      </p>
+</div>
+<!-- Uang Muka (DP Flat) -->
+<div class="p-4 rounded-xl bg-canvas border border-line flex flex-col gap-1.5">
+<div class="flex items-center gap-2 text-ink font-semibold text-body-sm">
+<svg class="w-5 h-5 text-muted shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><rect height="16" rx="2" width="20" x="2" y="4"></rect><line x1="2" x2="22" y1="10" y2="10"></line></svg>
+<span>Uang Muka (DP Flat) Wajib</span>
+</div>
+<p class="text-body-sm text-muted leading-relaxed">
+                        DP flat wajib disetorkan dan divalidasi operasional kasir sebelum alokasi unit disahkan dalam inventaris aktif.
+                      </p>
+</div>
+</div>
+<!-- Kebijakan Pembatalan & Refund (Tonal Card) - Strict PRD exact logic -->
+<div class="p-4 rounded-xl bg-pastel-blush border border-red-100 flex gap-3 text-body-sm">
+<svg class="w-5 h-5 text-urgency-red-ink shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" x2="12" y1="9" y2="13"></line><line x1="12" x2="12.01" y1="17" y2="17"></line></svg>
+<div class="space-y-1">
+<span class="font-semibold text-urgency-red-ink text-body-sm">Kebijakan Pembatalan &amp; Pengembalian Dana (PRD)</span>
+<p class="text-ink leading-relaxed">
+                        Pembatalan &gt;48 jam sebelum jadwal berhak atas refund 50% DP atau 75% pembayaran penuh. <strong>Tidak ada refund untuk DP maupun pembayaran penuh pada pembatalan pelanggan ≤48 jam.</strong> Proses refund ditransfer manual oleh kasir secara terpisah dari persetujuan sistem.
+                      </p>
+</div>
+</div>
+<!-- Alur Pengembalian & Buffer -->
+<div class="p-4 rounded-xl bg-pastel-mint border border-emerald-100 flex gap-3 text-body-sm">
+<svg class="w-5 h-5 text-success-ink shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 14 14"></polyline></svg>
+<div class="space-y-1">
+<span class="font-semibold text-success-ink text-body-sm">Alur Pengembalian &amp; Buffer Sterilisasi</span>
+<p class="text-ink leading-relaxed">
+                        Pelaporan pengembalian mengubah status reservasi ke verifikasi fisik di lokasi, diikuti jeda mandatori 1 jam sanitasi higienis &amp; diagnostik oleh staf sebelum unit dialokasikan kembali.
+                      </p>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- RIGHT COLUMN (Narrower: 4 Cols) -->
+<div class="col-span-4 space-y-space-2xl">
+<!-- CARD 1: Checklist Kesiapan Akun -->
+<section class="bg-surface rounded-2xl border border-line p-6 space-y-5">
+<div class="flex items-center justify-between pb-3 border-b border-line">
+<h3 class="text-headline-md font-headline-md text-ink font-semibold">Kesiapan Akun</h3>
+<span class="px-3 py-1 rounded-full bg-pastel-mint text-success-ink text-body-sm font-medium border border-emerald-200 min-h-[32px] inline-flex items-center">100% Siap</span>
+</div>
+<div class="bg-canvas p-4 rounded-xl border border-line flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-pastel-mint text-success-ink flex items-center justify-center shrink-0">
+<svg class="w-5 h-5 text-success-ink fill-current" viewbox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path></svg>
+</div>
+<div>
+<span class="text-body-sm text-ink font-semibold block">Status Kelayakan Booking</span>
+<span class="text-body-sm text-muted">Akun Anda memenuhi seluruh kualifikasi verifikasi</span>
+</div>
+</div>
+<!-- Checklist Items List -->
+<ul aria-label="Checklist Kesiapan" class="space-y-3">
+<li class="flex items-center gap-3 text-body-sm text-ink">
+<div class="w-6 h-6 rounded-md bg-pastel-mint text-success-ink flex items-center justify-center shrink-0">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+</div>
+<span>Nomor HP/WhatsApp terverifikasi</span>
+</li>
+<li class="flex items-center gap-3 text-body-sm text-ink">
+<div class="w-6 h-6 rounded-md bg-pastel-mint text-success-ink flex items-center justify-center shrink-0">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+</div>
+<span>NIK 16 digit terdaftar</span>
+</li>
+<li class="flex items-center gap-3 text-body-sm text-ink">
+<div class="w-6 h-6 rounded-md bg-pastel-mint text-success-ink flex items-center justify-center shrink-0">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+</div>
+<span>Alamat domisili terisi</span>
+</li>
+<li class="flex items-center gap-3 text-body-sm text-ink">
+<div class="w-6 h-6 rounded-md bg-pastel-mint text-success-ink flex items-center justify-center shrink-0">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+</div>
+<span>Persetujuan ketentuan umum disepakati</span>
+</li>
+</ul>
+<!-- CTA Card Booking -->
+<div class="pt-3 border-t border-line space-y-3">
+<div class="flex items-center gap-2 text-body-sm text-ink font-medium">
+<svg class="w-5 h-5 text-secondary shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-2z"></path><line x1="3" x2="21" y1="6" y2="6"></line><path d="M16 10a4 4 0 0 1-8 0"></path></svg>
+<span>Ingin menyewa perangkat baru?</span>
+</div>
+<button class="w-full min-h-[44px] h-11 bg-selected-rose text-secondary font-label-md text-body-sm font-semibold rounded-xl hover:opacity-90 transition-opacity flex items-center justify-center gap-2 border border-rose-200" type="button">
+<svg class="w-5 h-5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><line x1="5" x2="19" y1="12" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+<span>Mulai Reservasi di Katalog</span>
+</button>
+</div>
+</section>
+<!-- CARD 2: Ringkasan Keamanan & Privasi Akun -->
+<section class="bg-surface rounded-2xl border border-line p-6 space-y-4">
+<div class="flex items-center gap-2 pb-3 border-b border-line">
+<svg class="w-5 h-5 text-muted shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+<h3 class="text-headline-md font-headline-md text-ink font-semibold">Keamanan &amp; Privasi</h3>
+</div>
+<div class="space-y-4">
+<!-- Ganti Kata Sandi SOP Note -->
+<div class="p-3.5 bg-canvas rounded-xl border border-line space-y-1">
+<div class="flex items-center justify-between">
+<span class="text-body-sm text-ink font-semibold">Ganti Kata Sandi</span>
+<span class="text-body-sm text-muted bg-surface px-2.5 py-0.5 rounded border border-line">Prosedur Internal</span>
+</div>
+<p class="text-body-sm text-muted leading-relaxed">
+                      Penggantian kredensial diatur melalui verifikasi otorisasi operasional terdaftar untuk mencegah pengambilalihan akun secara daring.
+                    </p>
+</div>
+<!-- Enkripsi Data -->
+<div class="p-3.5 bg-canvas rounded-xl border border-line space-y-1">
+<div class="flex items-center gap-2 text-ink font-semibold text-body-sm">
+<svg class="w-4 h-4 text-success-ink shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+<span>Enkripsi Operasional Internal</span>
+</div>
+<p class="text-body-sm text-muted leading-relaxed">
+                      Enkripsi data tersimpan aman pada basis data operasional terproteksi tanpa perantara pihak ketiga.
+                    </p>
+</div>
+<!-- Kontak Dukungan Cepat (Placeholder configuration) -->
+<div class="pt-2 flex items-center justify-between text-body-sm text-muted">
+<span>Bantuan akun:</span>
+<span class="text-secondary font-medium">Bantuan pelanggan dari konfigurasi</span>
+</div>
+</div>
+</section>
+<!-- Informasi Lokasi Toko Placeholder (PRD rule 3) -->
+<div class="p-4 rounded-2xl bg-canvas border border-line flex items-start gap-3">
+<svg class="w-6 h-6 text-muted shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+<div class="text-body-sm space-y-1">
+<span class="font-semibold text-ink block">Lokasi Toko Resmi</span>
+<p class="text-body-sm text-muted">Lokasi toko dari konfigurasi</p>
+<p class="text-body-sm text-muted">Informasi operasional disediakan oleh pengelola layanan.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>

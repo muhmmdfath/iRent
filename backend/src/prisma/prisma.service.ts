@@ -9,10 +9,16 @@ export class PrismaService
   implements OnModuleInit, OnModuleDestroy
 {
   constructor(config: ConfigService) {
+    const connectionString = config.getOrThrow<string>('DATABASE_URL');
+    const schema =
+      new URL(connectionString).searchParams.get('schema') ?? 'public';
+    if (!/^[a-z_][a-z0-9_]{0,62}$/.test(schema))
+      throw new Error('Schema database tidak valid.');
     super({
-      adapter: new PrismaPg({
-        connectionString: config.getOrThrow<string>('DATABASE_URL'),
-      }),
+      adapter: new PrismaPg(
+        { connectionString, options: '-c search_path=' + schema },
+        { schema },
+      ),
     });
   }
 

@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>A04 — Admin Serah Terima &amp; Pengembalian — v2 | iRent Semarang</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "secondary-fixed": "#ffd9e4",
+            "urgency-red-ink": "#A12A39",
+            "outline": "#76777b",
+            "surface": "#FFFFFF",
+            "selected-rose": "#F9E8EF",
+            "on-primary-fixed-variant": "#45474d",
+            "on-background": "#1c1b1c",
+            "surface-container-highest": "#e5e2e2",
+            "background": "#fcf8f8",
+            "inverse-primary": "#c5c6ce",
+            "inverse-surface": "#313031",
+            "warning-ink": "#855300",
+            "secondary-fixed-dim": "#ffb0cc",
+            "sidebar": "#F8F9FA",
+            "primary": "#15171c",
+            "surface-container-lowest": "#ffffff",
+            "pastel-blush": "#FBECEE",
+            "error": "#ba1a1a",
+            "surface-container": "#f1eded",
+            "on-secondary-fixed-variant": "#79294e",
+            "urgency-red-bg": "#FFF0F1",
+            "tertiary-fixed-dim": "#d1c5b7",
+            "on-error-container": "#93000a",
+            "pastel-mint": "#E8F5EE",
+            "outline-variant": "#c7c6cb",
+            "canvas": "#F1F2F4",
+            "error-container": "#ffdad6",
+            "muted": "#606570",
+            "workspace": "#FCFCFD",
+            "tertiary-fixed": "#eee0d3",
+            "success-bg": "#EAF6EF",
+            "inverse-on-surface": "#f4f0f0",
+            "on-primary-fixed": "#191b21",
+            "primary-fixed": "#e2e2ea",
+            "pastel-blue": "#EAF1FC",
+            "line": "#E6E8ED",
+            "surface-variant": "#e5e2e2",
+            "primary-container": "#292b31",
+            "on-secondary-fixed": "#3e0021",
+            "on-secondary-container": "#7a2a4e",
+            "on-primary-container": "#919299",
+            "warning-bg": "#FFF5DF",
+            "ink": "#24262B",
+            "success-ink": "#176345",
+            "on-tertiary-container": "#9b9185",
+            "on-surface": "#1c1b1c",
+            "on-primary": "#ffffff",
+            "surface-container-high": "#ebe7e7",
+            "primary-fixed-dim": "#c5c6ce",
+            "tertiary-container": "#312a21",
+            "surface-bright": "#fcf8f8",
+            "on-tertiary-fixed": "#211b12",
+            "pastel-apricot": "#FFF0DE",
+            "surface-container-low": "#f6f3f3",
+            "on-surface-variant": "#46464b",
+            "on-tertiary": "#ffffff",
+            "on-error": "#ffffff",
+            "on-tertiary-fixed-variant": "#4e453b",
+            "surface-tint": "#5c5e65",
+            "secondary-container": "#fe96be",
+            "on-secondary": "#ffffff",
+            "secondary": "#974166",
+            "pastel-lilac": "#F1ECFB",
+            "tertiary": "#1c160e",
+            "surface-dim": "#ddd9d9"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "20": "20px",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "space-xs": "4px",
+            "space-sm": "8px",
+            "space-4xl": "48px",
+            "margin": "32px",
+            "space-md": "12px",
+            "space-lg": "16px",
+            "space-2xl": "24px",
+            "gutter": "32px",
+            "space-xl": "20px",
+            "space-3xl": "32px"
+          },
+          "fontFamily": {
+            "headline-lg": ["Poppins", "sans-serif"],
+            "headline-md": ["Poppins", "sans-serif"],
+            "label-md": ["Poppins", "sans-serif"],
+            "body-md": ["Poppins", "sans-serif"],
+            "label-sm": ["Poppins", "sans-serif"],
+            "body-sm": ["Poppins", "sans-serif"]
+          },
+          "fontSize": {
+            "headline-lg": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+            "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "label-sm": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+          }
+        }
+      }
+    };
+  </script>
+<style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #F1F2F4;
+      color: #24262B;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .material-symbols-outlined.fill {
+      font-variation-settings: 'FILL' 1;
+    }
+    input[type="radio"]:checked {
+      background-color: #292B31;
+      border-color: #292B31;
+    }
+  </style>
+</head>
+<body class="bg-canvas min-h-screen text-ink antialiased p-margin">
+<!-- Desktop App Shell Container (1440px target, 32px exterior padding, 20px rounded corners) -->
+<div class="max-w-[1376px] mx-auto bg-workspace rounded-[20px] border border-line flex min-h-[960px] overflow-hidden">
+<!-- SIDEBAR NAVIGATION (224px per Shared Components JSON) -->
+<aside class="w-[224px] min-w-[224px] bg-sidebar border-r border-line p-space-lg flex flex-col justify-between select-none">
+<div class="flex flex-col gap-y-6">
+<!-- Header Branding & Avatar -->
+<div class="flex items-center gap-3 px-2 py-2 border-b border-line pb-4">
+<div class="w-10 h-10 rounded-xl bg-primary-container text-surface flex items-center justify-center font-bold text-body-md shadow-sm">
+            iR
+          </div>
+<div class="flex flex-col">
+<span class="text-label-md font-label-md font-semibold text-ink leading-tight">iRent Semarang</span>
+<span class="text-body-sm font-body-sm text-muted leading-snug">Rental Management</span>
+</div>
+</div>
+<!-- Main Navigation Tab Links -->
+<nav aria-label="Main Navigation" class="flex flex-col gap-1.5">
+<!-- Dashboard -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-muted hover:bg-canvas transition-colors duration-150 rounded-lg text-body-sm font-body-sm" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span>Dashboard</span>
+</a>
+<!-- Booking -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-muted hover:bg-canvas transition-colors duration-150 rounded-lg text-body-sm font-body-sm" href="#">
+<span class="material-symbols-outlined text-[20px]">calendar_today</span>
+<span>Booking</span>
+</a>
+<!-- Jadwal -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-muted hover:bg-canvas transition-colors duration-150 rounded-lg text-body-sm font-body-sm" href="#">
+<span class="material-symbols-outlined text-[20px]">schedule</span>
+<span>Jadwal</span>
+</a>
+<!-- Data penyewa -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-muted hover:bg-canvas transition-colors duration-150 rounded-lg text-body-sm font-body-sm" href="#">
+<span class="material-symbols-outlined text-[20px]">people</span>
+<span>Data penyewa</span>
+</a>
+<!-- Item & unit -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-muted hover:bg-canvas transition-colors duration-150 rounded-lg text-body-sm font-body-sm" href="#">
+<span class="material-symbols-outlined text-[20px]">inventory_2</span>
+<span>Item &amp; unit</span>
+</a>
+<!-- Pembayaran -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-muted hover:bg-canvas transition-colors duration-150 rounded-lg text-body-sm font-body-sm" href="#">
+<span class="material-symbols-outlined text-[20px]">payments</span>
+<span>Pembayaran</span>
+</a>
+<!-- Pengembalian (ACTIVE TAB) -->
+<a class="flex items-center gap-3 px-3 py-2.5 bg-selected-rose text-ink font-medium rounded-lg text-body-sm font-body-sm border border-secondary/20" href="#">
+<span class="material-symbols-outlined text-[20px] text-secondary">assignment_return</span>
+<span class="font-semibold text-secondary">Pengembalian</span>
+</a>
+<!-- Refund -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-muted hover:bg-canvas transition-colors duration-150 rounded-lg text-body-sm font-body-sm" href="#">
+<span class="material-symbols-outlined text-[20px]">currency_exchange</span>
+<span>Refund</span>
+</a>
+<!-- Transaksi berhasil -->
+<a class="flex items-center gap-3 px-3 py-2.5 text-muted hover:bg-canvas transition-colors duration-150 rounded-lg text-body-sm font-body-sm" href="#">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+<span>Transaksi berhasil</span>
+</a>
+</nav>
+</div>
+<!-- Footer Nav Tabs -->
+<div class="flex flex-col gap-1.5 pt-4 border-t border-line">
+<a class="flex items-center gap-3 px-3 py-2.5 text-muted hover:bg-canvas transition-colors duration-150 rounded-lg text-body-sm font-body-sm" href="#">
+<span class="material-symbols-outlined text-[20px]">bar_chart</span>
+<span>Laporan</span>
+</a>
+<a class="flex items-center gap-3 px-3 py-2.5 text-muted hover:bg-canvas transition-colors duration-150 rounded-lg text-body-sm font-body-sm" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span>Pengaturan</span>
+</a>
+<div class="px-3 pt-3 flex items-center justify-between text-muted text-body-sm">
+<span class="text-body-sm">v2.4 Live Store</span>
+<span class="inline-block w-2.5 h-2.5 rounded-full bg-success-ink"></span>
+</div>
+</div>
+</aside>
+<!-- MAIN APP CANVAS & VIEWPORT -->
+<div class="flex-1 flex flex-col min-w-0 bg-workspace">
+<!-- TOP BAR (72px Docked Header) -->
+<header class="h-[72px] min-h-[72px] px-gutter border-b border-line flex items-center justify-between bg-workspace">
+<!-- Search Field (on_left per Shared Component) -->
+<div class="relative w-80">
+<span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-muted">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</span>
+<input class="w-full h-11 pl-11 pr-4 bg-canvas border border-line rounded-xl text-body-sm font-body-sm text-ink placeholder:text-muted focus:outline-none focus:ring-1 focus:ring-secondary/50 focus:border-secondary transition-all" placeholder="Cari kode booking, serial unit, nama..." type="text" value="BK-2026-1006-04"/>
+</div>
+<!-- Trailing Actions & Profile -->
+<div class="flex items-center gap-4">
+<!-- Badge Data Contoh -->
+<div class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-pastel-apricot border border-warning-ink/20 text-warning-ink text-label-md font-label-md">
+<span class="material-symbols-outlined text-[18px]">info</span>
+<span>Data contoh</span>
+</div>
+<!-- Secondary Trailing Date -->
+<div class="px-3 py-2 rounded-lg bg-canvas text-muted text-label-md font-label-md flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">calendar_today</span>
+<span>10 Okt 2026</span>
+</div>
+<!-- Icon Action: Notifications -->
+<button aria-label="Notifikasi" class="w-11 h-11 rounded-xl border border-line bg-surface text-ink flex items-center justify-center hover:bg-canvas transition-colors duration-150 relative" type="button">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+<span class="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-urgency-red-ink"></span>
+</button>
+<!-- Primary Trailing Action: Volume -->
+<button class="h-11 px-3.5 rounded-xl border border-line bg-surface text-ink flex items-center gap-2 hover:bg-canvas transition-colors duration-150 text-label-md font-label-md" type="button">
+<span class="material-symbols-outlined text-[20px]">volume_up</span>
+<span>Aktifkan suara</span>
+</button>
+<!-- Divider -->
+<div class="h-8 w-[1px] bg-line"></div>
+<!-- Admin Profile Badge -->
+<div class="flex items-center gap-3 pl-1">
+<div class="w-10 h-10 rounded-xl bg-pastel-lilac border border-line flex items-center justify-center text-ink font-semibold text-body-md" title="Foto profil admin operasional">
+              AO
+            </div>
+<div class="flex flex-col text-left">
+<span class="text-label-md font-label-md text-ink font-semibold leading-tight">AO Loket Pleburan</span>
+<span class="text-body-sm font-body-sm text-muted leading-snug">Admin Shift Pagi</span>
+</div>
+</div>
+</div>
+</header>
+<!-- SCROLLABLE WORKSPACE CONTENT -->
+<main class="flex-1 p-gutter overflow-y-auto space-y-6">
+<!-- HEADER & BOOKING CONTEXT CARD -->
+<section class="bg-surface rounded-xl border border-line p-6 flex flex-col gap-5">
+<!-- Page Title & Subtitle -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<div class="flex items-center gap-2 text-body-sm font-body-sm text-muted mb-1.5">
+<span>Manajemen Transaksi</span>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="text-secondary font-medium">Serah Terima &amp; Pengembalian</span>
+</div>
+<h1 class="text-headline-md font-headline-md text-ink tracking-tight">Operasional Serah Terima &amp; Pengembalian Unit</h1>
+<p class="text-body-sm font-body-sm text-muted mt-1">Pemeriksaan Fisik Loket, Verifikasi Kurir Sah, Perhitungan Denda &amp; Kesiapan Siklus Unit</p>
+</div>
+<!-- Booking Quick Summary Pill Group -->
+<div class="flex flex-wrap items-center gap-2.5 bg-canvas px-4 py-3 rounded-xl border border-line">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-muted">receipt_long</span>
+<span class="text-label-md font-label-md font-semibold text-ink">#BK-2026-1006-04</span>
+</div>
+<span class="text-muted">|</span>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-muted">person</span>
+<span class="text-body-sm font-body-sm text-ink">Fajar Nugroho</span>
+<span class="text-body-sm font-body-sm text-muted">(0812-9876-5432)</span>
+</div>
+<span class="text-muted">|</span>
+<div class="flex items-center gap-2 text-body-sm font-body-sm text-muted"><span class="material-symbols-outlined text-[18px]">storefront</span><span>Lokasi toko dari konfigurasi</span></div>
+</div>
+</div>
+<!-- 4 TABS NAVIGATION MODUL (Height min 44px, strict active token styling) -->
+<div class="border-t border-line pt-5">
+<div class="grid grid-cols-4 gap-3 bg-canvas p-1.5 rounded-xl border border-line">
+<!-- Tab 1 -->
+<button class="h-11 rounded-lg px-4 flex items-center justify-center gap-2 text-label-md font-label-md text-muted hover:bg-surface transition-colors duration-150" type="button">
+<span class="material-symbols-outlined text-[20px]">transfer_within_a_station</span>
+<span>Serah Terima (Handover)</span>
+</button>
+<!-- Tab 2 (ACTIVE) -->
+<button class="h-11 rounded-lg px-4 flex items-center justify-center gap-2 text-label-md font-label-md bg-surface text-ink font-semibold shadow-sm border border-line" type="button">
+<span class="material-symbols-outlined text-[20px] text-secondary">assignment_return</span>
+<span>Pengembalian &amp; Inspeksi Fisik</span>
+<span class="w-2.5 h-2.5 rounded-full bg-secondary"></span>
+</button>
+<!-- Tab 3 -->
+<button class="h-11 rounded-lg px-4 flex items-center justify-center gap-2 text-label-md font-label-md text-muted hover:bg-surface transition-colors duration-150" type="button">
+<span class="material-symbols-outlined text-[20px]">build_circle</span>
+<span>Persiapan &amp; Perawatan (Maintenance)</span>
+</button>
+<!-- Tab 4 -->
+<button class="h-11 rounded-lg px-4 flex items-center justify-center gap-2 text-label-md font-label-md text-muted hover:bg-surface transition-colors duration-150" type="button">
+<span class="material-symbols-outlined text-[20px]">warning</span>
+<span>Pencatatan Kehilangan Unit (Loss Closure)</span>
+</button>
+</div>
+</div>
+</section>
+<!-- KONTEN UTAMA: DUA KOLOM (Grid 5 / 7 Layout) -->
+<div class="grid grid-cols-12 gap-6 items-start">
+<!-- KOLOM KIRI (5 Kolom): Status Per-Item & Aksesoris Independen -->
+<section class="col-span-12 lg:col-span-5 flex flex-col gap-5">
+<div class="bg-surface rounded-xl border border-line p-6 flex flex-col gap-4"><div class="flex items-center justify-between pb-3 border-b border-line"><div><h2 class="text-headline-md font-headline-md text-ink text-base">Daftar Item &amp; Aksesoris Booking</h2><p class="text-body-sm font-body-sm text-muted">Verifikasi parsial: status berlaku independen per-unit fisik</p></div><span class="px-3 py-1 bg-pastel-blue text-ink rounded-lg text-label-md font-label-md border border-line">3 Item Terdaftar</span></div><div class="p-4 rounded-xl border-2 border-secondary/40 bg-selected-rose/30 flex flex-col gap-3 relative transition-all"><div class="flex items-start justify-between"><div class="flex items-center gap-3"><div class="w-11 h-11 rounded-xl bg-surface border border-line flex items-center justify-center text-ink font-semibold"><span class="material-symbols-outlined text-[24px]">smartphone</span></div><div><h3 class="text-label-md font-label-md font-semibold text-ink">iPhone 13 Pro 128GB</h3><div class="flex items-center gap-2 mt-0.5"><span class="px-2 py-0.5 rounded bg-surface border border-line text-body-sm font-body-sm text-ink font-medium">IP-13P-01</span><span class="text-body-sm font-body-sm text-muted">Sierra Blue</span></div></div></div><span class="px-2.5 py-1 rounded-md bg-urgency-red-bg border border-urgency-red-ink/20 text-urgency-red-ink text-label-md font-label-md font-semibold flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">hourglass_top</span>Sedang Diperiksa</span></div><div class="bg-surface p-3 rounded-lg border border-line/80 space-y-2 text-body-sm font-body-sm"><div class="flex justify-between items-center text-muted"><span>Jatuh tempo sewa:</span><span class="text-ink font-medium">10 Okt 2026, 11.00 WIB</span></div><div class="flex justify-between items-center text-muted"><span>Fisik diterima di loket:</span><span class="text-urgency-red-ink font-medium">10 Okt 2026, 12.30 WIB</span></div><div class="pt-2 border-t border-line flex justify-between items-center"><span class="text-muted">Status pengembalian:</span><span class="text-warning-ink font-medium bg-warning-bg px-2.5 py-1 rounded">Terlambat 1,5 Jam &amp; Perlu Perawatan</span></div></div></div><div class="p-4 rounded-xl border border-line bg-surface flex flex-col gap-3"><div class="flex items-start justify-between"><div class="flex items-center gap-3"><div class="w-11 h-11 rounded-xl bg-canvas border border-line flex items-center justify-center text-muted"><span class="material-symbols-outlined text-[24px]">shield</span></div><div><h3 class="text-label-md font-label-md font-semibold text-ink">Magsafe Clear Case</h3><div class="flex items-center gap-2 mt-0.5"><span class="px-2 py-0.5 rounded bg-canvas border border-line text-body-sm font-body-sm text-muted font-medium">ACC-MG-08</span><span class="text-body-sm font-body-sm text-muted">Original Apple</span></div></div></div><span class="px-2.5 py-1 rounded-md bg-pastel-blue text-ink text-label-md font-label-md font-semibold flex items-center gap-1 border border-line"><span class="material-symbols-outlined text-[16px]">schedule</span>Masih Berjalan (Belum Kembali)</span></div><div class="text-body-sm font-body-sm text-muted bg-canvas/60 px-3 py-2 rounded-lg flex items-center justify-between"><span>Jatuh tempo sewa: 10 Okt 18.00 WIB</span><span class="text-ink font-medium">Pengembalian Parsial</span></div></div><div class="p-4 rounded-xl border border-line bg-surface flex flex-col gap-3"><div class="flex items-start justify-between"><div class="flex items-center gap-3"><div class="w-11 h-11 rounded-xl bg-canvas border border-line flex items-center justify-center text-muted"><span class="material-symbols-outlined text-[24px]">cable</span></div><div><h3 class="text-label-md font-label-md font-semibold text-ink">Kabel USB-C to Lightning Asli</h3><div class="flex items-center gap-2 mt-0.5"><span class="px-2 py-0.5 rounded bg-canvas border border-line text-body-sm font-body-sm text-muted font-medium">ACC-CB-12</span><span class="text-body-sm font-body-sm text-muted">1 Meter White</span></div></div></div><span class="px-2.5 py-1 rounded-md bg-pastel-mint border border-success-ink/20 text-success-ink text-label-md font-label-md font-semibold flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">check_circle</span>Telah Kembali Tepat Waktu</span></div><div class="text-body-sm font-body-sm text-muted bg-canvas/60 px-3 py-2 rounded-lg flex items-center justify-between"><span>Diterima: 10 Okt 10.45 WIB (Layak)</span><span class="text-success-ink font-medium">Denda: Rp0</span></div></div><div class="p-4 rounded-xl bg-pastel-blush border border-urgency-red-ink/20 flex items-start gap-3 mt-2"><span class="material-symbols-outlined text-[22px] text-urgency-red-ink mt-0.5">policy</span><div class="text-body-sm font-body-sm text-ink space-y-1"><span class="font-semibold block text-urgency-red-ink">Integritas Fisik &amp; Siklus Mandiri</span><p class="leading-relaxed">Penyewa dapat mengembalikan unit secara bertahap. Verifikasi fisik wajib dituntaskan item per item sebelum unit dialihkan ke status perawatan atau persiapan siklus sewa.</p></div></div></div>
+</section>
+<!-- KOLOM KANAN (7 Kolom): Form Inspeksi & Rekap Denda (Unit IP-13P-01) -->
+<section class="col-span-12 lg:col-span-7 flex flex-col gap-5">
+<div class="bg-surface rounded-xl border border-line p-6 flex flex-col gap-6">
+<!-- Form Header Section -->
+<div class="flex items-center justify-between pb-4 border-b border-line">
+<div>
+<div class="flex items-center gap-2">
+<span class="text-label-md font-label-md bg-pastel-lilac px-2.5 py-1 rounded text-ink font-semibold">Formulir Verifikasi</span>
+<h2 class="text-headline-md font-headline-md text-ink text-lg">Pemeriksaan Unit: IP-13P-01</h2>
+</div>
+<p class="text-body-sm font-body-sm text-muted mt-1">Apple iPhone 13 Pro 128GB — SN: F2LP80J5N70M</p>
+</div>
+<div class="text-right">
+<span class="text-body-sm font-body-sm text-muted block">Status Form</span>
+<span class="text-label-md font-label-md text-urgency-red-ink font-semibold">Draft Verifikasi Fisik</span>
+</div>
+</div>
+<!-- Field 1: Metode & Waktu Penerimaan Fisik -->
+<div class="space-y-3">
+<label class="block text-label-md font-label-md font-semibold text-ink">
+                  Metode &amp; Saluran Penerimaan Fisik Sah
+                </label>
+<div class="grid grid-cols-2 gap-3">
+<label class="flex items-center gap-3 p-3.5 rounded-xl border-2 border-primary bg-canvas/40 cursor-pointer"><input checked="" class="h-4 w-4 text-primary focus:ring-secondary border-line" name="metode_terima" type="radio"/><div class="flex flex-col"><span class="text-label-md font-label-md font-semibold text-ink">Diterima Langsung di Loket Toko</span><span class="text-body-sm font-body-sm text-muted">Lokasi toko dari konfigurasi</span></div></label>
+<label class="flex items-center gap-3 p-3.5 rounded-xl border border-line bg-surface cursor-pointer hover:bg-canvas transition-colors">
+<input class="h-4 w-4 text-primary focus:ring-secondary border-line" name="metode_terima" type="radio"/>
+<div class="flex flex-col">
+<span class="text-label-md font-label-md font-medium text-ink">Tanda Terima Kurir Resmi Toko</span>
+<span class="text-body-sm font-body-sm text-muted">Surat Jalan Resmi (Bukan klaim chat WA)</span>
+</div>
+</label>
+</div>
+<div class="grid grid-cols-2 gap-3 pt-1">
+<div>
+<label class="block text-body-sm font-body-sm text-muted mb-1.5">Waktu Terima Nyata di Loket</label>
+<div class="h-11 px-3.5 rounded-xl border border-line bg-canvas flex items-center justify-between text-body-sm font-body-sm text-ink font-medium">
+<span>10 Okt 2026, 12.30 WIB</span>
+<span class="material-symbols-outlined text-[20px] text-muted">schedule</span>
+</div>
+</div>
+<div>
+<label class="block text-body-sm font-body-sm text-muted mb-1.5">Admin Pemeriksa Fisik</label>
+<div class="h-11 px-3.5 rounded-xl border border-line bg-canvas flex items-center justify-between text-body-sm font-body-sm text-ink font-medium">
+<span>AO Loket Pleburan</span>
+<span class="material-symbols-outlined text-[20px] text-muted">badge</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Field 2: Evaluasi Waktu & Toleransi Keterlambatan -->
+<div class="p-4 rounded-xl border border-line bg-canvas space-y-4">
+<div class="flex items-center justify-between pb-2 border-b border-line">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[20px] text-secondary">timer</span>
+<span class="text-label-md font-label-md font-semibold text-ink">Evaluasi Waktu &amp; Toleransi Keterlambatan</span>
+</div>
+<span class="px-2.5 py-1 rounded bg-warning-bg border border-warning-ink/20 text-warning-ink text-label-md font-label-md font-medium">
+                    Terlambat 1 Jam 30 Menit
+                  </span>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-body-sm font-body-sm">
+<div class="bg-surface p-3 rounded-lg border border-line">
+<span class="text-muted block text-body-sm">Jatuh Tempo:</span>
+<span class="text-ink font-semibold">10 Okt, 11.00 WIB</span>
+</div>
+<div class="bg-surface p-3 rounded-lg border border-line">
+<span class="text-muted block text-body-sm">Terima Nyata:</span>
+<span class="text-ink font-semibold">10 Okt, 12.30 WIB</span>
+</div>
+<div class="bg-surface p-3 rounded-lg border border-line">
+<span class="text-muted block text-body-sm">Toleransi Gratis:</span>
+<span class="text-success-ink font-semibold">1 Jam (s.d 12.00)</span>
+</div>
+<div class="bg-surface p-3 rounded-lg border border-line">
+<span class="text-muted block text-body-sm">Waktu Kena Denda:</span>
+<span class="text-urgency-red-ink font-semibold">30 Menit (1 Jam Sah)</span>
+</div>
+</div>
+<div class="p-3 bg-surface rounded-lg border border-line flex items-center justify-between">
+<div class="space-y-0.5">
+<span class="text-body-sm font-body-sm font-medium text-ink">Tarif Denda Keterlambatan Sewa:</span>
+<p class="text-body-sm font-body-sm text-muted">Rp10.000 per jam berjalan yang telah dimulai setelah masa toleransi lewat</p>
+</div>
+<div class="text-right">
+<span class="text-label-md font-label-md text-muted block">Subtotal Denda Jam</span>
+<span class="text-body-md font-body-md font-semibold text-urgency-red-ink">Rp10.000</span>
+</div>
+</div>
+<div class="flex items-start gap-2.5 bg-pastel-mint p-3 rounded-lg border border-success-ink/20 text-body-sm font-body-sm">
+<span class="material-symbols-outlined text-[20px] text-success-ink mt-0.5">verified_user</span>
+<div class="text-ink">
+<span class="font-semibold text-success-ink block">Klausul Keterlambatan Divalidasi</span>
+<p class="text-muted">Keterlambatan bukan disebabkan kelalaian kurir/toko internal. Denda dibebankan sah kepada penyewa sesuai sistem.</p>
+</div>
+</div>
+</div>
+<!-- Field 3: Pemeriksaan Kondisi Fisik & Kerusakan -->
+<div class="space-y-4">
+<label class="block text-label-md font-label-md font-semibold text-ink">
+                  Pemeriksaan Kondisi Fisik &amp; Kelayakan Unit
+                </label>
+<div class="grid grid-cols-2 gap-3">
+<button class="h-12 px-4 rounded-xl border border-line bg-surface flex items-center justify-center gap-2 text-label-md font-label-md text-muted hover:bg-canvas" type="button">
+<span class="material-symbols-outlined text-[20px]">check_circle</span>
+<span>Layak Pakai Penuh (Mulus)</span>
+</button>
+<button class="h-12 px-4 rounded-xl border-2 border-urgency-red-ink/40 bg-pastel-blush flex items-center justify-center gap-2 text-label-md font-label-md text-urgency-red-ink font-semibold" type="button">
+<span class="material-symbols-outlined text-[20px]">error_outline</span>
+<span>Perlu Perawatan / Ada Lecet (Terpilih)</span>
+</button>
+</div>
+<!-- Input Biaya Kerusakan & Catatan Admin -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+<div class="md:col-span-1">
+<label class="block text-body-sm font-body-sm text-muted mb-1.5">Estimasi Biaya Ganti/Denda Fisik</label>
+<div class="relative">
+<span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-muted font-medium text-body-sm">Rp</span>
+<input class="w-full h-11 pl-10 pr-3.5 bg-workspace border border-line rounded-xl text-body-sm font-body-sm font-semibold text-ink focus:outline-none focus:ring-1 focus:ring-secondary" type="text" value="25.000"/>
+</div>
+</div>
+<div class="md:col-span-2">
+<label class="block text-body-sm font-body-sm text-muted mb-1.5">Catatan Kerusakan Fisik Loket</label>
+<input class="w-full h-11 px-3.5 bg-workspace border border-line rounded-xl text-body-sm font-body-sm text-ink focus:outline-none focus:ring-1 focus:ring-secondary" type="text" value="Bodi unit tergores minor pada frame bezel bawah, fungsi kamera &amp; layar 100% normal."/>
+</div>
+</div>
+</div>
+<!-- Field 4: Rekapitulasi Tagihan Akhir (Final Bill Per-Unit) -->
+<div class="bg-selected-rose/40 rounded-xl border border-secondary/20 p-5 space-y-3">
+<div class="flex items-center justify-between pb-2 border-b border-secondary/20">
+<span class="text-label-md font-label-md font-semibold text-ink">Rekapitulasi Tagihan Tambahan Unit IP-13P-01</span>
+<span class="px-2.5 py-0.5 rounded-full bg-urgency-red-bg text-urgency-red-ink text-label-md font-label-md font-semibold border border-urgency-red-ink/20">
+                    Status: Tagihan Belum Lunas
+                  </span>
+</div>
+<div class="space-y-2 text-body-sm font-body-sm">
+<div class="flex justify-between items-center text-muted">
+<span>Denda Keterlambatan (1 jam berjalan lewat toleransi)</span>
+<span class="text-ink font-medium">Rp10.000</span>
+</div>
+<div class="flex justify-between items-center text-muted">
+<span>Kompensasi Kerusakan Fisik (Bezel bawah tergores)</span>
+<span class="text-ink font-medium">Rp25.000</span>
+</div>
+<div class="pt-2 border-t border-secondary/20 flex justify-between items-center text-label-md font-label-md">
+<span class="font-semibold text-ink text-base">Total Kewajiban Tambahan Unit Ini</span>
+<span class="font-bold text-urgency-red-ink text-headline-md font-headline-md">Rp35.000</span>
+</div>
+</div>
+</div>
+<!-- Action Verification Buttons (Strict 44px min touch target, Charcoal #292B31) -->
+<div class="pt-2 flex flex-col sm:flex-row items-center gap-3">
+<!-- Tombol Utama Charcoal #292B31 -->
+<button class="w-full sm:flex-1 h-12 rounded-[10px] bg-primary-container text-surface text-label-md font-label-md font-semibold flex items-center justify-center gap-2 hover:bg-ink transition-colors duration-150 active:scale-[0.99] shadow-sm" type="button"><span class="material-symbols-outlined text-[20px]">build</span><span>Verifikasi &amp; Alihkan ke Perawatan (Maintenance)</span></button>
+<!-- Tombol Sekunder Outline/Tinted -->
+<button class="w-full sm:w-auto h-12 px-5 rounded-[10px] border border-line bg-surface text-ink text-label-md font-label-md font-medium flex items-center justify-center gap-2 hover:bg-canvas transition-colors duration-150 active:scale-[0.99]" type="button">
+<span class="material-symbols-outlined text-[20px]">print</span>
+<span>Cetak Tanda Terima &amp; Kwitansi</span>
+</button>
+</div>
+</div>
+</section>
+</div>
+<!-- ALUR SIKLUS BERIKUTNYA & LOSS CLOSURE PREVIEW (2 Col Bawah) -->
+<div class="grid grid-cols-12 gap-6 items-stretch">
+<!-- PANEL ALUR SIKLUS BERIKUTNYA (7 Kolom) -->
+<section class="col-span-12 lg:col-span-7 bg-surface rounded-xl border border-line p-6 flex flex-col justify-between gap-5"><div class="space-y-4"><div class="flex items-center justify-between pb-3 border-b border-line"><div class="flex items-center gap-2.5"><div class="w-9 h-9 rounded-lg bg-pastel-blue flex items-center justify-center text-ink"><span class="material-symbols-outlined text-[22px]">build_circle</span></div><div><h2 class="text-headline-md font-headline-md text-ink text-base">Alur Siklus: Perawatan (Maintenance) &amp; Persiapan Unit</h2><p class="text-body-sm font-body-sm text-muted">SOP transisi kesiapan unit sebelum dialokasikan ke booking berikutnya</p></div></div><span class="px-3 py-1 rounded-full bg-pastel-blush text-urgency-red-ink text-label-md font-label-md font-medium border border-urgency-red-ink/20">Logika 2 Jalur Transisi</span></div><div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div class="p-4 rounded-xl bg-canvas border-2 border-secondary/30 space-y-2"><div class="flex items-center gap-2 text-ink font-semibold text-label-md font-label-md"><span class="material-symbols-outlined text-[18px] text-secondary">healing</span><span>Jalur 1: Unit Rusak / Lecet (Unit Ini)</span></div><p class="text-body-sm font-body-sm text-ink leading-relaxed">Unit IP-13P-01 dialihkan ke status <strong class="text-secondary font-medium">PERAWATAN</strong> terlebih dahulu (bukan langsung persiapan). Setelah perbaikan/pembersihan khusus ditandai selesai oleh admin, unit masuk tahap persiapan 1 jam.</p><div class="pt-2 border-t border-line text-body-sm font-body-sm text-muted"><span class="font-medium text-ink">Status:</span> Menunggu Verifikasi Masuk Perawatan</div></div><div class="p-4 rounded-xl bg-pastel-mint/40 border border-success-ink/20 space-y-2"><div class="flex items-center gap-2 text-ink font-semibold text-label-md font-label-md"><span class="material-symbols-outlined text-[18px] text-success-ink">verified</span><span>Jalur 2: Unit Layak Penuh (Contoh Lain)</span></div><p class="text-body-sm font-body-sm text-ink leading-relaxed">Jika unit diverifikasi dalam kondisi layak pakai (mulus), unit langsung masuk status <strong class="text-success-ink font-medium">Persiapan (Buffer 1 Jam)</strong> dengan countdown timer aktif.</p><div class="flex items-center justify-between pt-2 border-t border-success-ink/20 text-body-sm font-body-sm text-success-ink font-medium"><span>Countdown: 48 Menit Tersisa</span><span class="text-muted font-normal">(Timer tuntas tidak auto-ready)</span></div></div></div><div class="p-3.5 bg-warning-bg rounded-xl border border-warning-ink/20 text-body-sm font-body-sm flex items-start gap-2.5 text-ink"><span class="material-symbols-outlined text-[20px] text-warning-ink mt-0.5">info</span><div><span class="font-semibold text-warning-ink block">Aturan Wajib Tanpa Auto-Ready:</span><span>Setelah masa hitung mundur persiapan 1 jam selesai, sistem tidak otomatis mengubah unit menjadi tersedia. Admin loket wajib melakukan konfirmasi manual tuntas.</span></div></div></div><div class="pt-3 border-t border-line flex items-center justify-between"><span class="text-body-sm font-body-sm text-muted">Tombol membutuhkan penyelesaian perbaikan fisik terlebih dahulu.</span><button class="h-11 px-5 rounded-[10px] bg-canvas text-muted border border-line cursor-not-allowed text-label-md font-label-md font-semibold flex items-center gap-2 opacity-70" disabled="" title="Unit masuk perawatan terlebih dahulu sebelum persiapan" type="button"><span class="material-symbols-outlined text-[18px]">lock_clock</span><span>Selesaikan Persiapan Unit (Terkunci)</span></button></div></section>
+<!-- PANEL PRATINJAU TAB KEHILANGAN (Loss Closure Card - 5 Kolom) -->
+<section class="col-span-12 lg:col-span-5 bg-surface rounded-xl border border-line p-6 flex flex-col justify-between gap-4"><div><div class="flex items-center gap-2.5 pb-3 border-b border-line"><div class="w-9 h-9 rounded-lg bg-pastel-blush flex items-center justify-center text-urgency-red-ink"><span class="material-symbols-outlined text-[22px]">gavel</span></div><div><h2 class="text-headline-md font-headline-md text-ink text-base">Pencatatan Kehilangan Unit (Loss Closure)</h2><p class="text-body-sm font-body-sm text-muted">Otoritas resmi admin loket tanpa pengembalian fisik fiktif</p></div></div><div class="mt-4 p-4 rounded-xl bg-urgency-red-bg border border-urgency-red-ink/20 space-y-2.5"><div class="flex items-center gap-2 text-urgency-red-ink font-semibold text-label-md font-label-md"><span class="material-symbols-outlined text-[20px]">report_problem</span><span>Prosedur Pencatatan Unit Hilang / Musnah</span></div><p class="text-body-sm font-body-sm text-ink leading-relaxed">Admin berwenang mencatat kehilangan nyata unit langsung dengan alasan dan timestamp resmi (tidak memerlukan konfirmasi penyewa &amp; tanpa tanda terima fisik fiktif).</p><ul class="text-body-sm font-body-sm text-muted space-y-1.5 list-disc list-inside"><li>Admin memasukkan catatan alasan kehilangan &amp; estimasi ganti rugi yang disepakati secara manual</li><li>Jadwal booking di masa depan yang berisiko ditandai bendera peringatan (flagged, tidak dibatalkan otomatis)</li><li>Tagihan akhir tercatat resmi di sistem dan diteruskan ke laporan piutang transaksi</li></ul></div></div><div class="pt-3 border-t border-line flex items-center justify-between"><span class="text-body-sm font-body-sm text-muted">Akses pencatatan langsung oleh staf operasional</span><button class="h-11 px-4 rounded-[10px] bg-canvas border border-line text-ink hover:bg-workspace text-label-md font-label-md font-medium flex items-center gap-2 transition-colors" type="button"><span>Buka Formulir Unit Hilang</span><span class="material-symbols-outlined text-[18px]">open_in_new</span></button></div></section>
+</div>
+</main>
+<!-- BOTTOM AUDIT FOOTER STRIP -->
+<footer class="h-12 border-t border-line px-gutter bg-workspace flex items-center justify-between text-body-sm font-body-sm text-muted">
+<div class="flex items-center gap-4">
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px] text-success-ink">check_circle</span>Sistem Loket Aktif (Konfigurasi Toko)</span>
+<span>•</span>
+<span>Sesi Login: Admin Operasional (AO-04)</span>
+</div>
+<div class="flex items-center gap-6">
+<span>Ketentuan Denda Sewa PerJam: SK-DIR-2026-v3</span>
+<span class="text-ink font-medium">iRent Semarang Operasional</span>
+</div>
+</footer>
+</div>
+</div>
+</body></html>

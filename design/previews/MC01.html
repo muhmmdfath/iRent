@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MC01 — Mobile Pelanggan Dashboard — v4 Final</title>
+<!-- Google Fonts: Poppins -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS with Forms and Container Queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-error-container": "#93000a",
+            "pastel-blush": "#FBECEE",
+            "secondary": "#974166",
+            "canvas": "#F1F2F4",
+            "on-tertiary": "#ffffff",
+            "on-secondary": "#ffffff",
+            "pastel-apricot": "#FFF0DE",
+            "on-secondary-fixed": "#3e0021",
+            "primary-fixed": "#e2e2ea",
+            "surface-dim": "#ddd9d9",
+            "on-surface-variant": "#46464b",
+            "sidebar": "#F8F9FA",
+            "pastel-lilac": "#F1ECFB",
+            "on-tertiary-fixed-variant": "#4e453b",
+            "success-bg": "#EAF6EF",
+            "secondary-container": "#fe96be",
+            "inverse-on-surface": "#f4f0f0",
+            "surface-container-highest": "#e5e2e2",
+            "workspace": "#FCFCFD",
+            "outline-variant": "#c7c6cb",
+            "pastel-blue": "#EAF1FC",
+            "on-background": "#1c1b1c",
+            "surface-container": "#f1eded",
+            "tertiary-fixed": "#eee0d3",
+            "muted": "#606570",
+            "on-error": "#ffffff",
+            "on-tertiary-fixed": "#211b12",
+            "surface-container-lowest": "#ffffff",
+            "warning-bg": "#FFF5DF",
+            "on-primary-fixed-variant": "#45474d",
+            "success-ink": "#176345",
+            "error": "#ba1a1a",
+            "surface": "#FFFFFF",
+            "tertiary-container": "#312a21",
+            "surface-tint": "#5c5e65",
+            "surface-container-low": "#f6f3f3",
+            "tertiary-fixed-dim": "#d1c5b7",
+            "on-primary-fixed": "#191b21",
+            "secondary-fixed-dim": "#ffb0cc",
+            "inverse-surface": "#313031",
+            "error-container": "#ffdad6",
+            "selected-rose": "#F9E8EF",
+            "secondary-fixed": "#ffd9e4",
+            "on-primary": "#ffffff",
+            "primary-fixed-dim": "#c5c6ce",
+            "background": "#fcf8f8",
+            "inverse-primary": "#c5c6ce",
+            "on-secondary-container": "#7a2a4e",
+            "outline": "#76777b",
+            "urgency-red-ink": "#A12A39",
+            "tertiary": "#1c160e",
+            "primary": "#15171c",
+            "on-surface": "#1c1b1c",
+            "warning-ink": "#855300",
+            "surface-variant": "#e5e2e2",
+            "surface-container-high": "#ebe7e7",
+            "on-primary-container": "#919299",
+            "ink": "#24262B",
+            "primary-container": "#292b31",
+            "line": "#E6E8ED",
+            "urgency-red-bg": "#FFF0F1",
+            "pastel-mint": "#E8F5EE",
+            "on-tertiary-container": "#9b9185",
+            "on-secondary-fixed-variant": "#79294e",
+            "surface-bright": "#fcf8f8"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "space-4xl": "48px",
+            "space-xl": "20px",
+            "margin": "32px",
+            "space-md": "12px",
+            "space-xs": "4px",
+            "space-3xl": "32px",
+            "space-2xl": "24px",
+            "space-lg": "16px",
+            "space-sm": "8px",
+            "gutter": "32px"
+          },
+          "fontFamily": {
+            "headline-lg": ["Poppins"],
+            "headline-md": ["Poppins"],
+            "label-sm": ["Poppins"],
+            "body-sm": ["Poppins"],
+            "label-md": ["Poppins"],
+            "body-md": ["Poppins"]
+          },
+          "fontSize": {
+            "headline-lg": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+            "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+            "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+  </style>
+</head>
+<body class="bg-canvas text-ink min-h-screen flex justify-center selection:bg-selected-rose selection:text-secondary">
+<!-- Mobile Screen Container (390px viewport standard) -->
+<div class="w-full max-w-[390px] min-h-screen bg-workspace flex flex-col relative pb-[84px] shadow-sm">
+<!-- TopAppBar (Shared Component) -->
+<header class="sticky top-0 z-40 bg-surface dark:bg-workspace border-b border-line dark:border-outline-variant h-[56px] transition-all">
+<div class="flex justify-between items-center w-full h-full px-space-xl">
+<div class="flex items-center gap-space-sm">
+<div class="flex items-center justify-center w-8 h-8 rounded-full bg-pastel-blush text-secondary">
+<span class="material-symbols-outlined text-[18px]">directions_car</span>
+</div>
+<div class="flex flex-col">
+<span class="text-headline-md font-headline-md text-ink dark:text-inverse-on-surface tracking-tight text-[17px] leading-5 font-semibold">iRent Semarang</span>
+<span class="text-[10px] font-label-sm text-muted">Portal Pelanggan</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm">
+<!-- Status Badge: Data contoh -->
+<span class="px-2 py-0.5 rounded-full bg-pastel-apricot text-warning-ink font-label-sm text-[11px] font-medium border border-line">
+            Data contoh
+          </span>
+<!-- Notification Trigger -->
+<button aria-label="Notifikasi" class="w-9 h-9 rounded-full flex items-center justify-center text-muted hover:bg-canvas transition-colors active:scale-95">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas (Single column layout with 20px / space-xl gutters) -->
+<main class="flex-1 px-space-xl py-space-lg flex flex-col gap-space-xl">
+<!-- User Welcome & Status Meta -->
+<section class="flex items-center justify-between pt-1">
+<div>
+<p class="text-label-sm font-label-sm text-muted">Halo, Pelanggan Terdaftar</p>
+<h1 class="text-headline-md font-headline-md text-ink tracking-tight text-[20px]">Ringkasan Rental</h1>
+</div>
+<div class="text-right">
+<span class="inline-flex items-center gap-1 text-[11px] font-label-sm font-medium text-success-ink bg-pastel-mint px-2 py-1 rounded-full border border-line">
+<span class="w-1.5 h-1.5 rounded-full bg-success-ink"></span>
+            Akun Aktif
+          </span>
+</div>
+</section>
+<!-- KARTU 1: Status Sewa Aktif -->
+<section class="bg-surface rounded-xl border border-line p-space-lg flex flex-col gap-space-md">
+<!-- Header status -->
+<div class="flex items-center justify-between pb-space-sm border-b border-line">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="font-label-md text-label-md text-ink font-semibold">Sedang Digunakan</span>
+</div>
+<span class="text-label-sm font-label-sm text-secondary bg-selected-rose px-2.5 py-0.5 rounded-full font-medium">
+            Sewa Aktif
+          </span>
+</div>
+<!-- Product detail compact -->
+<div class="flex items-center gap-space-md pt-1">
+<!-- Thumbnail compact 64px -->
+<div class="w-16 h-16 rounded-xl bg-canvas border border-line p-1 flex-shrink-0 flex items-center justify-center overflow-hidden">
+<img class="w-full h-full object-contain" data-alt="High precision studio product shot of a sleek Apple iPhone 14 Pro in Deep Purple with triple camera array on a pure minimalist clean neutral light gray surface, soft daylighting, modern consumer tech workspace style, no reflections." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBwBLD33zr-GXwER0RycEjGIu8TAFzqvS1ha112qXId1ze42lJUsKFg5Nv57uoljLlX5ChnL1nOj0Bvj_C6XK4xslauXGFTWXzjh4a6zg0EGMs1wBGwzY4ikYtR_pajW17QMEqmPMW-H2k3K8azM_avjFKeDZf8yDOhFCrmoI4LbFOGhAPoZ0J2Aytpi3rggfVqlbXOU3WzJ_sYm02v3A8ymjaGnGSYeCUAu5aUOgp2MXNy-D6LidD78rFcEtM0h17dQ72t9_8kDt8"/>
+</div>
+<div class="flex-1 min-w-0">
+<h2 class="text-label-md font-label-md text-ink font-semibold truncate">iPhone 14 Pro 256GB</h2>
+<p class="text-label-sm font-label-sm text-muted flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[14px]">extension</span>
+              Paket: Tripod Mini included
+            </p>
+<div class="flex items-center gap-1 mt-1 text-[11px] font-label-sm text-secondary bg-pastel-blush/60 px-2 py-0.5 rounded w-fit">
+<span class="material-symbols-outlined text-[13px]">alarm</span>
+<span>Kembali: Hari ini, 17.00 WIB</span>
+</div>
+</div>
+</div>
+<!-- Schedule details pill box -->
+<div class="bg-sidebar rounded-xl p-space-sm border border-line flex flex-col gap-1 text-[12px]">
+<div class="flex justify-between items-center text-muted">
+<span class="font-label-sm">Batas Akhir Kembali</span>
+<span class="font-label-sm text-ink font-medium tabular-nums">10 Okt 2026, 17.00 WIB</span>
+</div>
+<div class="flex justify-between items-center text-muted">
+<span class="font-label-sm">Lokasi Drop Point</span>
+<span class="font-label-sm text-ink">Lokasi toko dari konfigurasi</span>
+</div>
+</div>
+<!-- Action CTA Buttons (Min 44px touch targets) -->
+<div class="grid grid-cols-2 gap-2 pt-1">
+<button class="h-11 px-3 rounded-xl border border-line bg-surface hover:bg-canvas text-ink font-label-md text-label-md font-medium flex items-center justify-center gap-1 transition-all active:scale-[0.98]" type="button">
+<span class="material-symbols-outlined text-[18px]">update</span>
+            Perpanjang unit
+          </button>
+<button class="h-11 px-3 rounded-xl bg-primary-container text-white font-label-md text-label-md font-medium flex items-center justify-center gap-1 transition-all hover:bg-primary active:scale-[0.98]" type="button">
+<span class="material-symbols-outlined text-[18px]">assignment_turned_in</span>
+            Laporkan kembali
+          </button>
+</div>
+</section>
+<!-- KARTU 2: Reservasi Menunggu Pembayaran -->
+<section class="bg-surface rounded-xl border border-line p-space-lg flex flex-col gap-space-md">
+<!-- Header status with Urgency Timer -->
+<div class="flex items-center justify-between pb-space-sm border-b border-line">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-warning-ink text-[18px]">schedule</span>
+<span class="font-label-md text-label-md text-ink font-semibold">Menunggu Pembayaran</span>
+</div>
+<span class="text-label-sm font-label-sm text-warning-ink bg-warning-bg px-2.5 py-0.5 rounded-full font-medium border border-line">
+            Tersisa 15 mnt
+          </span>
+</div>
+<!-- Reservation Code & Booking meta -->
+<div class="flex justify-between items-start text-label-sm">
+<div>
+<span class="text-muted text-[11px] block">Nomor Reservasi</span>
+<span class="font-label-md text-label-md text-ink font-semibold tabular-nums">#BK-2026-1008-01</span>
+</div>
+<div class="text-right">
+<span class="text-muted text-[11px] block">Waktu Buat</span>
+<span class="text-muted tabular-nums">10 Okt, 08.30 WIB</span>
+</div>
+</div>
+<!-- Product detail compact 64px image using DATA:IMAGE:IMAGE_6 -->
+<div class="flex items-center gap-space-md bg-sidebar p-2.5 rounded-xl border border-line">
+<div class="w-16 h-16 rounded-xl bg-surface border border-line p-1 flex-shrink-0 flex items-center justify-center overflow-hidden">
+<img alt="Apple iPhone 15 Pro Natural Titanium" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1WVaD1ekzrwEvFxGwsp4FNnqj7mlG7B5DhFRLTYmxYo5Muf64snu7D4-_HJRIf-yyDeMazgdPUW3-yopAIRx-u6Q0Nwm1pc6eNAhp6Xb573h04LKWso3ajC1zd_vJaYQhlv6UNmLQx7hzrmuFvdNq3AwkSPLo5bHeaXT2xB1PRjEYIJUriMExmcS8iKMPWmzjBXrbdJCHXGm4ojjzUn60OVKrRc7LZcHXv6T4Sz7V0RdWw_SR6opuUO0DU"/>
+</div>
+<div class="flex-1 min-w-0">
+<h2 class="text-label-md font-label-md text-ink font-semibold truncate">iPhone 15 Pro Titanium</h2>
+<p class="text-label-sm font-label-sm text-muted text-[12px] mt-0.5">Jadwal: Besok 11 Okt 12.30 WIB</p>
+<p class="text-[11px] font-label-sm text-muted mt-0.5">Durasi sewa: 6 Jam</p>
+</div>
+</div>
+<!-- Timer Notice -->
+<div class="bg-urgency-red-bg border border-urgency-red-ink/20 rounded-xl p-2.5 flex items-center gap-2 text-[12px] text-urgency-red-ink">
+<span class="material-symbols-outlined text-[18px] text-urgency-red-ink flex-shrink-0">hourglass_top</span>
+<p class="font-label-sm leading-tight">
+            Batas unggah: <strong>10.30 WIB</strong> (Server: <strong>10.15 WIB</strong>). Segera selesaikan sebelum hangus.
+          </p>
+</div>
+<!-- Financial Breakdown Structured Table -->
+<div class="bg-workspace rounded-xl p-space-sm border border-line flex flex-col gap-1.5 text-[12px]"><div class="flex justify-between items-center text-muted"><span class="font-body-sm text-body-sm">Total Biaya Sewa</span><span class="font-body-sm text-body-sm text-ink tabular-nums">Rp150.000</span></div><div class="flex justify-between items-center text-muted"><span class="font-body-sm text-body-sm">Kewajiban Uang Muka (DP)</span><span class="font-body-sm text-body-sm text-ink tabular-nums">Rp20.000</span></div><div class="flex justify-between items-center text-muted"><span class="font-body-sm text-body-sm">Verifikasi Rekening Bank</span><span class="font-body-sm text-body-sm text-ink tabular-nums">Rp0</span></div><div class="h-[1px] bg-line my-0.5"></div><div class="flex justify-between items-center text-muted"><span class="font-body-sm text-body-sm">Pelunasan setelah DP terverifikasi</span><span class="font-body-sm text-body-sm text-ink tabular-nums">Rp130.000</span></div><div class="flex justify-between items-center font-semibold text-ink text-[13px]"><span class="font-label-md">Sisa Kewajiban Riil</span><span class="text-secondary font-label-md tabular-nums">Rp150.000</span></div></div>
+<!-- CTA Action Button (Min 44px touch height) -->
+<button class="w-full h-11 px-4 rounded-xl bg-primary-container text-white font-label-md text-label-md font-semibold flex items-center justify-center gap-2 hover:bg-primary transition-all active:scale-[0.98]" type="button">
+<span class="material-symbols-outlined text-[20px]">upload_file</span>
+          Bayar &amp; unggah bukti
+        </button>
+</section>
+<!-- SEKSI 3: Daftar Riwayat Sewa Sebelumnya -->
+<section class="flex flex-col gap-space-sm">
+<div class="flex items-center justify-between">
+<h2 class="text-headline-md font-headline-md text-ink text-[16px]">Riwayat Sewa Sebelumnya</h2>
+<button class="text-label-sm font-label-sm text-secondary hover:underline" type="button">Lihat Semua</button>
+</div>
+<div class="flex flex-col gap-2.5">
+<!-- Item Riwayat 1: Selesai dengan Denda Terlambat -->
+<div class="bg-surface rounded-xl border border-line p-3.5 flex flex-col gap-2"><div class="flex items-center justify-between"><span class="text-[11px] font-label-sm text-muted tabular-nums">02 Okt 2026 • #BK-2026-0930-44</span><span class="px-2 py-0.5 rounded-full text-[11px] font-label-sm font-medium bg-pastel-mint text-success-ink border border-line">Toleransi 1 jam: Denda Rp0</span></div><div class="flex items-center justify-between"><div><p class="font-label-md text-label-md text-ink font-semibold">iPhone 13 128GB Midnight</p><p class="text-label-sm font-label-sm text-muted text-[12px]">Kembali dalam toleransi (45 mnt)</p></div><div class="text-right"><span class="block font-label-md text-label-md text-ink font-semibold tabular-nums">Rp115.000</span><span class="text-[11px] font-label-sm text-success-ink tabular-nums">Denda Rp0</span></div></div></div>
+<!-- Item Riwayat 2: Selesai Normal & Refund Jaminan -->
+<div class="bg-surface rounded-xl border border-line p-3.5 flex flex-col gap-2"><div class="flex items-center justify-between"><span class="text-[11px] font-label-sm text-muted tabular-nums">24 Sep 2026 • #BK-2026-0922-12</span><div class="flex items-center gap-1.5"><span class="px-2 py-0.5 rounded-full text-[11px] font-label-sm font-medium bg-pastel-blush text-secondary border border-line">Dibatalkan</span><span class="px-2 py-0.5 rounded-full text-[11px] font-label-sm font-medium bg-pastel-blue text-ink border border-line">Refund 75%</span></div></div><div class="flex items-center justify-between"><div><p class="font-label-md text-label-md text-ink font-semibold">iPhone 15 Pro Max 256GB</p><p class="text-label-sm font-label-sm text-muted text-[12px]">Dibatalkan &gt;48 jam sebelum pengambilan</p></div><div class="text-right"><span class="block font-label-md text-label-md text-ink font-semibold tabular-nums">Rp100.000</span><span class="text-[11px] font-label-sm text-success-ink tabular-nums">Refund Rp75.000</span></div></div></div>
+</div>
+</section>
+<!-- Information & Assistance banner -->
+<section class="bg-sidebar rounded-xl border border-line p-3.5 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-pastel-lilac flex items-center justify-center text-ink flex-shrink-0">
+<span class="material-symbols-outlined text-[18px]">support_agent</span>
+</div>
+<div>
+<p class="font-label-md text-label-md text-ink font-medium">Perlu bantuan operasional?</p>
+<p class="text-label-sm font-label-sm text-muted text-[12px]">Tim helpdesk siap 08.00 - 22.00 WIB</p>
+</div>
+</div>
+<button class="h-9 px-3 rounded-lg border border-line bg-surface text-ink text-[12px] font-medium hover:bg-canvas" type="button">
+          Kontak
+        </button>
+</section>
+</main>
+<!-- BottomNavBar (Shared Component Execution) -->
+<!-- Destination count 5: Dashboard (active), Cari, Booking Saya, Bantuan, Profil -->
+<nav aria-label="Navigasi Utama" class="fixed bottom-0 left-0 right-0 w-full max-w-[390px] mx-auto z-50 flex justify-around items-center px-space-sm bg-surface dark:bg-workspace border-t border-line dark:border-outline-variant h-[64px] pb-safe"><a class="flex flex-col items-center justify-center text-secondary dark:text-secondary-fixed bg-selected-rose dark:bg-tertiary-container rounded-full px-space-sm py-space-xs transition-transform active:scale-[0.95]" href="#beranda"><span class="material-symbols-outlined text-[20px]" data-weight="fill" style="font-variation-settings: 'FILL' 1;">dashboard</span><span class="text-label-sm font-label-sm text-[11px] font-medium mt-0.5">Beranda</span></a><a class="flex flex-col items-center justify-center text-muted dark:text-outline-variant px-space-sm py-space-xs hover:text-ink dark:hover:text-inverse-on-surface transition-colors active:scale-[0.95]" href="#katalog"><span class="material-symbols-outlined text-[20px]">search</span><span class="text-label-sm font-label-sm text-[11px] mt-0.5">Katalog</span></a><a class="flex flex-col items-center justify-center text-muted dark:text-outline-variant px-space-sm py-space-xs hover:text-ink dark:hover:text-inverse-on-surface transition-colors active:scale-[0.95]" href="#booking"><span class="material-symbols-outlined text-[20px]">receipt_long</span><span class="text-label-sm font-label-sm text-[11px] mt-0.5">Booking Saya</span></a><a class="flex flex-col items-center justify-center text-muted dark:text-outline-variant px-space-sm py-space-xs hover:text-ink dark:hover:text-inverse-on-surface transition-colors active:scale-[0.95]" href="#bantuan"><span class="material-symbols-outlined text-[20px]">help_outline</span><span class="text-label-sm font-label-sm text-[11px] mt-0.5">Bantuan</span></a><a class="flex flex-col items-center justify-center text-muted dark:text-outline-variant px-space-sm py-space-xs hover:text-ink dark:hover:text-inverse-on-surface transition-colors active:scale-[0.95]" href="#profil"><span class="material-symbols-outlined text-[20px]">person</span><span class="text-label-sm font-label-sm text-[11px] mt-0.5">Profil</span></a></nav>
+</div>
+</body></html>

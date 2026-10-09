@@ -7,6 +7,7 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  Query,
   Req,
 } from '@nestjs/common';
 import { AuthRequest, Roles } from '../../auth/auth.guard';
@@ -14,6 +15,7 @@ import { AuthService } from '../../auth/auth.service';
 import { RegisterDto, ResetPasswordDto } from '../../auth/auth.dto';
 import { ProfileDto } from './profile.dto';
 import { CustomersService } from './customers.service';
+import { AccountsDto } from './accounts.dto';
 
 @Controller('customer/profile')
 @Roles('customer')
@@ -34,6 +36,18 @@ export class AdminAccountsController {
     private readonly auth: AuthService,
     private readonly customers: CustomersService,
   ) {}
+  @Get('accounts') accounts(
+    @Req() req: AuthRequest,
+    @Query() dto: AccountsDto,
+  ) {
+    return this.customers.list(req.auth, 'admin', dto);
+  }
+  @Get('customers') customersList(
+    @Req() req: AuthRequest,
+    @Query() dto: AccountsDto,
+  ) {
+    return this.customers.list(req.auth, 'customer', dto);
+  }
   @Post('accounts')
   createAdmin(@Req() req: AuthRequest, @Body() dto: RegisterDto) {
     return this.auth.register(dto, req.auth);

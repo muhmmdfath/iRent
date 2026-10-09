@@ -30,7 +30,7 @@ Stok berasal dari item_units. activeUnitCount menghitung unit aktif/layak; ready
 
 Kode aksesori otomatis memakai counter global ACC000001 dan dapat bertambah panjang; kode ACC numerik dicadangkan untuk aksesori. Kode iPhone dinormalisasi uppercase dan unique. Pembuatan batch atomik, termasuk counter dan audit. Tidak ada hard delete unit/transaksi: penurunan stok menonaktifkan unit bebas. Alokasi active tetap memblokir penonaktifan meskipun hold waktunya lewat sampai lifecycle expiry melepaskannya.
 
-Perawatan membutuhkan unit ready tanpa alokasi aktif. Selesai perawatan menjadi preparing selama buffer_minutes (default satu jam), lalu action selesai persiapan memeriksa ulang deadline/kondisi. Tidak ada CRUD bebas untuk physicalStatus, itemId, atau kode unit. Serah terima, return, kehilangan, worker, dan alokasi kalender dikerjakan dalam tahap berikutnya.
+Perawatan membutuhkan unit ready tanpa alokasi aktif. Selesai perawatan menjadi preparing selama satu jam tetap, lalu action selesai persiapan memeriksa ulang deadline/kondisi. Tidak ada CRUD bebas untuk physicalStatus, itemId, atau kode unit. Serah terima/pengembalian tersedia melalui [OPERATIONS.md](OPERATIONS.md); alokasi kalender melalui [BOOKINGS.md](BOOKINGS.md). Kehilangan dan pengiriman notifikasi masih tahap berikutnya.
 
 ## Quote dan snapshot
 

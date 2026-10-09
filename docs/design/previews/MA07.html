@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MA07 — Mobile Admin Item &amp; Foto</title>
+<!-- Google Fonts: Poppins -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-primary-fixed": "#191b21",
+            "secondary-container": "#fe96be",
+            "primary-fixed-dim": "#c5c6ce",
+            "selected-rose": "#F9E8EF",
+            "on-primary-container": "#919299",
+            "inverse-surface": "#313031",
+            "tertiary-fixed-dim": "#d1c5b7",
+            "muted": "#606570",
+            "surface-container-low": "#f6f3f3",
+            "surface-container-lowest": "#ffffff",
+            "workspace": "#FCFCFD",
+            "line": "#E6E8ED",
+            "urgency-red-ink": "#A12A39",
+            "outline": "#76777b",
+            "on-tertiary-fixed": "#211b12",
+            "secondary": "#974166",
+            "on-primary-fixed-variant": "#45474d",
+            "pastel-mint": "#E8F5EE",
+            "error-container": "#ffdad6",
+            "ink": "#24262B",
+            "surface-variant": "#e5e2e2",
+            "on-background": "#1c1b1c",
+            "surface-container-high": "#ebe7e7",
+            "surface-container": "#f1eded",
+            "on-tertiary-container": "#9b9185",
+            "pastel-blue": "#EAF1FC",
+            "inverse-on-surface": "#f4f0f0",
+            "pastel-blush": "#FBECEE",
+            "primary-container": "#292b31",
+            "error": "#ba1a1a",
+            "success-bg": "#EAF6EF",
+            "tertiary": "#1c160e",
+            "primary-fixed": "#e2e2ea",
+            "tertiary-container": "#312a21",
+            "on-surface-variant": "#46464b",
+            "canvas": "#F1F2F4",
+            "tertiary-fixed": "#eee0d3",
+            "sidebar": "#F8F9FA",
+            "outline-variant": "#c7c6cb",
+            "pastel-lilac": "#F1ECFB",
+            "surface-bright": "#fcf8f8",
+            "surface-tint": "#5c5e65",
+            "on-secondary-container": "#7a2a4e",
+            "on-error": "#ffffff",
+            "primary": "#15171c",
+            "warning-bg": "#FFF5DF",
+            "warning-ink": "#855300",
+            "secondary-fixed": "#ffd9e4",
+            "on-tertiary-fixed-variant": "#4e453b",
+            "on-error-container": "#93000a",
+            "secondary-fixed-dim": "#ffb0cc",
+            "inverse-primary": "#c5c6ce",
+            "urgency-red-bg": "#FFF0F1",
+            "surface-container-highest": "#e5e2e2",
+            "on-primary": "#ffffff",
+            "on-secondary-fixed-variant": "#79294e",
+            "on-tertiary": "#ffffff",
+            "on-secondary": "#ffffff",
+            "surface": "#FFFFFF",
+            "pastel-apricot": "#FFF0DE",
+            "on-surface": "#1c1b1c",
+            "on-secondary-fixed": "#3e0021",
+            "background": "#fcf8f8",
+            "surface-dim": "#ddd9d9",
+            "success-ink": "#176345"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          "spacing": {
+            "space-4xl": "48px",
+            "space-2xl": "24px",
+            "margin": "32px",
+            "gutter": "32px",
+            "space-sm": "8px",
+            "space-xl": "20px",
+            "space-md": "12px",
+            "space-lg": "16px",
+            "space-xs": "4px",
+            "space-3xl": "32px"
+          },
+          "fontFamily": {
+            "body-sm": ["Poppins"],
+            "label-sm": ["Poppins"],
+            "headline-md": ["Poppins"],
+            "label-md": ["Poppins"],
+            "headline-lg": ["Poppins"],
+            "body-md": ["Poppins"]
+          },
+          "fontSize": {
+            "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "label-sm": ["12px", { "lineHeight": "16px", "fontWeight": "500" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+            "label-md": ["14px", { "lineHeight": "20px", "fontWeight": "500" }],
+            "headline-lg": ["28px", { "lineHeight": "36px", "fontWeight": "600" }],
+            "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }]
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-canvas text-ink antialiased font-body-md min-h-screen flex justify-center selection:bg-selected-rose selection:text-secondary">
+<!-- Mobile Viewport Constraint: 390px strictly -->
+<div class="w-full max-w-[390px] min-h-screen bg-canvas flex flex-col relative pb-28">
+<!-- Top App Bar (Shared Components Anchor: iRent Semarang) -->
+<header class="sticky top-0 z-40 bg-workspace/95 backdrop-blur-sm border-b border-line px-space-xl h-[72px] flex items-center justify-between">
+<div class="flex items-center gap-space-md">
+<button aria-label="Menu" class="w-10 h-10 rounded-xl bg-canvas flex items-center justify-center text-ink active:scale-95 transition-transform">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+</button>
+<div>
+<div class="flex items-center gap-1.5">
+<span class="font-headline-md text-headline-md font-semibold text-ink leading-tight">iRent Semarang</span>
+<span class="bg-pastel-mint text-success-ink font-label-sm text-[10px] px-1.5 py-0.5 rounded-full font-medium">Data contoh</span>
+</div>
+<span class="font-label-sm text-label-sm text-muted block -mt-0.5">Admin Operasional • Logistik</span>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button aria-label="Notifikasi" class="w-10 h-10 rounded-xl bg-canvas flex items-center justify-center text-ink relative active:scale-95 transition-transform">
+<svg class="w-5 h-5 text-muted" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="absolute top-2.5 right-2.5 w-2 h-2 rounded-full bg-secondary"></span>
+</button>
+</div>
+</header>
+<!-- Page Context Title Area -->
+<div class="px-space-xl pt-4 pb-2">
+<div class="flex items-center gap-2 mb-1">
+<span class="font-label-sm text-[11px] text-muted tracking-wide uppercase">MA07 • Manajemen Katalog &amp; Fisik</span>
+</div>
+<h1 class="font-headline-md text-headline-md font-bold text-ink tracking-tight">Item Katalog &amp; Pengelolaan Foto</h1>
+</div>
+<!-- Category Filter Tabs -->
+<section class="px-space-xl py-2 overflow-x-auto no-scrollbar">
+<div class="flex gap-2 min-w-max pb-1">
+<button class="h-10 px-4 rounded-xl bg-primary-container text-surface font-label-md text-label-md font-medium transition-all">
+          Semua
+        </button>
+<button class="h-10 px-4 rounded-xl bg-selected-rose text-ink border border-secondary/20 font-label-md text-label-md font-semibold transition-all">
+          iPhone (Katalog Utama)
+        </button>
+<button class="h-10 px-4 rounded-xl bg-surface border border-line text-muted font-label-md text-label-md font-medium hover:bg-canvas transition-all">
+          Aksesoris
+        </button>
+<button class="h-10 px-4 rounded-xl bg-surface border border-line text-muted font-label-md text-label-md font-medium hover:bg-canvas transition-all">
+          Riwayat Unit
+        </button>
+</div>
+</section>
+<!-- Main Content Stream -->
+<main class="px-space-xl flex flex-col gap-5 mt-2">
+<!-- Master Item Card -->
+<article class="bg-surface rounded-2xl border border-line p-5">
+<div class="flex items-start gap-4">
+<!-- Real Image 64x64px -->
+<div class="w-16 h-16 rounded-xl bg-canvas border border-line flex-shrink-0 flex items-center justify-center p-1 overflow-hidden">
+<img alt="iPhone 15 Pro Max Natural Titanium" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1WVaD1ekzrwEvFxGwsp4FNnqj7mlG7B5DhFRLTYmxYo5Muf64snu7D4-_HJRIf-yyDeMazgdPUW3-yopAIRx-u6Q0Nwm1pc6eNAhp6Xb573h04LKWso3ajC1zd_vJaYQhlv6UNmLQx7hzrmuFvdNq3AwkSPLo5bHeaXT2xB1PRjEYIJUriMExmcS8iKMPWmzjBXrbdJCHXGm4ojjzUn60OVKrRc7LZcHXv6T4Sz7V0RdWw_SR6opuUO0DU"/>
+</div>
+<div class="flex-1 min-w-0">
+<div class="flex items-center justify-between gap-1 mb-1">
+<span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-pastel-mint text-success-ink font-label-sm text-[11px] font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-success-ink"></span>
+                Katalog Aktif
+              </span>
+<span class="text-[12px] font-label-sm text-muted">ID: IPH-15PM</span>
+</div>
+<h2 class="font-headline-md text-body-md font-bold text-ink leading-snug truncate">
+              iPhone 15 Pro Max 256GB
+            </h2>
+<p class="font-label-sm text-[12px] text-muted mt-0.5">
+              Total 3 Unit Fisik (1 Siap, 1 Sedang Disewa, 1 Buffer Persiapan)
+            </p>
+</div>
+</div>
+<!-- Tariff Structure Box -->
+<div class="mt-4 pt-3 border-t border-line">
+<div class="flex items-center justify-between text-[11px] font-label-sm text-muted mb-2">
+<span class="font-medium text-ink">Tarif Sewa Flat (Weekday &amp; Weekend)</span>
+<span class="text-secondary font-medium">SOP Standar</span>
+</div>
+<div class="grid grid-cols-3 gap-2">
+<div class="bg-sidebar rounded-xl p-2 border border-line/60 text-center">
+<span class="block text-[11px] text-muted font-label-sm">6 Jam</span>
+<span class="block font-label-md text-label-md font-semibold text-ink">Rp140k</span>
+</div>
+<div class="bg-sidebar rounded-xl p-2 border border-line/60 text-center">
+<span class="block text-[11px] text-muted font-label-sm">12 Jam</span>
+<span class="block font-label-md text-label-md font-semibold text-ink">Rp190k</span>
+</div>
+<div class="bg-selected-rose/50 rounded-xl p-2 border border-secondary/20 text-center">
+<span class="block text-[11px] text-on-secondary-container font-label-sm font-medium">24 Jam</span>
+<span class="block font-label-md text-label-md font-bold text-ink">Rp250k</span>
+</div>
+</div>
+</div>
+<!-- Master Card Action Buttons -->
+<div class="mt-4 flex gap-2 pt-1">
+<button class="flex-1 min-h-[44px] px-3 rounded-xl bg-canvas border border-line text-ink font-label-md text-label-md font-medium flex items-center justify-center gap-1.5 active:scale-[0.98] transition-all">
+<svg class="w-4 h-4 text-muted" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+            Kelola Unit Fisik (3)
+          </button>
+<button class="flex-1 min-h-[44px] px-3 rounded-xl bg-primary-container text-surface font-label-md text-label-md font-medium flex items-center justify-center gap-1.5 active:scale-[0.98] transition-all">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+            Edit Foto &amp; Spek
+          </button>
+</div>
+</article>
+<!-- Panel Pengelolaan Foto Produk & Galeri (Item Editor Section) -->
+<section class="bg-surface rounded-2xl border border-line p-5">
+<div class="flex items-center justify-between mb-3">
+<div>
+<h3 class="font-headline-md text-body-md font-bold text-ink">Pengelolaan Media &amp; Galeri Produk</h3>
+<p class="font-label-sm text-[12px] text-muted">Prototipe Antarmuka Lokal</p>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-pastel-blue text-muted font-label-sm text-[11px] font-medium">3 Foto contoh</span>
+</div>
+<!-- Foto Sampul Utama Preview Area -->
+<div class="relative bg-canvas rounded-xl border border-line p-3 flex flex-col items-center justify-center overflow-hidden">
+<span class="absolute top-3 left-3 bg-ink/80 text-surface text-[11px] font-label-sm font-medium px-2.5 py-1 rounded-full backdrop-blur-sm z-10 flex items-center gap-1">
+<svg class="w-3 h-3 text-selected-rose" fill="currentColor" viewbox="0 0 20 20">
+<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+</svg>
+            Foto Sampul Utama
+          </span>
+<!-- Gambar Besar ~160px -->
+<div class="w-full h-40 flex items-center justify-center py-2">
+<img alt="Foto Sampul Utama iPhone 15 Pro Max" class="max-h-full max-w-full object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1WVaD1ekzrwEvFxGwsp4FNnqj7mlG7B5DhFRLTYmxYo5Muf64snu7D4-_HJRIf-yyDeMazgdPUW3-yopAIRx-u6Q0Nwm1pc6eNAhp6Xb573h04LKWso3ajC1zd_vJaYQhlv6UNmLQx7hzrmuFvdNq3AwkSPLo5bHeaXT2xB1PRjEYIJUriMExmcS8iKMPWmzjBXrbdJCHXGm4ojjzUn60OVKrRc7LZcHXv6T4Sz7V0RdWw_SR6opuUO0DU"/>
+</div>
+<div class="w-full flex gap-2 pt-2 border-t border-line/60">
+<button class="flex-1 min-h-[44px] px-3 rounded-lg bg-surface border border-line text-ink font-label-sm text-label-sm font-medium flex items-center justify-center gap-1.5 active:scale-95 transition-all">
+<svg class="w-4 h-4 text-muted" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+              Ganti Foto Sampul
+            </button>
+<button class="min-h-[44px] px-3 rounded-lg bg-urgency-red-bg text-urgency-red-ink font-label-sm text-label-sm font-medium flex items-center justify-center gap-1 active:scale-95 transition-all">
+<svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+              Hapus
+            </button>
+</div>
+</div>
+<!-- Galeri Foto Tambahan & Urutan -->
+<div class="mt-4">
+<label class="block font-label-sm text-label-sm font-semibold text-ink mb-2">
+            Urutan Galeri Foto (Tap untuk pratinjau / geser):
+          </label>
+<div class="grid grid-cols-4 gap-2">
+<!-- Slot 1: Natural Titanium -->
+<div class="relative aspect-square rounded-xl bg-canvas border-2 border-secondary/80 p-1 flex items-center justify-center group">
+<img alt="Tampak Depan" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1WVaD1ekzrwEvFxGwsp4FNnqj7mlG7B5DhFRLTYmxYo5Muf64snu7D4-_HJRIf-yyDeMazgdPUW3-yopAIRx-u6Q0Nwm1pc6eNAhp6Xb573h04LKWso3ajC1zd_vJaYQhlv6UNmLQx7hzrmuFvdNq3AwkSPLo5bHeaXT2xB1PRjEYIJUriMExmcS8iKMPWmzjBXrbdJCHXGm4ojjzUn60OVKrRc7LZcHXv6T4Sz7V0RdWw_SR6opuUO0DU"/>
+<span class="absolute -top-1.5 -left-1.5 w-5 h-5 rounded-full bg-secondary text-surface text-[10px] font-bold flex items-center justify-center">1</span>
+</div>
+<!-- Slot 2: Blue Titanium -->
+<div class="relative aspect-square rounded-xl bg-canvas border border-line p-1 flex items-center justify-center group">
+<img alt="Tampak Samping &amp; Modul Kamera" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1VVqqV4PvlhpGOUynz8sjBPJbMMJo69JmM0yoLy-kReUc4rMX26vOjJJcm7Gydfwak6rkBZehhsplQOXJ7Cz_UwbEcxivvoS1BQDXRQCD0sb8VBsHzKroFK2IEnktk5ZHruRQ3Y3ZKtD9uOVpSZUuV0sZ3iOUqam0J4hyNN98oKk3iTWhGvBGbArdU4tfwvnxRXRzfX7iG-JBpbFn0NkSyszyXn6GPcbpPfazi2TMqBFmQm5NT-yGTjVw"/>
+<span class="absolute -top-1.5 -left-1.5 w-5 h-5 rounded-full bg-line text-ink text-[10px] font-semibold flex items-center justify-center">2</span>
+</div>
+<!-- Slot 3: Tripod Stand -->
+<div class="relative aspect-square rounded-xl bg-canvas border border-line p-1 flex items-center justify-center group">
+<img alt="Aksesoris Terkait" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1UfxKARj_jY0mc3BJWHy4YZyYqnnH1AreqqWUzbP0dIY5oozPQJ10MtqsWztWbV1ILgsayihuPcOaq1GovY7kda2BMG9nE8f96ZKzlN3IljALegKu6eNTCDjJ9BGzgZNhasVz8FE33xBSUVtW43g01nVMhinQCr-yD0EHNZ5t5M-AB6XESRDCFwBM8Vz-3lAD8g-aSJET0cd8kk4tlgjP4L-IwTBZ6GCIbjtkG7LyrmG9feP7rdffTxhNs"/>
+<span class="absolute -top-1.5 -left-1.5 w-5 h-5 rounded-full bg-line text-ink text-[10px] font-semibold flex items-center justify-center">3</span>
+</div>
+<!-- Slot Unggah Baru -->
+<button aria-label="Unggah Foto Baru" class="aspect-square rounded-xl border-2 border-dashed border-outline-variant hover:border-secondary/60 bg-sidebar flex flex-col items-center justify-center gap-1 active:scale-95 transition-all text-muted">
+<svg class="w-5 h-5 text-muted" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 4.5v15m7.5-7.5h-15" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="text-[10px] font-label-sm font-medium text-center leading-tight">Unggah</span>
+</button>
+</div>
+</div>
+<!-- Kontrol Urutan Foto Mini Action Bar -->
+<div class="mt-3.5 flex gap-2">
+<button class="flex-1 min-h-[44px] px-2 rounded-xl bg-canvas border border-line text-ink font-label-sm text-label-sm font-medium flex items-center justify-center gap-1 active:scale-95 transition-all">
+<svg class="w-4 h-4 text-muted" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+            Geser Urutan
+          </button>
+<button class="flex-1 min-h-[44px] px-2 rounded-xl bg-selected-rose text-ink border border-secondary/20 font-label-sm text-label-sm font-semibold flex items-center justify-center gap-1 active:scale-95 transition-all">
+<svg class="w-4 h-4 text-secondary" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+            Jadikan Sampul Utama
+          </button>
+</div>
+<!-- Alt Teks Aksesibilitas Input Field -->
+<div class="mt-4 pt-3 border-t border-line">
+<label class="block font-label-sm text-label-sm font-semibold text-ink mb-1.5" for="alt-input">
+            Alt Teks Aksesibilitas (SEO &amp; Screen Reader)
+          </label>
+<div class="relative">
+<textarea class="w-full rounded-xl border border-line bg-sidebar p-3 text-body-sm font-body-sm text-ink focus:border-secondary focus:ring-1 focus:ring-secondary resize-none" id="alt-input" readonly="" rows="2">iPhone 15 Pro Max Natural Titanium tampak depan dan belakang pada studio netral</textarea>
+<span class="absolute bottom-2 right-2 text-[10px] font-label-sm text-muted">Aksesibilitas Valid</span>
+</div>
+</div>
+</section>
+<!-- Siklus Status Fisik Unit Terpilih (IP-15PM-03) -->
+<section class="bg-surface rounded-2xl border border-line p-5">
+<div class="flex items-center justify-between pb-3 border-b border-line">
+<div>
+<span class="text-[11px] font-label-sm text-muted block">Unit Terpilih</span>
+<span class="font-headline-md text-body-md font-bold text-ink">IP-15PM-03</span>
+</div>
+<div class="text-right">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-urgency-red-bg text-urgency-red-ink font-label-sm text-[11px] font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-urgency-red-ink animate-pulse"></span>
+              Sisa 28 Menit
+            </span>
+<span class="text-[11px] font-label-sm text-muted block mt-0.5">Buffer 1 Jam Mandatori</span>
+</div>
+</div>
+<div class="mt-3.5 bg-warning-bg/60 border border-warning-ink/20 rounded-xl p-3">
+<div class="flex items-start gap-2.5">
+<div class="w-5 h-5 rounded-full bg-warning-ink text-surface flex items-center justify-center flex-shrink-0 mt-0.5 text-xs font-bold">!</div>
+<div class="text-xs">
+<span class="font-semibold text-warning-ink block">Dalam Persiapan Pasca-Sewa</span>
+<p class="text-ink/80 mt-0.5">
+                Unit kembali pukul <strong>10:28 WIB</strong>. Buffer sterilisasi &amp; pengecekan berlangsung hingga <strong>11:28 WIB</strong>.
+              </p>
+</div>
+</div>
+</div>
+<!-- Checklist Verifikasi Admin -->
+<div class="mt-4">
+<span class="block font-label-sm text-label-sm font-semibold text-ink mb-2">Checklist Inspeksi Fisik (Contoh Panduan Opsional Admin):</span>
+<div class="space-y-2.5">
+<!-- Item 1 - Checked -->
+<label class="flex items-center gap-3 p-2.5 rounded-xl bg-canvas border border-line cursor-pointer select-none">
+<input checked="" class="w-5 h-5 rounded border-line text-primary focus:ring-0 cursor-pointer" type="checkbox"/>
+<span class="text-body-sm font-body-sm text-ink font-medium">Sanitasi bodi &amp; pembersihan alkohol lensa</span>
+</label>
+<!-- Item 2 - Checked -->
+<label class="flex items-center gap-3 p-2.5 rounded-xl bg-canvas border border-line cursor-pointer select-none">
+<input checked="" class="w-5 h-5 rounded border-line text-primary focus:ring-0 cursor-pointer" type="checkbox"/>
+<span class="text-body-sm font-body-sm text-ink font-medium">Reset akun iCloud &amp; log-out tuntas (Factory clean)</span>
+</label>
+<!-- Item 3 - Pending (64%) -->
+<label class="flex items-center gap-3 p-2.5 rounded-xl bg-sidebar border border-dashed border-outline-variant cursor-pointer select-none">
+<input class="w-5 h-5 rounded border-line text-primary focus:ring-0 cursor-pointer" type="checkbox"/>
+<div class="flex-1 flex items-center justify-between">
+<span class="text-body-sm font-body-sm text-muted">Pengecasan daya baterai memadai</span>
+<span class="px-2 py-0.5 rounded bg-warning-bg text-warning-ink font-label-sm text-[11px] font-semibold">Saat ini 64%</span>
+</div>
+</label>
+</div>
+</div>
+<!-- SOP Warning Notice -->
+<div class="mt-3.5 p-3 rounded-xl bg-canvas text-muted text-[11px] font-label-sm leading-relaxed border border-line/60"><strong class="text-ink">SOP Operasional:</strong> Timer habis <em>TIDAK PERNAH</em> otomatis meloloskan unit menjadi siap sewa; admin loket wajib menekan tombol verifikasi manual setelah seluruh pengecekan fisik tuntas. Selesai masa perbaikan/maintenance masuk tahap buffer 1 jam.</div>
+<!-- Locked Action Button -->
+<div class="mt-4">
+<button class="w-full min-h-[48px] rounded-xl bg-line/80 text-muted/80 font-label-md text-label-md font-semibold flex items-center justify-center gap-2 cursor-not-allowed" disabled=""><svg class="w-4 h-4 text-muted/70" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" stroke-linecap="round" stroke-linejoin="round"></path></svg> Selesaikan Persiapan Unit (Verifikasi Manual Admin)</button>
+</div>
+</section>
+<!-- Aksesoris Pelengkap Bundling Section -->
+<section class="bg-surface rounded-2xl border border-line p-5 mb-2">
+<div class="flex items-center justify-between mb-3">
+<h3 class="font-headline-md text-body-md font-bold text-ink">Aksesoris Siap Bundling</h3>
+<span class="text-xs text-muted font-label-sm">Gudang Semarang</span>
+</div>
+<div class="space-y-2.5">
+<!-- Item Aksesoris 1 -->
+<div class="flex items-center justify-between p-2.5 rounded-xl bg-sidebar border border-line">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-canvas border border-line flex items-center justify-center p-0.5 overflow-hidden">
+<img alt="MagSafe Battery Pack" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1VbXplBZBsaHsu4z3xZ-S59OuQBr8KK1LOkfvjJR2V8H_pyssQmmU3nu5NjVlNjYMrOHgpeH51N22WacIm5b3JxawKeEzsGzVgEdKtKRRs6-5_Jt02J755K5G88QXS7EVL5glpYPiHDPm91jr9yI_vAI7-MRRM3Jevgn7yVCq9BAjBCJPf-di26cKENfrwmjHK2OAa3q6SVGnMVWixkk_oFuyY-E7-tV86hTnAsxWPE5Z2-euCsJ2Wodn8"/>
+</div>
+<div>
+<span class="text-body-sm font-body-sm font-semibold text-ink block">MagSafe Battery Pack</span>
+<span class="text-[11px] font-label-sm text-muted">Stok: 4 Unit Siap</span>
+</div>
+</div>
+<span class="text-label-sm font-label-sm font-semibold text-ink">+Rp30k/24j</span>
+</div>
+<!-- Item Aksesoris 2 -->
+<div class="flex items-center justify-between p-2.5 rounded-xl bg-sidebar border border-line">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-canvas border border-line flex items-center justify-center p-0.5 overflow-hidden">
+<img alt="Tripod Stand" class="w-full h-full object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1UfxKARj_jY0mc3BJWHy4YZyYqnnH1AreqqWUzbP0dIY5oozPQJ10MtqsWztWbV1ILgsayihuPcOaq1GovY7kda2BMG9nE8f96ZKzlN3IljALegKu6eNTCDjJ9BGzgZNhasVz8FE33xBSUVtW43g01nVMhinQCr-yD0EHNZ5t5M-AB6XESRDCFwBM8Vz-3lAD8g-aSJET0cd8kk4tlgjP4L-IwTBZ6GCIbjtkG7LyrmG9feP7rdffTxhNs"/>
+</div>
+<div>
+<span class="text-body-sm font-body-sm font-semibold text-ink block">Tripod Stand Selfie Wireless</span>
+<span class="text-[11px] font-label-sm text-muted">Stok: 2 Unit Siap</span>
+</div>
+</div>
+<span class="text-label-sm font-label-sm font-semibold text-ink">+Rp20k/24j</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation Bar (4 Menu Admin: Bayar, Serah, Kembali, Perpanjang) -->
+<!-- Applying Shared Component rules: docked fixed bottom, no border line, tone separated -->
+<nav class="fixed bottom-0 left-0 right-0 z-50 bg-surface/95 backdrop-blur-md shadow-[0_-4px_16px_rgba(0,0,0,0.04)]">
+<div class="max-w-[390px] mx-auto h-[68px] px-3 flex justify-around items-center">
+<!-- 1: Bayar -->
+<button aria-label="Bayar" class="flex flex-col items-center justify-center text-muted px-2 py-1 min-h-[44px] rounded-xl active:scale-95 transition-transform">
+<svg class="w-5 h-5 text-muted" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6H2.25m0 0v8.25m0 0h19.5m-19.5 0v1.5a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 16.5v-1.5m0 0V6a2.25 2.25 0 00-2.25-2.25H3.75" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="font-label-sm text-[11px] font-medium mt-1">Bayar</span>
+</button>
+<!-- 2: Serah (Unit / Serah Terima) - Active Tab in current catalog inventory workflow -->
+<button aria-label="Serah" class="flex flex-col items-center justify-center bg-selected-rose text-ink rounded-xl px-3 py-1 min-h-[44px] active:scale-95 transition-transform">
+<svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="font-label-sm text-[11px] font-semibold mt-1">Serah</span>
+</button>
+<!-- 3: Kembali (Return Process) -->
+<button aria-label="Kembali" class="flex flex-col items-center justify-center text-muted px-2 py-1 min-h-[44px] rounded-xl active:scale-95 transition-transform">
+<svg class="w-5 h-5 text-muted" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 010 12h-3" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="font-label-sm text-[11px] font-medium mt-1">Kembali</span>
+</button>
+<!-- 4: Perpanjang (Extension) -->
+<button aria-label="Perpanjang" class="flex flex-col items-center justify-center text-muted px-2 py-1 min-h-[44px] rounded-xl active:scale-95 transition-transform">
+<svg class="w-5 h-5 text-muted" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<span class="font-label-sm text-[11px] font-medium mt-1">Perpanjang</span>
+</button>
+</div>
+</nav>
+</div>
+</body></html>

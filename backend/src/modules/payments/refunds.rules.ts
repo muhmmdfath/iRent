@@ -1,5 +1,22 @@
 import { SettingsValues } from '../settings/settings.rules';
 
+/** No-show retains at most the snapshotted DP, without percentage rounding. */
+export function noShowShares(amounts: bigint[], dp: bigint) {
+  const total = amounts.reduce((sum, amount) => sum + amount, 0n);
+  const refund = total > dp ? total - dp : 0n;
+  const shares = amounts.map((amount) =>
+    total > 0n ? (amount * refund) / total : 0n,
+  );
+  let remainder = refund - shares.reduce((sum, share) => sum + share, 0n);
+  for (let index = 0; remainder > 0n && index < shares.length; index++) {
+    if (shares[index] < amounts[index]) {
+      shares[index]++;
+      remainder--;
+    }
+  }
+  return { total, refund, shares };
+}
+
 /** Round once on the total, then distribute remainder in stable source order. */
 export function refundShares(amounts: bigint[], percent: number) {
   const total = amounts.reduce((sum, amount) => sum + amount, 0n);

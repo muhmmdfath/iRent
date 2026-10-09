@@ -24,7 +24,10 @@ import {
 } from './bookings.rules';
 
 const detailInclude = {
-  items: { orderBy: { id: 'asc' as const } },
+  items: {
+    orderBy: { id: 'asc' as const },
+    include: { returnRecord: true, lossRecord: true },
+  },
   obligations: { orderBy: { createdAt: 'asc' as const } },
   statusLogs: {
     orderBy: [{ createdAt: 'asc' as const }, { id: 'asc' as const }],

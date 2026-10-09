@@ -3,19 +3,23 @@ import { Booking, Payment, Prisma } from '../../generated/prisma/client';
 
 @Injectable()
 export class PaymentLedgerService {
-  async summary(tx: Prisma.TransactionClient, bookingId: string) {
+  async summary(
+    tx: Prisma.TransactionClient,
+    bookingId: string,
+    extensionId: string | null = null,
+  ) {
     const charges = await tx.bookingCharge.findMany({
-      where: { bookingId, extensionId: null },
+      where: { bookingId, extensionId },
     });
     const receipts = await tx.payment.findMany({
-      where: { bookingId, extensionId: null },
+      where: { bookingId, extensionId, supersededAt: null },
     });
     const applications = await tx.paymentApplication.findMany({
-      where: { bookingId, obligation: { extensionId: null } },
+      where: { bookingId, obligation: { extensionId } },
       include: { refundSources: { include: { refund: true } } },
     });
     const refunds = await tx.refundRequest.findMany({
-      where: { bookingId, extensionId: null },
+      where: { bookingId, extensionId },
     });
     const bill = charges.reduce(
       (total, charge) =>
@@ -63,6 +67,7 @@ export class PaymentLedgerService {
     reason: string,
     now: Date,
   ) {
+    if (receipt.supersededAt) return;
     const allocations = await tx.paymentApplication.findMany({
       where: {
         incomingPaymentId: receipt.id,
@@ -105,6 +110,7 @@ export class PaymentLedgerService {
     const refund = await tx.refundRequest.create({
       data: {
         bookingId: receipt.bookingId,
+        extensionId: receipt.extensionId,
         reasonCode: reason,
         requestedAmount: available,
         policySnapshot: {
@@ -133,6 +139,94 @@ export class PaymentLedgerService {
         aggregateId: refund.id,
         eventType: 'refund.requested',
         payload: { refundId: refund.id, bookingId: receipt.bookingId },
+        occurredAt: now,
+      },
+    });
+  }
+
+  async requestAppliedExcessRefund(
+    tx: Prisma.TransactionClient,
+    bookingId: string,
+    reason: string,
+    now: Date,
+    policy: Prisma.InputJsonObject = {},
+  ) {
+    const summary = await this.summary(tx, bookingId);
+    let excess = summary.applied - summary.bill;
+    if (excess <= 0n) return;
+    const applications = await tx.paymentApplication.findMany({
+      where: {
+        bookingId: bookingId,
+        state: 'applied',
+        obligation: { extensionId: null },
+      },
+      include: { refundSources: { include: { refund: true } } },
+      orderBy: { id: 'asc' },
+    });
+    const sources: {
+      paymentApplicationId: string;
+      incomingPaymentId: string;
+      bookingId: string;
+      amount: bigint;
+    }[] = [];
+    for (const application of applications) {
+      const pending = application.refundSources
+        .filter((source) =>
+          ['diajukan', 'disetujui'].includes(source.refund.status),
+        )
+        .reduce((sum, source) => sum + source.amount, 0n);
+      excess -= pending;
+    }
+    if (excess <= 0n) return;
+    for (const application of applications) {
+      const committed = application.refundSources
+        .filter((source) => source.refund.status !== 'ditolak')
+        .reduce((sum, source) => sum + source.amount, 0n);
+      const free = application.amount - committed,
+        amount = free < excess ? free : excess;
+      if (amount > 0n) {
+        sources.push({
+          paymentApplicationId: application.id,
+          incomingPaymentId: application.incomingPaymentId,
+          bookingId: bookingId,
+          amount,
+        });
+        excess -= amount;
+      }
+      if (excess <= 0n) break;
+    }
+    if (!sources.length) return;
+    const refund = await tx.refundRequest.create({
+      data: {
+        bookingId: bookingId,
+        reasonCode: reason,
+        requestedAmount: sources.reduce((sum, row) => sum + row.amount, 0n),
+        recipientDetails: {},
+        createdAt: now,
+        policySnapshot: {
+          schemaVersion: 1,
+          percent: 100,
+          ...policy,
+          sourceBudgets: sources.map((row) => ({
+            ...row,
+            amount: row.amount.toString(),
+          })),
+        },
+      },
+    });
+    await tx.refundSource.createMany({
+      data: sources.map((source) => ({
+        ...source,
+        refundRequestId: refund.id,
+      })),
+    });
+    await tx.outboxEvent.create({
+      data: {
+        eventKey: 'refund.requested:' + refund.id,
+        aggregateType: 'RefundRequest',
+        aggregateId: refund.id,
+        eventType: 'refund.requested',
+        payload: { refundId: refund.id, bookingId: bookingId },
         occurredAt: now,
       },
     });
@@ -213,7 +307,12 @@ export class PaymentLedgerService {
       },
     });
     const receipts = await tx.payment.findMany({
-      where: { bookingId: booking.id, extensionId: null, direction: 'in' },
+      where: {
+        bookingId: booking.id,
+        extensionId: null,
+        direction: 'in',
+        supersededAt: null,
+      },
     });
     for (const receipt of receipts)
       await this.requestUnusedRefund(

@@ -9,13 +9,17 @@ import { AuthContext } from '../../auth/auth.service';
 import { Prisma } from '../../generated/prisma/client';
 import { PrismaService } from '../../prisma/prisma.service';
 import { BusinessClock } from '../../shared/time/business-clock';
-import { parseWibDateTime } from '../../shared/time/wib';
+import { formatWibDateTime, parseWibDateTime } from '../../shared/time/wib';
 import { rupiah } from '../settings/settings.rules';
 import { PaymentLedgerService } from './payment-ledger.service';
 import { LockedBooking, PaymentsService } from './payments.service';
 import { ProofStorageService, ProofUpload } from './proof-storage.service';
 import { RefundRecipientDto, TransferRefundDto } from './refunds.dto';
-import { cancellationPolicy, refundShares } from './refunds.rules';
+import {
+  cancellationPolicy,
+  noShowShares,
+  refundShares,
+} from './refunds.rules';
 
 @Injectable()
 export class RefundsService {
@@ -34,7 +38,7 @@ export class RefundsService {
 
   private async event(
     tx: Prisma.TransactionClient,
-    actorId: string,
+    actorId: string | undefined,
     type: string,
     id: string,
     bookingId: string,
@@ -84,210 +88,263 @@ export class RefundsService {
       shopFailure ? 'booking.cancel.shop' : 'booking.cancel.customer',
       { reason },
       shopFailure ? 'admin' : 'customer',
-      async (tx, booking) => {
-        await this.lockMoney(tx, booking.id);
-        if (
-          ![
-            'menunggu_pembayaran',
-            'menunggu_konfirmasi',
-            'dikonfirmasi',
-          ].includes(booking.status) ||
-          booking.items.some(
-            (item) =>
-              item.useStatus !== 'allocated' || item.pickedUpAt !== null,
-          )
-        )
-          throw new ConflictException(
-            'Pembatalan hanya berlaku untuk seluruh booking sebelum serah terima.',
-          );
-        const now = this.clock.now();
-        const summary = await this.ledger.summary(tx, booking.id);
-        const applications = await tx.paymentApplication.findMany({
-          where: {
-            bookingId: booking.id,
-            state: 'applied',
-            obligation: { extensionId: null },
-          },
-          include: { refundSources: { include: { refund: true } } },
-          orderBy: { id: 'asc' },
-        });
-        const amounts = applications.map(
-          (application) =>
-            application.amount -
-            application.refundSources
-              .filter((source) => source.refund.status === 'sudah_dikembalikan')
-              .reduce((sum, source) => sum + source.amount, 0n),
-        );
-        const policy = cancellationPolicy(
-          this.payments.rules(booking).values,
-          booking.initialStartAt,
-          now,
-          summary.applied,
-          summary.bill,
-          shopFailure,
-        );
-        const split = refundShares(amounts, policy.percent);
-        const retained = split.total - split.refund;
-        const sourceBudgets = applications.map((application, index) => ({
-          incomingPaymentId: application.incomingPaymentId,
-          paymentApplicationId: application.id,
-          eligible: amounts[index].toString(),
-          amount: split.shares[index].toString(),
-        }));
-        const policySnapshot = {
-          schemaVersion: 1,
-          ...policy,
-          cause: shopFailure ? 'shop' : 'customer',
-          cutoffDays:
-            this.payments.rules(booking).values.cancel_refund_cutoff_days,
-          appliedBefore: summary.applied.toString(),
-          billBefore: summary.bill.toString(),
-          retained: retained.toString(),
-          refundAmount: split.refund.toString(),
-          sourceBudgets,
-        };
-        if (retained > summary.bill)
-          throw new ConflictException(
-            'Ledger booking perlu direkonsiliasi sebelum pembatalan.',
-          );
-        // Preserve snapshots/debits. Credit only the unpaid/refundable amount;
-        // retained funds remain applied until linked refunds actually transfer.
-        let credit = summary.bill - retained;
-        const charges = await tx.bookingCharge.findMany({
-          where: {
-            bookingId: booking.id,
-            extensionId: null,
-            direction: 'debit',
-          },
-          include: { adjustments: true },
-          orderBy: { id: 'asc' },
-        });
-        for (const charge of charges) {
-          const available =
-            charge.amount -
-            charge.adjustments.reduce(
-              (sum, adjustment) =>
-                sum +
-                (adjustment.direction === 'credit'
-                  ? adjustment.amount
-                  : -adjustment.amount),
-              0n,
-            );
-          const amount = available < credit ? available : credit;
-          if (amount > 0n) {
-            await tx.bookingCharge.create({
-              data: {
-                bookingId: booking.id,
-                bookingItemId: charge.bookingItemId,
-                kind: 'adjustment',
-                direction: 'credit',
-                amount,
-                relatedChargeId: charge.id,
-                effectiveAt: now,
-                reason,
-                createdBy: context.user.id,
-                sourceKey: 'booking.cancel:' + charge.id,
-              },
-            });
-            credit -= amount;
+      async (tx, booking) =>
+        this.closeBooking(
+          tx,
+          booking,
+          reason,
+          context.user.id,
+          shopFailure ? 'shop' : 'customer',
+        ),
+    );
+  }
+
+  async noShow(tx: Prisma.TransactionClient, booking: LockedBooking) {
+    return this.closeBooking(
+      tx,
+      booking,
+      'no_show: Pelanggan belum menerima barang setelah batas yang berlaku.',
+      undefined,
+      'no_show',
+    );
+  }
+
+  private async closeBooking(
+    tx: Prisma.TransactionClient,
+    booking: LockedBooking,
+    reason: string,
+    actorId: string | undefined,
+    mode: 'customer' | 'shop' | 'no_show',
+  ) {
+    await this.lockMoney(tx, booking.id);
+    if (
+      mode === 'no_show' &&
+      (booking.status !== 'dikonfirmasi' ||
+        this.clock.now() <= booking.noShowDueAt ||
+        (booking.deliveryType === 'delivery' &&
+          (!booking.deliveryReadyAt ||
+            !booking.customerFailureConfirmedAt ||
+            !booking.deliveryFailureReason)))
+    )
+      throw new ConflictException('Booking belum memenuhi syarat no-show.');
+    if (
+      !['menunggu_pembayaran', 'menunggu_konfirmasi', 'dikonfirmasi'].includes(
+        booking.status,
+      ) ||
+      !booking.items.length ||
+      booking.items.some(
+        (item) => item.useStatus !== 'allocated' || item.pickedUpAt !== null,
+      )
+    )
+      throw new ConflictException(
+        'Pembatalan hanya berlaku untuk seluruh booking sebelum serah terima.',
+      );
+    const now = this.clock.now();
+    const summary = await this.ledger.summary(tx, booking.id);
+    const applications = await tx.paymentApplication.findMany({
+      where: {
+        bookingId: booking.id,
+        state: 'applied',
+        obligation: { extensionId: null },
+      },
+      include: { refundSources: { include: { refund: true } } },
+      orderBy: { id: 'asc' },
+    });
+    const amounts = applications.map(
+      (application) =>
+        application.amount -
+        application.refundSources
+          .filter((source) => source.refund.status === 'sudah_dikembalikan')
+          .reduce((sum, source) => sum + source.amount, 0n),
+    );
+    const rules = this.payments.rules(booking).values;
+    const cancellation = cancellationPolicy(
+      rules,
+      booking.initialStartAt,
+      now,
+      summary.applied,
+      summary.bill,
+      mode === 'shop',
+    );
+    const policy =
+      mode === 'no_show'
+        ? {
+            category: 'no_show',
+            dpSnapshot: booking.dpSnapshot.toString(),
+            noShowDueAt: formatWibDateTime(booking.noShowDueAt),
+            shopDelaySeconds: booking.shopDelaySeconds,
           }
-        }
-        if (credit !== 0n)
-          throw new ConflictException(
-            'Adjustment pembatalan tidak dapat diseimbangkan.',
-          );
-        if (split.refund > 0n) {
-          const refund = await tx.refundRequest.create({
-            data: {
-              bookingId: booking.id,
-              reasonCode: shopFailure
-                ? 'shop_cancellation'
-                : 'customer_cancellation',
-              reasonNote: reason,
-              requestedAmount: split.refund,
-              recipientDetails: {},
-              createdAt: now,
-              policySnapshot,
-              sources: {
-                create: sourceBudgets
-                  .filter((source) => BigInt(source.amount) > 0n)
-                  .map((source) => ({
-                    incomingPaymentId: source.incomingPaymentId,
-                    paymentApplicationId: source.paymentApplicationId,
-                    amount: BigInt(source.amount),
-                  })),
-              },
-            },
-          });
-          await this.event(
-            tx,
-            context.user.id,
-            'refund.requested',
-            refund.id,
-            booking.id,
-            reason,
-          );
-        }
-        // Pending proofs are not receipts. Close them without inferring a bank
-        // balance; later reconciliation can record actual money and a full refund.
-        // A customer cancellation is not an admin proof review. Pending proofs
-        // remain historical, while closing their obligation prevents verification.
-        await tx.paymentObligation.updateMany({
-          where: { bookingId: booking.id, extensionId: null },
-          data: { status: 'closed', pendingProofId: null },
-        });
-        await tx.paymentApplication.updateMany({
-          where: {
-            bookingId: booking.id,
-            state: 'reserved',
-            obligation: { extensionId: null },
-          },
-          data: { state: 'released' },
-        });
-        const receipts = await tx.payment.findMany({
-          where: { bookingId: booking.id, extensionId: null, direction: 'in' },
-        });
-        for (const receipt of receipts)
-          await this.ledger.requestUnusedRefund(
-            tx,
-            receipt,
-            'unused_cancelled_payment',
-            now,
-          );
-        await tx.unitAllocation.updateMany({
-          where: { bookingItem: { bookingId: booking.id }, state: 'active' },
-          data: { state: 'released', releasedAt: now, releasedReason: reason },
-        });
-        await tx.booking.update({
-          where: { id: booking.id },
-          data: { status: 'dibatalkan', cancelReason: reason },
-        });
-        await tx.bookingStatusLog.create({
+        : cancellation;
+    const split =
+      mode === 'no_show'
+        ? noShowShares(amounts, booking.dpSnapshot)
+        : refundShares(amounts, cancellation.percent);
+    const retained = split.total - split.refund;
+    const sourceBudgets = applications.map((application, index) => ({
+      incomingPaymentId: application.incomingPaymentId,
+      paymentApplicationId: application.id,
+      eligible: amounts[index].toString(),
+      amount: split.shares[index].toString(),
+    }));
+    const policySnapshot = {
+      schemaVersion: 1,
+      ...policy,
+      cause: mode,
+      cutoffDays: rules.cancel_refund_cutoff_days,
+      appliedBefore: summary.applied.toString(),
+      billBefore: summary.bill.toString(),
+      retained: retained.toString(),
+      refundAmount: split.refund.toString(),
+      sourceBudgets,
+    };
+    if (retained > summary.bill)
+      throw new ConflictException(
+        'Ledger booking perlu direkonsiliasi sebelum pembatalan.',
+      );
+    // Preserve snapshots/debits. Credit only the unpaid/refundable amount;
+    // retained funds remain applied until linked refunds actually transfer.
+    let credit = summary.bill - retained;
+    const charges = await tx.bookingCharge.findMany({
+      where: {
+        bookingId: booking.id,
+        extensionId: null,
+        direction: 'debit',
+      },
+      include: { adjustments: true },
+      orderBy: { id: 'asc' },
+    });
+    for (const charge of charges) {
+      const available =
+        charge.amount -
+        charge.adjustments.reduce(
+          (sum, adjustment) =>
+            sum +
+            (adjustment.direction === 'credit'
+              ? adjustment.amount
+              : -adjustment.amount),
+          0n,
+        );
+      const amount = available < credit ? available : credit;
+      if (amount > 0n) {
+        await tx.bookingCharge.create({
           data: {
             bookingId: booking.id,
-            fromStatus: booking.status,
-            toStatus: 'dibatalkan',
-            actorId: context.user.id,
-            note: reason,
-            createdAt: now,
+            bookingItemId: charge.bookingItemId,
+            kind: 'adjustment',
+            direction: 'credit',
+            amount,
+            relatedChargeId: charge.id,
+            effectiveAt: now,
+            reason,
+            createdBy: actorId,
+            sourceKey: 'booking.cancel:' + charge.id,
           },
         });
-        await this.event(
-          tx,
-          context.user.id,
-          'booking.cancelled',
-          booking.id,
-          booking.id,
-          reason,
-          {
-            fromStatus: booking.status,
-            toStatus: 'dibatalkan',
-            policySnapshot,
+        credit -= amount;
+      }
+    }
+    if (credit !== 0n)
+      throw new ConflictException(
+        'Adjustment pembatalan tidak dapat diseimbangkan.',
+      );
+    if (split.refund > 0n) {
+      const refund = await tx.refundRequest.create({
+        data: {
+          bookingId: booking.id,
+          reasonCode:
+            mode === 'no_show'
+              ? 'no_show'
+              : mode === 'shop'
+                ? 'shop_cancellation'
+                : 'customer_cancellation',
+          reasonNote: reason,
+          requestedAmount: split.refund,
+          recipientDetails: {},
+          createdAt: now,
+          policySnapshot,
+          sources: {
+            create: sourceBudgets
+              .filter((source) => BigInt(source.amount) > 0n)
+              .map((source) => ({
+                incomingPaymentId: source.incomingPaymentId,
+                paymentApplicationId: source.paymentApplicationId,
+                amount: BigInt(source.amount),
+              })),
           },
-        );
-        return { bookingId: booking.id };
+        },
+      });
+      await this.event(
+        tx,
+        actorId,
+        'refund.requested',
+        refund.id,
+        booking.id,
+        reason,
+      );
+    }
+    // Pending proofs are not receipts. Close them without inferring a bank
+    // balance; later reconciliation can record actual money and a full refund.
+    // A customer cancellation is not an admin proof review. Pending proofs
+    // remain historical, while closing their obligation prevents verification.
+    await tx.paymentObligation.updateMany({
+      where: { bookingId: booking.id, extensionId: null },
+      data: { status: 'closed', pendingProofId: null },
+    });
+    await tx.paymentApplication.updateMany({
+      where: {
+        bookingId: booking.id,
+        state: 'reserved',
+        obligation: { extensionId: null },
+      },
+      data: { state: 'released' },
+    });
+    const receipts = await tx.payment.findMany({
+      where: {
+        bookingId: booking.id,
+        extensionId: null,
+        direction: 'in',
+        supersededAt: null,
+      },
+    });
+    for (const receipt of receipts)
+      await this.ledger.requestUnusedRefund(
+        tx,
+        receipt,
+        'unused_cancelled_payment',
+        now,
+      );
+    await tx.unitAllocation.updateMany({
+      where: { bookingItem: { bookingId: booking.id }, state: 'active' },
+      data: { state: 'released', releasedAt: now, releasedReason: reason },
+    });
+    await tx.booking.update({
+      where: { id: booking.id },
+      data: { status: 'dibatalkan', cancelReason: reason },
+    });
+    await tx.bookingStatusLog.create({
+      data: {
+        bookingId: booking.id,
+        fromStatus: booking.status,
+        toStatus: 'dibatalkan',
+        actorId: actorId,
+        note: reason,
+        createdAt: now,
+      },
+    });
+    await this.event(
+      tx,
+      actorId,
+      mode === 'no_show' ? 'booking.no_show' : 'booking.cancelled',
+      booking.id,
+      booking.id,
+      reason,
+      {
+        fromStatus: booking.status,
+        toStatus: 'dibatalkan',
+        policySnapshot,
       },
     );
+    return { bookingId: booking.id };
   }
 
   private async identity(context: AuthContext, refundId: string) {
@@ -307,7 +364,7 @@ export class RefundsService {
   ) {
     await this.lockMoney(tx, booking.id);
     const refund = await tx.refundRequest.findFirst({
-      where: { id: refundId, bookingId: booking.id, extensionId: null },
+      where: { id: refundId, bookingId: booking.id },
       include: { sources: true },
     });
     if (!refund) throw new NotFoundException('Refund tidak ditemukan.');
@@ -619,6 +676,7 @@ export class RefundsService {
               where: {
                 receivingAccountReference: account,
                 transactionReference: reference,
+                supersededAt: null,
               },
             })
           )
@@ -635,6 +693,7 @@ export class RefundsService {
           await tx.payment.create({
             data: {
               bookingId,
+              extensionId: refund.extensionId,
               direction: 'out',
               type: 'refund',
               method: 'transfer',

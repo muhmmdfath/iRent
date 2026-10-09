@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+
+<html class="light" lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>C01 — Pelanggan Dashboard &amp; Riwayat — v2</title>
+<!-- Google Fonts: Poppins -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS Play CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config verbatim with Design Tokens -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "surface-container-highest": "#e5e2e2",
+            "warning-ink": "#855300",
+            "line": "#E6E8ED",
+            "secondary-fixed-dim": "#ffb0cc",
+            "canvas": "#F1F2F4",
+            "outline-variant": "#c7c6cb",
+            "secondary": "#974166",
+            "on-error-container": "#93000a",
+            "surface-container-lowest": "#ffffff",
+            "surface-container-low": "#f6f3f3",
+            "surface": "#FFFFFF",
+            "on-secondary-fixed": "#3e0021",
+            "on-surface-variant": "#46464b",
+            "on-error": "#ffffff",
+            "pastel-blue": "#EAF1FC",
+            "primary-fixed-dim": "#c5c6ce",
+            "pastel-lilac": "#F1ECFB",
+            "secondary-container": "#fe96be",
+            "on-secondary-fixed-variant": "#79294e",
+            "outline": "#76777b",
+            "surface-bright": "#fcf8f8",
+            "primary-container": "#292b31",
+            "error-container": "#ffdad6",
+            "ink": "#24262B",
+            "tertiary": "#1c160e",
+            "on-tertiary-fixed": "#211b12",
+            "surface-container": "#f1eded",
+            "error": "#ba1a1a",
+            "warning-bg": "#FFF5DF",
+            "background": "#fcf8f8",
+            "surface-container-high": "#ebe7e7",
+            "primary-fixed": "#e2e2ea",
+            "tertiary-fixed": "#eee0d3",
+            "urgency-red-bg": "#FFF0F1",
+            "pastel-apricot": "#FFF0DE",
+            "inverse-primary": "#c5c6ce",
+            "on-tertiary-fixed-variant": "#4e453b",
+            "surface-variant": "#e5e2e2",
+            "tertiary-container": "#312a21",
+            "surface-tint": "#5c5e65",
+            "inverse-on-surface": "#f4f0f0",
+            "sidebar": "#F8F9FA",
+            "on-primary-fixed-variant": "#45474d",
+            "on-tertiary-container": "#9b9185",
+            "pastel-blush": "#FBECEE",
+            "on-tertiary": "#ffffff",
+            "muted": "#606570",
+            "on-background": "#1c1b1c",
+            "success-bg": "#EAF6EF",
+            "on-secondary-container": "#7a2a4e",
+            "urgency-red-ink": "#A12A39",
+            "on-surface": "#1c1b1c",
+            "on-primary-fixed": "#191b21",
+            "workspace": "#FCFCFD",
+            "surface-dim": "#ddd9d9",
+            "success-ink": "#176345",
+            "pastel-mint": "#E8F5EE",
+            "inverse-surface": "#313031",
+            "secondary-fixed": "#ffd9e4",
+            "primary": "#15171c",
+            "tertiary-fixed-dim": "#d1c5b7",
+            "on-primary": "#ffffff",
+            "selected-rose": "#F9E8EF",
+            "on-secondary": "#ffffff",
+            "on-primary-container": "#919299"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem",
+            "20": "20px"
+          },
+          "spacing": {
+            "space-4xl": "48px",
+            "space-lg": "16px",
+            "space-sm": "8px",
+            "space-xs": "4px",
+            "space-3xl": "32px",
+            "margin": "32px",
+            "space-2xl": "24px",
+            "space-xl": "20px",
+            "gutter": "32px",
+            "space-md": "12px"
+          },
+          "fontFamily": {
+            "body-md": ["Poppins", "sans-serif"],
+            "headline-md": ["Poppins", "sans-serif"],
+            "label-sm": ["Poppins", "sans-serif"],
+            "label-md": ["Poppins", "sans-serif"],
+            "headline-lg": ["Poppins", "sans-serif"],
+            "body-sm": ["Poppins", "sans-serif"]
+          },
+          "fontSize": {
+            "body-md": [
+              "16px",
+              {
+                "lineHeight": "24px",
+                "fontWeight": "400"
+              }
+            ],
+            "headline-md": [
+              "20px",
+              {
+                "lineHeight": "28px",
+                "fontWeight": "600"
+              }
+            ],
+            "label-sm": [
+              "12px",
+              {
+                "lineHeight": "16px",
+                "fontWeight": "500"
+              }
+            ],
+            "label-md": [
+              "14px",
+              {
+                "lineHeight": "20px",
+                "fontWeight": "500"
+              }
+            ],
+            "headline-lg": [
+              "28px",
+              {
+                "lineHeight": "36px",
+                "fontWeight": "600"
+              }
+            ],
+            "body-sm": [
+              "14px",
+              {
+                "lineHeight": "20px",
+                "fontWeight": "400"
+              }
+            ]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
+    .tabular-nums {
+      font-variant-numeric: tabular-nums;
+    }
+  </style>
+</head>
+<body class="bg-canvas text-ink min-h-screen p-space-3xl flex justify-center items-start antialiased selection:bg-selected-rose selection:text-secondary">
+<!-- Desktop App Shell Container (Max 1440px, 20px corners, white surface, fine neutral borders) -->
+<div class="w-full max-w-[1376px] bg-surface rounded-[20px] border border-line overflow-hidden flex flex-col min-h-[920px]">
+<!-- Shared TopNavBar Component -->
+<header class="flex justify-between items-center h-[72px] px-gutter w-full border-b border-line bg-surface shrink-0">
+<!-- Left: Logo text and search input -->
+<div class="flex items-center gap-space-2xl">
+<div class="flex items-center gap-space-sm">
+<div class="w-7 h-7 rounded-xl bg-primary-container flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[18px]">devices</span>
+</div>
+<span class="text-headline-md font-headline-md text-ink font-semibold tracking-tight">iRent Semarang</span>
+</div>
+<div class="relative w-80">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-muted text-[18px]">search</span>
+<input class="w-full h-10 pl-9 pr-3 text-body-sm font-body-sm bg-sidebar border border-line rounded-xl text-ink placeholder:text-muted focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-colors" placeholder="Cari ID booking, perangkat, faktur..." type="text"/>
+</div>
+</div>
+<!-- Right: Badges, Notification & Profile Meta -->
+<div class="flex items-center gap-space-lg">
+<!-- Badge Data Contoh -->
+<span class="px-space-md py-1 rounded-full text-label-sm font-label-md bg-warning-bg text-warning-ink border border-[#ecd5a5]">
+          Data contoh
+        </span>
+<!-- Date indicator -->
+<div class="flex items-center gap-1.5 px-space-md py-1.5 text-body-sm font-body-sm text-muted bg-sidebar rounded-xl border border-line">
+<span class="material-symbols-outlined text-[16px] text-muted">calendar_today</span>
+<span class="tabular-nums font-label-md text-label-md text-ink">10 Okt 2026</span>
+</div>
+<!-- Notification Icon -->
+<button class="w-10 h-10 rounded-xl flex items-center justify-center text-muted hover:text-ink hover:bg-canvas transition-colors duration-150 border border-line relative" title="Notifikasi">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 rounded-full bg-urgency-red-ink"></span>
+</button>
+<div class="h-6 w-[1px] bg-line"></div>
+<!-- User Profile Cluster -->
+<div class="flex items-center gap-space-md pl-1">
+<div class="w-9 h-9 rounded-xl overflow-hidden border border-line shrink-0 bg-pastel-blue">
+<img alt="Avatar foto profil Rian Pratama" class="w-full h-full object-cover" data-alt="A clean professional studio portrait of Rian Pratama against a warm neutral gray background, modern minimalist corporate lighting, natural expression, crisp light mode aesthetics matching muted software design system." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOjspY74ZKQeX_yPX0wzJR-gdHpz7m6QTMwjSxA8v1hFygMc9KG5I5Qxla5IB0zvV9SQAinUzUK0CRJf3RPkdAlmvbCl-8MPE2RIO1iW3iDV2HE_tFzxUJi3hkvnGjnIcqb_lGy9HarLADSdt4wX_TV38R0pRg4-Hx5gNqJhX71kU_qg7k7B3YOEEYV8EieIm6agdmEQGwGr_0U-18GUzwHhrXglTk51ooS-JIs0ic10ATlaH3uXTmvpW-p38tlrhBoww3-KhYwBs"/>
+</div>
+<div class="flex flex-col text-left">
+<span class="text-label-md font-label-md text-ink leading-tight">Rian Pratama</span>
+<span class="text-label-sm font-label-sm text-muted leading-tight">Profil lengkap</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Shell Body: Sidebar + Dynamic Content Canvas -->
+<div class="flex flex-1 w-full overflow-hidden">
+<!-- Shared SideNavBar Component -->
+<aside class="w-56 bg-sidebar border-r border-line flex flex-col justify-between p-space-lg shrink-0">
+<div>
+<!-- Header Branding Subtext inside Sidebar -->
+<div class="px-space-md pt-space-xs pb-space-lg">
+<p class="text-label-sm font-label-sm text-muted tracking-wide">Customer Portal</p>
+</div>
+<!-- Navigation Links -->
+<nav class="flex flex-col gap-1.5">
+<!-- Active Tab: Dashboard -->
+<a class="flex items-center gap-space-md px-space-md py-space-sm rounded-xl bg-selected-rose text-secondary font-label-md" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span>Dashboard</span>
+</a>
+<!-- Inactive Tab: Cari perangkat -->
+<a class="flex items-center gap-space-md px-space-md py-space-sm rounded-xl text-muted hover:text-ink hover:bg-surface-container transition-colors font-label-md" href="#">
+<span class="material-symbols-outlined text-[20px]">search</span>
+<span>Cari perangkat</span>
+</a>
+<!-- Inactive Tab: Booking saya -->
+<a class="flex items-center gap-space-md px-space-md py-space-sm rounded-xl text-muted hover:text-ink hover:bg-surface-container transition-colors font-label-md" href="#">
+<span class="material-symbols-outlined text-[20px]">receipt_long</span>
+<span>Booking saya</span>
+</a>
+<!-- Inactive Tab: Profil -->
+<a class="flex items-center gap-space-md px-space-md py-space-sm rounded-xl text-muted hover:text-ink hover:bg-surface-container transition-colors font-label-md" href="#">
+<span class="material-symbols-outlined text-[20px]">person</span>
+<span>Profil</span>
+</a>
+<!-- Inactive Tab: Bantuan -->
+<a class="flex items-center gap-space-md px-space-md py-space-sm rounded-xl text-muted hover:text-ink hover:bg-surface-container transition-colors font-label-md" href="#">
+<span class="material-symbols-outlined text-[20px]">help_outline</span>
+<span>Bantuan</span>
+</a>
+</nav>
+</div>
+<!-- Sidebar Bottom / CTA & Logout -->
+<div class="flex flex-col gap-space-md pt-space-lg border-t border-line">
+<button class="w-full h-11 bg-primary-container text-on-primary rounded-xl text-label-md font-label-md flex items-center justify-center gap-2 hover:bg-ink transition-colors">
+<span class="material-symbols-outlined text-[18px]">add_circle</span>
+<span>Sewa Baru</span>
+</button>
+<a class="flex items-center gap-space-md px-space-md py-space-sm rounded-xl text-muted hover:text-error hover:bg-urgency-red-bg transition-colors font-label-md" href="#">
+<span class="material-symbols-outlined text-[20px]">logout</span>
+<span>Keluar</span>
+</a>
+</div>
+</aside>
+<!-- Main Workspace Canvas -->
+<main class="flex-1 bg-workspace overflow-y-auto px-gutter py-space-3xl flex flex-col gap-space-3xl">
+<!-- Section 1: Page Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-space-md pb-space-lg border-b border-line">
+<div>
+<h1 class="text-headline-lg font-headline-lg text-ink tracking-tight">Dashboard Pelanggan &amp; Riwayat Sewa</h1>
+<p class="text-body-sm font-body-sm text-muted mt-1">Pantau jadwal aktif, status verifikasi bukti transfer, dan tenggat waktu unit sewa Anda di iRent Semarang.</p>
+</div>
+<div class="flex items-center gap-space-sm self-start md:self-auto shrink-0"><span class="inline-flex items-center gap-1.5 px-space-md py-1 bg-pastel-mint text-success-ink rounded-full text-label-sm font-label-md border border-[#cbe6d7]"><span class="w-2 h-2 rounded-full bg-success-ink"></span> Loket Buka (08.00 - 22.00 WIB)</span></div>
+</div>
+<!-- Section 2 & 3: Bento Dual Card Layout (Urgent Payment + Ongoing Rental) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-2xl">
+<!-- Bento Left / 7 cols: Urgent Pending Payment Task Card -->
+<div class="lg:col-span-7 bg-surface rounded-xl border border-line p-space-2xl flex flex-col justify-between relative overflow-hidden"><div class="absolute top-0 left-0 right-0 h-1 bg-[#E17A88]"></div><div><div class="flex flex-wrap items-center justify-between gap-space-sm mb-space-lg"><div class="flex items-center gap-2"><span class="px-space-md py-1 rounded-full text-label-sm font-label-md bg-urgency-red-bg text-urgency-red-ink border border-[#fad0d5] flex items-center gap-1.5"><svg class="w-4 h-4 text-urgency-red-ink shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path></svg> Menunggu Pembayaran DP &amp; Bukti</span><span class="text-label-sm font-label-sm text-muted">(Batas unggah: 10.30 WIB)</span></div><div class="flex items-center gap-1.5 px-space-md py-1 rounded-xl bg-urgency-red-bg text-urgency-red-ink border border-[#fad0d5] text-label-sm font-label-md tabular-nums"><svg class="w-4 h-4 text-urgency-red-ink shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 6v6h45m-7 9a9 9 0 110-18 9 9 0 010 18z" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Tersisa 15 menit (Server: 10.15 WIB)</span></div></div><div class="flex items-baseline justify-between mb-space-md"><div><span class="text-label-sm font-label-sm text-muted uppercase tracking-wider block">ID Reservasi</span><span class="text-headline-md font-headline-md text-ink tracking-tight font-semibold">#BK-2026-1008-01</span></div><div class="text-right"><span class="text-label-sm font-label-sm text-muted block">Dibuat</span><span class="text-body-sm font-body-sm text-ink tabular-nums">10 Okt 2026, 08.30 WIB</span></div></div><div class="bg-pastel-blue rounded-xl p-space-md mb-space-lg border border-[#d6e3f8]"><div class="flex items-start justify-between gap-space-md"><div class="space-y-1"><p class="text-body-sm font-body-sm text-ink font-semibold flex items-center gap-2"><svg class="w-4 h-4 text-secondary shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><rect height="20" rx="2" width="12" x="6" y="2"></rect><line x1="12" x2="12" y1="18" y2="18.01"></line></svg> 1x iPhone 15 Pro 128GB (Natural Titanium)</p><p class="text-body-sm font-body-sm text-muted flex items-center gap-2 pl-6"><svg class="w-4 h-4 text-muted shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"></path></svg> 1x Tripod Wireless Bluetooth MagSafe</p></div><span class="text-label-sm font-label-sm px-2 py-0.5 rounded bg-surface text-ink border border-line self-start">Maks. 1 iPhone OK</span></div><div class="mt-space-md pt-space-sm border-t border-[#d2e0f5] flex items-center justify-between text-label-sm font-label-sm text-muted"><span>Jadwal Pengambilan &amp; Durasi:</span><span class="text-ink font-label-md tabular-nums">Besok, 11 Okt 2026, 12.30 – 18.30 WIB (6 Jam)</span></div></div><div class="grid grid-cols-3 gap-space-md p-space-md bg-sidebar rounded-xl border border-line mb-space-lg"><div><span class="text-label-sm font-label-sm text-muted block">Total Nilai Sewa</span><span class="text-body-md font-body-md text-ink font-semibold tabular-nums">Rp150.000</span><span class="text-label-sm font-label-sm text-muted block mt-0.5 tabular-nums">Verifikasi bank: Rp0</span></div><div class="border-l border-line pl-space-md"><span class="text-label-sm font-label-sm text-secondary font-semibold block">DP Flat Dipilih</span><span class="text-body-md font-body-md text-secondary font-semibold tabular-nums">Rp20.000</span><span class="text-label-sm font-label-sm text-muted block mt-0.5">Menunggu transfer</span></div><div class="border-l border-line pl-space-md"><span class="text-label-sm font-label-sm text-muted block">Pelunasan di Loket</span><span class="text-body-md font-body-md text-ink font-semibold tabular-nums">Rp130.000</span><span class="text-label-sm font-label-sm text-muted block mt-0.5 leading-tight">Setelah DP Rp20.000 terverifikasi</span></div></div><p class="text-label-sm font-label-sm text-muted flex items-center gap-1.5 mb-space-lg"><svg class="w-4 h-4 text-muted shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" x2="12" y1="16" y2="12"></line><line x1="12" x2="12" y1="8" y2="8.01"></line></svg> Sisa kewajiban riil saat ini Rp150.000. Unggah bukti DP langsung tanpa menunggu verifikasi manual.</p></div><div class="flex items-center justify-between pt-space-md border-t border-line"><a class="text-label-md font-label-md text-muted hover:text-ink underline underline-offset-4 transition-colors min-h-[44px] inline-flex items-center" href="#">Lihat rincian kalkulasi</a><button class="h-11 px-space-2xl bg-primary-container text-on-primary rounded-xl text-label-md font-label-md hover:bg-ink transition-colors flex items-center gap-2 min-h-[44px]"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Bayar &amp; unggah bukti DP</span></button></div></div>
+<!-- Bento Right / 5 cols: Ongoing Active Rental Card -->
+<div class="lg:col-span-5 bg-surface rounded-xl border border-line p-space-2xl flex flex-col justify-between relative overflow-hidden"><div class="absolute top-0 left-0 right-0 h-1 bg-[#47A477]"></div><div><div class="flex items-center justify-between gap-space-sm mb-space-lg"><span class="px-space-md py-1 rounded-full text-label-sm font-label-md bg-pastel-mint text-success-ink border border-[#cbe6d7] flex items-center gap-1.5"><svg class="w-4 h-4 text-success-ink shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="round" stroke-linejoin="round"></path></svg> Sewa Sedang Berjalan</span><span class="text-label-sm font-label-sm text-muted bg-sidebar px-2 py-1 rounded border border-line">Loket Kasir Resmi</span></div><div class="mb-space-md"><span class="text-label-sm font-label-sm text-muted uppercase tracking-wider block">ID Transaksi Aktif</span><span class="text-headline-md font-headline-md text-ink tracking-tight font-semibold">#BK-2026-1007-12</span></div><div class="space-y-space-md mb-space-lg"><div class="p-space-md rounded-xl bg-sidebar border border-line flex flex-col gap-1.5"><div class="flex items-center justify-between"><span class="text-body-sm font-body-sm font-semibold text-ink flex items-center gap-1.5"><svg class="w-4 h-4 text-ink shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><rect height="20" rx="2" width="12" x="6" y="2"></rect><line x1="12" x2="12" y1="18" y2="18.01"></line></svg> iPhone 14 Pro 256GB</span><span class="text-label-sm font-label-sm px-2 py-0.5 rounded-full bg-pastel-mint text-success-ink border border-[#cbe6d7]">Sedang Digunakan</span></div><div class="flex items-center justify-between text-label-sm font-label-sm text-muted pt-1 border-t border-line"><span>Jatuh tempo kembali:</span><span class="text-ink font-label-md tabular-nums">Hari ini, 10 Okt 2026, 17.00 WIB</span></div></div><div class="p-space-md rounded-xl bg-sidebar border border-line flex flex-col gap-1.5"><div class="flex items-center justify-between"><span class="text-body-sm font-body-sm font-semibold text-ink flex items-center gap-1.5"><svg class="w-4 h-4 text-ink shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"></path></svg> Tripod Mini Flexible</span><span class="text-label-sm font-label-sm px-2 py-0.5 rounded-full bg-pastel-mint text-success-ink border border-[#cbe6d7]">Sedang Digunakan</span></div><div class="flex items-center justify-between text-label-sm font-label-sm text-muted pt-1 border-t border-line"><span>Jatuh tempo kembali:</span><span class="text-ink font-label-md tabular-nums">Hari ini, 10 Okt 2026, 17.00 WIB</span></div></div></div><div class="bg-pastel-apricot p-space-md rounded-xl border border-[#fae2c3] text-label-sm font-label-sm text-ink mb-space-lg flex items-center gap-2"><svg class="w-4 h-4 text-warning-ink shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" x2="12" y1="12" y2="8"></line><line x1="12" x2="16" y1="12" y2="12"></line></svg><span>Pelaporan mandiri bukan serah-terima final. Fisik unit wajib dicek staf loket sebelum status tuntas.</span></div></div><div class="flex items-center gap-space-md pt-space-md border-t border-line"><button class="flex-1 h-11 px-space-md bg-surface text-ink border border-line rounded-xl text-label-md font-label-md hover:bg-canvas transition-colors min-h-[44px] flex items-center justify-center gap-1.5"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Perpanjang unit</span></button><button class="flex-1 h-11 px-space-md bg-surface text-ink border border-line rounded-xl text-label-md font-label-md hover:bg-canvas transition-colors min-h-[44px] flex items-center justify-center gap-1.5"><svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>Laporkan pengembalian</span></button></div></div>
+</div>
+<!-- Section 4: Riwayat Transaksi & Booking (Tabel Bersih & Berjarak Lapang) -->
+<div class="bg-surface rounded-xl border border-line flex flex-col">
+<!-- Section Header + Tabs -->
+<div class="p-space-2xl pb-space-lg flex flex-col md:flex-row md:items-center justify-between gap-space-lg border-b border-line">
+<div>
+<h2 class="text-headline-md font-headline-md text-ink">Riwayat Transaksi &amp; Booking</h2>
+<p class="text-body-sm font-body-sm text-muted mt-0.5">Semua riwayat sewa fisik, status mutasi dana, dan catatan kondisi pengembalian.</p>
+</div>
+<!-- Filter Tabs -->
+<div class="flex items-center gap-1.5 p-1 bg-sidebar rounded-xl border border-line">
+<button class="px-space-md py-1.5 rounded-lg text-label-md font-label-md bg-surface text-ink shadow-sm">
+                Semua (4)
+              </button>
+<button class="px-space-md py-1.5 rounded-lg text-label-md font-label-md text-muted hover:text-ink transition-colors">
+                Menunggu Verifikasi (1)
+              </button>
+<button class="px-space-md py-1.5 rounded-lg text-label-md font-label-md text-muted hover:text-ink transition-colors">
+                Selesai &amp; Lunas (2)
+              </button>
+<button class="px-space-md py-1.5 rounded-lg text-label-md font-label-md text-muted hover:text-ink transition-colors">
+                Pembatalan &amp; Refund (1)
+              </button>
+</div>
+</div>
+<!-- Structured High-Density Operational Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-sidebar border-b border-line text-muted text-label-sm font-label-md">
+<th class="py-space-md px-space-2xl">ID Booking</th>
+<th class="py-space-md px-space-lg">Unit &amp; Aksesoris</th>
+<th class="py-space-md px-space-lg">Periode Sewa</th>
+<th class="py-space-md px-space-lg">Status Booking</th>
+<th class="py-space-md px-space-lg">Status Pembayaran</th>
+<th class="py-space-md px-space-lg">Status Fisik &amp; Refund</th>
+<th class="py-space-md px-space-2xl text-right">Aksi</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-line text-body-sm font-body-sm"><tr class="hover:bg-workspace transition-colors duration-150"><td class="py-space-lg px-space-2xl align-top"><span class="font-semibold text-ink block tabular-nums text-body-sm">#BK-2026-1006-03</span><span class="text-body-sm font-body-sm text-muted">06 Okt 2026</span></td><td class="py-space-lg px-space-lg align-top"><div class="flex items-center gap-2"><svg class="w-4 h-4 text-muted shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><rect height="20" rx="2" width="12" x="6" y="2"></rect><line x1="12" x2="12" y1="18" y2="18.01"></line></svg><span class="text-ink font-medium text-body-sm">iPhone 13 128GB</span></div><span class="text-body-sm font-body-sm text-muted pl-6 block">+ MagSafe Battery Pack</span></td><td class="py-space-lg px-space-lg align-top"><span class="text-ink tabular-nums text-body-sm">2 Hari</span><span class="text-body-sm font-body-sm text-muted block tabular-nums">06 Okt – 08 Okt 2026</span></td><td class="py-space-lg px-space-lg align-top"><span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-label-sm font-label-md bg-sidebar text-ink border border-line"><span class="w-1.5 h-1.5 rounded-full bg-ink"></span> Selesai</span></td><td class="py-space-lg px-space-lg align-top"><span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-label-sm font-label-md bg-pastel-mint text-success-ink border border-[#cbe6d7]"><svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><path d="M9 12l2 2 4-4" stroke-linecap="round" stroke-linejoin="round"></path></svg> Lunas (Verifikasi BCA)</span></td><td class="py-space-lg px-space-lg align-top"><span class="text-ink flex items-center gap-1.5 text-body-sm"><svg class="w-4 h-4 text-success-ink shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"></path></svg> Unit Diterima Bersih</span><span class="text-body-sm font-body-sm text-muted">Kondisi prima tanpa baret</span></td><td class="py-space-lg px-space-2xl align-top text-right"><button class="h-11 px-space-md bg-surface text-ink border border-line rounded-lg text-label-md font-label-md hover:bg-canvas transition-colors min-h-[44px]">Rincian</button></td></tr><tr class="hover:bg-workspace transition-colors duration-150"><td class="py-space-lg px-space-2xl align-top"><span class="font-semibold text-ink block tabular-nums text-body-sm">#BK-2026-1005-09</span><span class="text-body-sm font-body-sm text-muted">05 Okt 2026</span></td><td class="py-space-lg px-space-lg align-top"><div class="flex items-center gap-2"><svg class="w-4 h-4 text-muted shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><rect height="20" rx="2" width="12" x="6" y="2"></rect><line x1="12" x2="12" y1="18" y2="18.01"></line></svg><span class="text-ink font-medium text-body-sm">iPhone 13 Pro 128GB</span></div><span class="text-body-sm font-body-sm text-muted pl-6 block">+ Fast Charger 20W</span></td><td class="py-space-lg px-space-lg align-top"><span class="text-ink tabular-nums text-body-sm">24 Jam</span><span class="text-body-sm font-body-sm text-muted block tabular-nums">05 Okt – 06 Okt 2026</span></td><td class="py-space-lg px-space-lg align-top"><span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-label-sm font-label-md bg-sidebar text-ink border border-line"><span class="w-1.5 h-1.5 rounded-full bg-ink"></span> Selesai</span></td><td class="py-space-lg px-space-lg align-top"><span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-label-sm font-label-md bg-urgency-red-bg text-urgency-red-ink border border-[#fad0d5]"><svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-linecap="round" stroke-linejoin="round"></path></svg> Denda Telat Rp35.000 (Belum Lunas)</span></td><td class="py-space-lg px-space-lg align-top"><span class="text-ink flex items-center gap-1.5 text-body-sm"><svg class="w-4 h-4 text-warning-ink shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="12" x2="12" y1="16" y2="12"></line><line x1="12" x2="12" y1="8" y2="8.01"></line></svg> Ditutup dengan Catatan</span><span class="text-body-sm font-body-sm text-muted">Terlambat 45 menit di loket</span></td><td class="py-space-lg px-space-2xl align-top text-right"><button class="h-11 px-space-md bg-primary-container text-on-primary rounded-lg text-label-md font-label-md hover:bg-ink transition-colors min-h-[44px]">Lunasi Denda</button></td></tr><tr class="hover:bg-workspace transition-colors duration-150"><td class="py-space-lg px-space-2xl align-top"><span class="font-semibold text-ink block tabular-nums text-body-sm">#BK-2026-1004-14</span><span class="text-body-sm font-body-sm text-muted">04 Okt 2026</span></td><td class="py-space-lg px-space-lg align-top"><div class="flex items-center gap-2"><svg class="w-4 h-4 text-muted shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><rect height="20" rx="2" width="12" x="6" y="2"></rect><line x1="12" x2="12" y1="18" y2="18.01"></line></svg><span class="text-ink font-medium text-body-sm">iPhone 15 Pro Max 256GB</span></div><span class="text-body-sm font-body-sm text-muted pl-6 block">+ Lanyard Case &amp; MagSafe</span></td><td class="py-space-lg px-space-lg align-top"><span class="text-ink tabular-nums text-body-sm">12 Jam</span><span class="text-body-sm font-body-sm text-muted block tabular-nums">04 Okt 2026</span></td><td class="py-space-lg px-space-lg align-top"><span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-label-sm font-label-md bg-pastel-blush text-urgency-red-ink border border-[#fad0d5]"><span class="w-1.5 h-1.5 rounded-full bg-urgency-red-ink"></span> Dibatalkan Toko</span></td><td class="py-space-lg px-space-lg align-top"><span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-label-sm font-label-md bg-pastel-blue text-ink border border-[#d6e3f8]"><svg class="w-3.5 h-3.5 text-secondary shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><rect height="14" rx="2" width="20" x="2" y="5"></rect><line x1="2" x2="22" y1="10" y2="10"></line></svg> 100% Refund (Rp250.000)</span></td><td class="py-space-lg px-space-lg align-top"><span class="text-ink flex items-center gap-1.5 text-body-sm"><svg class="w-4 h-4 text-muted shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"></path></svg> Selesai</span><span class="text-body-sm font-body-sm text-muted">Unit cadangan sedang perawatan</span></td><td class="py-space-lg px-space-2xl align-top text-right"><button class="h-11 px-space-md bg-surface text-ink border border-line rounded-lg text-label-md font-label-md hover:bg-canvas transition-colors min-h-[44px]">Bukti Refund</button></td></tr></tbody>
+</table>
+</div>
+<!-- Table Footer Pagination / Summary -->
+<div class="p-space-lg border-t border-line bg-sidebar flex items-center justify-between text-label-sm font-label-sm text-muted rounded-b-xl">
+<span class="tabular-nums">Menampilkan 3 dari 4 reservasi terakhir</span>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1 bg-surface border border-line rounded-lg text-ink disabled:opacity-50" disabled="">Sebelumnya</button>
+<button class="px-3 py-1 bg-surface border border-line rounded-lg text-ink hover:bg-canvas transition-colors">Berikutnya</button>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>

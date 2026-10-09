@@ -1,0 +1,4057 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/api/health/live": {
+      "get": {
+        "operationId": "HealthController_live",
+        "parameters": [],
+        "responses": { "200": { "description": "" } },
+        "tags": ["Health"]
+      }
+    },
+    "/api/health/ready": {
+      "get": {
+        "operationId": "HealthController_ready",
+        "parameters": [],
+        "responses": { "200": { "description": "" } },
+        "tags": ["Health"]
+      }
+    },
+    "/api/auth/register": {
+      "post": {
+        "operationId": "AuthController_register",
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/RegisterDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "tags": ["Auth"]
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/LoginDto" }
+            }
+          }
+        },
+        "responses": { "200": { "description": "" } },
+        "tags": ["Auth"]
+      }
+    },
+    "/api/auth/session": {
+      "get": {
+        "operationId": "AuthController_session",
+        "parameters": [],
+        "responses": { "200": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Auth"],
+        "x-irent-roles": ["customer", "admin"]
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "operationId": "AuthController_logout",
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "204": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Auth"],
+        "x-irent-roles": ["customer", "admin"]
+      }
+    },
+    "/api/customer/profile": {
+      "get": {
+        "operationId": "ProfileController_get",
+        "parameters": [],
+        "responses": { "200": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Profile"],
+        "x-irent-roles": ["customer"]
+      },
+      "put": {
+        "operationId": "ProfileController_save",
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ProfileDto" }
+            }
+          }
+        },
+        "responses": { "200": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Profile"],
+        "x-irent-roles": ["customer"]
+      }
+    },
+    "/api/admin/accounts": {
+      "get": {
+        "operationId": "AdminAccountsController_accounts",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 1000000,
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": { "minLength": 1, "maxLength": 100, "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["AdminAccounts"],
+        "x-irent-roles": ["admin"]
+      },
+      "post": {
+        "operationId": "AdminAccountsController_createAdmin",
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/RegisterDto" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "type": "object" } }
+            }
+          }
+        },
+        "security": [{ "cookie": [] }],
+        "tags": ["AdminAccounts"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/customers": {
+      "get": {
+        "operationId": "AdminAccountsController_customersList",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 1000000,
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": { "minLength": 1, "maxLength": 100, "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["AdminAccounts"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/customers/{id}": {
+      "get": {
+        "operationId": "AdminAccountsController_detail",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["AdminAccounts"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/customers/{id}/password": {
+      "post": {
+        "operationId": "AdminAccountsController_reset",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ResetPasswordDto" }
+            }
+          }
+        },
+        "responses": { "204": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["AdminAccounts"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/settings": {
+      "get": {
+        "operationId": "SettingsController_get",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "type": "object" } }
+            }
+          }
+        },
+        "security": [{ "cookie": [] }],
+        "tags": ["Settings"],
+        "x-irent-roles": ["admin"]
+      },
+      "patch": {
+        "operationId": "SettingsController_update",
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SettingsPatchDto" }
+            }
+          }
+        },
+        "responses": { "200": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Settings"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/payment-options": {
+      "get": {
+        "operationId": "PaymentOptionsController_read",
+        "parameters": [],
+        "responses": { "200": { "description": "" } },
+        "tags": ["PaymentOptions"]
+      }
+    },
+    "/api/items": {
+      "get": {
+        "operationId": "CatalogController_list",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 1000000,
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": { "200": { "description": "" } },
+        "tags": ["Catalog"]
+      }
+    },
+    "/api/items/{id}": {
+      "get": {
+        "operationId": "CatalogController_detail",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "" } },
+        "tags": ["Catalog"]
+      }
+    },
+    "/api/admin/items": {
+      "get": {
+        "operationId": "InventoryController_list",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 1000000,
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": { "200": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Inventory"],
+        "x-irent-roles": ["admin"]
+      },
+      "post": {
+        "operationId": "InventoryController_create",
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ItemDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Inventory"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/items/{id}": {
+      "patch": {
+        "operationId": "InventoryController_update",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ItemPatchDto" }
+            }
+          }
+        },
+        "responses": { "200": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Inventory"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/items/{id}/units": {
+      "get": {
+        "operationId": "InventoryController_units",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 1000000,
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": { "200": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Inventory"],
+        "x-irent-roles": ["admin"]
+      },
+      "post": {
+        "operationId": "InventoryController_add",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UnitsDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Inventory"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/units/{id}/active": {
+      "patch": {
+        "operationId": "InventoryController_active",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ActiveDto" }
+            }
+          }
+        },
+        "responses": { "200": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Inventory"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/units/{id}/maintenance": {
+      "post": {
+        "operationId": "InventoryController_maintenance",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/MaintenanceDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Inventory"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/units/{id}/maintenance/complete": {
+      "post": {
+        "operationId": "InventoryController_complete",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Inventory"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/units/{id}/preparation/complete": {
+      "post": {
+        "operationId": "InventoryController_prepared",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Inventory"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/delivery-zones": {
+      "get": {
+        "operationId": "InventoryController_zones",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "type": "object" } }
+            }
+          }
+        },
+        "security": [{ "cookie": [] }],
+        "tags": ["Inventory"],
+        "x-irent-roles": ["admin"]
+      },
+      "post": {
+        "operationId": "InventoryController_zone",
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ZoneDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Inventory"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/delivery-zones/{id}": {
+      "put": {
+        "operationId": "InventoryController_updateZone",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ZoneDto" }
+            }
+          }
+        },
+        "responses": { "200": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Inventory"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/delivery-zones": {
+      "get": {
+        "operationId": "PublicZonesController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": { "schema": { "type": "object" } }
+            }
+          }
+        },
+        "tags": ["PublicZones"]
+      }
+    },
+    "/api/pricing/quote": {
+      "post": {
+        "operationId": "PricingController_quote",
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/QuoteDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Pricing"],
+        "x-irent-roles": ["customer"]
+      }
+    },
+    "/api/bookings": {
+      "post": {
+        "operationId": "BookingsController_create",
+        "parameters": [
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Kunci 1–128 karakter; gunakan kembali saat retry payload yang sama.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateBookingDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Bookings"],
+        "x-irent-roles": ["customer"]
+      },
+      "get": {
+        "operationId": "BookingsController_list",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 1000000,
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": { "200": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Bookings"],
+        "x-irent-roles": ["customer"]
+      }
+    },
+    "/api/bookings/availability": {
+      "post": {
+        "operationId": "BookingsController_availability",
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/QuoteDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Bookings"],
+        "x-irent-roles": ["customer"]
+      }
+    },
+    "/api/bookings/{id}": {
+      "get": {
+        "operationId": "BookingsController_detail",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Bookings"],
+        "x-irent-roles": ["customer", "admin"]
+      }
+    },
+    "/api/admin/bookings": {
+      "get": {
+        "operationId": "AdminBookingsController_list",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 1000000,
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": { "200": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["AdminBookings"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/bookings/{id}/payments": {
+      "get": {
+        "operationId": "CustomerPaymentsController_detail",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["CustomerPayments"],
+        "x-irent-roles": ["customer", "admin"]
+      }
+    },
+    "/api/bookings/{id}/obligations/{obligationId}/proofs": {
+      "post": {
+        "operationId": "CustomerPaymentsController_upload",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "obligationId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Kunci 1–128 karakter; gunakan kembali saat retry payload yang sama.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "allOf": [
+                  { "$ref": "#/components/schemas/UploadProofDto" },
+                  {
+                    "type": "object",
+                    "required": ["file"],
+                    "properties": {
+                      "file": { "type": "string", "format": "binary" }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["CustomerPayments"],
+        "x-irent-roles": ["customer"]
+      }
+    },
+    "/api/bookings/{id}/settlement": {
+      "post": {
+        "operationId": "CustomerPaymentsController_settlement",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Kunci 1–128 karakter; gunakan kembali saat retry payload yang sama.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["CustomerPayments"],
+        "x-irent-roles": ["customer"]
+      }
+    },
+    "/api/payment-proofs/{id}/file": {
+      "get": {
+        "operationId": "PrivateProofsController_download",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["PrivateProofs"],
+        "x-irent-roles": ["customer", "admin"]
+      }
+    },
+    "/api/admin/bookings/{id}/settlement": {
+      "post": {
+        "operationId": "AdminPaymentsController_recordSettlement",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Kunci 1–128 karakter; gunakan kembali saat retry payload yang sama.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SettlementReceiptDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["AdminPayments"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/bookings/{id}/payments/verify": {
+      "post": {
+        "operationId": "AdminPaymentsController_verify",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Kunci 1–128 karakter; gunakan kembali saat retry payload yang sama.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/VerifyProofDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["AdminPayments"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/bookings/{id}/proofs/{proofId}/reject": {
+      "post": {
+        "operationId": "AdminPaymentsController_reject",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "proofId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Kunci 1–128 karakter; gunakan kembali saat retry payload yang sama.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/RejectProofDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["AdminPayments"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/bookings/{id}/payments/reconcile": {
+      "post": {
+        "operationId": "AdminPaymentsController_reconcile",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Kunci 1–128 karakter; gunakan kembali saat retry payload yang sama.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ReconcileReceiptDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["AdminPayments"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/bookings/{id}/approve": {
+      "post": {
+        "operationId": "AdminPaymentsController_approve",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Kunci 1–128 karakter; gunakan kembali saat retry payload yang sama.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["AdminPayments"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/bookings/{id}/cancel": {
+      "post": {
+        "operationId": "RefundsController_cancel",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Kunci 1–128 karakter; gunakan kembali saat retry payload yang sama.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CancelBookingDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Refunds"],
+        "x-irent-roles": ["customer"]
+      }
+    },
+    "/api/admin/bookings/{id}/cancel": {
+      "post": {
+        "operationId": "RefundsController_shopCancel",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Kunci 1–128 karakter; gunakan kembali saat retry payload yang sama.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CancelBookingDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Refunds"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/refunds/{id}/recipient": {
+      "post": {
+        "operationId": "RefundsController_recipient",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Kunci 1–128 karakter; gunakan kembali saat retry payload yang sama.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/RefundRecipientDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Refunds"],
+        "x-irent-roles": ["customer"]
+      }
+    },
+    "/api/admin/refunds/{id}/approve": {
+      "post": {
+        "operationId": "RefundsController_approve",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Kunci 1–128 karakter; gunakan kembali saat retry payload yang sama.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Refunds"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/refunds/{id}/recipient": {
+      "post": {
+        "operationId": "RefundsController_adminRecipient",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Kunci 1–128 karakter; gunakan kembali saat retry payload yang sama.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/RefundRecipientDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Refunds"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/refunds/{id}/reject": {
+      "post": {
+        "operationId": "RefundsController_reject",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Kunci 1–128 karakter; gunakan kembali saat retry payload yang sama.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/RejectProofDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Refunds"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/refunds/{id}/transfer": {
+      "post": {
+        "operationId": "RefundsController_transfer",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Kunci 1–128 karakter; gunakan kembali saat retry payload yang sama.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "allOf": [
+                  { "$ref": "#/components/schemas/TransferRefundDto" },
+                  {
+                    "type": "object",
+                    "required": ["file"],
+                    "properties": {
+                      "file": { "type": "string", "format": "binary" }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Refunds"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/refunds/{id}/file": {
+      "get": {
+        "operationId": "RefundsController_download",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Refunds"],
+        "x-irent-roles": ["customer", "admin"]
+      }
+    },
+    "/api/admin/bookings/delivery-follow-up": {
+      "get": {
+        "operationId": "NoShowController_followUp",
+        "parameters": [],
+        "responses": { "200": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["NoShow"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/bookings/{id}/delivery/customer-failure": {
+      "post": {
+        "operationId": "NoShowController_deliveryFailure",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Kunci 1–128 karakter; gunakan kembali saat retry payload yang sama.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/DeliveryFailureDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["NoShow"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/bookings/{id}/payments/{paymentId}/correct": {
+      "post": {
+        "operationId": "ReceiptCorrectionsController_correct",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "paymentId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Kunci 1–128 karakter; gunakan kembali saat retry payload yang sama.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CorrectReceiptDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["ReceiptCorrections"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/bookings/at-risk": {
+      "get": {
+        "operationId": "RisksController_list",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 1000000,
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": { "200": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Risks"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/bookings/{id}/items/{itemId}/return-report": {
+      "post": {
+        "operationId": "CustomerReturnsController_report",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "itemId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Kunci 1–128 karakter; gunakan kembali saat retry payload yang sama.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["CustomerReturns"],
+        "x-irent-roles": ["customer"]
+      }
+    },
+    "/api/admin/bookings/{id}/items/{itemId}/return/correct": {
+      "post": {
+        "operationId": "AdminOperationsController_correctReturn",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "itemId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Kunci 1–128 karakter; gunakan kembali saat retry payload yang sama.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CorrectReturnDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["AdminOperations"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/bookings/{id}/items/{itemId}/loss/verify": {
+      "post": {
+        "operationId": "AdminOperationsController_loss",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "itemId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Kunci 1–128 karakter; gunakan kembali saat retry payload yang sama.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/VerifyLossDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["AdminOperations"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/bookings/{id}/items/{itemId}/unit/replace": {
+      "post": {
+        "operationId": "AdminOperationsController_replace",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "itemId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Kunci 1–128 karakter; gunakan kembali saat retry payload yang sama.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ReplaceUnitDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["AdminOperations"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/bookings/{id}/handover": {
+      "post": {
+        "operationId": "AdminOperationsController_handover",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Kunci 1–128 karakter; gunakan kembali saat retry payload yang sama.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/HandoverDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["AdminOperations"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/bookings/{id}/items/{itemId}/return-report/reject": {
+      "post": {
+        "operationId": "AdminOperationsController_reject",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "itemId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Kunci 1–128 karakter; gunakan kembali saat retry payload yang sama.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/RejectProofDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["AdminOperations"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/bookings/{id}/items/{itemId}/return/verify": {
+      "post": {
+        "operationId": "AdminOperationsController_verify",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "itemId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Kunci 1–128 karakter; gunakan kembali saat retry payload yang sama.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/VerifyReturnDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["AdminOperations"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/bookings/{bookingId}/extensions/{id}": {
+      "get": {
+        "operationId": "CustomerExtensionsController_detail",
+        "parameters": [
+          {
+            "name": "bookingId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["CustomerExtensions"],
+        "x-irent-roles": ["customer", "admin"]
+      }
+    },
+    "/api/bookings/{bookingId}/extensions": {
+      "post": {
+        "operationId": "CustomerExtensionsController_create",
+        "parameters": [
+          {
+            "name": "bookingId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Kunci 1–128 karakter; gunakan kembali saat retry payload yang sama.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreateExtensionDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["CustomerExtensions"],
+        "x-irent-roles": ["customer"]
+      }
+    },
+    "/api/bookings/{bookingId}/extensions/{id}/submit": {
+      "post": {
+        "operationId": "CustomerExtensionsController_submit",
+        "parameters": [
+          {
+            "name": "bookingId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Kunci 1–128 karakter; gunakan kembali saat retry payload yang sama.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SubmitExtensionDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["CustomerExtensions"],
+        "x-irent-roles": ["customer"]
+      }
+    },
+    "/api/bookings/{bookingId}/extensions/{id}/cancel": {
+      "post": {
+        "operationId": "CustomerExtensionsController_cancel",
+        "parameters": [
+          {
+            "name": "bookingId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Kunci 1–128 karakter; gunakan kembali saat retry payload yang sama.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/RejectProofDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["CustomerExtensions"],
+        "x-irent-roles": ["customer"]
+      }
+    },
+    "/api/bookings/{bookingId}/extensions/{id}/proofs": {
+      "post": {
+        "operationId": "CustomerExtensionsController_upload",
+        "parameters": [
+          {
+            "name": "bookingId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Kunci 1–128 karakter; gunakan kembali saat retry payload yang sama.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "allOf": [
+                  { "$ref": "#/components/schemas/UploadProofDto" },
+                  {
+                    "type": "object",
+                    "required": ["file"],
+                    "properties": {
+                      "file": { "type": "string", "format": "binary" }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["CustomerExtensions"],
+        "x-irent-roles": ["customer"]
+      }
+    },
+    "/api/admin/bookings/{bookingId}/extensions/{id}/quote": {
+      "post": {
+        "operationId": "AdminExtensionsController_quote",
+        "parameters": [
+          {
+            "name": "bookingId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Kunci 1–128 karakter; gunakan kembali saat retry payload yang sama.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/QuoteExtensionDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["AdminExtensions"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/bookings/{bookingId}/extensions/{id}/payments/verify": {
+      "post": {
+        "operationId": "AdminExtensionsController_verify",
+        "parameters": [
+          {
+            "name": "bookingId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Kunci 1–128 karakter; gunakan kembali saat retry payload yang sama.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/VerifyProofDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["AdminExtensions"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/bookings/{bookingId}/extensions/{id}/proofs/{proofId}/reject": {
+      "post": {
+        "operationId": "AdminExtensionsController_rejectProof",
+        "parameters": [
+          {
+            "name": "bookingId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "proofId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Kunci 1–128 karakter; gunakan kembali saat retry payload yang sama.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/RejectProofDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["AdminExtensions"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/bookings/{bookingId}/extensions/{id}/reject": {
+      "post": {
+        "operationId": "AdminExtensionsController_reject",
+        "parameters": [
+          {
+            "name": "bookingId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Kunci 1–128 karakter; gunakan kembali saat retry payload yang sama.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/RejectProofDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["AdminExtensions"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/bookings/{bookingId}/extensions/{id}/approve": {
+      "post": {
+        "operationId": "AdminExtensionsController_approve",
+        "parameters": [
+          {
+            "name": "bookingId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Kunci 1–128 karakter; gunakan kembali saat retry payload yang sama.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["AdminExtensions"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/bookings/{bookingId}/extensions/{id}/payments/reconcile": {
+      "post": {
+        "operationId": "AdminExtensionsController_reconcile",
+        "parameters": [
+          {
+            "name": "bookingId",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "idempotency-key",
+            "required": true,
+            "in": "header",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "description": "Kunci 1–128 karakter; gunakan kembali saat retry payload yang sama.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ReconcileReceiptDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["AdminExtensions"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/notifications/configuration": {
+      "get": {
+        "operationId": "NotificationsController_configuration",
+        "parameters": [],
+        "responses": { "200": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Notifications"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/notifications/subscriptions": {
+      "post": {
+        "operationId": "NotificationsController_subscribe",
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SubscribeDto" }
+            }
+          }
+        },
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Notifications"],
+        "x-irent-roles": ["admin"]
+      },
+      "delete": {
+        "operationId": "NotificationsController_unsubscribe",
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/UnsubscribeDto" }
+            }
+          }
+        },
+        "responses": { "200": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Notifications"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/notifications": {
+      "get": {
+        "operationId": "NotificationsController_list",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 1000000,
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": { "200": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Notifications"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/reports": {
+      "get": {
+        "operationId": "ReportsController_read",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 1000000,
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "kind",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "day",
+              "type": "string",
+              "enum": ["day", "month"]
+            }
+          },
+          {
+            "name": "period",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "pattern": "^\\d{4}-\\d{2}(?:-\\d{2})?$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": { "200": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Reports"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/reports/excel": {
+      "get": {
+        "operationId": "ReportsController_excel",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 1000000,
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "kind",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "day",
+              "type": "string",
+              "enum": ["day", "month"]
+            }
+          },
+          {
+            "name": "period",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "pattern": "^\\d{4}-\\d{2}(?:-\\d{2})?$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": { "200": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Reports"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/media/{folder}/{filename}": {
+      "get": {
+        "operationId": "MediaController_image",
+        "parameters": [
+          {
+            "name": "folder",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "filename",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "" } },
+        "tags": ["Media"]
+      }
+    },
+    "/api/admin/items/{id}/photo": {
+      "post": {
+        "operationId": "MediaUploadController_photo",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["MediaUpload"],
+        "x-irent-roles": ["admin"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["file"],
+                "properties": {
+                  "file": { "type": "string", "format": "binary" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/settings/qris-image": {
+      "post": {
+        "operationId": "MediaUploadController_qris",
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["MediaUpload"],
+        "x-irent-roles": ["admin"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["file"],
+                "properties": {
+                  "file": { "type": "string", "format": "binary" }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/admin/tasks": {
+      "get": {
+        "operationId": "AdminReadController_tasks",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 1000000,
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "kind",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "all",
+              "type": "string",
+              "enum": [
+                "all",
+                "payment",
+                "return",
+                "extension_quote",
+                "refund",
+                "preparation",
+                "handover"
+              ]
+            }
+          }
+        ],
+        "responses": { "200": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["AdminRead"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/calendar": {
+      "get": {
+        "operationId": "AdminReadController_calendar",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 1000000,
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "startAt",
+            "required": true,
+            "in": "query",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "endAt",
+            "required": true,
+            "in": "query",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "itemId",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "uuid", "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["AdminRead"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/refunds": {
+      "get": {
+        "operationId": "AdminReadController_refunds",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 1000000,
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["diajukan", "disetujui", "ditolak", "sudah_dikembalikan"]
+            }
+          },
+          {
+            "name": "bookingId",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "uuid", "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["AdminRead"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/extensions": {
+      "get": {
+        "operationId": "AdminReadController_extensions",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 1000000,
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "draft_quote",
+                "menunggu_pembayaran",
+                "menunggu_konfirmasi",
+                "disetujui",
+                "ditolak",
+                "kedaluwarsa",
+                "dibatalkan"
+              ]
+            }
+          },
+          {
+            "name": "bookingId",
+            "required": false,
+            "in": "query",
+            "schema": { "format": "uuid", "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["AdminRead"],
+        "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/admin/api-docs": {
+      "get": {
+        "operationId": "ApiDocsController_read",
+        "parameters": [],
+        "responses": { "200": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["ApiDocs"],
+        "x-irent-roles": ["admin"]
+      }
+    }
+  },
+  "info": {
+    "title": "iRent Semarang API",
+    "description": "Rupiah: string desimal; waktu: ISO WIB +07:00. Mutasi: Origin dan X-CSRF-Token; aksi bisnis: Idempotency-Key sesuai backend/API.md. Response rinci mengikuti dokumentasi modul.",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "cookie": { "type": "apiKey", "in": "cookie", "name": "irent_session" }
+    },
+    "schemas": {
+      "RegisterDto": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "minLength": 1, "maxLength": 100 },
+          "email": { "type": "string", "minLength": 1, "maxLength": 254 },
+          "phone": { "type": "string", "minLength": 1, "maxLength": 40 },
+          "password": { "type": "string", "minLength": 12, "maxLength": 128 }
+        },
+        "required": ["name", "password"]
+      },
+      "LoginDto": {
+        "type": "object",
+        "properties": {
+          "identity": { "type": "string", "minLength": 1, "maxLength": 254 },
+          "password": { "type": "string", "minLength": 1, "maxLength": 128 }
+        },
+        "required": ["identity", "password"]
+      },
+      "ProfileDto": {
+        "type": "object",
+        "properties": {
+          "fullName": { "type": "string", "minLength": 1, "maxLength": 150 },
+          "address": { "type": "string", "minLength": 1, "maxLength": 1000 },
+          "phoneActive": { "type": "string", "minLength": 1, "maxLength": 40 },
+          "nik": { "type": "string", "pattern": "^[0-9]{16}$" },
+          "phoneAlt": { "type": "string", "nullable": true, "maxLength": 40 },
+          "instagram": { "type": "string", "nullable": true, "maxLength": 100 },
+          "emailContact": {
+            "type": "string",
+            "nullable": true,
+            "maxLength": 254
+          }
+        },
+        "required": ["fullName", "address", "phoneActive"]
+      },
+      "ResetPasswordDto": {
+        "type": "object",
+        "properties": {
+          "password": { "type": "string", "minLength": 12, "maxLength": 128 }
+        },
+        "required": ["password"]
+      },
+      "SettingsPatchDto": { "type": "object", "properties": {} },
+      "ItemDto": {
+        "type": "object",
+        "properties": {
+          "category": { "type": "string", "enum": ["iphone", "accessory"] },
+          "name": { "type": "string", "minLength": 1, "maxLength": 150 },
+          "includes": {
+            "maxItems": 50,
+            "type": "array",
+            "items": { "type": "string", "maxLength": 200, "minLength": 1 }
+          },
+          "price6h": { "type": "string", "pattern": "^(0|[1-9][0-9]{0,18})$" },
+          "price12h": { "type": "string", "pattern": "^(0|[1-9][0-9]{0,18})$" },
+          "price24h": { "type": "string", "pattern": "^(0|[1-9][0-9]{0,18})$" },
+          "photoPath": { "type": "string", "nullable": true }
+        },
+        "required": [
+          "category",
+          "name",
+          "includes",
+          "price6h",
+          "price12h",
+          "price24h"
+        ]
+      },
+      "ItemPatchDto": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "minLength": 1, "maxLength": 150 },
+          "includes": {
+            "maxItems": 50,
+            "type": "array",
+            "items": { "type": "string", "maxLength": 200, "minLength": 1 }
+          },
+          "price6h": { "type": "string", "pattern": "^(0|[1-9][0-9]{0,18})$" },
+          "price12h": { "type": "string", "pattern": "^(0|[1-9][0-9]{0,18})$" },
+          "price24h": { "type": "string", "pattern": "^(0|[1-9][0-9]{0,18})$" },
+          "photoPath": { "type": "string", "nullable": true },
+          "isActive": { "type": "boolean" }
+        }
+      },
+      "UnitsDto": {
+        "type": "object",
+        "properties": {
+          "quantity": { "type": "number", "minimum": 1, "maximum": 100 },
+          "codes": {
+            "minItems": 1,
+            "maxItems": 100,
+            "type": "array",
+            "items": { "type": "string", "pattern": "^[A-Za-z0-9-]{1,64}$" }
+          }
+        }
+      },
+      "ActiveDto": {
+        "type": "object",
+        "properties": { "isActive": { "type": "boolean" } },
+        "required": ["isActive"]
+      },
+      "MaintenanceDto": {
+        "type": "object",
+        "properties": {
+          "reason": { "type": "string", "minLength": 1, "maxLength": 1000 }
+        },
+        "required": ["reason"]
+      },
+      "ZoneDto": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "minLength": 1, "maxLength": 100 },
+          "fee": { "type": "string", "pattern": "^(0|[1-9][0-9]{0,18})$" },
+          "isActive": { "type": "boolean" }
+        },
+        "required": ["name", "fee"]
+      },
+      "QuoteItemDto": {
+        "type": "object",
+        "properties": {
+          "itemId": { "type": "string", "format": "uuid" },
+          "quantity": { "type": "number", "minimum": 1, "maximum": 100 }
+        },
+        "required": ["itemId", "quantity"]
+      },
+      "QuoteDto": {
+        "type": "object",
+        "properties": {
+          "startAt": { "type": "string", "minLength": 25, "maxLength": 29 },
+          "durationHours": { "type": "number", "minimum": 6, "maximum": 168 },
+          "items": {
+            "minItems": 1,
+            "maxItems": 100,
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/QuoteItemDto" }
+          },
+          "deliveryType": { "enum": ["pickup", "delivery"], "type": "string" },
+          "deliveryZoneId": { "type": "string", "format": "uuid" },
+          "payOption": {
+            "default": "dp",
+            "enum": ["dp", "full"],
+            "type": "string"
+          }
+        },
+        "required": [
+          "startAt",
+          "durationHours",
+          "items",
+          "deliveryType",
+          "payOption"
+        ]
+      },
+      "CreateBookingDto": {
+        "type": "object",
+        "properties": {
+          "startAt": { "type": "string", "minLength": 25, "maxLength": 29 },
+          "durationHours": { "type": "number", "minimum": 6, "maximum": 168 },
+          "items": {
+            "minItems": 1,
+            "maxItems": 100,
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/QuoteItemDto" }
+          },
+          "deliveryType": { "enum": ["pickup", "delivery"], "type": "string" },
+          "deliveryZoneId": { "type": "string", "format": "uuid" },
+          "payOption": {
+            "default": "dp",
+            "enum": ["dp", "full"],
+            "type": "string"
+          },
+          "deliveryAddress": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 1000
+          },
+          "termsVersion": { "type": "string" },
+          "agreeTerms": { "type": "boolean" },
+          "prepareIdentity": { "type": "boolean" },
+          "understandPayment": { "type": "boolean" },
+          "agreeOperatingHours": { "type": "boolean" }
+        },
+        "required": [
+          "startAt",
+          "durationHours",
+          "items",
+          "deliveryType",
+          "payOption",
+          "termsVersion",
+          "agreeTerms",
+          "prepareIdentity",
+          "understandPayment",
+          "agreeOperatingHours"
+        ]
+      },
+      "UploadProofDto": {
+        "type": "object",
+        "properties": {
+          "claimedAmount": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]{0,18})$"
+          }
+        },
+        "required": ["claimedAmount"]
+      },
+      "SettlementReceiptDto": {
+        "type": "object",
+        "properties": {
+          "extensionId": { "type": "string", "format": "uuid" },
+          "amount": { "type": "string", "pattern": "^[1-9][0-9]{0,18}$" },
+          "occurredAt": { "type": "string", "minLength": 25, "maxLength": 29 },
+          "method": { "type": "string", "enum": ["qris", "transfer", "cash"] },
+          "receivingAccountReference": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 150
+          },
+          "transactionReference": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 150
+          },
+          "note": { "type": "string", "minLength": 5, "maxLength": 1000 }
+        },
+        "required": ["amount", "occurredAt", "method", "note"]
+      },
+      "VerifyProofDto": {
+        "type": "object",
+        "properties": {
+          "proofId": { "type": "string", "format": "uuid" },
+          "amount": { "type": "string", "pattern": "^[1-9][0-9]{0,18}$" },
+          "occurredAt": { "type": "string", "minLength": 25, "maxLength": 29 },
+          "method": { "enum": ["qris", "transfer", "cash"], "type": "string" },
+          "receivingAccountReference": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 150
+          },
+          "transactionReference": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 150
+          },
+          "note": { "type": "string", "minLength": 5, "maxLength": 1000 }
+        },
+        "required": ["proofId", "amount", "occurredAt", "method", "note"]
+      },
+      "RejectProofDto": {
+        "type": "object",
+        "properties": {
+          "reason": { "type": "string", "minLength": 5, "maxLength": 1000 }
+        },
+        "required": ["reason"]
+      },
+      "ReconcileReceiptDto": {
+        "type": "object",
+        "properties": {
+          "obligationId": { "type": "string", "format": "uuid" },
+          "proofId": { "type": "string", "format": "uuid" },
+          "amount": { "type": "string", "pattern": "^[1-9][0-9]{0,18}$" },
+          "occurredAt": { "type": "string", "minLength": 25, "maxLength": 29 },
+          "method": { "enum": ["qris", "transfer", "cash"], "type": "string" },
+          "receivingAccountReference": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 150
+          },
+          "transactionReference": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 150
+          },
+          "note": { "type": "string", "minLength": 5, "maxLength": 1000 }
+        },
+        "required": ["obligationId", "amount", "occurredAt", "method", "note"]
+      },
+      "CancelBookingDto": {
+        "type": "object",
+        "properties": {
+          "reason": { "type": "string", "minLength": 5, "maxLength": 1000 }
+        },
+        "required": ["reason"]
+      },
+      "RefundRecipientDto": {
+        "type": "object",
+        "properties": {
+          "bankName": { "type": "string", "minLength": 2, "maxLength": 100 },
+          "accountNumber": { "type": "string", "pattern": "^[0-9]{5,34}$" },
+          "accountHolder": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 150
+          }
+        },
+        "required": ["bankName", "accountNumber", "accountHolder"]
+      },
+      "TransferRefundDto": {
+        "type": "object",
+        "properties": {
+          "amount": { "type": "string", "pattern": "^[1-9][0-9]{0,18}$" },
+          "transferredAt": {
+            "type": "string",
+            "minLength": 25,
+            "maxLength": 29
+          },
+          "transactionReference": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 150
+          },
+          "note": { "type": "string", "minLength": 5, "maxLength": 1000 }
+        },
+        "required": ["amount", "transferredAt", "transactionReference", "note"]
+      },
+      "DeliveryFailureDto": {
+        "type": "object",
+        "properties": {
+          "readyAt": { "type": "string", "minLength": 25, "maxLength": 29 },
+          "customerFailureAt": {
+            "type": "string",
+            "minLength": 25,
+            "maxLength": 29
+          },
+          "reason": { "type": "string", "minLength": 5, "maxLength": 1000 }
+        },
+        "required": ["readyAt", "customerFailureAt", "reason"]
+      },
+      "CorrectReceiptDto": {
+        "type": "object",
+        "properties": {
+          "reason": { "type": "string", "minLength": 5, "maxLength": 1000 },
+          "amount": { "type": "string", "pattern": "^[1-9][0-9]{0,18}$" },
+          "occurredAt": { "type": "string", "minLength": 25, "maxLength": 29 },
+          "method": { "type": "string", "enum": ["qris", "transfer", "cash"] },
+          "receivingAccountReference": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 150
+          },
+          "transactionReference": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 150
+          },
+          "note": { "type": "string", "minLength": 5, "maxLength": 1000 }
+        },
+        "required": ["reason", "amount", "occurredAt", "method", "note"]
+      },
+      "ExemptionDto": {
+        "type": "object",
+        "properties": {
+          "type": { "type": "string", "enum": ["admin", "courier"] },
+          "from": { "type": "string", "minLength": 25, "maxLength": 29 },
+          "to": { "type": "string", "minLength": 25, "maxLength": 29 },
+          "reason": { "type": "string", "minLength": 5, "maxLength": 1000 }
+        },
+        "required": ["type", "from", "to", "reason"]
+      },
+      "CorrectReturnDto": {
+        "type": "object",
+        "properties": {
+          "receivedAtStore": {
+            "type": "string",
+            "minLength": 25,
+            "maxLength": 29
+          },
+          "receivedByCourierAt": {
+            "type": "string",
+            "minLength": 25,
+            "maxLength": 29
+          },
+          "conditionNote": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 1000
+          },
+          "damageAmount": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]{0,18})$"
+          },
+          "damageNote": { "type": "string", "minLength": 5, "maxLength": 1000 },
+          "exemptions": {
+            "maxItems": 20,
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ExemptionDto" }
+          },
+          "reason": { "type": "string", "minLength": 5, "maxLength": 1000 }
+        },
+        "required": [
+          "receivedAtStore",
+          "conditionNote",
+          "damageAmount",
+          "reason"
+        ]
+      },
+      "VerifyLossDto": {
+        "type": "object",
+        "properties": {
+          "lostAt": { "type": "string", "minLength": 25, "maxLength": 29 },
+          "lossNote": { "type": "string", "minLength": 5, "maxLength": 1000 },
+          "compensationAmount": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]{0,18})$"
+          },
+          "exemptions": {
+            "maxItems": 20,
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ExemptionDto" }
+          }
+        },
+        "required": ["lostAt", "lossNote", "compensationAmount"]
+      },
+      "ReplaceUnitDto": {
+        "type": "object",
+        "properties": {
+          "itemUnitId": { "type": "string", "format": "uuid" },
+          "reason": { "type": "string", "minLength": 5, "maxLength": 1000 }
+        },
+        "required": ["itemUnitId", "reason"]
+      },
+      "HandoverDto": {
+        "type": "object",
+        "properties": {
+          "pickedUpAt": { "type": "string", "minLength": 25, "maxLength": 29 },
+          "conditionNote": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 1000
+          },
+          "shopDelayReason": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 1000
+          }
+        },
+        "required": ["pickedUpAt", "conditionNote"]
+      },
+      "VerifyReturnDto": {
+        "type": "object",
+        "properties": {
+          "receivedAtStore": {
+            "type": "string",
+            "minLength": 25,
+            "maxLength": 29
+          },
+          "receivedByCourierAt": {
+            "type": "string",
+            "minLength": 25,
+            "maxLength": 29
+          },
+          "condition": { "type": "string", "enum": ["layak", "maintenance"] },
+          "conditionNote": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 1000
+          },
+          "damageAmount": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]{0,18})$"
+          },
+          "damageNote": { "type": "string", "minLength": 5, "maxLength": 1000 },
+          "exemptions": {
+            "maxItems": 20,
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ExemptionDto" }
+          }
+        },
+        "required": [
+          "receivedAtStore",
+          "condition",
+          "conditionNote",
+          "damageAmount"
+        ]
+      },
+      "ExtensionSelectionDto": {
+        "type": "object",
+        "properties": {
+          "bookingItemId": { "type": "string", "format": "uuid" },
+          "addedHours": { "type": "number", "enum": [6, 12, 24] }
+        },
+        "required": ["bookingItemId", "addedHours"]
+      },
+      "CreateExtensionDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "minItems": 1,
+            "maxItems": 100,
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/ExtensionSelectionDto" }
+          }
+        },
+        "required": ["items"]
+      },
+      "SubmitExtensionDto": {
+        "type": "object",
+        "properties": {
+          "agreeExtraDelivery": { "type": "boolean" },
+          "expectedExtraDeliveryQuote": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]{0,18})$"
+          }
+        },
+        "required": ["agreeExtraDelivery", "expectedExtraDeliveryQuote"]
+      },
+      "QuoteExtensionDto": {
+        "type": "object",
+        "properties": {
+          "extraDeliveryQuote": {
+            "type": "string",
+            "pattern": "^(0|[1-9][0-9]{0,18})$"
+          },
+          "note": { "type": "string", "minLength": 5, "maxLength": 1000 }
+        },
+        "required": ["extraDeliveryQuote", "note"]
+      },
+      "PushKeysDto": {
+        "type": "object",
+        "properties": {
+          "p256dh": { "type": "string", "minLength": 87, "maxLength": 87 },
+          "auth": { "type": "string", "minLength": 22, "maxLength": 22 }
+        },
+        "required": ["p256dh", "auth"]
+      },
+      "SubscribeDto": {
+        "type": "object",
+        "properties": {
+          "endpoint": { "type": "string", "minLength": 1, "maxLength": 2048 },
+          "keys": { "$ref": "#/components/schemas/PushKeysDto" }
+        },
+        "required": ["endpoint", "keys"]
+      },
+      "UnsubscribeDto": {
+        "type": "object",
+        "properties": {
+          "endpoint": { "type": "string", "minLength": 1, "maxLength": 2048 }
+        },
+        "required": ["endpoint"]
+      }
+    }
+  }
+}

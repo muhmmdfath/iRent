@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+
+<html lang="id"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>M01 — Admin Antrean Mobile — v2</title>
+<!-- Strict Poppins Typography Load -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "canvas": "#F1F2F4",
+            "on-primary-container": "#919299",
+            "on-secondary-fixed-variant": "#79294e",
+            "urgency-red-ink": "#A12A39",
+            "warning-ink": "#855300",
+            "surface-bright": "#fcf8f8",
+            "surface-container-low": "#f6f3f3",
+            "on-primary-fixed": "#191b21",
+            "error": "#ba1a1a",
+            "surface-container": "#f1eded",
+            "surface-dim": "#ddd9d9",
+            "ink": "#24262B",
+            "success-bg": "#EAF6EF",
+            "primary-fixed-dim": "#c5c6ce",
+            "secondary": "#974166",
+            "tertiary-container": "#312a21",
+            "on-secondary-fixed": "#3e0021",
+            "on-secondary-container": "#7a2a4e",
+            "primary": "#15171c",
+            "muted": "#606570",
+            "success-ink": "#176345",
+            "surface-tint": "#5c5e65",
+            "pastel-apricot": "#FFF0DE",
+            "on-tertiary-container": "#9b9185",
+            "primary-fixed": "#e2e2ea",
+            "on-tertiary-fixed": "#211b12",
+            "on-error": "#ffffff",
+            "surface-container-highest": "#e5e2e2",
+            "tertiary": "#1c160e",
+            "on-secondary": "#ffffff",
+            "surface-container-lowest": "#ffffff",
+            "on-surface": "#1c1b1c",
+            "inverse-on-surface": "#f4f0f0",
+            "inverse-primary": "#c5c6ce",
+            "urgency-red-bg": "#FFF0F1",
+            "surface": "#FFFFFF",
+            "surface-variant": "#e5e2e2",
+            "outline": "#76777b",
+            "inverse-surface": "#313031",
+            "on-primary": "#ffffff",
+            "secondary-fixed-dim": "#ffb0cc",
+            "on-tertiary": "#ffffff",
+            "on-background": "#1c1b1c",
+            "pastel-lilac": "#F1ECFB",
+            "on-primary-fixed-variant": "#45474d",
+            "secondary-container": "#fe96be",
+            "pastel-blush": "#FBECEE",
+            "on-tertiary-fixed-variant": "#4e453b",
+            "primary-container": "#292b31",
+            "tertiary-fixed": "#eee0d3",
+            "background": "#fcf8f8",
+            "surface-container-high": "#ebe7e7",
+            "workspace": "#FCFCFD",
+            "pastel-mint": "#E8F5EE",
+            "tertiary-fixed-dim": "#d1c5b7",
+            "line": "#E6E8ED",
+            "selected-rose": "#F9E8EF",
+            "error-container": "#ffdad6",
+            "warning-bg": "#FFF5DF",
+            "pastel-blue": "#EAF1FC",
+            "outline-variant": "#c7c6cb",
+            "secondary-fixed": "#ffd9e4",
+            "on-surface-variant": "#46464b",
+            "sidebar": "#F8F9FA",
+            "on-error-container": "#93000a"
+          },
+          borderRadius: {
+            "DEFAULT": "0.125rem",
+            "lg": "0.25rem",
+            "xl": "0.5rem",
+            "full": "0.75rem"
+          },
+          spacing: {
+            "space-lg": "16px",
+            "gutter": "32px",
+            "margin": "32px",
+            "space-3xl": "32px",
+            "space-sm": "8px",
+            "space-4xl": "48px",
+            "space-xs": "4px",
+            "space-xl": "20px",
+            "space-md": "12px",
+            "space-2xl": "24px"
+          },
+          fontFamily: {
+            "label-md": ["Poppins", "sans-serif"],
+            "headline-md": ["Poppins", "sans-serif"],
+            "body-md": ["Poppins", "sans-serif"],
+            "label-sm": ["Poppins", "sans-serif"],
+            "body-sm": ["Poppins", "sans-serif"],
+            "headline-lg": ["Poppins", "sans-serif"]
+          },
+          fontSize: {
+            "label-md": ["14px", { lineHeight: "20px", fontWeight: "500" }],
+            "headline-md": ["20px", { lineHeight: "28px", fontWeight: "600" }],
+            "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+            "label-sm": ["14px", { lineHeight: "20px", fontWeight: "500" }],
+            "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+            "headline-lg": ["28px", { lineHeight: "36px", fontWeight: "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    * {
+      font-family: 'Poppins', sans-serif !important;
+      -webkit-tap-highlight-color: transparent;
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #F1F2F4;
+      margin: 0;
+      padding: 0;
+      min-height: max(884px, 100dvh);
+      overflow-x: hidden;
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+</head>
+<body class="flex justify-center min-h-screen text-ink">
+<!-- Mobile Viewport Container 390px with strictly 20px gutters -->
+<main class="w-full max-w-[390px] min-h-screen bg-workspace text-ink flex flex-col relative pb-24 overflow-x-hidden">
+<!-- Header 56px + title 'iRent Semarang' + equal admin roles -->
+<header class="h-[56px] sticky top-0 z-40 bg-workspace flex items-center justify-between px-5 border-b border-line shadow-none">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-lg bg-surface border border-line flex items-center justify-center text-primary shrink-0">
+<!-- Smartphone / device icon -->
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<rect height="20" rx="2" ry="2" width="14" x="5" y="2"></rect>
+<line x1="12" x2="12.01" y1="18" y2="18"></line>
+</svg>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<h1 class="font-headline-md text-[17px] font-semibold text-ink leading-none">iRent Semarang</h1>
+<span class="bg-pastel-apricot text-warning-ink text-[11px] px-1.5 py-0.5 rounded font-medium leading-none">Contoh</span>
+</div>
+<div class="flex items-center gap-1 mt-0.5 text-muted text-[12px] leading-tight">
+<span>Admin</span>
+<span>•</span>
+<span>Lokasi toko dari konfigurasi</span>
+</div>
+</div>
+</div>
+<button aria-label="Notifikasi" class="w-[44px] h-[44px] flex items-center justify-center rounded-xl hover:bg-sidebar text-ink transition-colors active:opacity-75">
+<svg class="w-5 h-5 text-ink" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+<path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+</svg>
+</button>
+</header>
+<!-- Main Content Area: 20px padding (px-5) -->
+<div class="px-5 flex flex-col gap-3.5 pt-3">
+<!-- Short urgent warning banner -->
+<section class="bg-urgency-red-bg border border-urgency-red-ink/20 rounded-xl p-3 flex items-start gap-2.5">
+<svg class="w-5 h-5 text-urgency-red-ink shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+<line x1="12" x2="12" y1="9" y2="13"></line>
+<line x1="12" x2="12.01" y1="17" y2="17"></line>
+</svg>
+<p class="text-body-sm text-urgency-red-ink font-medium leading-snug">1 konfirmasi melewati batas; alokasi tetap ditahan sampai keputusan admin.</p>
+</section>
+<!-- Compact Audio Toggle Row -->
+<section class="bg-surface rounded-xl p-3 border border-line flex flex-col gap-2">
+<div class="flex items-center justify-between gap-2">
+<div class="flex items-center gap-2">
+<svg class="w-4 h-4 text-secondary shrink-0" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+<path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+<path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+</svg>
+<span class="text-body-sm font-medium text-ink">Alarm tab depan</span>
+</div>
+<button class="min-h-[44px] px-3.5 bg-primary-container text-surface rounded-lg text-label-md font-medium flex items-center gap-1.5 active:scale-95 transition-all shrink-0" id="soundToggle" onclick="toggleAudio()">
+<svg class="w-4 h-4 text-surface" fill="none" id="soundIcon" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+<path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+</svg>
+<span id="soundText">Aktifkan suara</span>
+</button>
+</div>
+<p class="text-[12px] text-muted leading-tight">
+          Suara berdering hanya saat tab terbuka di latar depan. Tidak menembus layar mati/DND. Notifikasi WhatsApp ditunda ke Fase 2.
+        </p>
+</section>
+<!-- Queue Section Header & Pill Tabs (scrollable without breaking gutters) -->
+<section class="flex flex-col gap-2 mt-1">
+<div class="flex items-center justify-between">
+<h2 class="text-headline-md font-semibold text-ink">Antrean Tugas</h2>
+<span class="text-body-sm text-muted">11 item aktif</span>
+</div>
+<div class="flex gap-2 overflow-x-auto hide-scrollbar py-0.5 -mx-5 px-5">
+<button class="min-h-[44px] px-3.5 py-1.5 rounded-lg text-label-md font-medium whitespace-nowrap bg-selected-rose text-secondary border border-secondary/20 flex items-center gap-1.5 shrink-0 transition-colors">
+<svg class="w-4 h-4 text-secondary" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<rect height="16" rx="2" width="20" x="2" y="4"></rect>
+<line x1="2" x2="22" y1="10" y2="10"></line>
+</svg>
+<span>Pembayaran (4)</span>
+</button>
+<button class="min-h-[44px] px-3.5 py-1.5 rounded-lg text-label-md font-medium whitespace-nowrap bg-surface text-muted border border-line flex items-center gap-1.5 shrink-0 hover:bg-sidebar transition-colors">
+<svg class="w-4 h-4 text-muted" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 11l3 3L22 4"></path>
+<path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+</svg>
+<span>Serah terima (3)</span>
+</button>
+<button class="min-h-[44px] px-3.5 py-1.5 rounded-lg text-label-md font-medium whitespace-nowrap bg-surface text-muted border border-line flex items-center gap-1.5 shrink-0 hover:bg-sidebar transition-colors">
+<svg class="w-4 h-4 text-muted" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<polyline points="9 14 4 9 9 4"></polyline>
+<path d="M20 20v-7a4 4 0 0 0-4-4H4"></path>
+</svg>
+<span>Pengembalian (2)</span>
+</button>
+<button class="min-h-[44px] px-3.5 py-1.5 rounded-lg text-label-md font-medium whitespace-nowrap bg-surface text-muted border border-line flex items-center gap-1.5 shrink-0 hover:bg-sidebar transition-colors">
+<svg class="w-4 h-4 text-muted" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle>
+<polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+<span>Perpanjangan (2)</span>
+</button>
+</div>
+</section>
+<!-- Active Task List: Exactly 2 Task Cards -->
+<section class="flex flex-col gap-3">
+<!-- Task Card 1: Pembayaran -->
+<article class="bg-pastel-blue border border-line rounded-xl p-4 flex flex-col gap-3">
+<div class="flex items-start justify-between gap-2 border-b border-line/60 pb-2.5">
+<div>
+<span class="text-label-md font-semibold text-ink tracking-tight">#BK-2026-1008-01</span>
+<div class="text-body-sm text-urgency-red-ink font-medium mt-0.5 flex items-center gap-1"><svg class="w-3.5 h-3.5 text-urgency-red-ink" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg><span>Terlambat 15 menit</span></div>
+</div>
+<span class="bg-surface text-body-sm font-medium text-muted px-2 py-0.5 rounded border border-line shrink-0 text-right">10 Okt 2026, 10.00 WIB</span>
+</div>
+<!-- Required card metadata (min 14px text) -->
+<div class="flex flex-col gap-2 text-ink">
+<div class="flex items-baseline justify-between">
+<span class="text-body-sm text-muted">Pelanggan</span>
+<span class="text-body-sm font-medium text-ink text-right">Rian Pratama</span>
+</div>
+<div class="flex items-baseline justify-between">
+<span class="text-body-sm text-muted">Model</span>
+<span class="text-body-sm font-medium text-ink text-right">iPhone 15 Pro 128GB</span>
+</div>
+<div class="flex items-baseline justify-between">
+<span class="text-body-sm text-muted">Status</span>
+<span class="text-body-sm font-medium text-warning-ink bg-warning-bg px-2 py-0.5 rounded border border-warning-ink/20">
+                Verifikasi bukti transfer
+              </span>
+</div>
+<div class="flex items-baseline justify-between pt-1 border-t border-line/40">
+<span class="text-body-sm text-muted">Nominal</span>
+<div class="text-right">
+<span class="text-headline-md font-semibold text-ink">Rp150.000</span>
+<span class="text-body-sm text-secondary font-medium ml-1.5">(DP Rp20.000)</span>
+</div>
+</div>
+</div>
+<!-- Actions: ONE Primary Action button + small discreet text link 'Saya tangani' -->
+<div class="flex flex-col gap-2 pt-2 border-t border-line/60">
+<button class="min-h-[44px] w-full bg-primary-container text-surface rounded-xl text-label-md font-medium flex items-center justify-center gap-2 active:scale-[0.99] transition-transform">
+<svg class="w-4 h-4 text-surface" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+<polyline points="14 2 14 8 20 8"></polyline>
+<line x1="16" x2="8" y1="13" y2="13"></line>
+<line x1="16" x2="8" y1="17" y2="17"></line>
+<polyline points="10 9 9 9 8 9"></polyline>
+</svg>
+<span>Periksa pembayaran</span>
+</button>
+<button class="min-h-[44px] w-full text-muted hover:text-ink text-[13px] font-normal flex items-center justify-center text-center underline decoration-line underline-offset-4">
+              Saya tangani (senyapkan alarm lokal, bukan persetujuan)
+            </button>
+</div>
+</article>
+<!-- Task Card 2: Serah Terima / Pembayaran Lanjutan -->
+<article class="bg-pastel-blue border border-line rounded-xl p-4 flex flex-col gap-3">
+<div class="flex items-start justify-between gap-2 border-b border-line/60 pb-2.5">
+<div>
+<span class="text-label-md font-semibold text-ink tracking-tight">#BK-2026-1008-05</span>
+<div class="text-body-sm text-muted font-normal mt-0.5"><div class="text-body-sm text-warning-ink font-medium flex items-center gap-1"><svg class="w-3.5 h-3.5 text-warning-ink" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg><span>Sisa 15 menit</span></div></div>
+</div>
+<span class="bg-surface text-body-sm font-medium text-muted px-2 py-0.5 rounded border border-line shrink-0 text-right">10 Okt 2026, 10.30 WIB</span>
+</div>
+<!-- Required card metadata (min 14px text) -->
+<div class="flex flex-col gap-2 text-ink">
+<div class="flex items-baseline justify-between">
+<span class="text-body-sm text-muted">Pelanggan</span>
+<span class="text-body-sm font-medium text-ink text-right">Siti Rahma</span>
+</div>
+<div class="flex items-baseline justify-between">
+<span class="text-body-sm text-muted">Model</span>
+<span class="text-body-sm font-medium text-ink text-right">iPhone 13 128GB</span>
+</div>
+<div class="flex items-baseline justify-between">
+<span class="text-body-sm text-muted">Status</span>
+<span class="text-body-sm font-medium text-muted bg-surface px-2 py-0.5 rounded border border-line">
+                Menunggu mutasi
+              </span>
+</div>
+<div class="flex items-baseline justify-between pt-1 border-t border-line/40">
+<span class="text-body-sm text-muted">Nominal</span>
+<span class="text-headline-md font-semibold text-ink text-right">Rp120.000</span>
+</div>
+</div>
+<!-- Actions -->
+<div class="flex flex-col gap-2 pt-2 border-t border-line/60">
+<button class="min-h-[44px] w-full bg-primary-container text-surface rounded-xl text-label-md font-medium flex items-center justify-center gap-2 active:scale-[0.99] transition-transform">
+<svg class="w-4 h-4 text-surface" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+<polyline points="14 2 14 8 20 8"></polyline>
+<line x1="16" x2="8" y1="13" y2="13"></line>
+<line x1="16" x2="8" y1="17" y2="17"></line>
+<polyline points="10 9 9 9 8 9"></polyline>
+</svg>
+<span>Periksa pembayaran</span>
+</button>
+<button class="min-h-[44px] w-full text-muted hover:text-ink text-[13px] font-normal flex items-center justify-center text-center underline decoration-line underline-offset-4">
+              Saya tangani (senyapkan alarm lokal)
+            </button>
+</div>
+</article>
+</section>
+<!-- Clean 'Lihat semua antrean' action -->
+<button class="min-h-[44px] w-full bg-surface hover:bg-sidebar text-ink border border-line rounded-xl text-label-md font-medium flex items-center justify-center gap-2 transition-colors">
+<span>Lihat semua antrean (9 item lainnya)</span>
+<svg class="w-4 h-4 text-muted" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<polyline points="9 18 15 12 9 6"></polyline>
+</svg>
+</button>
+<!-- Collapsed/Compact Settings & Protocol section (no giant stacked wall) -->
+<details class="bg-surface rounded-xl border border-line p-3 group">
+<summary class="min-h-[44px] flex items-center justify-between cursor-pointer list-none select-none text-label-md font-medium text-ink">
+<div class="flex items-center gap-2">
+<svg class="w-4 h-4 text-muted" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="3"></circle>
+<path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+</svg>
+<span>Pengaturan &amp; Protokol SOP Teknis</span>
+</div>
+<svg class="w-4 h-4 text-muted transition-transform group-open:rotate-180" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<polyline points="6 9 12 15 18 9"></polyline>
+</svg>
+</summary>
+<div class="pt-3 border-t border-line flex flex-col gap-2.5 text-body-sm mt-1">
+<div class="flex items-center justify-between">
+<span class="text-muted">Izin Notifikasi OS:</span>
+<span class="text-[12px] font-medium text-success-ink bg-pastel-mint px-2 py-0.5 rounded">Diizinkan</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-muted">Status Audio Tab:</span>
+<span class="text-[12px] font-medium text-ink bg-sidebar px-2 py-0.5 rounded border border-line">Lokal aktif</span>
+</div>
+<div class="bg-pastel-lilac rounded-lg p-2.5 text-[12px] text-muted leading-relaxed">
+<span class="font-semibold text-secondary block mb-0.5">Batasan Web Audio</span>
+            Mode hening atau Do Not Disturb (DND) pada sistem operasi tidak dapat ditembus tanpa aplikasi native.
+          </div>
+<div class="bg-pastel-blush rounded-lg p-2.5 text-[12px] text-muted leading-relaxed">
+<span class="font-semibold text-urgency-red-ink block mb-0.5">Integritas Antrean SOP</span>
+            Papan tugas tidak mendukung drag-and-drop; mutasi status wajib melalui aksi verifikasi eksplisit kartu identitas dan mutasi rekening.
+          </div>
+</div>
+</details>
+</div>
+<!-- Bottom Navigation Bar (44px min touch target buttons, clean SVG icons) -->
+<nav aria-label="Navigasi Menu Admin" class="fixed bottom-0 left-0 right-0 w-full max-w-[390px] mx-auto h-[64px] bg-surface z-50 flex items-center justify-around px-5 border-t border-line shadow-none">
+<!-- Item 1: Antrean (Active) -->
+<a class="flex flex-col items-center justify-center text-secondary bg-selected-rose rounded-xl py-1 px-3 min-h-[44px] min-w-[44px] transition-all" href="#antrean">
+<svg class="w-5 h-5 text-secondary" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<rect height="16" rx="2" width="20" x="2" y="4"></rect>
+<line x1="2" x2="22" y1="10" y2="10"></line>
+</svg>
+<span class="text-[11px] font-medium mt-0.5">Bayar</span>
+</a>
+<!-- Item 2: Serah Terima -->
+<a class="flex flex-col items-center justify-center text-muted hover:text-ink py-1 px-3 min-h-[44px] min-w-[44px] transition-all" href="#serah">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 11l3 3L22 4"></path>
+<path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+</svg>
+<span class="text-[11px] mt-0.5">Serah</span>
+</a>
+<!-- Item 3: Kembali -->
+<a class="flex flex-col items-center justify-center text-muted hover:text-ink py-1 px-3 min-h-[44px] min-w-[44px] transition-all" href="#kembali">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<polyline points="9 14 4 9 9 4"></polyline>
+<path d="M20 20v-7a4 4 0 0 0-4-4H4"></path>
+</svg>
+<span class="text-[11px] mt-0.5">Kembali</span>
+</a>
+<!-- Item 4: Perpanjang -->
+<a class="flex flex-col items-center justify-center text-muted hover:text-ink py-1 px-3 min-h-[44px] min-w-[44px] transition-all" href="#perpanjang">
+<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle>
+<polyline points="12 6 12 12 16 14"></polyline>
+</svg>
+<span class="text-[11px] mt-0.5">Perpanjang</span>
+</a>
+</nav>
+</main>
+<!-- Interactive script for audio toggle state -->
+<script>
+    let isAudioActive = false;
+    function toggleAudio() {
+      isAudioActive = !isAudioActive;
+      const textElem = document.getElementById('soundText');
+      const btnElem = document.getElementById('soundToggle');
+      if (isAudioActive) {
+        textElem.innerText = "Suara Aktif";
+        btnElem.classList.remove('bg-primary-container');
+        btnElem.classList.add('bg-secondary');
+      } else {
+        textElem.innerText = "Aktifkan suara";
+        btnElem.classList.remove('bg-secondary');
+        btnElem.classList.add('bg-primary-container');
+      }
+    }
+  </script>
+</body></html>
