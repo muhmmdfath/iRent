@@ -369,6 +369,14 @@
         "tags": ["PaymentOptions"]
       }
     },
+    "/api/rental-policy": {
+      "get": {
+        "operationId": "RentalPolicyController_read",
+        "parameters": [],
+        "responses": { "200": { "description": "" } },
+        "tags": ["RentalPolicy"]
+      }
+    },
     "/api/items": {
       "get": {
         "operationId": "CatalogController_list",
@@ -937,6 +945,34 @@
               "maximum": 100,
               "default": 50,
               "type": "integer"
+            }
+          },
+          {
+            "name": "sort",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "default": "oldest",
+              "type": "string",
+              "enum": ["oldest", "newest", "deadline"]
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "menunggu_pembayaran",
+                "menunggu_konfirmasi",
+                "dikonfirmasi",
+                "berjalan",
+                "selesai",
+                "kedaluwarsa",
+                "ditolak",
+                "dibatalkan"
+              ]
             }
           }
         ],

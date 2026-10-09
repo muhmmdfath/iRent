@@ -26,7 +26,11 @@ import {
 const detailInclude = {
   items: {
     orderBy: { id: 'asc' as const },
-    include: { returnRecord: true, lossRecord: true },
+    include: {
+      returnRecord: true,
+      lossRecord: true,
+      item: { select: { photoPath: true } },
+    },
   },
   obligations: { orderBy: { createdAt: 'asc' as const } },
   statusLogs: {
@@ -409,17 +413,45 @@ export class BookingsService {
     });
   }
 
-  async list(context: AuthContext, page: PageDto, admin = false) {
+  async list(
+    context: AuthContext,
+    page: PageDto & {
+      sort?: 'oldest' | 'newest' | 'deadline';
+      status?: string;
+    },
+    admin = false,
+  ) {
     if (admin && context.user.role !== 'admin') throw new NotFoundException();
     const owner = admin
       ? Prisma.empty
-      : Prisma.sql`WHERE user_id=${context.user.id}::uuid`;
+      : Prisma.sql`WHERE user_id=${context.user.id}::uuid ${page.status ? Prisma.sql`AND status=${page.status}::booking_status` : Prisma.empty}`;
+    const ordering =
+      !admin && page.sort === 'deadline'
+        ? Prisma.sql`expires_at, created_at, length(code), code`
+        : !admin && page.sort === 'newest'
+          ? Prisma.sql`created_at DESC, length(code) DESC, code DESC`
+          : Prisma.sql`created_at, length(code), code`;
     const rows = await this.prisma.$queryRaw<{ id: string }[]>`
       SELECT id FROM bookings ${owner}
-      ORDER BY created_at, length(code), code
+      ORDER BY ${ordering}
       OFFSET ${(page.page - 1) * page.limit} LIMIT ${page.limit}`;
     const bookings = await this.prisma.booking.findMany({
       where: { id: { in: rows.map((row) => row.id) } },
+      include: {
+        items: {
+          select: {
+            id: true,
+            itemId: true,
+            itemNameSnapshot: true,
+            unitCodeSnapshot: true,
+            unitPriceSnapshot: true,
+            startAt: true,
+            currentEndAt: true,
+            useStatus: true,
+            item: { select: { photoPath: true } },
+          },
+        },
+      },
     });
     return rows.map((row) =>
       bookings.find((booking) => booking.id === row.id)!,

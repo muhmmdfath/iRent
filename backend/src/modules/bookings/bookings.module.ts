@@ -17,7 +17,7 @@ import { PageDto } from '../inventory/inventory.dto';
 import { PricingModule } from '../pricing/pricing.module';
 import { QuoteDto } from '../pricing/pricing.dto';
 import { SettingsModule } from '../settings/settings.module';
-import { CreateBookingDto } from './bookings.dto';
+import { CreateBookingDto, BookingListDto } from './bookings.dto';
 import { BookingsService } from './bookings.service';
 
 @Controller('bookings')
@@ -38,7 +38,7 @@ export class BookingsController {
   }
   @Get() @Roles('customer') list(
     @Req() req: AuthRequest,
-    @Query() page: PageDto,
+    @Query() page: BookingListDto,
   ) {
     return this.bookings.list(req.auth, page);
   }

@@ -30,3 +30,11 @@ Status server tetap `menunggu_pembayaran ? menunggu_konfirmasi ? dikonfirmasi ? 
 Halaman detail memakai booking detail ditambah financial detail pada kontrak pembayaran; saldo scope perpanjangan terpisah. Invalidasi detail, daftar booking, availability, tasks, calendar, refund dan laporan setelah mutasi terkait. Daftar baru memakai `{data,total,page,limit}`; daftar booking lama tetap array sesuai BOOKING contract. Gunakan versi tugas untuk helper suara; notifikasi delivery adalah riwayat pengiriman, bukan daftar pekerjaan.
 
 Jangan simpan response privat di cache service worker. URL bukti diperoleh melalui endpoint terlindungi sesuai ownership; `/media/` hanya menyajikan foto publik hasil sanitasi. Tidak ada endpoint CRUD untuk menghapus receipt atau mengganti jadwal melewati business action.
+
+## Read model pelanggan
+
+`GET /api/rental-policy` publik memberikan `{termsVersion, values}` dengan allowlist aturan pelanggan (jam buka/tutup, lead time, tenggat bayar/konfirmasi, durasi, DP, refund, denda dan perpanjangan). Pengaturan internal dan referensi rekening tidak diekspos.
+
+`GET /api/bookings` tetap array dan menerima `page`, `limit`, `sort=oldest|newest|deadline` (default oldest), serta filter `status` opsional. Filter/order ini berlaku untuk daftar pelanggan dengan ownership server. Item dalam daftar/detail memuat `item.photoPath` publik.
+
+Financial detail menambahkan `creditedAmount` dan `remainingAmount` pada setiap obligation. Kredit menghitung aplikasi reserved/applied net refund selesai; bukti pending tidak dihitung. Gunakan saldo obligation untuk nominal transfer berikutnya, bukan `amountDueNow` booking yang merupakan snapshot awal. Summary tetap memisahkan applied/reserved dan sisa seluruh tagihan.

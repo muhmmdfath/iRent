@@ -198,7 +198,13 @@ export class PaymentsService {
     const booking = await tx.booking.findUniqueOrThrow({
       where: { id: bookingId },
       include: {
-        items: { include: { returnRecord: true, lossRecord: true } },
+        items: {
+          include: {
+            returnRecord: true,
+            lossRecord: true,
+            item: { select: { photoPath: true } },
+          },
+        },
         extensions: { include: { items: true }, orderBy: { createdAt: 'asc' } },
         obligations: {
           include: {
@@ -235,6 +241,34 @@ export class PaymentsService {
         },
       },
     });
+    const applications = await tx.paymentApplication.findMany({
+      where: { bookingId, state: { in: ['reserved', 'applied'] } },
+      include: {
+        refundSources: {
+          select: { amount: true, refund: { select: { status: true } } },
+        },
+      },
+    });
+    const credited = new Map<string, bigint>();
+    for (const application of applications) {
+      const returned = application.refundSources
+        .filter((source) => source.refund.status === 'sudah_dikembalikan')
+        .reduce((sum, source) => sum + source.amount, 0n);
+      credited.set(
+        application.paymentObligationId,
+        (credited.get(application.paymentObligationId) ?? 0n) +
+          application.amount -
+          returned,
+      );
+    }
+    const obligations = booking.obligations.map((obligation) => {
+      const creditedAmount = credited.get(obligation.id) ?? 0n;
+      const remainingAmount =
+        obligation.amountDue > creditedAmount
+          ? obligation.amountDue - creditedAmount
+          : 0n;
+      return { ...obligation, creditedAmount, remainingAmount };
+    });
     const summary = await this.ledger.summary(tx, bookingId);
     const paymentStatus = ['kedaluwarsa', 'ditolak', 'dibatalkan'].includes(
       booking.status,
@@ -248,7 +282,7 @@ export class PaymentsService {
             ? 'kurang_bayar'
             : 'belum_terverifikasi';
     return {
-      booking,
+      booking: { ...booking, obligations },
       risks: await this.risks.bookingRisks(tx, bookingId),
       summary: { ...summary, paymentStatus },
       confirmationOverdue:

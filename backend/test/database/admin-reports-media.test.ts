@@ -1209,4 +1209,18 @@ test('admin_read_models_reports_and_public_media_follow_real_business_state', as
       }
     },
   );
+  await t.test(
+    'public_rental_policy_exposes_only_customer_rules_and_current_terms',
+    async () => {
+      const response = await fetch(base + '/api/rental-policy');
+      assert.equal(response.status, 200);
+      const policy = await response.json();
+      assert.equal(policy.termsVersion, TERMS_VERSION);
+      assert.equal(policy.values.min_lead_minutes, 120);
+      assert.equal(policy.values.open_time, '08:00');
+      assert.equal('qris_image_path' in policy.values, false);
+      assert.equal('receiving_account_reference' in policy.values, false);
+      assert.deepEqual(Object.keys(policy).sort(), ['termsVersion', 'values']);
+    },
+  );
 });

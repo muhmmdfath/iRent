@@ -536,6 +536,8 @@ test('private_proofs_receipts_approval_and_expiry_keep_stock_and_money_consisten
         assert.equal(partial.booking.status, 'menunggu_pembayaran');
         assert.equal(partial.summary.reserved, 10000n);
         assert.equal(partial.summary.applied, 0n);
+        assert.equal(partial.booking.obligations[0].creditedAmount, 10000n);
+        assert.equal(partial.booking.obligations[0].remainingAmount, 10000n);
         assert.equal(
           partial.booking.expiresAt.getTime(),
           booking.expiresAt.getTime(),

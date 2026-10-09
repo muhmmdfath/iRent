@@ -75,7 +75,7 @@ Verifikasi tahap notifikasi 9 Oktober 2026: build/typecheck/lint, 23 tes tanpa D
 - [ ] Frontend mengikuti API dan DESIGN.md; lengkapi halaman phase 1.
 - [ ] PWA perangkat nyata, performa, aksesibilitas, demo/panduan dan deployment.
 
-Provider WhatsApp, hosting, target bisnis/performa terukur, dan prosedur koreksi receipt tetap mengikuti keputusan terbuka PRD §19. Jangan mengklaim fondasi/schema sebagai backend bisnis yang sudah lengkap.
+Provider WhatsApp, hosting, dan target bisnis/performa terukur tetap mengikuti keputusan terbuka PRD §19. Jangan mengklaim fondasi/schema sebagai backend bisnis yang sudah lengkap.
 
 Keputusan 9 Oktober 2026: phase 1 hanya PWA. Pengingat booking/perpanjangan H-30/H-15/H-5 dan overdue; tahap lama tidak menumpuk jika worker terlambat. WhatsApp tidak mendapat antrean baru. Helper bunyi dashboard aktif tersedia; wiring panel React, tanda merah overdue, tombol aktivasi/pengakuan dan tes perangkat mengikuti tahap frontend.
 
@@ -88,3 +88,28 @@ Backend phase 1 melengkapi laporan/Excel, media publik aman, read-model panel ad
 Folder design/ berisi 36 HTML + 36 PNG terbaru, DESIGN.md, registry screen dan [galeri filter desktop/mobile](design/index.html). Tujuh preview sebelumnya dipindahkan ke archive/legacy-previews. Ekspor tetap referensi; penerapan UI mengikuti hierarchy/spacing terbaru karena beberapa card Stitch masih padat.
 
 Verifikasi akhir backend 9 Oktober 2026: 26 tes tanpa DB dan 185 tes PostgreSQL/HTTP lulus (211 total). Build/typecheck/lint/format dan Prisma validate lulus. Migrasi diterapkan dari kosong dan upgrade pada PostgreSQL 18; diff database/schema tanpa drift; audit dependency nol kerentanan. Tes koreksi/read-model/media juga berjalan dalam schema sementara dari SQL migrasi kosong dan membersihkan seluruh fixture tanpa menonaktifkan guard riwayat. Ekspor OpenAPI dan 36 pasangan HTML/PNG/registry/guide diperiksa. Tidak ada commit/push atau deployment pada tahap ini.
+
+## Fondasi frontend - tahap 3, langkah 1
+
+- [x] React/Vite/TypeScript dengan dependensi terkunci; build menyertakan typecheck.
+- [x] Tailwind v4, komponen dasar shadcn/ui, Poppins lokal, dan token/layout DESIGN.md.
+- [x] Router pelanggan/admin dengan guard sesi/role dan tujuan login yang dibatasi.
+- [x] Axios cookie/CSRF, React Query untuk sesi/server, Zustand untuk state navigasi.
+- [x] Login nyata, pemulihan sesi, logout, cache privat, keadaan loading/error/offline.
+- [x] Shell responsif, navigasi keyboard, beranda/informasi akun, dan manifest admin.
+- [ ] Registrasi/profil penyewa, katalog, booking dan upload bukti (langkah 2).
+- [ ] Operasional/pengelolaan admin serta aktivasi push/suara dan uji perangkat nyata.
+
+Setup dan batas cakupan ada di [frontend/README.md](frontend/README.md). Beranda tahap ini menampilkan akun aktif; belum menampilkan dashboard bisnis atau data transaksi contoh.
+
+Verifikasi fondasi frontend: 19 tes Vitest/MSW dan 9 tes browser Chromium lulus, termasuk API Nest/PostgreSQL nyata pada database sementara. Build/typecheck, lint, format dan audit dependensi lulus (0 vulnerabilities). Tampilan diperiksa pada 360/390/768/1024/1440 px; layout admin diperiksa pada 390/1440 px. Ini belum mencakup alur booking atau pengujian PWA pada perangkat nyata.
+
+## Frontend pelanggan - langkah 2
+
+Registrasi dan profil (NIK tidak dikembalikan/disimpan lokal), katalog/detail dengan foto, pilihan tarif, aksesori per unit, jadwal WIB, pickup/delivery, quotation/availability, empat persetujuan dan booking tersedia. Pelanggan langsung upload bukti tanpa persetujuan admin sebelumnya; halaman pembayaran memisahkan bukti pending dari uang terverifikasi, menampilkan sisa obligation, tenggat dan riwayat proof privat. Daftar/detail, dashboard tindakan berikutnya dan pelunasan terintegrasi.
+
+Read model backend ditambah allowlist rental-policy publik, sortir/filter daftar pelanggan, foto item serta kredit/sisa kewajiban pembayaran. Tidak ada migrasi/perubahan aturan alokasi. OpenAPI diperbarui.
+
+Verifikasi: build/typecheck/lint/format; 26 tes frontend dan 15 Chromium lulus, termasuk UI registrasi/profil/booking/upload pada Nest/PostgreSQL sementara dan viewport 360/390/768/1024/1440. Backend 26 tes tanpa DB dan 186 skenario PostgreSQL/HTTP lulus (suite penuh sebelumnya 185, ditambah skenario kontrak publik dan assertion saldo partial). Screenshot implementasi tersedia di docs/frontend/.
+
+Berikutnya: aksi pelanggan pembatalan/refund, perpanjangan dan pengembalian per item; panel operasional admin; wiring notifikasi/suara PWA dan pengujian perangkat. WhatsApp tetap ditunda.

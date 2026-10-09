@@ -1,21 +1,21 @@
 # Integrasi PWA admin
 
-Direktori ini baru memuat aset PWA dan helper, belum aplikasi React/Vite. Saat frontend dibangun, Vite menyajikan `public/admin/*` pada `/admin/*`.
+Aplikasi React/Vite sudah tersedia; fondasi layout admin memasang manifest saat sesi admin aktif. Vite menyajikan `public/admin/*` pada `/admin/*`. Panel aktivasi push/suara dan pengujian perangkat nyata masih mengikuti tahap PWA.
 
-1. Layout admin memakai `<link rel="manifest" href="/admin/manifest.webmanifest">` dan `<meta name="theme-color" content="#F28CB1">`.
+1. Layout admin memakai `<link rel="manifest" href="/admin/manifest.webmanifest">` dan `<meta name="theme-color" content="#292B31">`.
 2. Konfigurasi hosting mengarahkan `/admin` ke `/admin/`. Sajikan manifest, ikon dan `/admin/sw.js` secara publik tanpa redirect login. Service worker harus JavaScript, bukan fallback HTML. Prioritaskan file aset sebelum fallback route SPA.
 3. Route admin serta detail booking/perpanjangan tetap membutuhkan sesi/role. Link notifikasi menuju `/admin/bookings/:id` atau `/admin/bookings/:id/extensions/:extensionId`; setelah login, router dapat melanjutkan ke tujuan yang berotorisasi.
 4. Ambil konfigurasi public key dari `GET /api/admin/notifications/configuration`. Hubungkan helper ke tombol admin yang nyata, bukan saat page load:
 
 ```js
-import { enableAdminPush, disableAdminPush } from "/admin/push-client.js";
+import { enableAdminPush, disableAdminPush } from '/admin/push-client.js';
 
 // Panggil langsung dalam handler klik "Aktifkan notifikasi".
-await enableAdminPush({ apiBase: "", csrfToken, publicKey });
+await enableAdminPush({ apiBase: '', csrfToken, publicKey });
 
 // Panggil pada tombol "Nonaktifkan notifikasi"; sebelum berpindah akun,
 // nonaktifkan subscription akun lama selagi sesinya masih aktif.
-await disableAdminPush({ apiBase: "", csrfToken });
+await disableAdminPush({ apiBase: '', csrfToken });
 ```
 
 `apiBase` kosong memakai API pada origin yang sama. Development lintas port memakai origin API eksplisit sesuai CORS; konfigurasi `VITE_*` tetap publik. CSRF berasal dari sesi iRent. Jangan memasukkan private VAPID key, NIK, rekening atau bukti pembayaran ke aset/PWA payload.

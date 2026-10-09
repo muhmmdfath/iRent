@@ -5,11 +5,16 @@ import { SettingsService } from './settings.service';
 import {
   SettingsController,
   PaymentOptionsController,
+  RentalPolicyController,
 } from './settings.controller';
 @Module({
   imports: [PrismaModule, AuthModule],
   providers: [SettingsService],
-  controllers: [SettingsController, PaymentOptionsController],
+  controllers: [
+    SettingsController,
+    PaymentOptionsController,
+    RentalPolicyController,
+  ],
   exports: [SettingsService],
 })
 export class SettingsModule {}

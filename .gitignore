@@ -16,3 +16,7 @@ coverage/
 backend/src/generated/
 backend/storage/
 *.tsbuildinfo
+
+# Frontend browser-test output
+frontend/test-results/
+frontend/playwright-report/
