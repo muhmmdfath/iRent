@@ -2,6 +2,27 @@
 
 Website penyewaan iPhone/aksesori dan PWA admin. Implementasi dimulai dari struktur data dan backend; UI mengikuti kontrak API dan design system.
 
+## Menjalankan lokal di Windows
+
+Nyalakan Docker Desktop, lalu dari root repository jalankan:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/setup.ps1
+```
+
+Setup memasang Node 24 khusus proyek di `%LOCALAPPDATA%/iRent/runtime`, dependency dari lockfile, PostgreSQL, migrasi, pengaturan awal, dan build kedua aplikasi. Environment yang sudah ada dipertahankan; environment baru menggunakan kunci acak tanpa mencetak rahasia.
+
+Jalankan dua terminal dari root repository:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File scripts/dev.ps1 backend
+powershell -ExecutionPolicy Bypass -File scripts/dev.ps1 frontend
+```
+
+Buka `http://127.0.0.1:5173`; readiness API tersedia di `http://127.0.0.1:3000/api/health/ready`. PostgreSQL lokal memakai port `55432` agar terpisah dari instalasi PostgreSQL lain. Database dapat dihentikan dengan `docker compose stop postgres` tanpa menghapus data. Seed hanya mengisi pengaturan; katalog dan QRIS perlu diisi dengan data toko. Pembuatan admin pertama mengikuti [AUTH.md](backend/AUTH.md).
+
+Data simulasi lokal tersedia melalui `powershell -ExecutionPolicy Bypass -File scripts/seed-demo.ps1` setelah kedua server berjalan dan kredensial akun simulasi tersedia di `backend/.env.simulation`. Detail item, booking, gambar dan batas simulasi ada di [docs/demo-data.md](docs/demo-data.md). Seed demo terpisah dari seed pengaturan dan tidak dijalankan otomatis saat setup.
+
 - [PRD.md](PRD.md): requirement, aturan bisnis, struktur data, dan skenario pengujian.
 - [IMPLEMENTATION.md](IMPLEMENTATION.md): progres dan urutan implementasi.
 - [backend/README.md](backend/README.md): setup API/PostgreSQL dan perintah development.

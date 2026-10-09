@@ -7,7 +7,7 @@ Backend NestJS/Express dan PostgreSQL sesuai [PRD](../PRD.md). API tersedia untu
 Gunakan Node.js 24.15–24.x dan PostgreSQL 17. Dari root repository:
 
 ```powershell
-docker compose up -d db
+docker compose up -d postgres
 cd backend
 Copy-Item .env.example .env
 # Isi kunci auth/enkripsi sesuai AUTH.md sebelum menjalankan API.
