@@ -1,5 +1,35 @@
 # Data simulasi lokal
 
+## Seed lengkap frontend (11 Oktober 2026)
+
+Build backend dan terapkan migrasi/pengaturan dahulu. Jalankan dari root dengan Node 24:
+
+```powershell
+node scripts/seed-accounts.cjs
+# Backend/frontend berjalan untuk katalog dan foto melalui API.
+powershell -ExecutionPolicy Bypass -File scripts/seed-demo.ps1
+# Hentikan API utama sementara (Ctrl+C), supaya worker tidak memproses
+# booking historis di tengah penyusunan skenario.
+node scripts/seed-scenarios.cjs
+# Nyalakan kembali API dari backend: npm run start
+```
+
+`seed-accounts` membuat admin pertama pada database baru, pelanggan utama, serta Nadia, Raka, Dina dan Laila dengan profil/sesi masing-masing. Admin lokal yang sudah ada memakai `backend/.env.simulation` atau environment `IRENT_DEMO_ADMIN_EMAIL`/`IRENT_DEMO_ADMIN_PASSWORD`. Password acak hanya ditulis ke file lokal yang diabaikan Git; password/data lama tidak direset.
+
+`seed-scenarios` memakai service bisnis NestJS, transaksi, otorisasi, snapshot, ledger dan penyimpanan bukti sebenarnya. Clock simulasi dan worker nonaktif hanya berlaku pada proses seed. Tujuh model dummy ditambah hingga minimal delapan unit per model (56 unit): siap, disewa, persiapan, perawatan dan hilang.
+
+Skenario: belum bayar, bukti pending, siap serah-terima, sedang disewa, perpanjangan disetujui/bukti pending, quotation ongkir untuk penjemputan terpisah, laporan pengembalian, sewa terlambat, selesai/lunas, booking berisiko, unit hilang/ganti rugi, refund diajukan/disetujui/sudah ditransfer. Bukti gambar ditandai **SIMULASI**, bukan transaksi bank nyata. QRIS asli tetap diisi admin dan tidak diganti seed.
+
+`backend/storage/demo/scenarios.json` menyimpan kode/ID, UUID idempotensi, payload dan tahap selesai. Mengulang pada hari/batch yang sama tidak menggandakan tindakan. Deadline berjalan normal setelah API menyala, termasuk upload perpanjangan 30 menit. Untuk batch baru sambil mempertahankan histori:
+
+```powershell
+$env:IRENT_DEMO_RUN = 'simulasi-kedua'
+node scripts/seed-scenarios.cjs
+Remove-Item Env:IRENT_DEMO_RUN
+```
+
+Pertahankan nama batch untuk mengulang batch yang sama. Booking lama tetap mengikuti keputusan/worker; tidak dihapus atau diaktifkan kembali. Jadwal contoh mengikuti pengaturan awal PRD dan tetap divalidasi ketika pengaturan toko berbeda. Bagian berikut menjelaskan katalog dan tiga booking baseline sebelumnya; seed lengkap menambahkan unit/skenario di atas.
+
 Jalankan dari root setelah backend/frontend menyala:
 
 ```powershell

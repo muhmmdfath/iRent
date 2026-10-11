@@ -4,7 +4,7 @@ const path = require("node:path");
 const { randomUUID } = require("node:crypto");
 const root = path.resolve(__dirname, "..");
 const sharp = require(path.join(root, "backend/node_modules/sharp"));
-const base = "http://127.0.0.1:5173";
+const base = process.env.IRENT_DEMO_BASE_URL || "http://127.0.0.1:5173";
 const directory = path.join(root, "backend/storage/demo");
 const manifestPath = path.join(directory, "manifest.json");
 fs.mkdirSync(directory, { recursive: true });

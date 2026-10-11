@@ -45,12 +45,18 @@ export function TermsPage() {
             sebelum konfirmasi booking. Pelunasan sewa dan ongkir harus selesai
             sebelum serah terima.
           </p>
+          <p>
+            Jika pelanggan tidak hadir hingga batas no-show{' '}
+            {rule.no_show_minutes} menit, booking dapat ditutup sesuai
+            kebijakan. Delivery memerlukan bukti kesiapan petugas dan kegagalan
+            pelanggan; keterlambatan toko diperhitungkan.
+          </p>
         </section>
         <section>
           <h2>Pembatalan dan refund</h2>
           <p>
-            Pembatalan pelanggan minimal {rule.cancel_refund_cutoff_days} hari
-            sebelum pengambilan dapat memenuhi kebijakan refund:{' '}
+            Pembatalan pelanggan lebih dari {rule.cancel_refund_cutoff_days}{' '}
+            hari sebelum pengambilan dapat memenuhi kebijakan refund:{' '}
             {rule.cancel_refund_percent}% dana DP yang memenuhi syarat, atau{' '}
             {rule.cancel_full_refund_percent}% dana pembayaran penuh yang
             memenuhi syarat. Setelah cutoff, refund pembatalan pelanggan tidak
@@ -76,6 +82,13 @@ export function TermsPage() {
             Perpanjangan diajukan per item, membutuhkan pemeriksaan bentrok
             jadwal, pembayaran, dan persetujuan admin. Jadwal lama berlaku
             sampai perpanjangan disetujui.
+          </p>
+          <p>
+            Ajukan paling lambat {rule.extension_min_lead_minutes} menit sebelum
+            jadwal kembali setiap unit, dengan tambahan 6, 12, atau 24 jam.
+            Ongkir penjemputan terpisah perlu persetujuan pelanggan; batas bayar{' '}
+            {rule.extension_hold_minutes} menit dimulai setelah pengajuan final.
+            Total durasi tetap mengikuti batas sewa.
           </p>
         </section>
       </div>

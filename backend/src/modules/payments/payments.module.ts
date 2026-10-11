@@ -240,6 +240,12 @@ export class PrivateProofsController {
 @Roles('admin')
 export class AdminPaymentsController {
   constructor(private readonly payments: PaymentsService) {}
+  @Get(':id/receipts') receipts(
+    @Req() req: AuthRequest,
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ) {
+    return this.payments.receipts(req.auth, id);
+  }
   @Post(':id/settlement') recordSettlement(
     @Req() req: AuthRequest,
     @Param('id', new ParseUUIDPipe()) id: string,

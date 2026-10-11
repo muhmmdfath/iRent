@@ -7,6 +7,7 @@ import {
   IsBoolean,
   IsIn,
   IsInt,
+  IsOptional,
   IsString,
   Length,
   Matches,
@@ -38,6 +39,25 @@ export class PageDto {
   @Min(1)
   @Max(100)
   limit: number = 50;
+}
+export class InventoryListDto extends PageDto {
+  @ApiPropertyOptional({
+    minLength: 1,
+    maxLength: 150,
+    description: 'Cari nama model',
+  })
+  @IsOptional()
+  @IsString()
+  @Length(1, 150)
+  search?: string;
+  @ApiPropertyOptional({ enum: ['iphone', 'accessory'] })
+  @IsOptional()
+  @IsIn(['iphone', 'accessory'])
+  category?: 'iphone' | 'accessory';
+  @ApiPropertyOptional({ enum: ['true', 'false'] })
+  @IsOptional()
+  @IsIn(['true', 'false'])
+  isActive?: 'true' | 'false';
 }
 export class ItemDto {
   @IsIn(['iphone', 'accessory']) category!: 'iphone' | 'accessory';

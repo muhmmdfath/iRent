@@ -16,6 +16,8 @@ Semua route membutuhkan sesi iRent. POST memakai JSON, Origin yang diizinkan, da
 
 Contoh body; ganti UUID dan pilih waktu WIB yang valid saat request diproses:
 
+Daftar mendukung `status` serta `sort=oldest|newest|deadline` (default `oldest`). Admin juga dapat memakai `search` (1–100 karakter) untuk kode booking atau nama pelanggan, misalnya `/api/admin/bookings?search=IR&status=menunggu_konfirmasi&sort=deadline&page=1&limit=20`. Daftar dan detail untuk admin menyertakan `customer` dengan `id`, `name`, `email`, dan `phone`; data profil/NIK/password tidak disertakan. Response pelanggan tetap dibatasi pada booking miliknya dan tidak menyertakan relasi tersebut.
+
 ```json
 {
   "startAt": "2026-10-10T10:00:00+07:00",

@@ -207,6 +207,53 @@ test('inventory_settings_and_quotes_preserve_stock_history_and_money', async (t)
       },
     );
     await t.test(
+      'admin_search_filters_and_inactive_details_preserve_public_visibility',
+      async () => {
+        await inventory.updateItem(contexts[0], accessoryId, {
+          isActive: false,
+        });
+        const response = await call(
+          `/admin/items?search=${suffix}&category=accessory&isActive=false&limit=20`,
+          'GET',
+          undefined,
+          0,
+        );
+        assert.equal(response.status, 200);
+        const result = (await response.json()) as {
+          data: { id: string }[];
+          total: number;
+        };
+        assert.equal(result.total, 1);
+        assert.deepEqual(
+          result.data.map((value) => value.id),
+          [accessoryId],
+        );
+        assert.equal((await call('/items/' + accessoryId)).status, 404);
+        assert.equal(
+          (await call('/admin/items/' + accessoryId, 'GET', undefined, 0))
+            .status,
+          200,
+        );
+        assert.equal(
+          (await call('/admin/items/' + accessoryId, 'GET', undefined, 2))
+            .status,
+          403,
+        );
+        assert.equal(
+          (await call('/admin/items?isActive=yes', 'GET', undefined, 0)).status,
+          400,
+        );
+        assert.equal(
+          (await call('/admin/items?category=other', 'GET', undefined, 0))
+            .status,
+          400,
+        );
+        await inventory.updateItem(contexts[0], accessoryId, {
+          isActive: true,
+        });
+      },
+    );
+    await t.test(
       'concurrent_accessory_codes_are_unique_across_items_and_admins',
       async () => {
         const other = await item('accessory', 'Tripod', [
@@ -501,6 +548,30 @@ test('inventory_settings_and_quotes_preserve_stock_history_and_money', async (t)
             blockEndAt: new Date(endAt.getTime() + 3600000),
           },
         });
+        const unitsResponse = await call(
+          '/admin/items/' + iphoneId + '/units',
+          'GET',
+          undefined,
+          0,
+        );
+        assert.equal(unitsResponse.status, 200);
+        const unitRead = (await unitsResponse.json()) as {
+          data: {
+            id: string;
+            activeAllocationCount: number;
+            unreturnedBookingCount: number;
+          }[];
+        };
+        assert.equal(
+          unitRead.data.find((unit) => unit.id === iphoneUnitId)
+            ?.activeAllocationCount,
+          1,
+        );
+        assert.equal(
+          unitRead.data.find((unit) => unit.id === iphoneUnitId)
+            ?.unreturnedBookingCount,
+          0,
+        );
         assert.equal(
           (
             await call(

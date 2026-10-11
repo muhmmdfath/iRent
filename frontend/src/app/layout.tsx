@@ -9,6 +9,7 @@ import {
   ReaderIcon,
   MagnifyingGlassIcon,
   ExitIcon,
+  CubeIcon,
 } from '@radix-ui/react-icons';
 import { Brand } from '@/components/brand';
 import { Button } from '@/components/ui/button';
@@ -19,6 +20,7 @@ import { clearSessionData } from '@/services/query-client';
 import { errorMessage } from '@/services/api';
 import { useUiStore } from '@/stores/ui';
 import { useOnline } from '@/hooks/use-online';
+import { disableCurrentPush } from '@/admin/notifications/push';
 export function AppLayout() {
   const session = useSession();
   const location = useLocation();
@@ -27,7 +29,10 @@ export function AppLayout() {
   const navigationOpen = useUiStore((state) => state.navigationOpen);
   const setNavigationOpen = useUiStore((state) => state.setNavigationOpen);
   const mutation = useMutation({
-    mutationFn: logout,
+    mutationFn: async () => {
+      if (session.data?.user.role === 'admin') await disableCurrentPush();
+      return logout();
+    },
     onSuccess: clearSessionData,
     onError: (error) => setLogoutError(errorMessage(error)),
   });
@@ -55,6 +60,24 @@ export function AppLayout() {
         <HomeIcon aria-hidden="true" />
         Beranda
       </NavLink>
+      {admin && (
+        <NavLink to="/admin/bookings" onClick={() => setNavigationOpen(false)}>
+          <ReaderIcon aria-hidden="true" />
+          Booking & pembayaran
+        </NavLink>
+      )}
+      {admin && (
+        <NavLink to="/admin/inventory" onClick={() => setNavigationOpen(false)}>
+          <CubeIcon aria-hidden="true" />
+          Inventaris & unit
+        </NavLink>
+      )}
+      {admin && (
+        <NavLink to="/admin/refunds" onClick={() => setNavigationOpen(false)}>
+          <ReaderIcon aria-hidden="true" />
+          Refund
+        </NavLink>
+      )}
       {!admin && (
         <>
           <NavLink to="/catalog" onClick={() => setNavigationOpen(false)}>
@@ -65,6 +88,31 @@ export function AppLayout() {
             <ReaderIcon aria-hidden="true" />
             Booking
           </NavLink>
+        </>
+      )}
+      {admin && (
+        <>
+          {[
+            ['calendar', 'Jadwal unit'],
+            ['risks', 'Risiko & tindak lanjut'],
+            ['notifications', 'Notifikasi PWA'],
+            ['extensions', 'Perpanjangan'],
+            ['customers', 'Data penyewa'],
+            ['accounts', 'Akun admin'],
+            ['reports', 'Laporan & transaksi'],
+            ['zones', 'Zona ongkir'],
+            ['settings', 'Pengaturan'],
+            ['guide', 'Panduan admin'],
+          ].map(([path, label]) => (
+            <NavLink
+              key={path}
+              to={'/admin/' + path}
+              onClick={() => setNavigationOpen(false)}
+            >
+              <ReaderIcon aria-hidden="true" />
+              {label}
+            </NavLink>
+          ))}
         </>
       )}
       <NavLink to={home + 'account'} onClick={() => setNavigationOpen(false)}>
@@ -109,17 +157,19 @@ export function AppLayout() {
       <div className="workspace-body">
         <div className="account-toolbar">
           <span>
-            {location.pathname.endsWith('account')
-              ? 'Akun'
-              : location.pathname.endsWith('profile')
-                ? 'Profil'
-                : location.pathname.endsWith('new')
-                  ? 'Booking baru'
-                  : location.pathname.endsWith('payment')
-                    ? 'Pembayaran'
-                    : location.pathname.includes('/bookings')
-                      ? 'Booking'
-                      : 'Beranda'}
+            {location.pathname.startsWith('/admin/inventory')
+              ? 'Inventaris'
+              : location.pathname.endsWith('account')
+                ? 'Akun'
+                : location.pathname.endsWith('profile')
+                  ? 'Profil'
+                  : location.pathname.endsWith('new')
+                    ? 'Booking baru'
+                    : location.pathname.endsWith('payment')
+                      ? 'Pembayaran'
+                      : location.pathname.includes('/bookings')
+                        ? 'Booking'
+                        : 'Beranda'}
           </span>
           <Button
             variant="ghost"

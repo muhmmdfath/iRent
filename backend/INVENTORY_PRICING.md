@@ -9,6 +9,7 @@ Semua path menggunakan prefix /api. Mutasi admin dan quote memakai cookie/CSRF s
 | GET /items, /items/:id                     | Publik: katalog aktif; list menerima page/limit                           |
 | GET /delivery-zones                        | Publik: zona aktif, ongkir antar-jemput sekaligus                         |
 | GET /admin/items                           | Admin: katalog aktif/nonaktif dan ringkasan unit                          |
+| GET /admin/items/:id                       | Admin: detail model, termasuk model nonaktif                              |
 | POST /admin/items                          | Admin: category, name, includes[], price6h/12h/24h, photoPath opsional    |
 | PATCH /admin/items/:id                     | Admin: metadata, harga, isActive; kategori tetap                          |
 | GET /admin/items/:id/units                 | Admin: unit fisik, page/limit                                             |
@@ -22,7 +23,11 @@ Semua path menggunakan prefix /api. Mutasi admin dan quote memakai cookie/CSRF s
 | GET/PATCH /admin/settings                  | Admin: baca atau ubah dengan body {values:{key:value}}                    |
 | POST /pricing/quote                        | Customer: rincian harga/snapshot dan validasi jadwal                      |
 
-Page mulai 1, limit default 50/maksimal 100. Includes merupakan array teks. Gambar menerima path publik /media/items/filename.png atau /media/qris/filename.png (juga jpg/jpeg/webp); upload dan penyajian file media belum diimplementasikan.
+Page mulai 1, limit default 50/maksimal 100. Daftar admin menerima `search` nama model (1–150 karakter, case-insensitive), `category=iphone|accessory` dan `isActive=true|false`. Contoh: `/api/admin/items?search=iphone&category=iphone&isActive=true&page=1&limit=20`. Filter tidak mengubah katalog publik yang hanya menampilkan model aktif. Detail model nonaktif tetap tersedia bagi admin; akses pelanggan ke route admin ditolak.
+
+Includes merupakan array teks. Upload foto publik dan penyajian file media tersedia melalui [MEDIA.md](MEDIA.md). Daftar unit admin menambah `activeAllocationCount` dan `unreturnedBookingCount`, tanpa mengekspos relasi pelanggan. Alokasi aktif menahan penonaktifan/mulai perawatan; sewa belum kembali menahan penyelesaian persiapan. Fisik ready tetap berbeda dari ketersediaan kalender.
+
+Mutasi inventaris memakai sesi/Origin/CSRF dan tidak diulang otomatis oleh frontend. Endpoint pembuatan model/unit ini belum mendukung kunci idempotensi. Bila respons pembuatan terputus/5xx, panel memblokir konfirmasi ulang pada pemeriksaan yang sama dan meminta admin memeriksa inventaris sebelum membuat ulang.
 
 ## Stok dan riwayat
 

@@ -418,26 +418,33 @@ export class BookingsService {
     page: PageDto & {
       sort?: 'oldest' | 'newest' | 'deadline';
       status?: string;
+      search?: string;
+      customerId?: string;
     },
     admin = false,
   ) {
     if (admin && context.user.role !== 'admin') throw new NotFoundException();
-    const owner = admin
-      ? Prisma.empty
-      : Prisma.sql`WHERE user_id=${context.user.id}::uuid ${page.status ? Prisma.sql`AND status=${page.status}::booking_status` : Prisma.empty}`;
+    const owner = Prisma.sql`WHERE TRUE
+      ${admin ? Prisma.empty : Prisma.sql`AND b.user_id=${context.user.id}::uuid`}
+      ${admin && page.customerId ? Prisma.sql`AND b.user_id=${page.customerId}::uuid` : Prisma.empty}
+      ${page.status ? Prisma.sql`AND b.status=${page.status}::booking_status` : Prisma.empty}
+      ${admin && page.search ? Prisma.sql`AND (b.code ILIKE ${'%' + page.search.trim() + '%'} OR u.name ILIKE ${'%' + page.search.trim() + '%'})` : Prisma.empty}`;
     const ordering =
-      !admin && page.sort === 'deadline'
-        ? Prisma.sql`expires_at, created_at, length(code), code`
-        : !admin && page.sort === 'newest'
-          ? Prisma.sql`created_at DESC, length(code) DESC, code DESC`
-          : Prisma.sql`created_at, length(code), code`;
+      page.sort === 'deadline'
+        ? Prisma.sql`b.expires_at, b.created_at, length(b.code), b.code`
+        : page.sort === 'newest'
+          ? Prisma.sql`b.created_at DESC, length(b.code) DESC, b.code DESC`
+          : Prisma.sql`b.created_at, length(b.code), b.code`;
     const rows = await this.prisma.$queryRaw<{ id: string }[]>`
-      SELECT id FROM bookings ${owner}
+      SELECT b.id FROM bookings b JOIN users u ON u.id=b.user_id ${owner}
       ORDER BY ${ordering}
       OFFSET ${(page.page - 1) * page.limit} LIMIT ${page.limit}`;
     const bookings = await this.prisma.booking.findMany({
       where: { id: { in: rows.map((row) => row.id) } },
       include: {
+        customer: admin
+          ? { select: { id: true, name: true, email: true, phone: true } }
+          : false,
         items: {
           select: {
             id: true,
@@ -464,7 +471,13 @@ export class BookingsService {
         id,
         ...(context.user.role === 'admin' ? {} : { userId: context.user.id }),
       },
-      include: detailInclude,
+      include: {
+        ...detailInclude,
+        customer:
+          context.user.role === 'admin'
+            ? { select: { id: true, name: true, email: true, phone: true } }
+            : false,
+      },
     });
     if (!booking) throw new NotFoundException('Booking tidak ditemukan.');
     return booking;

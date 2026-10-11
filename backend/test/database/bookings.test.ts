@@ -766,6 +766,7 @@ test('booking_allocation_is_atomic_fair_and_idempotent_in_postgresql', async (t)
         assert.equal(response.status, 201, await response.clone().text());
         const result = (await response.json()) as {
           id: string;
+          code: string;
           amountDueNow: string;
           expiresAt: string;
         };
@@ -778,6 +779,17 @@ test('booking_allocation_is_atomic_fair_and_idempotent_in_postgresql', async (t)
         const admin = await call('/bookings/' + result.id, 'GET', undefined, 3);
         assert.equal(admin.status, 200);
         assert.equal(admin.headers.get('Cache-Control'), 'no-store');
+        const adminDetail = (await admin.json()) as {
+          customer: {
+            id: string;
+            name: string;
+            passwordHash?: string;
+            profile?: unknown;
+          };
+        };
+        assert.equal(adminDetail.customer.id, users[0].id);
+        assert.equal(adminDetail.customer.passwordHash, undefined);
+        assert.equal(adminDetail.customer.profile, undefined);
         assert.equal(
           (await call('/admin/bookings', 'GET', undefined, 0)).status,
           403,
@@ -785,6 +797,30 @@ test('booking_allocation_is_atomic_fair_and_idempotent_in_postgresql', async (t)
         assert.equal(
           (await call('/admin/bookings', 'GET', undefined, 3)).status,
           200,
+        );
+        const filtered = await call(
+          '/admin/bookings?status=menunggu_pembayaran&sort=newest&search=' +
+            encodeURIComponent(result.code),
+          'GET',
+          undefined,
+          3,
+        );
+        assert.equal(filtered.status, 200);
+        const matches = (await filtered.json()) as {
+          id: string;
+          status: string;
+          customer: { id: string; passwordHash?: string; profile?: unknown };
+        }[];
+        assert.equal(matches.length, 1);
+        assert.equal(matches[0].id, result.id);
+        assert.equal(matches[0].status, 'menunggu_pembayaran');
+        assert.equal(matches[0].customer.id, users[0].id);
+        assert.equal(matches[0].customer.passwordHash, undefined);
+        assert.equal(matches[0].customer.profile, undefined);
+        assert.equal(
+          (await call('/admin/bookings?status=invalid', 'GET', undefined, 3))
+            .status,
+          400,
         );
         const own = await call('/bookings', 'GET', undefined, 0);
         assert.equal(own.status, 200);

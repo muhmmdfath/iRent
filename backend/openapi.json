@@ -448,6 +448,25 @@
               "default": 50,
               "type": "integer"
             }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "Cari nama model",
+            "schema": { "minLength": 1, "maxLength": 150, "type": "string" }
+          },
+          {
+            "name": "category",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string", "enum": ["iphone", "accessory"] }
+          },
+          {
+            "name": "isActive",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string", "enum": ["true", "false"] }
           }
         ],
         "responses": { "200": { "description": "" } },
@@ -488,6 +507,21 @@
       }
     },
     "/api/admin/items/{id}": {
+      "get": {
+        "operationId": "InventoryController_detail",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Inventory"],
+        "x-irent-roles": ["admin"]
+      },
       "patch": {
         "operationId": "InventoryController_update",
         "parameters": [
@@ -948,8 +982,22 @@
             }
           },
           {
+            "name": "customerId",
+            "required": false,
+            "in": "query",
+            "description": "Filter pelanggan untuk daftar admin",
+            "schema": { "format": "uuid", "type": "string" }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "Pencarian kode booking atau nama pelanggan (admin)",
+            "schema": { "minLength": 1, "maxLength": 100, "type": "string" }
+          },
+          {
             "name": "sort",
-            "required": true,
+            "required": false,
             "in": "query",
             "schema": {
               "default": "oldest",
@@ -1056,6 +1104,48 @@
               "maximum": 100,
               "default": 50,
               "type": "integer"
+            }
+          },
+          {
+            "name": "customerId",
+            "required": false,
+            "in": "query",
+            "description": "Filter pelanggan untuk daftar admin",
+            "schema": { "format": "uuid", "type": "string" }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "Pencarian kode booking atau nama pelanggan (admin)",
+            "schema": { "minLength": 1, "maxLength": 100, "type": "string" }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": "oldest",
+              "type": "string",
+              "enum": ["oldest", "newest", "deadline"]
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "menunggu_pembayaran",
+                "menunggu_konfirmasi",
+                "dikonfirmasi",
+                "berjalan",
+                "selesai",
+                "kedaluwarsa",
+                "ditolak",
+                "dibatalkan"
+              ]
             }
           }
         ],
@@ -1210,6 +1300,23 @@
         "security": [{ "cookie": [] }],
         "tags": ["PrivateProofs"],
         "x-irent-roles": ["customer", "admin"]
+      }
+    },
+    "/api/admin/bookings/{id}/receipts": {
+      "get": {
+        "operationId": "AdminPaymentsController_receipts",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["AdminPayments"],
+        "x-irent-roles": ["admin"]
       }
     },
     "/api/admin/bookings/{id}/settlement": {
@@ -3319,6 +3426,16 @@
             }
           }
         }
+      }
+    },
+    "/api/admin/overview": {
+      "get": {
+        "operationId": "AdminReadController_overview",
+        "parameters": [],
+        "responses": { "200": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["AdminRead"],
+        "x-irent-roles": ["admin"]
       }
     },
     "/api/admin/tasks": {

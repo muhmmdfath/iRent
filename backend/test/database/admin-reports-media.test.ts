@@ -180,6 +180,42 @@ test('admin_read_models_reports_and_public_media_follow_real_business_state', as
   let proofId: string;
 
   await t.test(
+    'overview_and_receipts_are_admin_only_and_customer_filter_uses_identity',
+    async () => {
+      for (const route of [
+        '/admin/overview',
+        `/admin/bookings/${booking.id}/receipts`,
+      ]) {
+        assert.equal((await fetch(base + '/api' + route)).status, 401);
+        assert.equal((await get(route, 0)).status, 403);
+      }
+      const overview = await (await get('/admin/overview')).json();
+      assert.equal(overview.total, 1);
+      assert.equal(overview.today, 0);
+      assert.equal(overview.readyUnits, 1);
+      assert.equal(overview.lateUnits, 0);
+      assert.deepEqual(overview.pickups, []);
+      const own = await (
+        await get('/admin/bookings?customerId=' + customer.id)
+      ).json();
+      assert.equal(own.length, 1);
+      assert.equal(own[0].id, booking.id);
+      assert.deepEqual(
+        await (await get('/admin/bookings?customerId=' + admin.id)).json(),
+        [],
+      );
+      assert.equal(
+        (await get('/admin/bookings?customerId=invalid')).status,
+        400,
+      );
+      assert.deepEqual(
+        await (await get(`/admin/bookings/${booking.id}/receipts`)).json(),
+        [],
+      );
+    },
+  );
+
+  await t.test(
     'requires_admin_and_returns_paginated_accounts_without_identity_secrets',
     async () => {
       for (const path of [
@@ -290,6 +326,16 @@ test('admin_read_models_reports_and_public_media_follow_real_business_state', as
       );
       const report = await reports.read(contexts[1], period);
       assert.equal(report.cash.incoming - before.cash.incoming, price);
+      const receipts = await (
+        await get(`/admin/bookings/${booking.id}/receipts`)
+      ).json();
+      assert.equal(receipts.length, 1);
+      assert.equal(receipts[0].amount, price.toString());
+      assert.equal(receipts[0].direction, 'in');
+      assert.equal(receipts[0].method, 'cash');
+      assert.equal(JSON.stringify(receipts).includes('proofPath'), false);
+      assert.equal(JSON.stringify(receipts).includes('attachmentPath'), false);
+
       assert.equal(
         report.successfulTransactions.some((row) => row.id === booking.id),
         false,

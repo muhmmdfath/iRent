@@ -4,6 +4,9 @@ import { LoadingState, ErrorState } from '@/components/feedback';
 import { useBooking, useFinancial } from '../hooks';
 import { wib, rupiah, statusLabels } from '../format';
 import { ItemPhoto } from '../components/item-photo';
+import { RefundPanel } from '@/refunds/panel';
+import { CustomerReturns } from '../components/returns-panel';
+import { ExtensionList } from '@/extensions/pages';
 const useLabels: Record<string, string> = {
   allocated: 'Dipesan',
   in_use: 'Sedang disewa',
@@ -111,25 +114,15 @@ export function BookingDetailPage() {
           </>
         )}
       </section>
-      {financial.data?.booking.refunds?.length ? (
-        <section className="form-section">
-          <h2>Status refund</h2>
-          {financial.data.booking.refunds.map((refund) => (
-            <div className="proof-row" key={refund.id}>
-              <p>{rupiah(refund.approvedAmount ?? refund.requestedAmount)}</p>
-              <p>
-                {refund.status === 'diajukan'
-                  ? 'Refund diajukan'
-                  : refund.status === 'disetujui'
-                    ? 'Disetujui - menunggu transfer'
-                    : refund.status === 'sudah_dikembalikan'
-                      ? 'Uang sudah dikembalikan'
-                      : 'Refund ditolak'}
-              </p>
-            </div>
-          ))}
-        </section>
-      ) : null}
+      {financial.data && (
+        <RefundPanel key={id} booking={booking} money={financial.data} />
+      )}
+      {financial.data && (
+        <>
+          <ExtensionList booking={financial.data.booking} />
+          <CustomerReturns booking={financial.data.booking} />
+        </>
+      )}
       <details className="optional-fields">
         <summary>Riwayat status</summary>
         {booking.statusLogs?.map((log) => (

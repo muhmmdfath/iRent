@@ -1,5 +1,18 @@
 # Implementasi iRent
 
+## Penyelesaian frontend menyeluruh — permintaan 11 Oktober 2026
+
+- [x] Perpanjangan pelanggan/admin: proposal, quotation, consent, upload, keputusan dan rekonsiliasi.
+- [x] Laporan pengembalian pelanggan dan tindakan lanjutan admin: kehilangan, penggantian, no-show, koreksi pengembalian/receipt.
+- [x] Kalender, antrean seluruh tugas/risiko, data pelanggan/admin dan reset password.
+- [x] Pengaturan, QRIS, zona ongkir, laporan dan ekspor Excel.
+- [x] Aktivasi push/suara, pengakuan tugas, riwayat notifikasi dan lifecycle sesi.
+- [x] Audit halaman publik/pelanggan/admin, aksesibilitas dan responsivitas.
+- [x] Seed dummy berulang dengan foto item dan skenario transaksi untuk seluruh UI.
+- [x] Verifikasi frontend/backend, dokumentasi demo, commit dan push main.
+
+Verifikasi akhir 12 Oktober 2026: build, TypeScript dan lint frontend/backend lulus; 76 tes frontend, 26 tes backend tanpa DB, 188 tes PostgreSQL/HTTP pada database baru, serta 36 tes browser API simulasi lulus. Lima tes browser berkonfigurasi khusus dilewati pada regresi default; audit demo API nyata dijalankan terpisah dan lulus (88 kunjungan halaman pada viewport 360?1440 px). Screenshot desktop/mobile dan petunjuk seed disertakan. Database demo berisi 7 model bergambar, 56 unit, 18 booking, 4 perpanjangan dan 3 refund; 17 entri skenario tercatat. Tidak ada migrasi baru. Web Push pada perangkat fisik masih memerlukan HTTPS/VAPID dan uji perangkat; QRIS resmi disediakan toko.
+
 PRD menjadi acuan fungsi; DESIGN.md dan 36 ekspor desktop/mobile terbaru di design/ menjadi acuan visual. Backend/data dikerjakan sebelum UI. Checklist ini adalah satu tempat pelacakan implementasi, bukan pengganti 65 skenario PRD.
 
 ## Tahap 1 — fondasi backend dan struktur data
@@ -113,3 +126,54 @@ Read model backend ditambah allowlist rental-policy publik, sortir/filter daftar
 Verifikasi: build/typecheck/lint/format; 26 tes frontend dan 15 Chromium lulus, termasuk UI registrasi/profil/booking/upload pada Nest/PostgreSQL sementara dan viewport 360/390/768/1024/1440. Backend 26 tes tanpa DB dan 186 skenario PostgreSQL/HTTP lulus (suite penuh sebelumnya 185, ditambah skenario kontrak publik dan assertion saldo partial). Screenshot implementasi tersedia di docs/frontend/.
 
 Berikutnya: aksi pelanggan pembatalan/refund, perpanjangan dan pengembalian per item; panel operasional admin; wiring notifikasi/suara PWA dan pengujian perangkat. WhatsApp tetap ditunda.
+
+## Panel booking dan pembayaran admin — langkah 3
+
+- [x] Daftar booking, pencarian/filter dan antrean bukti pembayaran.
+- [x] Detail booking, pelanggan tanpa NIK, unit/jadwal, saldo dan riwayat status.
+- [x] Preview/unduh bukti privat, verifikasi uang aktual dan penolakan bukti.
+- [x] Pencatatan pelunasan aktual, konfirmasi tindakan dan retry idempotent.
+- [x] Verifikasi UI/API, responsivitas dan dokumentasi cakupan.
+
+Verifikasi 11 Oktober 2026: 35 tes frontend, 18 tes browser dengan API simulasi, dan satu alur admin UI pada Nest/PostgreSQL terpisah lulus. Alur nyata mencakup DP kurang bayar, pelengkapan DP, konfirmasi, pelunasan, proof privat, penolakan bukti tanpa membatalkan booking dan akses admin yang ditolak bagi pelanggan. Backend: 26 tes tanpa DB dan suite booking PostgreSQL (17 skenario) lulus. Build/typecheck/lint lulus; viewport 360/390/768/1024/1440 px diperiksa. Kontrak daftar admin menambah pencarian/filter/sort serta kontak pelanggan aman; OpenAPI diperbarui tanpa migrasi atau perubahan aturan pembayaran.
+
+Berikutnya: serah-terima dan pengembalian per unit, pembatalan/refund/perpanjangan, inventaris/pengaturan/laporan, serta aktivasi push/suara dan tes perangkat nyata. Verifikasi bukti pada panel ini mencakup pembayaran awal; pembayaran perpanjangan mengikuti tahap berikutnya.
+
+## Serah-terima dan pengembalian admin — langkah 4
+
+- [x] Form serah-terima dengan pemeriksaan pelunasan dan keterlambatan delivery.
+- [x] Verifikasi pengembalian per unit, kondisi, kerusakan dan pengecualian denda.
+- [x] Penolakan laporan, riwayat penerimaan dan pembaruan saldo/status.
+- [x] Konfirmasi tindakan, retry idempotent, tes perilaku dan browser responsif.
+
+Verifikasi 11 Oktober 2026: seluruh 43 tes Vitest/MSW frontend lulus. Sepuluh tes browser booking/pembayaran/pengembalian admin lulus pada 360/390/768/1024/1440 px. Suite operasional PostgreSQL terpisah lulus (14 skenario dan suite induk), termasuk handover/no-show bersamaan, pengembalian sebagian, perawatan, pengecualian denda, pembatalan perpanjangan pending dan HTTP role/CSRF. Build/typecheck/lint serta format file yang berubah diperiksa. Tidak ada perubahan backend, schema atau migrasi pada langkah ini; UI memakai endpoint operasional yang sudah tersedia. Screenshot desktop/mobile ada di docs/frontend/.
+
+Tahap berikutnya mencakup inventaris serta penyelesaian perawatan/persiapan fisik. Verifikasi pengembalian tidak otomatis menjadikan unit ready; aturan persiapan satu jam tetap berlaku. Koreksi pengembalian, kehilangan, refund dan perpanjangan belum memiliki form pada panel ini.
+
+## Inventaris dan kesiapan unit admin — langkah 5
+
+- [x] Katalog admin dengan pencarian/filter, pagination dan detail aktif/nonaktif.
+- [x] Buat/edit model, tarif, isi paket dan upload foto publik.
+- [x] Tambah unit iPhone/aksesori dan kelola status aktif tanpa menghapus riwayat.
+- [x] Mulai/selesaikan perawatan dan selesaikan persiapan setelah satu jam.
+- [x] Verifikasi API, UI responsif, dokumentasi dan screenshot.
+
+Verifikasi 11 Oktober 2026: 54 tes frontend, tujuh tes browser inventaris dengan API simulasi, satu alur browser dengan API/PostgreSQL nyata dan delapan tes suite inventaris PostgreSQL lulus. Alur nyata mencakup model baru/edit, foto sanitasi, batch aksesori, mulai/selesai perawatan, persiapan satu jam dan detail model nonaktif. Tes lain mencakup batch kode iPhone, alokasi aktif, pengembalian belum verified, clock deadline dan browser back. Build/typecheck/lint serta format file yang berubah lulus. Read model backend menambah pencarian/filter, detail admin nonaktif dan hitungan alokasi/sewa belum kembali. OpenAPI diperbarui; tidak ada migrasi atau perubahan aturan stok/tarif.
+
+Pembuatan inventaris belum mendukung idempotensi backend; panel memblokir pengulangan langsung bila respons pembuatan ambigu dan meminta pemeriksaan inventaris. Langkah berikutnya: pembatalan/refund dan perpanjangan, pengaturan/zona/laporan admin, serta integrasi push/suara dan perangkat nyata.
+
+Regresi browser akhir: 30 tes API simulasi lulus, empat tes API nyata dilewati pada konfigurasi default; alur inventaris API nyata dijalankan terpisah dan lulus. Backend demo utama dimulai ulang dengan build terbaru; detail model/hitungan unit tersedia dan tujuh model dummy tetap tersimpan.
+
+## Pembatalan dan refund — langkah 6
+
+- [x] Pembatalan seluruh booking pelanggan sebelum serah-terima, dengan aturan snapshot dan alasan wajib.
+- [x] Pembatalan admin karena kendala toko memakai endpoint refund penuh terpisah.
+- [x] Form rekening pelanggan/admin yang terkunci setelah keputusan.
+- [x] Antrean refund admin, persetujuan tanpa mencatat kas keluar dan penolakan beralasan.
+- [x] Pencatatan transfer manual dengan nominal persetujuan, waktu WIB, referensi dan bukti privat.
+- [x] Review tindakan, retry idempotent, invalidasi data dan unduhan bukti pemilik/admin.
+- [x] Verifikasi akhir dan dokumentasi screenshot.
+
+Backend yang sudah tersedia tetap menghitung hak refund dan menjaga transaksi/idempotensi/otorisasi. Suite refund PostgreSQL terpisah lulus: 17 tes termasuk batas tepat 48 jam, DP/lunas, pembatalan kendala toko, dana berlebih, pembatalan bersamaan approval, transfer bersamaan, CSRF dan bukti privat. Tidak ada migrasi, perubahan perhitungan atau transfer bank sungguhan. Berikutnya: perpanjangan dan laporan pengembalian pelanggan, pengaturan/zona/laporan admin, push/suara serta perangkat nyata.
+
+Verifikasi akhir 11 Oktober 2026: 61 tes Vitest/MSW, 36 tes Chromium API simulasi dan 17 tes refund PostgreSQL lulus; empat tes browser API nyata fase terdahulu dilewati pada konfigurasi default. Regresi dijalankan berurutan setelah timeout saat suite berjalan bersamaan. Browser refund mencakup 360/390/768/1024/1440 px serta pelanggan yang membatalkan, mengisi rekening dan mengunduh bukti privat setelah penyelesaian admin. Build/typecheck/lint dan format file berubah lulus. Screenshot tersimpan di docs/frontend; Vite dan readiness API demo utama merespons 200. Alur browser refund belum diuji end-to-end dengan API nyata; kontrak UI diperiksa lewat MSW/Chromium dan perilaku backend lewat PostgreSQL/HTTP.

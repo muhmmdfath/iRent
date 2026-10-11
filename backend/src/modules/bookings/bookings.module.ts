@@ -13,7 +13,6 @@ import {
 import { AuthModule } from '../../auth/auth.module';
 import { AuthRequest, Roles } from '../../auth/auth.guard';
 import { PrismaModule } from '../../prisma/prisma.module';
-import { PageDto } from '../inventory/inventory.dto';
 import { PricingModule } from '../pricing/pricing.module';
 import { QuoteDto } from '../pricing/pricing.dto';
 import { SettingsModule } from '../settings/settings.module';
@@ -53,7 +52,7 @@ export class BookingsController {
 @Roles('admin')
 export class AdminBookingsController {
   constructor(private readonly bookings: BookingsService) {}
-  @Get() list(@Req() req: AuthRequest, @Query() page: PageDto) {
+  @Get() list(@Req() req: AuthRequest, @Query() page: BookingListDto) {
     return this.bookings.list(req.auth, page, true);
   }
 }

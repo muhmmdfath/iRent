@@ -11,6 +11,7 @@ import { publicImage, rupiah } from '../settings/settings.rules';
 import { BusinessClock } from '../../shared/time/business-clock';
 import {
   ItemDto,
+  InventoryListDto,
   ItemPatchDto,
   PageDto,
   UnitsDto,
@@ -24,8 +25,16 @@ export class InventoryService {
     private readonly auth: AuthService,
     private readonly clock: BusinessClock,
   ) {}
-  async list(page: PageDto, admin = false) {
-    const where = admin ? {} : { isActive: true };
+  async list(page: PageDto & Partial<InventoryListDto>, admin = false) {
+    const where: Prisma.ItemWhereInput = admin
+      ? {
+          ...(page.search?.trim()
+            ? { name: { contains: page.search.trim(), mode: 'insensitive' } }
+            : {}),
+          ...(page.category ? { category: page.category } : {}),
+          ...(page.isActive ? { isActive: page.isActive === 'true' } : {}),
+        }
+      : { isActive: true };
     const [items, total] = await this.prisma.$transaction([
       this.prisma.item.findMany({
         where,
@@ -64,9 +73,9 @@ export class InventoryService {
       page: page.page,
     };
   }
-  async detail(id: string) {
+  async detail(id: string, admin = false) {
     const item = await this.prisma.item.findFirst({
-      where: { id, isActive: true },
+      where: { id, ...(admin ? {} : { isActive: true }) },
     });
     if (!item) throw new NotFoundException('Item tidak ditemukan.');
     return { ...item, availabilityChecked: false };
@@ -85,10 +94,28 @@ export class InventoryService {
         orderBy: { code: 'asc' },
         skip: (page.page - 1) * page.limit,
         take: page.limit,
+        include: {
+          _count: {
+            select: {
+              allocations: { where: { state: 'active' } },
+              bookingItems: {
+                where: { useStatus: { in: ['in_use', 'return_pending'] } },
+              },
+            },
+          },
+        },
       }),
       this.prisma.itemUnit.count({ where: { itemId } }),
     ]);
-    return { data, total, page: page.page };
+    return {
+      data: data.map(({ _count, ...unit }) => ({
+        ...unit,
+        activeAllocationCount: _count.allocations,
+        unreturnedBookingCount: _count.bookingItems,
+      })),
+      total,
+      page: page.page,
+    };
   }
   private async audit(
     tx: Prisma.TransactionClient,

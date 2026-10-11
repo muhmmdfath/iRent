@@ -14,6 +14,7 @@ import { AuthRequest, Public, Roles } from '../../auth/auth.guard';
 import { InventoryService } from './inventory.service';
 import {
   ActiveDto,
+  InventoryListDto,
   ItemDto,
   ItemPatchDto,
   MaintenanceDto,
@@ -45,8 +46,11 @@ export class PublicZonesController {
 @Roles('admin')
 export class InventoryController {
   constructor(private readonly inventory: InventoryService) {}
-  @Get('items') list(@Query() query: PageDto) {
+  @Get('items') list(@Query() query: InventoryListDto) {
     return this.inventory.list(query, true);
+  }
+  @Get('items/:id') detail(@Param('id', new ParseUUIDPipe()) id: string) {
+    return this.inventory.detail(id, true);
   }
   @Post('items') create(@Req() req: AuthRequest, @Body() dto: ItemDto) {
     return this.inventory.createItem(req.auth, dto);

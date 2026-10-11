@@ -61,6 +61,9 @@ export class RisksService {
     const reasons = this.reasons(item);
     return {
       bookingId: item.bookingId,
+      code: item.booking.code,
+      itemName: item.itemNameSnapshot,
+      unitCode: item.unitCodeSnapshot,
       bookingItemId: item.id,
       itemUnitId: item.itemUnitId,
       startAt: item.startAt,

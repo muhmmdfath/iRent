@@ -90,6 +90,85 @@ export class AdminService {
       { isolationLevel: Prisma.TransactionIsolationLevel.RepeatableRead },
     );
   }
+  async overview(context: AuthContext) {
+    const now = this.clock.now();
+    const start = new Date(now.toISOString().slice(0, 10) + 'T00:00:00.000Z');
+    const end = new Date(start.getTime() + 86400000);
+    const period = { gte: start, lt: end };
+    return this.prisma.$transaction(
+      async (tx) => {
+        await this.auth.authorizeLocked(tx, context, 'admin');
+        const [total, counts, today, late, ready, pickups, returns] =
+          await Promise.all([
+            tx.booking.count(),
+            tx.booking.groupBy({ by: ['status'], _count: true }),
+            tx.booking.count({ where: { initialStartAt: period } }),
+            tx.bookingItem.count({
+              where: {
+                useStatus: { in: ['in_use', 'return_pending'] },
+                currentEndAt: { lt: now },
+              },
+            }),
+            tx.itemUnit.count({
+              where: {
+                isActive: true,
+                conditionStatus: 'layak',
+                physicalStatus: 'ready',
+              },
+            }),
+            tx.bookingItem.findMany({
+              where: {
+                startAt: period,
+                useStatus: 'allocated',
+                booking: {
+                  status: { in: ['menunggu_konfirmasi', 'dikonfirmasi'] },
+                },
+              },
+              orderBy: [{ startAt: 'asc' }, { id: 'asc' }],
+              take: 100,
+              select: {
+                id: true,
+                itemNameSnapshot: true,
+                unitCodeSnapshot: true,
+                startAt: true,
+                currentEndAt: true,
+                booking: { select: { id: true, code: true } },
+              },
+            }),
+            tx.bookingItem.findMany({
+              where: {
+                currentEndAt: period,
+                useStatus: { in: ['in_use', 'return_pending'] },
+              },
+              orderBy: [{ currentEndAt: 'asc' }, { id: 'asc' }],
+              take: 100,
+              select: {
+                id: true,
+                itemNameSnapshot: true,
+                unitCodeSnapshot: true,
+                startAt: true,
+                currentEndAt: true,
+                booking: { select: { id: true, code: true } },
+              },
+            }),
+          ]);
+        return {
+          total,
+          today,
+          lateUnits: late,
+          readyUnits: ready,
+          counts: counts.map((row) => ({
+            status: row.status,
+            count: row._count,
+          })),
+          pickups,
+          returns,
+          asOf: now,
+        };
+      },
+      { isolationLevel: Prisma.TransactionIsolationLevel.RepeatableRead },
+    );
+  }
   async refunds(context: AuthContext, dto: RefundListDto) {
     return this.prisma.$transaction(async (tx) => {
       await this.auth.authorizeLocked(tx, context, 'admin');

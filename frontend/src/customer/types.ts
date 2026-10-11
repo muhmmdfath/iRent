@@ -136,6 +136,30 @@ export interface Obligation {
   proofs?: Proof[];
 }
 export interface BookingItem {
+  itemUnitId?: string;
+  tariff6hSnapshot?: string;
+  tariff12hSnapshot?: string;
+  tariff24hSnapshot?: string;
+  pickedUpAt?: string | null;
+  handoverNote?: string | null;
+  returnRecord?: {
+    status: 'pending' | 'verified' | 'rejected';
+    reportedAt: string | null;
+    receivedAtStore: string | null;
+    receivedByCourierAt: string | null;
+    verifiedAt: string | null;
+    conditionNote: string | null;
+    damageAmount: string;
+    damageNote: string | null;
+    lateFee: string;
+    preparationStartedAt: string | null;
+    manualExemptions?: {
+      type: 'admin' | 'courier';
+      from: string;
+      to: string;
+      reason: string;
+    }[];
+  } | null;
   item?: { photoPath: string | null };
   id: string;
   itemId: string;
@@ -147,6 +171,7 @@ export interface BookingItem {
   useStatus: string;
 }
 export interface Booking {
+  extensions?: import('@/extensions/types').Extension[];
   id: string;
   code: string;
   status: BookingStatus;
@@ -184,6 +209,15 @@ export interface Financial {
       requestedAmount: string;
       approvedAmount: string | null;
       transferredAt: string | null;
+      approvedAt?: string | null;
+      reasonNote?: string | null;
+      rejectedReason?: string | null;
+      reasonCode?: string;
+      recipientDetails?: {
+        bankName?: string;
+        accountNumber?: string;
+        accountHolder?: string;
+      };
     }[];
   };
   summary: {

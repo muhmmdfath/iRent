@@ -309,6 +309,31 @@ export class PaymentsService {
     });
   }
 
+  async receipts(context: AuthContext, bookingId: string) {
+    return runBusinessTransaction(this.prisma, async (tx) => {
+      await this.auth.authorizeLocked(tx, context, 'admin');
+      await this.lockBooking(tx, bookingId.toLowerCase(), context);
+      return tx.payment.findMany({
+        where: { bookingId: bookingId.toLowerCase() },
+        orderBy: [{ recordedAt: 'asc' }, { id: 'asc' }],
+        select: {
+          id: true,
+          paymentObligationId: true,
+          extensionId: true,
+          direction: true,
+          amount: true,
+          method: true,
+          occurredAt: true,
+          recordedAt: true,
+          note: true,
+          receivingAccountReference: true,
+          transactionReference: true,
+          supersededAt: true,
+        },
+      });
+    });
+  }
+
   async upload(
     context: AuthContext,
     bookingId: string,

@@ -14,6 +14,9 @@ import {
 @Roles('admin')
 class AdminReadController {
   constructor(private readonly service: AdminService) {}
+  @Get('overview') overview(@Req() req: AuthRequest) {
+    return this.service.overview(req.auth);
+  }
   @Get('tasks') tasks(@Req() req: AuthRequest, @Query() dto: TasksDto) {
     return this.service.tasks(req.auth, dto);
   }

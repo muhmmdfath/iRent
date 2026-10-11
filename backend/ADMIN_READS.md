@@ -1,5 +1,11 @@
 # Read API admin
 
+Tambahan integrasi frontend:
+
+- `GET /api/admin/overview`: total booking, pengambilan hari ini WIB, jumlah per status, unit terlambat/siap fisik, serta maksimal 100 jadwal pengambilan/pengembalian. Snapshot konsisten dalam RepeatableRead, tanpa profil/bukti privat.
+- `GET /api/admin/bookings?customerId=<uuid>`: filter ID pelanggan untuk admin; daftar pelanggan selalu memakai pemilik sesi. ID invalid ditolak.
+- `GET /api/admin/bookings/:id/receipts`: receipt masuk/keluar, scope, nominal/waktu/metode/referensi dan superseded; admin-only dengan authorization di bawah lock. Tidak mengirim path lampiran/proof privat.
+
 Semua endpoint di bawah membutuhkan sesi admin; memakai pagination `page=1`, `limit=50`, maksimal 100, dan response `{data,total,page,limit}`. Rupiah/string dan WIB mengikuti [API.md](API.md).
 
 - `GET /api/admin/customers?search=...`: pencarian nama/email/telepon, akun, completedAt profil dan jumlah booking. NIK/password tidak dikirim. NIK hanya melalui detail pelanggan yang diaudit.
