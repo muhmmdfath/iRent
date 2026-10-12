@@ -6,7 +6,7 @@ import { wib, rupiah, statusLabels } from '../format';
 import { ItemPhoto } from '../components/item-photo';
 import { RefundPanel } from '@/refunds/panel';
 import { CustomerReturns } from '../components/returns-panel';
-import { ExtensionList } from '@/extensions/pages';
+import { ExtensionList } from '@/extensions/components/extension-list';
 const useLabels: Record<string, string> = {
   allocated: 'Dipesan',
   in_use: 'Sedang disewa',

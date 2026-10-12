@@ -1,6 +1,6 @@
 # Frontend iRent Semarang
 
-## Cakupan phase 1 — 11 Oktober 2026
+## Cakupan terkini phase 1 — 12 Oktober 2026
 
 Seluruh halaman pelanggan/admin terhubung dengan API bisnis. Bagian tahap di bawah adalah catatan historis; cakupan terbaru:
 
@@ -50,7 +50,7 @@ Buka `http://127.0.0.1:5173`. Jalankan [backend](../backend/README.md) pada `127
 | `npm run typecheck`               | Periksa TypeScript tanpa menghasilkan file.                      |
 | `npm run lint`                    | ESLint TypeScript dan aturan React hooks.                        |
 | `npm run format:check`            | Periksa format Prettier; `npm run format` memperbaikinya.        |
-| `npm test`                        | Tes integrasi sesi/akses dengan MSW dan tujuan login.            |
+| `npm test`                        | Tes perilaku sesi, pelanggan dan admin dengan MSW.               |
 | `npx playwright install chromium` | Instal browser tes sekali.                                       |
 | `npm run test:e2e`                | Tes browser dengan API simulasi dan lima ukuran layar.           |
 | `npm run preview`                 | Sajikan bundle; proxy API development tidak tersedia di preview. |
@@ -65,7 +65,7 @@ Gunakan Axios `api` dengan path relatif. Berikan AbortSignal query, sertakan ID 
 
 Mutasi tidak diulang otomatis. Aksi bisnis memakai `businessActionHeaders()`; pertahankan kunci saat mengulang payload yang sama, gunakan kunci baru untuk payload berbeda. Rupiah API berupa string desimal dan harus memakai BigInt saat dihitung. Waktu ditampilkan dalam WIB tanpa pergeseran offset ganda. Upload multipart tidak menetapkan Content-Type secara manual.
 
-## Cakupan implementasi
+## Riwayat cakupan implementasi - langkah 1 sampai 6
 
 Route publik: `/`, `/login`, `/register`, `/catalog`, `/catalog/:id`, `/terms`. Route pelanggan: `/app/`, `/app/account`, `/app/profile`, `/app/new?itemId=...`, `/app/bookings`, `/app/bookings/:id`, `/app/bookings/:id/payment`. Route admin: `/admin/`, `/admin/account`, `/admin/bookings`, `/admin/bookings/:id`, `/admin/inventory`, `/admin/inventory/new`, `/admin/inventory/:id`.
 
@@ -104,3 +104,5 @@ Verifikasi langkah 5: 54 tes Vitest/MSW, tujuh tes browser inventaris dengan API
 Regresi seluruh suite Chromium: 30 tes API simulasi lulus; empat tes API nyata dilewati pada konfigurasi default. Alur inventaris API nyata di atas dijalankan terpisah dengan environment pengujian. Backend demo utama sudah memakai API terbaru dan tetap memiliki tujuh model dummy.
 
 Verifikasi penyelesaian 12 Oktober 2026: build/typecheck/lint lulus; 76 tes Vitest/MSW (`npm test -- --maxWorkers=2`), 36 tes browser API simulasi dan audit demo API nyata terpisah (88 kunjungan halaman) lulus. Lima tes browser khusus API nyata dilewati pada regresi default. Backend: 26 tes unit dan 188 tes PostgreSQL/HTTP pada database kosong lulus. Batasi worker pada mesin dengan RAM terbatas. Screenshot dan seed tersedia pada tautan di atas.
+
+Refactor 12 Oktober 2026: daftar perpanjangan bersama ada di `src/extensions/components/extension-list.tsx`; halaman/form di `src/extensions/pages.tsx` hanya dimuat dinamis oleh router. Build bebas warning import dinamis tidak efektif; 76 tes UI dan 12 tes browser pada bundle produksi lulus. Navigasi/reload detail perpanjangan diuji pada 390/1440 px.

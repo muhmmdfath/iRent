@@ -14,7 +14,7 @@ import { ProofViewer } from '@/admin/components/proof-viewer';
 import { ItemPhoto } from '@/customer/components/item-photo';
 import { rupiah, wib } from '@/customer/format';
 import { useInventoryClock } from '@/admin/inventory/hooks';
-import type { Financial, Booking } from '@/customer/types';
+import type { Financial } from '@/customer/types';
 import type { Extension, ExtensionDetail } from './types';
 import { extensionLabels, pendingExtension } from './types';
 import { useAdminRead, type Page } from '@/admin/manage/hooks';
@@ -41,57 +41,6 @@ function useExtensionContext(id: string, extensionId?: string) {
       ).data,
   });
   return { money, detail, admin: mode === 'admin' };
-}
-export function ExtensionList({
-  booking,
-  admin = false,
-}: {
-  booking: Booking;
-  admin?: boolean;
-}) {
-  return (
-    <section className="form-section">
-      <div className="section-heading">
-        <h2>Perpanjangan</h2>
-        {!admin && booking.status === 'berjalan' && (
-          <Button asChild>
-            <Link to={`/app/bookings/${booking.id}/extensions/new`}>
-              Ajukan perpanjangan
-            </Link>
-          </Button>
-        )}
-      </div>
-      <p className="muted">
-        Jadwal lama berlaku sampai pengajuan disetujui. Dana dan saldo
-        perpanjangan memiliki rincian sendiri.
-      </p>
-      {booking.extensions?.length ? (
-        booking.extensions.map((extension) => (
-          <article className="management-row" key={extension.id}>
-            <div>
-              <h3>
-                {extension.items.length} unit · {rupiah(extension.amountDue)}
-              </h3>
-              <p>{extensionLabels[extension.status]}</p>
-              {extension.confirmationDueAt && (
-                <p className="muted">
-                  Konfirmasi {wib(extension.confirmationDueAt)}
-                </p>
-              )}
-            </div>
-            <Link
-              className="text-link"
-              to={`${admin ? '/admin' : '/app'}/bookings/${booking.id}/extensions/${extension.id}`}
-            >
-              Detail perpanjangan
-            </Link>
-          </article>
-        ))
-      ) : (
-        <p className="muted">Belum ada pengajuan perpanjangan.</p>
-      )}
-    </section>
-  );
 }
 export function NewExtensionPage() {
   const { id = '' } = useParams();

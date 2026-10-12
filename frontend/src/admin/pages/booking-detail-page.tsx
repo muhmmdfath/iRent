@@ -10,7 +10,7 @@ import { ProofViewer } from '../components/proof-viewer';
 import { ReceiptForm, RejectProofForm } from '../components/payment-action';
 import { BookingOperations } from '../components/operations';
 import { RefundPanel } from '@/refunds/panel';
-import { ExtensionList } from '@/extensions/pages';
+import { ExtensionList } from '@/extensions/components/extension-list';
 import { AdvancedPayments } from '../components/advanced-payments';
 import { UnitReplacement } from '../components/unit-replacement';
 import { DeliveryFailure } from '../components/delivery-failure';

@@ -1,5 +1,19 @@
 # Implementasi iRent
 
+## Status terkini - 12 Oktober 2026
+
+UI phase 1 pelanggan/admin dan integrasi API sudah tersedia, termasuk perpanjangan, refund, operasional per unit, inventaris, pengelolaan dan kontrol notifikasi. Bagian tahap di bawah menyimpan hasil pada waktu masing-masing tahap; kalimat "berikutnya" di sana bukan daftar pekerjaan terkini.
+
+Yang belum selesai: pengujian Web Push pada perangkat fisik dengan HTTPS/VAPID, acceptance operasional toko dan deployment produksi. WhatsApp tetap ditunda. Pengujian browser dengan API simulasi, audit halaman demo API nyata dan tes PostgreSQL memiliki cakupan berbeda; jangan menyamakan audit tampilan dengan keberhasilan semua mutasi end-to-end.
+
+### Perapihan modul dan dokumentasi
+
+- [x] Pisahkan daftar perpanjangan bersama dari halaman/form yang dimuat dinamis.
+- [x] Selaraskan status README, PWA dan checklist dengan cakupan terbaru.
+- [x] Verifikasi bundle, TypeScript, lint, tes UI dan navigasi browser terkait.
+
+Verifikasi refactor 12 Oktober 2026: build/typecheck/lint dan format file yang berubah lulus; 76 tes Vitest/MSW serta 12 tes Chromium pada bundle produksi lulus. Browser menguji katalog/booking/pembayaran pelanggan, review receipt admin dan navigasi/reload detail perpanjangan. Warning import dinamis tidak efektif sudah hilang; bundle utama turun dari 405.04 KB menjadi 385.03 KB (sebelum gzip). Backend, schema dan aturan bisnis tidak berubah.
+
 ## Penyelesaian frontend menyeluruh — permintaan 11 Oktober 2026
 
 - [x] Perpanjangan pelanggan/admin: proposal, quotation, consent, upload, keputusan dan rekonsiliasi.
@@ -11,7 +25,7 @@
 - [x] Seed dummy berulang dengan foto item dan skenario transaksi untuk seluruh UI.
 - [x] Verifikasi frontend/backend, dokumentasi demo, commit dan push main.
 
-Verifikasi akhir 12 Oktober 2026: build, TypeScript dan lint frontend/backend lulus; 76 tes frontend, 26 tes backend tanpa DB, 188 tes PostgreSQL/HTTP pada database baru, serta 36 tes browser API simulasi lulus. Lima tes browser berkonfigurasi khusus dilewati pada regresi default; audit demo API nyata dijalankan terpisah dan lulus (88 kunjungan halaman pada viewport 360?1440 px). Screenshot desktop/mobile dan petunjuk seed disertakan. Database demo berisi 7 model bergambar, 56 unit, 18 booking, 4 perpanjangan dan 3 refund; 17 entri skenario tercatat. Tidak ada migrasi baru. Web Push pada perangkat fisik masih memerlukan HTTPS/VAPID dan uji perangkat; QRIS resmi disediakan toko.
+Verifikasi akhir 12 Oktober 2026: build, TypeScript dan lint frontend/backend lulus; 76 tes frontend, 26 tes backend tanpa DB, 188 tes PostgreSQL/HTTP pada database baru, serta 36 tes browser API simulasi lulus. Lima tes browser berkonfigurasi khusus dilewati pada regresi default; audit demo API nyata dijalankan terpisah dan lulus (88 kunjungan halaman pada viewport 360-1440 px). Screenshot desktop/mobile dan petunjuk seed disertakan. Database demo berisi 7 model bergambar, 56 unit, 18 booking, 4 perpanjangan dan 3 refund; 17 entri skenario tercatat. Tidak ada migrasi baru. Web Push pada perangkat fisik masih memerlukan HTTPS/VAPID dan uji perangkat; QRIS resmi disediakan toko.
 
 PRD menjadi acuan fungsi; DESIGN.md dan 36 ekspor desktop/mobile terbaru di design/ menjadi acuan visual. Backend/data dikerjakan sebelum UI. Checklist ini adalah satu tempat pelacakan implementasi, bukan pengganti 65 skenario PRD.
 
@@ -85,8 +99,9 @@ Verifikasi tahap notifikasi 9 Oktober 2026: build/typecheck/lint, 23 tes tanpa D
 ## Tahap 3 — UI, integrasi, dan deployment
 
 - [x] Kontrak API modul, OpenAPI runtime admin dan ekspor build untuk integrasi; response service rinci mengikuti dokumentasi modul.
-- [ ] Frontend mengikuti API dan DESIGN.md; lengkapi halaman phase 1.
-- [ ] PWA perangkat nyata, performa, aksesibilitas, demo/panduan dan deployment.
+- [x] Frontend phase 1 mengikuti API dan DESIGN.md; hasilnya ada pada status terkini.
+- [x] Demo/panduan, audit halaman responsif dan kontrol notifikasi tersedia.
+- [ ] Web Push perangkat nyata, acceptance operasional dan deployment produksi.
 
 Provider WhatsApp, hosting, dan target bisnis/performa terukur tetap mengikuti keputusan terbuka PRD §19. Jangan mengklaim fondasi/schema sebagai backend bisnis yang sudah lengkap.
 
