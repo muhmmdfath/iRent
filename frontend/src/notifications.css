@@ -1,0 +1,320 @@
+/* Action feedback and a user-scoped inbox. */
+.toast-viewport {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 90;
+  width: min(380px, calc(100vw - 32px));
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  pointer-events: none;
+}
+.toast-card {
+  pointer-events: auto;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 18px;
+  background: #fff;
+  border: 1px solid #e9e0e6;
+  border-radius: 15px;
+  box-shadow: 0 10px 35px #37213318;
+  animation: toast-in 0.2s ease-out;
+}
+.toast-symbol {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  border-radius: 50%;
+  background: #f8edf3;
+  color: #a34971;
+}
+.toast-symbol svg {
+  width: 19px;
+  height: 19px;
+}
+.toast-success .toast-symbol {
+  background: #e8f5ed;
+  color: #28704b;
+}
+.toast-error .toast-symbol {
+  background: #ffe9ed;
+  color: #ad3855;
+}
+.toast-warning .toast-symbol {
+  background: #fff2d8;
+  color: #976624;
+}
+.toast-card > div {
+  flex: 1;
+  min-width: 0;
+}
+.toast-card strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.7;
+  color: #332b33;
+}
+.toast-card p {
+  font-size: 11px;
+  line-height: 1.9;
+  color: #82717e;
+  margin-top: 4px;
+  overflow-wrap: anywhere;
+}
+.toast-card > button {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+  color: #8e7c88;
+  flex: 0 0 24px;
+  cursor: pointer;
+}
+.toast-card > button svg {
+  width: 13px;
+  height: 13px;
+}
+.navbar-notifications {
+  position: relative;
+}
+.notification-toggle {
+  position: relative;
+}
+.notification-toggle > svg {
+  width: 19px;
+  height: 19px;
+}
+.notification-count {
+  position: absolute;
+  top: -3px;
+  right: -4px;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 10px;
+  background: #ff4081;
+  color: #fff;
+  border: 2px solid #fff;
+  font-size: 9px;
+  display: grid;
+  place-items: center;
+  line-height: 1;
+  box-sizing: content-box;
+}
+.notification-inbox {
+  position: absolute;
+  top: calc(100% + 15px);
+  right: 0;
+  z-index: 65;
+  width: min(375px, calc(100vw - 24px));
+  max-height: min(650px, calc(100dvh - 180px));
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid #e9e0e6;
+  border-radius: 17px;
+  box-shadow: 0 14px 45px #3d26341c;
+}
+.notification-inbox > header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px;
+  border-bottom: 1px solid #f1eaf0;
+}
+.notification-inbox h2 {
+  font-size: 17px;
+  font-weight: 600;
+  color: #332b33;
+}
+.notification-inbox header p {
+  font-size: 11px;
+  color: #8b7785;
+  margin-top: 5px;
+}
+.notification-close {
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border-radius: 6px;
+  color: #8b7785;
+  cursor: pointer;
+}
+.notification-close svg {
+  width: 14px;
+  height: 14px;
+}
+.notification-inbox .notification-read-all {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 12px 16px;
+  padding: 6px 8px;
+  border-radius: 7px;
+  font-size: 11px;
+  color: #c52d65;
+  cursor: pointer;
+}
+.notification-inbox ul {
+  list-style: none;
+  margin: 0;
+  padding: 0 8px 8px;
+}
+.notification-inbox li {
+  border-bottom: 1px solid #f5f0f3;
+}
+.notification-inbox .notification-entry {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 15px 12px;
+  border-radius: 9px;
+  text-decoration: none;
+  color: #483640;
+}
+.notification-entry > div {
+  flex: 1;
+  min-width: 0;
+}
+.notification-entry strong {
+  display: block;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.8;
+}
+.notification-entry p {
+  font-size: 10px;
+  color: #8a7482;
+  margin-top: 3px;
+  overflow-wrap: anywhere;
+}
+.notification-entry time {
+  font-size: 9px;
+  color: #9b8795;
+  display: block;
+  margin-top: 6px;
+}
+.notification-entry-symbol {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  flex: 0 0 30px;
+  background: #f6f2f5;
+  color: #9d7b8d;
+  border-radius: 9px;
+}
+.notification-entry-symbol svg {
+  width: 15px;
+  height: 15px;
+}
+.notification-inbox .is-unread .notification-entry {
+  background: #fff6fa;
+}
+.notification-inbox .notification-entry:hover {
+  background: #f8f3f6;
+}
+.notification-unread-dot {
+  width: 6px;
+  height: 6px;
+  background: #ff4081;
+  border-radius: 50%;
+  margin-top: 8px;
+  flex-shrink: 0;
+}
+.notification-empty {
+  text-align: center;
+  padding: 34px 25px;
+}
+.notification-empty > svg {
+  width: 28px;
+  height: 28px;
+  margin: 0 auto 13px;
+  color: #bb8ca4;
+}
+.notification-empty h3 {
+  font-size: 13px;
+  font-weight: 500;
+}
+.notification-empty p,
+.notification-state {
+  font-size: 11px;
+  color: #8b7785;
+  line-height: 1.9;
+}
+.notification-empty p {
+  margin-top: 8px;
+}
+.notification-state {
+  padding: 25px;
+}
+.notification-state button {
+  display: inline-flex;
+  gap: 6px;
+  padding: 6px;
+  margin-top: 10px;
+  border-radius: 6px;
+}
+.notification-inbox footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 13px 18px;
+  border-top: 1px solid #f1eaf0;
+  font-size: 11px;
+}
+.notification-inbox footer button {
+  padding: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.notification-inbox button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.notification-inbox button:focus-visible,
+.notification-entry:focus-visible,
+.toast-card button:focus-visible {
+  outline: 2px solid #ff4081;
+  outline-offset: 2px;
+}
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (max-width: 767px) {
+  .toast-viewport {
+    right: 16px;
+    bottom: 16px;
+  }
+  .notification-inbox {
+    position: fixed;
+    right: 12px;
+    top: 145px;
+  }
+  .studio-navbar-account {
+    gap: 8px;
+  }
+  .notification-toggle {
+    width: 34px;
+    height: 34px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .toast-card {
+    animation: none;
+  }
+}

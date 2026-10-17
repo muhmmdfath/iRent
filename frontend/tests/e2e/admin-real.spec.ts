@@ -126,7 +126,7 @@ test('real API: administrator rejects proof, verifies partial DP and records set
     .fill(process.env.IRENT_ADMIN_TEST_PASSWORD!);
   await page.getByRole('button', { name: 'Masuk', exact: true }).click();
   await expect(
-    page.getByRole('heading', { name: /Selamat datang/ }),
+    page.getByRole('heading', { name: 'Ringkasan operasional' }),
   ).toBeVisible();
   await page.goto('/admin/bookings?search=' + encodeURIComponent(value.code));
   await expect(

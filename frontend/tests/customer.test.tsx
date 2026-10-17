@@ -60,7 +60,7 @@ it('registers a customer with email and opens their account without storing cred
   await user.click(screen.getByRole('button', { name: 'Buat akun' }));
   expect(
     await screen.findByRole('heading', {
-      name: 'Selamat datang, Penyewa Baru.',
+      name: 'Untuk rencana berikutnya',
     }),
   ).toBeVisible();
   expect(received).toEqual({

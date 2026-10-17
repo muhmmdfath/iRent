@@ -203,7 +203,7 @@ export function NewInventoryItemPage() {
   return (
     <>
       <Link className="back-link" to="/admin/inventory">
-        ← Inventaris
+        Inventaris
       </Link>
       <header className="page-heading">
         <p className="eyebrow">Model baru</p>
@@ -250,7 +250,7 @@ function InventoryDetail({ id }: { id: string }) {
   return (
     <>
       <Link className="back-link" to="/admin/inventory">
-        ← Inventaris
+        Inventaris
       </Link>
       <header className="page-heading admin-detail-heading">
         <div>

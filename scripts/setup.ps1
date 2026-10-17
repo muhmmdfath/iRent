@@ -1,3 +1,4 @@
+param([switch]$UseDocker)
 $ErrorActionPreference = 'Stop'
 $projectRoot = Split-Path $PSScriptRoot -Parent
 Set-Location $projectRoot
@@ -10,14 +11,20 @@ if (!(Test-Path (Join-Path $localNode 'node.exe'))) {
 $env:PATH = "$localNode;$env:PATH"
 & node scripts/setup-env.cjs
 if ($LASTEXITCODE -ne 0) { throw 'Pembuatan environment gagal.' }
-& docker compose up -d --wait postgres
-if ($LASTEXITCODE -ne 0) { throw 'PostgreSQL gagal start. Pastikan Docker Desktop berjalan.' }
+if ($UseDocker) {
+    & docker compose up -d --wait postgres
+    if ($LASTEXITCODE -ne 0) { throw 'PostgreSQL Docker gagal start.' }
+}
 try {
     Set-Location (Join-Path $projectRoot 'backend')
     foreach ($task in @('ci', 'run db:deploy', 'run build', 'run db:seed')) {
         $npmArguments = $task.Split(' ')
         & npm.cmd @npmArguments
         if ($LASTEXITCODE -ne 0) { throw "Backend: npm $task gagal." }
+        if ($task -eq 'ci') {
+            & node (Join-Path $projectRoot 'scripts/check-database.cjs')
+            if ($LASTEXITCODE -ne 0) { throw 'Koneksi PostgreSQL gagal. Sesuaikan DATABASE_URL di backend/.env.' }
+        }
     }
     Set-Location (Join-Path $projectRoot 'frontend')
     & npm.cmd ci

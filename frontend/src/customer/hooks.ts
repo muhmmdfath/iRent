@@ -17,11 +17,17 @@ export function usePolicy() {
     staleTime: 60_000,
   });
 }
-export function useBookings(page = 1) {
+export function useBookings(page = 1, status?: string) {
   const userId = useSession().data?.user.id;
   return useQuery({
-    queryKey: ['customer', userId, 'bookings', page],
-    queryFn: ({ signal }) => customerApi.bookings(page, signal),
+    queryKey: [
+      'customer',
+      userId,
+      'bookings',
+      page,
+      ...(status ? [status] : []),
+    ],
+    queryFn: ({ signal }) => customerApi.bookings(page, signal, status),
     enabled: !!userId,
     refetchInterval: 30_000,
   });

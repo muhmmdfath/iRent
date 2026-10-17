@@ -1,10 +1,22 @@
+import {
+  CubeIcon,
+  CalendarIcon,
+  BackpackIcon,
+  CheckIcon,
+  Cross2Icon,
+  ClockIcon,
+  MinusIcon,
+  PlusIcon,
+} from '@radix-ui/react-icons';
+import './booking-checkout.css';
 import { useState, useRef } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useQueries, useMutation } from '@tanstack/react-query';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { LoadingState, ErrorState } from '@/components/feedback';
+import { useSession } from '@/auth/session';
 import { useOnline } from '@/hooks/use-online';
 import { errorMessage } from '@/services/api';
 import { queryClient } from '@/services/query-client';
@@ -49,6 +61,7 @@ export function NewBookingPage() {
   const initialId = params.get('itemId') || '';
   const navigate = useNavigate();
   const online = useOnline();
+  const userId = useSession().data?.user.id;
   const profile = useProfile();
   const policy = usePolicy();
   const primary = useQuery({
@@ -76,8 +89,19 @@ export function NewBookingPage() {
   ];
   const form = useForm<Fields>({
     defaultValues: {
-      startAt: defaultStart(),
-      durationHours: 6,
+      startAt: (() => {
+        const value = params.get('startAt');
+        if (!value) return defaultStart();
+        const date = new Date(value);
+        return Number.isFinite(date.getTime())
+          ? new Date(date.getTime() + 7 * 3600000).toISOString().slice(0, 16)
+          : defaultStart();
+      })(),
+      durationHours: [6, 12, 24, 48, 72, 96, 120, 144, 168].includes(
+        Number(params.get('durationHours')),
+      )
+        ? Number(params.get('durationHours'))
+        : 6,
       deliveryType: 'pickup',
       deliveryZoneId: '',
       deliveryAddress: '',
@@ -110,6 +134,65 @@ export function NewBookingPage() {
   } catch {
     /* User is still entering the schedule. */
   }
+  const stockItems = [
+    ...new Map(
+      [...(catalog.data?.data || []), ...selected.map((row) => row.item)].map(
+        (item) => [item.id, item],
+      ),
+    ).values(),
+  ];
+  const stockQueries = useQueries({
+    queries: stockItems.map((item) => ({
+      queryKey: [
+        'customer',
+        userId,
+        'booking-stock',
+        item.id,
+        quoteInput?.startAt,
+        quoteInput?.durationHours,
+      ],
+      queryFn: () =>
+        customerApi.availability({
+          startAt: quoteInput!.startAt,
+          durationHours: quoteInput!.durationHours,
+          items: [{ itemId: item.id, quantity: 1 }],
+          deliveryType: 'pickup' as const,
+          payOption: 'full' as const,
+        }),
+      enabled: online && !!quoteInput && !!profile.data?.completedAt,
+      retry: false,
+      refetchInterval: 30000,
+    })),
+  });
+  const stockFor = (id: string) => {
+    const query = stockQueries[stockItems.findIndex((item) => item.id === id)];
+    return !query || query.isFetching || query.isError || !quoteInput
+      ? undefined
+      : query.data?.items.find((row) => row.itemId === id)?.availableQuantity;
+  };
+  const updateQuantity = (id: string, quantity: number) => {
+    const current = selected.find((row) => row.item.id === id)?.quantity || 1;
+    const limit = stockFor(id);
+    let next = Math.max(1, Math.min(100, Math.floor(quantity) || 1));
+    if (next > current) {
+      if (limit === undefined || limit <= current) return;
+      next = Math.min(next, limit);
+    }
+    if (id === primary.data?.id && includePrimary) setPrimaryQuantity(next);
+    else
+      setExtras((current) =>
+        current.map((extra) =>
+          extra.item.id === id ? { ...extra, quantity: next } : extra,
+        ),
+      );
+  };
+  const selectedStockAvailable =
+    selected.length > 0 &&
+    selected.every((row) => {
+      const count = stockFor(row.item.id);
+      return count !== undefined && count >= row.quantity;
+    });
+  const stockError = stockQueries.find((query) => query.isError)?.error;
   const fingerprint = JSON.stringify({
     quoteInput,
     address:
@@ -202,7 +285,7 @@ export function NewBookingPage() {
     check.mutate({ input: quoteInput, fingerprint });
   };
   const handleCreate = () => {
-    if (create.isPending) return;
+    if (create.isPending || !selectedStockAvailable) return;
     if (!currentPreview?.availability.available || !quoteInput) return;
     if (
       !values.agreeTerms ||
@@ -241,22 +324,65 @@ export function NewBookingPage() {
     create.mutate({ input, key: action.current.key });
   };
   return (
-    <>
-      <header className="page-heading">
+    <div className="rental-checkout">
+      <header className="page-heading checkout-heading">
         <p className="eyebrow">Booking baru</p>
         <h1>Atur jadwal sewamu.</h1>
         <p>Periksa jadwal dan biaya sebelum membuat booking.</p>
       </header>
+      <nav className="checkout-sections" aria-label="Bagian booking">
+        {[
+          ['checkout-devices', 'Perangkat'],
+          ['checkout-schedule', 'Jadwal'],
+          ['checkout-delivery', 'Pengambilan'],
+          ['checkout-consent', 'Persetujuan'],
+        ].map(([id, label], index) => (
+          <a key={id} href={'#' + id} className="checkout-section-link">
+            <span>{index + 1}</span>
+            {label}
+          </a>
+        ))}
+      </nav>
       <div className="booking-columns">
         <form
+          id="rental-checkout-form"
           noValidate
           onSubmit={(event) => {
             event.preventDefault();
             handleCheck();
           }}
         >
-          <fieldset disabled={busy} className="form-section">
-            <legend>Perangkat & aksesori</legend>
+          <fieldset
+            id="checkout-devices"
+            disabled={busy}
+            className="form-section checkout-block"
+          >
+            <legend>
+              <span className="checkout-section-number">1</span>
+              <CubeIcon aria-hidden="true" />
+              Perangkat & aksesori
+            </legend>
+            <p className="checkout-section-description">
+              Perangkat pilihanmu. Tambahkan aksesori jika diperlukan.
+            </p>
+            {stockError && (
+              <div className="checkout-stock-error" role="alert">
+                <p>
+                  Ketersediaan belum bisa diperiksa: {errorMessage(stockError)}
+                </p>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    stockQueries.forEach((query) => {
+                      if (query.isError) void query.refetch();
+                    });
+                  }}
+                >
+                  Periksa stok lagi
+                </Button>
+              </div>
+            )}
             {selected.map((row) => (
               <div className="selected-item" key={row.item.id}>
                 <ItemPhoto
@@ -266,37 +392,72 @@ export function NewBookingPage() {
                 />
                 <div>
                   <h3>{row.item.name}</h3>
+                  <p
+                    className={
+                      'checkout-stock-hint ' +
+                      (stockFor(row.item.id) !== undefined &&
+                      (stockFor(row.item.id) || 0) < row.quantity
+                        ? 'is-short'
+                        : '')
+                    }
+                    aria-live="polite"
+                  >
+                    {stockFor(row.item.id) === undefined
+                      ? 'Memeriksa ketersediaan jadwal...'
+                      : stockFor(row.item.id) === 0
+                        ? 'Tidak tersedia pada jadwal ini. Pilih jadwal lain atau hapus item.'
+                        : stockFor(row.item.id)! < row.quantity
+                          ? `Hanya ${stockFor(row.item.id)} unit tersedia. Kurangi jumlah atau ubah jadwal.`
+                          : `${stockFor(row.item.id)} unit tersedia pada jadwal ini`}
+                  </p>
                   {row.item.category === 'iphone' ? (
                     <p className="muted text-sm">1 iPhone</p>
                   ) : (
-                    <label className="quantity-field">
-                      Jumlah
-                      <Input
-                        aria-label={'Jumlah ' + row.item.name}
-                        type="number"
-                        min={1}
-                        max={100}
-                        value={row.quantity}
-                        onChange={(event) => {
-                          if (
-                            row.item.id === primary.data?.id &&
-                            includePrimary
-                          )
-                            setPrimaryQuantity(Number(event.target.value));
-                          else
-                            setExtras(
-                              extras.map((extra) =>
-                                extra.item.id === row.item.id
-                                  ? {
-                                      ...extra,
-                                      quantity: Number(event.target.value),
-                                    }
-                                  : extra,
-                              ),
-                            );
-                        }}
-                      />
-                    </label>
+                    <div className="quantity-field">
+                      <span>Jumlah</span>
+                      <div className="checkout-quantity-control">
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          aria-label={'Kurangi jumlah ' + row.item.name}
+                          disabled={row.quantity <= 1}
+                          onClick={() =>
+                            updateQuantity(row.item.id, row.quantity - 1)
+                          }
+                        >
+                          <MinusIcon aria-hidden="true" />
+                        </Button>
+                        <Input
+                          aria-label={'Jumlah ' + row.item.name}
+                          type="number"
+                          min={1}
+                          max={Math.max(1, stockFor(row.item.id) || 1)}
+                          value={row.quantity}
+                          onChange={(event) =>
+                            updateQuantity(
+                              row.item.id,
+                              Number(event.target.value),
+                            )
+                          }
+                        />
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          aria-label={'Tambah jumlah ' + row.item.name}
+                          disabled={
+                            !online ||
+                            stockFor(row.item.id) === undefined ||
+                            row.quantity >=
+                              Math.min(100, stockFor(row.item.id) || 0)
+                          }
+                          onClick={() =>
+                            updateQuantity(row.item.id, row.quantity + 1)
+                          }
+                        >
+                          <PlusIcon aria-hidden="true" />
+                        </Button>
+                      </div>
+                    </div>
                   )}
                 </div>
                 <Button
@@ -312,7 +473,7 @@ export function NewBookingPage() {
                       );
                   }}
                 >
-                  Hapus
+                  <Cross2Icon aria-hidden="true" />
                 </Button>
               </div>
             ))}
@@ -327,7 +488,15 @@ export function NewBookingPage() {
                   const item = catalog.data?.data.find(
                     (item) => item.id === event.target.value,
                   );
-                  if (item) setExtras([...extras, { item, quantity: 1 }]);
+                  if (
+                    item &&
+                    (stockFor(item.id) || 0) > 0 &&
+                    !(
+                      item.category === 'iphone' &&
+                      selected.some((row) => row.item.category === 'iphone')
+                    )
+                  )
+                    setExtras([...extras, { item, quantity: 1 }]);
                 }}
               >
                 <option value="">Pilih item</option>
@@ -340,11 +509,21 @@ export function NewBookingPage() {
                       key={item.id}
                       value={item.id}
                       disabled={
-                        item.category === 'iphone' &&
-                        selected.some((row) => row.item.category === 'iphone')
+                        !online ||
+                        stockFor(item.id) === undefined ||
+                        stockFor(item.id) === 0 ||
+                        (item.category === 'iphone' &&
+                          selected.some(
+                            (row) => row.item.category === 'iphone',
+                          ))
                       }
                     >
-                      {item.name}
+                      {item.name}{' '}
+                      {stockFor(item.id) === undefined
+                        ? '(belum diperiksa)'
+                        : stockFor(item.id) === 0
+                          ? '(tidak tersedia)'
+                          : `(${stockFor(item.id)} tersedia)`}
                     </option>
                   ))}
               </select>
@@ -383,55 +562,100 @@ export function NewBookingPage() {
               )}
             </div>
           </fieldset>
-          <fieldset disabled={busy} className="form-section">
-            <legend>Jadwal & pengambilan</legend>
-            <div className="field">
-              <label htmlFor="startAt">Tanggal dan jam pengambilan (WIB)</label>
-              <Input
-                id="startAt"
-                type="datetime-local"
-                {...form.register('startAt')}
-              />
-              {form.formState.errors.startAt && (
-                <p className="field-error">
-                  {form.formState.errors.startAt.message}
+          <fieldset
+            id="checkout-schedule"
+            disabled={busy}
+            className="form-section checkout-block"
+          >
+            <legend>
+              <span className="checkout-section-number">2</span>
+              <CalendarIcon aria-hidden="true" />
+              Jadwal sewa
+            </legend>
+            <p className="checkout-section-description">
+              Pilih waktu mulai. Waktu kembali dihitung dari durasi sewa.
+            </p>
+            <div className="checkout-schedule-fields">
+              <div className="field">
+                <label htmlFor="startAt">
+                  Tanggal dan jam pengambilan (WIB)
+                </label>
+                <Input
+                  id="startAt"
+                  type="datetime-local"
+                  {...form.register('startAt')}
+                />
+                {form.formState.errors.startAt && (
+                  <p className="field-error">
+                    {form.formState.errors.startAt.message}
+                  </p>
+                )}
+                <p className="muted text-sm mt-2">
+                  Ambil dan kembali {rule.open_time}-{rule.close_time} WIB.
+                  Minimal {rule.min_lead_minutes / 60} jam sebelum pengambilan.
                 </p>
-              )}
-              <p className="muted text-sm mt-2">
-                Ambil dan kembali {rule.open_time}-{rule.close_time} WIB.
-                Minimal {rule.min_lead_minutes / 60} jam sebelum pengambilan.
-              </p>
+              </div>
+              <div className="field">
+                <label htmlFor="duration">Durasi sewa</label>
+                <select
+                  id="duration"
+                  className="select-input"
+                  {...form.register('durationHours', { valueAsNumber: true })}
+                >
+                  {[
+                    6,
+                    12,
+                    ...Array.from(
+                      { length: Math.floor(rule.max_duration_hours / 24) },
+                      (_, index) => (index + 1) * 24,
+                    ),
+                  ].map((hours) => (
+                    <option
+                      key={hours}
+                      value={hours}
+                      disabled={
+                        !validDuration(values.startAt, hours, policy.data!)
+                      }
+                    >
+                      {hours} jam
+                      {!validDuration(values.startAt, hours, policy.data!)
+                        ? ' - kembali di luar jam operasional'
+                        : ''}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
-            <div className="field">
-              <label htmlFor="duration">Durasi sewa</label>
-              <select
-                id="duration"
-                className="select-input"
-                {...form.register('durationHours', { valueAsNumber: true })}
-              >
-                {[
-                  6,
-                  12,
-                  ...Array.from(
-                    { length: Math.floor(rule.max_duration_hours / 24) },
-                    (_, index) => (index + 1) * 24,
-                  ),
-                ].map((hours) => (
-                  <option
-                    key={hours}
-                    value={hours}
-                    disabled={
-                      !validDuration(values.startAt, hours, policy.data!)
-                    }
-                  >
-                    {hours} jam
-                    {!validDuration(values.startAt, hours, policy.data!)
-                      ? ' - kembali di luar jam operasional'
-                      : ''}
-                  </option>
-                ))}
-              </select>
+            <div className="checkout-return-preview">
+              <ClockIcon aria-hidden="true" />
+              <div>
+                <span>Rencana kembali</span>
+                <strong>
+                  {quoteInput
+                    ? wib(
+                        new Date(
+                          Date.parse(quoteInput.startAt) +
+                            quoteInput.durationHours * 3600000,
+                        ).toISOString(),
+                      )
+                    : 'Lengkapi jadwal sewa'}
+                </strong>
+              </div>
             </div>
+          </fieldset>
+          <fieldset
+            id="checkout-delivery"
+            disabled={busy}
+            className="form-section checkout-block"
+          >
+            <legend>
+              <span className="checkout-section-number">3</span>
+              <BackpackIcon aria-hidden="true" />
+              Pengambilan & pembayaran
+            </legend>
+            <p className="checkout-section-description">
+              Ambil di toko atau gunakan antar-jemput sesuai zona.
+            </p>
             <div className="field">
               <label htmlFor="deliveryType">Cara pengambilan</label>
               <select
@@ -500,22 +724,26 @@ export function NewBookingPage() {
                 <option value="full">Lunas</option>
               </select>
             </div>
-            <Button
-              type="submit"
-              variant="outline"
-              disabled={!online || !selected.length}
-            >
-              Periksa jadwal & biaya
-            </Button>
           </fieldset>
-          <fieldset disabled={busy} className="form-section consent-section">
-            <legend>Persetujuan</legend>
+          <fieldset
+            id="checkout-consent"
+            disabled={busy}
+            className="form-section consent-section checkout-block"
+          >
+            <legend>
+              <span className="checkout-section-number">4</span>
+              <CheckIcon aria-hidden="true" />
+              Persetujuan
+            </legend>
+            <p className="checkout-section-description">
+              Periksa ketentuan berikut sebelum membuat booking.
+            </p>
             <label className="check-label">
               <input type="checkbox" {...form.register('agreeTerms')} />
               <span>
                 Saya menyetujui{' '}
                 <Link
-                  className="text-link"
+                  className="checkout-terms-link"
                   to="/terms"
                   target="_blank"
                   rel="noreferrer"
@@ -549,7 +777,43 @@ export function NewBookingPage() {
           </fieldset>
         </form>
         <aside className="quote-panel" aria-label="Ringkasan booking">
+          <p className="checkout-summary-eyebrow">Booking kamu</p>
           <h2>Ringkasan biaya</h2>
+          <div className="checkout-summary-items">
+            {selected.map((row) => (
+              <div key={row.item.id}>
+                <ItemPhoto
+                  path={row.item.photoPath}
+                  name={row.item.name}
+                  className="checkout-summary-photo"
+                />
+                <div>
+                  <strong>{row.item.name}</strong>
+                  <span>{row.quantity} unit</span>
+                </div>
+              </div>
+            ))}
+          </div>
+          {quoteInput && (
+            <dl className="checkout-summary-schedule">
+              <div>
+                <dt>Mulai</dt>
+                <dd>{wib(quoteInput.startAt)}</dd>
+              </div>
+              <div>
+                <dt>Durasi</dt>
+                <dd>{quoteInput.durationHours} jam</dd>
+              </div>
+              <div>
+                <dt>Pengambilan</dt>
+                <dd>
+                  {values.deliveryType === 'delivery'
+                    ? 'Antar-jemput'
+                    : 'Ambil di toko'}
+                </dd>
+              </div>
+            </dl>
+          )}
           {currentPreview ? (
             <>
               <dl className="price-breakdown">
@@ -595,9 +859,13 @@ export function NewBookingPage() {
               </p>
             </>
           ) : (
-            <p className="muted">
-              Periksa jadwal untuk melihat biaya dan ketersediaan terbaru.
-            </p>
+            <div className="checkout-unchecked">
+              <CalendarIcon aria-hidden="true" />
+              <p>Jadwal sudah sesuai?</p>
+              <span>
+                Cek ketersediaan untuk mendapatkan rincian biaya terbaru.
+              </span>
+            </div>
           )}
           {error && (
             <p role="alert" className="form-error">
@@ -605,10 +873,28 @@ export function NewBookingPage() {
             </p>
           )}
           <Button
+            type="submit"
+            form="rental-checkout-form"
+            variant={
+              currentPreview?.availability.available ? 'outline' : 'default'
+            }
+            className="checkout-check-button"
+            disabled={!online || busy || !selected.length}
+          >
+            {check.isPending
+              ? 'Memeriksa jadwal...'
+              : currentPreview
+                ? 'Periksa ulang jadwal & biaya'
+                : 'Periksa jadwal & biaya'}
+          </Button>
+          <Button
             type="button"
             className="w-full"
             disabled={
-              !online || busy || !currentPreview?.availability.available
+              !online ||
+              busy ||
+              !selectedStockAvailable ||
+              !currentPreview?.availability.available
             }
             onClick={handleCreate}
           >
@@ -620,6 +906,6 @@ export function NewBookingPage() {
           </p>
         </aside>
       </div>
-    </>
+    </div>
   );
 }

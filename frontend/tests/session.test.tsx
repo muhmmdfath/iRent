@@ -98,7 +98,7 @@ describe('session and access', () => {
         name: 'Selamat datang, Penyewa iRent.',
       }),
     ).toBeVisible();
-    expect(screen.queryByText('Ruang kerja admin')).not.toBeInTheDocument();
+    expect(screen.queryByText('Administrator')).not.toBeInTheDocument();
     expect(document.querySelector('link[rel="manifest"]')).toBeNull();
   });
   it('restores an admin session and attaches the admin manifest only inside admin routes', async () => {
@@ -107,7 +107,7 @@ describe('session and access', () => {
     expect(
       await screen.findByRole('heading', { name: 'Akun saya' }),
     ).toBeVisible();
-    expect(screen.getByText('Ruang kerja admin')).toBeVisible();
+    expect(screen.getByText('Administrator')).toBeVisible();
     expect(document.querySelector('link[rel="manifest"]')).toHaveAttribute(
       'href',
       '/admin/manifest.webmanifest',

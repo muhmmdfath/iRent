@@ -1,6 +1,5 @@
 import { CustomerHomePage } from '@/customer/pages/customer-home-page';
 import { Link } from 'react-router-dom';
-import { ArrowRightIcon } from '@radix-ui/react-icons';
 import { useSession } from '@/auth/session';
 import { roleHome } from '@/auth/navigation';
 import { Button } from '@/components/ui/button';
@@ -28,10 +27,7 @@ export function HomePage() {
           <p>{user.email || user.phone}</p>
         </div>
         <Button variant="outline" asChild>
-          <Link to={roleHome(user.role) + 'account'}>
-            Lihat akun
-            <ArrowRightIcon aria-hidden="true" />
-          </Link>
+          <Link to={roleHome(user.role) + 'account'}>Lihat akun</Link>
         </Button>
       </section>
     </>

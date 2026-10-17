@@ -158,7 +158,7 @@ export function CustomerDetailPage() {
   return (
     <>
       <Link className="back-link" to="/admin/customers">
-        ← Data penyewa
+        Data penyewa
       </Link>
       <header className="page-heading">
         <h1>{customer.name}</h1>

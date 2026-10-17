@@ -1,5 +1,7 @@
 # Data simulasi lokal
 
+Database demo dipindahkan dari Docker ke PostgreSQL lokal `127.0.0.1:5432/irent` pada 15 Oktober 2026. Seluruh 31 tabel dipulihkan dan dibandingkan jumlah serta hash setiap baris sebelum aplikasi dinyalakan. Foto/bukti tetap memakai storage lokal yang sama; akun, histori, snapshot dan kunci enkripsi dipertahankan. Backup sebelum pemindahan berada di `%LOCALAPPDATA%/iRent/backups/`; tidak disimpan di Git. Docker tidak diperlukan untuk menjalankan demo.
+
 ## Seed lengkap frontend (11 Oktober 2026)
 
 Build backend dan terapkan migrasi/pengaturan dahulu. Jalankan dari root dengan Node 24:

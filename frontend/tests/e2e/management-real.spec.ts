@@ -37,7 +37,7 @@ test('real seeded API: all management and customer screens render responsively w
   for (const width of [360, 390, 768, 1024, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     for (const [route, title] of [
-      ['/admin', 'Selamat datang,'],
+      ['/admin', 'Ringkasan operasional'],
       ['/admin/customers', 'Data penyewa'],
       ['/admin/accounts', 'Admin'],
       ['/admin/settings', 'Pengaturan sewa'],

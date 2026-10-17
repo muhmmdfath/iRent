@@ -1,3 +1,4 @@
+import { notify } from '@/stores/notifications';
 import axios from 'axios';
 import type { Session } from '@/auth/types';
 import { queryClient, sessionKey, discardPrivateData } from './query-client';
@@ -32,7 +33,35 @@ api.interceptors.request.use((config) => {
   return config;
 });
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    const method = response.config.method?.toLowerCase();
+    const url = response.config.url || '';
+    if (
+      method &&
+      !['get', 'head', 'options'].includes(method) &&
+      !/availability|pricing\/quote|notifications/.test(url)
+    ) {
+      const title =
+        url === '/auth/login'
+          ? 'Berhasil masuk'
+          : url === '/auth/register'
+            ? 'Akun berhasil dibuat'
+            : url === '/bookings'
+              ? 'Booking berhasil dibuat'
+              : /proofs/.test(url)
+                ? 'Bukti berhasil diunggah'
+                : /profile/.test(url)
+                  ? 'Profil berhasil disimpan'
+                  : 'Perubahan berhasil disimpan';
+      notify({
+        kind: 'success',
+        title,
+        message: /proofs/.test(url) ? 'Menunggu pemeriksaan admin.' : undefined,
+      });
+      void queryClient.invalidateQueries({ queryKey: ['inbox'] });
+    }
+    return response;
+  },
   async (error: unknown) => {
     if (
       axios.isAxiosError(error) &&
@@ -42,6 +71,17 @@ api.interceptors.response.use(
       await discardPrivateData();
       queryClient.setQueryData(sessionKey, null);
     }
+    if (
+      axios.isAxiosError(error) &&
+      error.config?.method &&
+      !['get', 'head', 'options'].includes(error.config.method.toLowerCase()) &&
+      !/availability|pricing\/quote/.test(error.config.url || '')
+    )
+      notify({
+        kind: 'error',
+        title: 'Tindakan belum berhasil',
+        message: errorMessage(error),
+      });
     return Promise.reject(error);
   },
 );

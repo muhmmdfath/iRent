@@ -402,6 +402,19 @@
               "default": 50,
               "type": "integer"
             }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "description": "Cari nama model",
+            "schema": { "minLength": 1, "maxLength": 150, "type": "string" }
+          },
+          {
+            "name": "category",
+            "required": false,
+            "in": "query",
+            "schema": { "type": "string", "enum": ["iphone", "accessory"] }
           }
         ],
         "responses": { "200": { "description": "" } },
@@ -3217,6 +3230,95 @@
         "security": [{ "cookie": [] }],
         "tags": ["Notifications"],
         "x-irent-roles": ["admin"]
+      }
+    },
+    "/api/notifications": {
+      "get": {
+        "operationId": "InboxController_list",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 1000000,
+              "default": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": { "200": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Inbox"],
+        "x-irent-roles": ["customer", "admin"]
+      }
+    },
+    "/api/notifications/read-all": {
+      "post": {
+        "operationId": "InboxController_readAll",
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Inbox"],
+        "x-irent-roles": ["customer", "admin"]
+      }
+    },
+    "/api/notifications/{id}/read": {
+      "post": {
+        "operationId": "InboxController_read",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "201": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Inbox"],
+        "x-irent-roles": ["customer", "admin"]
       }
     },
     "/api/admin/reports": {

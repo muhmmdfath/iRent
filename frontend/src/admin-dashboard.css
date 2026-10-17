@@ -1,0 +1,1076 @@
+/* Operational homepage: clear hierarchy, real counts and one task queue. */
+.admin-dashboard {
+  --ops-border: #eae9eb;
+  --ops-muted: #8b868e;
+  color: #27242a;
+}
+.ops-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+.ops-eyebrow {
+  font-size: 12px;
+  color: #7b7380;
+  font-weight: 500;
+  margin-bottom: 8px;
+  letter-spacing: 0.3px;
+}
+.ops-header h1 {
+  font-size: clamp(24px, 2.3vw, 32px);
+  font-weight: 600;
+  letter-spacing: -1.1px;
+  line-height: 1.3;
+}
+.ops-welcome {
+  font-size: 12px;
+  line-height: 1.8;
+  color: #7b7380;
+  margin-top: 10px;
+}
+.ops-header-actions {
+  display: flex;
+  gap: 9px;
+  flex-shrink: 0;
+}
+.admin-dashboard [data-slot='button'] {
+  font-size: 13px;
+  padding: 8px 13px;
+  min-height: 36px;
+  border-radius: 9px;
+  white-space: normal;
+  text-align: center;
+}
+.ops-header-actions [data-slot='button'] {
+  min-height: 39px;
+}
+.ops-header-actions svg {
+  width: 15px;
+  height: 15px;
+}
+.ops-dayline {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 0;
+  border-top: 1px solid #efedf0;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+.ops-dayline > p {
+  color: #77707a;
+  font-weight: 500;
+}
+.ops-update-status,
+.ops-update-error {
+  font-size: 12px;
+  color: #7b7380;
+}
+.ops-update-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.ops-update-status::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #aea5b0;
+}
+.ops-update-error {
+  color: #ab3f55;
+}
+.ops-metrics {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.ops-metric {
+  padding: 21px 21px 18px;
+  border: 1px solid var(--ops-border);
+  border-radius: 15px;
+  background: #fff;
+  min-width: 0;
+}
+.ops-metric-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+.ops-metric-label > p {
+  font-size: 13px;
+  font-weight: 500;
+  color: #827985;
+}
+.ops-metric-label > span {
+  display: grid;
+  place-items: center;
+  width: 29px;
+  height: 29px;
+  border-radius: 9px;
+  color: #8e8591;
+  background: #f6f4f6;
+  flex-shrink: 0;
+}
+.ops-metric-label svg {
+  height: 14px;
+  width: 14px;
+}
+.ops-metric > strong {
+  display: block;
+  font-size: 36px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -1.3px;
+  font-variant-numeric: tabular-nums;
+}
+.ops-metric-note {
+  margin-top: 10px;
+  font-size: 11px;
+  line-height: 1.6;
+  color: #7b7380;
+}
+.ops-metric-alert {
+  background: #ff4081;
+  border-color: #ff4081;
+  color: #fff;
+}
+.ops-metric-alert > strong,
+.ops-metric-alert .ops-metric-label > p,
+.ops-metric-alert .ops-metric-note {
+  color: #fff;
+}
+.ops-metric-alert .ops-metric-label > span {
+  background: rgb(255 255 255 / 18%);
+  color: #fff;
+}
+.ops-metric-alert .ops-number-skeleton {
+  background: rgb(255 255 255 / 30%);
+}
+.ops-number-skeleton {
+  height: 43px;
+  width: 50px;
+  border-radius: 8px;
+  background: #f1eff2;
+  animation: ops-pulse 1.8s ease-in-out infinite;
+}
+.ops-main-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+  gap: 22px;
+  align-items: start;
+  margin-bottom: 24px;
+}
+.ops-agenda-column {
+  display: grid;
+  gap: 20px;
+  min-width: 0;
+}
+.ops-panel {
+  border: 1px solid var(--ops-border);
+  border-radius: 17px;
+  background: #fff;
+  min-width: 0;
+  overflow: hidden;
+}
+.ops-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 22px 23px 19px;
+}
+.ops-panel-header .ops-eyebrow {
+  margin-bottom: 5px;
+  font-size: 11px;
+}
+.ops-panel-header h2 {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.45px;
+}
+.ops-soft-label {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 9px;
+  border: 1px solid #eeeaf0;
+  background: #f9f8fa;
+  border-radius: 7px;
+  font-size: 11px;
+  color: #7b7380;
+  white-space: nowrap;
+}
+.ops-schedule-tabs {
+  display: flex;
+  gap: 5px;
+  padding: 0 23px 18px;
+}
+.ops-schedule-tabs > button {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 8px 12px;
+  min-height: 35px;
+  background: transparent;
+  font-size: 12px;
+  color: #7b7380;
+  cursor: pointer;
+}
+.ops-schedule-tabs > button > span {
+  background: #efedf0;
+  min-width: 19px;
+  border-radius: 5px;
+  padding: 2px 5px;
+  font-size: 11px;
+}
+.ops-schedule-tabs > button[aria-selected='true'] {
+  background: #f5f3f6;
+  border-color: #ece8ef;
+  color: #4c4253;
+  font-weight: 500;
+}
+.ops-schedule [role='tabpanel'] {
+  border-top: 1px solid #f0edf2;
+}
+.ops-schedule-empty {
+  padding: 27px 28px 30px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  min-height: 230px;
+}
+.ops-schedule-empty > span {
+  display: grid;
+  place-items: center;
+  height: 49px;
+  width: 49px;
+  border: 1px solid #eee6ef;
+  border-radius: 15px;
+  background: #faf7fb;
+  color: #aa8fa5;
+  margin-bottom: 15px;
+}
+.ops-schedule-empty svg {
+  height: 22px;
+  width: 22px;
+}
+.ops-schedule-empty h3 {
+  font-size: 12px;
+  font-weight: 500;
+}
+.ops-schedule-empty p {
+  font-size: 12px;
+  color: #7b7380;
+  line-height: 1.85;
+  max-width: 300px;
+  margin-top: 9px;
+}
+.ops-schedule-list {
+  padding-inline: 23px;
+}
+.ops-schedule-row {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  gap: 13px;
+  align-items: center;
+  padding: 17px 0;
+  border-bottom: 1px solid #f2eff3;
+}
+.ops-schedule-row:last-child {
+  border-bottom: 0;
+}
+.ops-schedule-row > time {
+  align-self: start;
+  padding-top: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: #65586b;
+}
+.ops-schedule-device {
+  display: flex;
+  gap: 10px;
+  min-width: 0;
+  align-items: center;
+}
+.ops-device-icon {
+  width: 33px;
+  height: 37px;
+  display: grid;
+  place-items: center;
+  border-radius: 8px;
+  background: #f5f3f6;
+  color: #7b7380;
+  flex-shrink: 0;
+}
+.ops-device-icon svg {
+  width: 16px;
+  height: 16px;
+}
+.ops-schedule-device h3 {
+  font-size: 13px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+.ops-schedule-device p {
+  font-size: 11px;
+  color: #7b7380;
+  margin-top: 5px;
+  overflow-wrap: anywhere;
+}
+.admin-dashboard .ops-schedule-row [data-slot='button'] {
+  font-size: 11px;
+  min-height: 31px;
+  padding: 6px 9px;
+}
+.ops-panel-footer {
+  padding: 15px 23px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border-top: 1px solid #f0edf2;
+}
+.ops-panel-footer > span {
+  font-size: 11px;
+  color: #7b7380;
+}
+.admin-dashboard .ops-panel-footer [data-slot='button'] {
+  min-height: 31px;
+  font-size: 12px;
+  padding-block: 6px;
+}
+.ops-total {
+  font-size: 23px;
+  font-weight: 600;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-variant-numeric: tabular-nums;
+}
+.ops-total > span {
+  font-size: 11px;
+  color: #7b7380;
+  font-weight: 400;
+}
+.ops-distribution {
+  display: flex;
+  gap: 3px;
+  height: 9px;
+  margin: 1px 23px 21px;
+  overflow: hidden;
+  border-radius: 5px;
+}
+.ops-distribution > span {
+  flex-basis: 0;
+  min-width: 4px;
+}
+.ops-status-menunggu_pembayaran {
+  background: #d8ccd8;
+}
+.ops-status-menunggu_konfirmasi {
+  background: #bb9bb5;
+}
+.ops-status-dikonfirmasi {
+  background: #8c7a8e;
+}
+.ops-status-berjalan {
+  background: #36313b;
+}
+.ops-status-selesai {
+  background: #efb7d1;
+}
+.ops-status-kedaluwarsa {
+  background: #ece8ee;
+}
+.ops-status-ditolak {
+  background: #d5cbd8;
+}
+.ops-status-dibatalkan {
+  background: #e1dce5;
+}
+.ops-status-legend {
+  padding: 0 23px 21px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 13px 20px;
+}
+.ops-status-legend > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+.ops-status-legend dt {
+  display: flex;
+  gap: 7px;
+  align-items: center;
+  font-size: 12px;
+  color: #7b7380;
+}
+.ops-status-dot {
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.ops-status-legend dd {
+  font-size: 12px;
+  font-weight: 500;
+  color: #66596d;
+  font-variant-numeric: tabular-nums;
+}
+.ops-breakdown-empty {
+  padding: 5px 23px 24px;
+  color: #7b7380;
+  font-size: 13px;
+}
+.ops-inventory-note {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 18px;
+  border: 1px dashed #e9dfe8;
+  border-radius: 12px;
+  background: #fffcfe;
+}
+.ops-note-dot {
+  height: 6px;
+  width: 6px;
+  border-radius: 50%;
+  background: #d3a3bb;
+  flex-shrink: 0;
+}
+.ops-inventory-note > div {
+  min-width: 0;
+  flex: 1;
+}
+.ops-inventory-note strong {
+  font-size: 12px;
+  font-weight: 500;
+}
+.ops-inventory-note p {
+  font-size: 11px;
+  line-height: 1.8;
+  color: #7b7380;
+  margin-top: 4px;
+}
+.admin-dashboard .ops-inventory-note [data-slot='button'] {
+  min-height: 31px;
+  font-size: 11px;
+  padding: 6px 9px;
+}
+.ops-task-toolbar {
+  display: flex;
+  align-items: end;
+  gap: 12px;
+  padding: 0 21px 18px;
+  border-bottom: 1px solid #f0edf2;
+}
+.ops-task-toolbar label {
+  font-size: 11px;
+  color: #7b7380;
+  flex: 1;
+  min-width: 0;
+}
+.ops-task-toolbar select {
+  min-height: 35px;
+  padding: 7px 25px 7px 10px;
+  border: 1px solid #eae4ed;
+  margin-top: 6px;
+  font-size: 12px;
+  border-radius: 8px;
+  background: #fff;
+  color: #807185;
+}
+.admin-dashboard .ops-task-toolbar [data-slot='button'] {
+  font-size: 11px;
+  padding: 8px 9px;
+  min-height: 35px;
+}
+.ops-task {
+  padding: 18px 21px;
+  border-bottom: 1px solid #f2eef3;
+}
+.ops-task-overdue {
+  border-left: 3px solid #edb6c5;
+  padding-left: 18px;
+}
+.ops-task-title {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+}
+.ops-task-title h3 {
+  font-size: 13px;
+  font-weight: 500;
+}
+.ops-overdue-label {
+  color: #b24661;
+  background: #fff0f4;
+  border-radius: 5px;
+  padding: 3px 6px;
+  font-size: 10px;
+}
+.ops-task-code {
+  font-size: 12px;
+  color: #7b7380;
+  margin-top: 7px;
+  font-variant-numeric: tabular-nums;
+}
+.ops-task-deadline {
+  margin-top: 4px;
+  color: #7b7380;
+  font-size: 11px;
+  line-height: 1.7;
+}
+.ops-task-overdue .ops-task-deadline {
+  color: #b36176;
+}
+.ops-task-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 12px;
+}
+.admin-dashboard .ops-task-actions [data-slot='button'] {
+  font-size: 11px;
+  padding: 6px 9px;
+  min-height: 30px;
+}
+.ops-task-actions [data-slot='button']:last-child {
+  color: #7b7380;
+}
+.ops-task-empty {
+  padding: 35px 23px;
+}
+.ops-task-empty strong {
+  font-size: 12px;
+  font-weight: 500;
+}
+.ops-task-empty p {
+  margin-top: 8px;
+  font-size: 12px;
+  color: #7b7380;
+}
+.ops-task-more {
+  padding: 12px 20px;
+  display: flex;
+  justify-content: center;
+}
+.ops-task-sound-note {
+  display: flex;
+  gap: 8px;
+  padding: 15px 21px;
+  background: #fcfafc;
+  color: #7b7380;
+}
+.ops-task-sound-note > span {
+  height: 5px;
+  width: 5px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #c1b7c5;
+  margin-top: 5px;
+}
+.ops-task-sound-note > span.is-enabled {
+  background: #9b728d;
+}
+.ops-task-sound-note p {
+  font-size: 10px;
+  line-height: 1.85;
+}
+.ops-priorities > .form-actions {
+  padding: 12px 21px;
+  margin: 0;
+  font-size: 11px;
+}
+.ops-panel-loading {
+  display: grid;
+  place-items: center;
+  min-height: 160px;
+  padding: 24px;
+  font-size: 13px;
+  color: #7b7380;
+}
+.ops-panel-message {
+  padding: 25px 23px;
+  display: grid;
+  justify-items: start;
+  gap: 14px;
+  color: #a06679;
+  font-size: 13px;
+}
+.ops-overview-error {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 13px 17px;
+  border: 1px solid #f0d7e1;
+  border-radius: 10px;
+  font-size: 13px;
+  margin-bottom: 16px;
+  color: #a0556d;
+}
+.ops-recent {
+  margin-bottom: 20px;
+}
+.ops-booking-list {
+  padding-inline: 23px;
+}
+.ops-booking-table-head,
+.ops-booking-row {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1.3fr) minmax(0, 1fr) minmax(0, 0.9fr)
+    minmax(0, 0.7fr) auto;
+  gap: 18px;
+  align-items: center;
+}
+.ops-booking-table-head {
+  font-size: 11px;
+  color: #7b7380;
+  padding: 0 0 14px;
+  border-bottom: 1px solid #efebf2;
+}
+.ops-booking-row {
+  padding: 17px 0;
+  border-bottom: 1px solid #f2eff4;
+}
+.ops-booking-row:last-child {
+  border-bottom: 0;
+}
+.ops-booking-person {
+  display: flex;
+  gap: 11px;
+  min-width: 0;
+  align-items: center;
+}
+.ops-booking-person .item-photo {
+  width: 39px;
+  height: 44px;
+  padding: 4px;
+  border-radius: 8px;
+  background: #f8f5f9;
+  flex-shrink: 0;
+  font-size: 6px;
+  line-height: 1.4;
+}
+.ops-booking-person .item-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.ops-booking-person h3 {
+  font-size: 13px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+.ops-booking-person p {
+  font-size: 11px;
+  color: #7b7380;
+  margin-top: 5px;
+  overflow-wrap: anywhere;
+}
+.ops-booking-date time {
+  font-size: 11px;
+  line-height: 1.85;
+  color: #7b7380;
+}
+.ops-booking-badge {
+  font-size: 10px;
+  border: 1px solid #eee7f0;
+  border-radius: 6px;
+  padding: 5px 8px;
+  text-align: center;
+  color: #7b7380;
+  background: #fcfaff;
+  justify-self: start;
+}
+.ops-badge-berjalan {
+  background: #eeebf0;
+  border-color: #e4dce9;
+  color: #6b5c74;
+}
+.ops-badge-dikonfirmasi {
+  background: #f6eff7;
+  color: #95719c;
+}
+.ops-badge-menunggu_konfirmasi {
+  background: #fff2f7;
+  color: #b17b96;
+}
+.ops-booking-amount strong {
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.admin-dashboard .ops-booking-row [data-slot='button'] {
+  min-height: 30px;
+  font-size: 11px;
+  padding: 6px 10px;
+}
+.ops-mobile-label {
+  display: none;
+}
+.ops-recent-empty {
+  padding: 10px 23px 30px;
+  color: #7b7380;
+  font-size: 13px;
+}
+.ops-risk-strip {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 17px 21px;
+  border-radius: 12px;
+  background: #f9f7fa;
+  border: 1px solid #f0ebf3;
+}
+.ops-risk-strip strong {
+  font-size: 13px;
+  font-weight: 500;
+}
+.ops-risk-strip p {
+  font-size: 12px;
+  color: #7b7380;
+  margin-top: 5px;
+  line-height: 1.8;
+}
+.studio-admin:has(.admin-dashboard) .site-footer {
+  padding: 0 48px 20px;
+  border: 0;
+  border-radius: 0;
+}
+.studio-admin:has(.admin-dashboard) .site-footer-panel {
+  transform: none;
+  padding: 19px 0 0;
+  border: 0;
+  border-top: 1px solid #f0eaf2;
+  border-radius: 0;
+  box-shadow: none;
+}
+.studio-admin:has(.admin-dashboard) .site-footer-top,
+.studio-admin:has(.admin-dashboard) .site-footer-wordmark {
+  display: none;
+}
+.studio-admin:has(.admin-dashboard) .site-footer-bottom {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  font-size: 11px;
+}
+@keyframes ops-pulse {
+  50% {
+    opacity: 0.5;
+  }
+}
+@media (max-width: 1279px) {
+  .ops-main-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ops-agenda-column {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    align-items: start;
+  }
+  .ops-inventory-note {
+    grid-column: 1/-1;
+  }
+  .ops-priorities .ops-task {
+    display: inline-block;
+    width: 50%;
+    vertical-align: top;
+    min-height: 160px;
+  }
+  .ops-task-toolbar {
+    justify-content: space-between;
+  }
+  .ops-task-toolbar label {
+    max-width: 320px;
+  }
+  .ops-metric {
+    padding: 18px 15px;
+  }
+  .ops-metric-label > p {
+    font-size: 12px;
+  }
+  .ops-booking-table-head,
+  .ops-booking-row {
+    gap: 12px;
+  }
+}
+@media (max-width: 1023px) {
+  .ops-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .ops-header {
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+  .ops-header h1 {
+    font-size: 27px;
+  }
+  .ops-agenda-column {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ops-booking-table-head {
+    display: none;
+  }
+  .ops-booking-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 13px 18px;
+  }
+  .ops-booking-person {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .ops-booking-row > .ops-booking-badge {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .ops-booking-date {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .ops-booking-amount {
+    grid-column: 2;
+    grid-row: 2;
+  }
+  .ops-mobile-label {
+    display: block;
+    font-size: 10px;
+    color: #7b7380;
+    margin-bottom: 3px;
+  }
+  .ops-booking-row > [data-slot='button'] {
+    grid-column: 2;
+    grid-row: 3;
+    justify-self: end;
+  }
+  .ops-booking-date time {
+    font-size: 12px;
+  }
+  .ops-booking-amount strong {
+    font-size: 12px;
+  }
+}
+@media (max-width: 767px) {
+  .ops-header {
+    margin-bottom: 20px;
+    gap: 17px;
+  }
+  .ops-header h1 {
+    font-size: 26px;
+    letter-spacing: -0.9px;
+  }
+  .ops-welcome {
+    font-size: 13px;
+  }
+  .ops-header-actions {
+    width: 100%;
+  }
+  .ops-header-actions [data-slot='button'] {
+    min-height: 37px;
+  }
+  .ops-dayline {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 9px;
+  }
+  .ops-metrics {
+    gap: 11px;
+    margin-bottom: 20px;
+  }
+  .ops-metric {
+    padding: 15px 13px;
+    border-radius: 12px;
+  }
+  .ops-metric-label {
+    align-items: flex-start;
+    margin-bottom: 12px;
+    gap: 6px;
+  }
+  .ops-metric-label > p {
+    font-size: 12px;
+    max-width: 100px;
+  }
+  .ops-metric-label > span {
+    width: 24px;
+    height: 24px;
+    border-radius: 7px;
+  }
+  .ops-metric-label svg {
+    width: 12px;
+    height: 12px;
+  }
+  .ops-metric > strong {
+    font-size: 31px;
+  }
+  .ops-metric-note {
+    font-size: 10px;
+    min-height: 25px;
+    margin-top: 8px;
+  }
+  .ops-main-grid {
+    gap: 20px;
+  }
+  .ops-panel-header {
+    padding: 20px 18px 17px;
+  }
+  .ops-panel-header h2 {
+    font-size: 15px;
+  }
+  .ops-panel-header .ops-eyebrow {
+    font-size: 10px;
+  }
+  .ops-soft-label {
+    padding: 5px 7px;
+    font-size: 10px;
+  }
+  .ops-schedule-tabs {
+    padding-inline: 15px;
+    padding-bottom: 15px;
+  }
+  .ops-schedule-tabs > button {
+    font-size: 12px;
+    padding: 8px 9px;
+  }
+  .ops-schedule-empty {
+    padding-inline: 25px;
+    min-height: 220px;
+  }
+  .ops-panel-footer {
+    padding-inline: 17px;
+  }
+  .ops-schedule-list {
+    padding-inline: 17px;
+  }
+  .ops-schedule-row {
+    grid-template-columns: 36px minmax(0, 1fr) auto;
+    gap: 8px;
+  }
+  .ops-schedule-device {
+    gap: 7px;
+  }
+  .ops-device-icon {
+    display: none;
+  }
+  .ops-schedule-device h3 {
+    font-size: 12px;
+  }
+  .ops-schedule-device p {
+    font-size: 10px;
+  }
+  .ops-schedule-row > time {
+    font-size: 12px;
+  }
+  .ops-total {
+    font-size: 21px;
+  }
+  .ops-distribution {
+    margin-inline: 18px;
+  }
+  .ops-status-legend {
+    padding-inline: 18px;
+    gap: 14px;
+  }
+  .ops-status-legend dt {
+    font-size: 11px;
+  }
+  .ops-inventory-note {
+    padding: 15px;
+    gap: 10px;
+  }
+  .ops-inventory-note strong {
+    font-size: 11px;
+  }
+  .ops-inventory-note p {
+    font-size: 10px;
+  }
+  .ops-priorities .ops-task {
+    display: block;
+    width: 100%;
+    min-height: auto;
+    padding-inline: 18px;
+  }
+  .ops-priorities .ops-task-overdue {
+    padding-left: 15px;
+  }
+  .ops-task-toolbar {
+    padding-inline: 18px;
+    gap: 9px;
+  }
+  .ops-task-title h3 {
+    font-size: 13px;
+  }
+  .ops-task-code {
+    font-size: 12px;
+  }
+  .ops-task-deadline {
+    font-size: 11px;
+  }
+  .admin-dashboard .ops-task-actions [data-slot='button'] {
+    font-size: 11px;
+  }
+  .ops-task-sound-note {
+    padding-inline: 18px;
+  }
+  .ops-risk-strip {
+    flex-wrap: wrap;
+    padding: 17px;
+  }
+  .ops-risk-strip strong {
+    font-size: 12px;
+  }
+  .ops-risk-strip p {
+    font-size: 11px;
+  }
+  .ops-booking-list {
+    padding-inline: 18px;
+  }
+  .ops-booking-person .item-photo {
+    width: 32px;
+    height: 38px;
+  }
+  .ops-booking-person h3 {
+    font-size: 12px;
+  }
+  .ops-booking-person p {
+    font-size: 10px;
+  }
+  .ops-booking-badge {
+    font-size: 10px;
+    padding: 5px 6px;
+  }
+  .ops-booking-date time {
+    font-size: 11px;
+  }
+  .ops-booking-amount strong {
+    font-size: 13px;
+  }
+  .studio-admin:has(.admin-dashboard) .site-footer {
+    padding-inline: 20px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ops-number-skeleton {
+    animation: none;
+  }
+}

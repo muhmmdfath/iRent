@@ -1,0 +1,303 @@
+/* Keep field labels and entered values consistent across customer/admin forms. */
+:root {
+  --form-label-size: 16px;
+  --form-value-size: 13px;
+}
+:root body label,
+:root body .field-label {
+  font-size: var(--form-label-size);
+  font-weight: 500;
+}
+:root
+  body
+  input:not([type='checkbox']):not([type='radio']):not([type='range']):not(
+    [type='submit']
+  ):not([type='button']),
+:root body select,
+:root body textarea {
+  font-size: var(--form-value-size);
+  line-height: 1.6;
+}
+:root body input::placeholder,
+:root body textarea::placeholder {
+  font-size: inherit;
+}
+:root body input[type='file']::file-selector-button {
+  font-size: inherit;
+}
+
+/* Separate section titles from the field labels that follow. */
+:root body .form-section > h2,
+:root body .form-section > h3,
+:root body fieldset.form-section > legend {
+  width: 100%;
+  padding-bottom: 12px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #e9e5e8;
+}
+
+/* Shared dropdown styling, preserving native form and keyboard behavior. */
+:root body select:not([multiple]):not([size]) {
+  appearance: none;
+  -webkit-appearance: none;
+  min-height: 44px;
+  min-width: 0;
+  padding: 11px 40px 11px 13px;
+  border: 1px solid #e3dce2;
+  border-radius: 10px;
+  background-color: #fff;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 16 16' fill='none'%3E%3Cpath d='m4 6 4 4 4-4' stroke='%23786b76' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 13px center;
+  color: #332c33;
+  font-family: inherit;
+  font-weight: 400;
+  cursor: pointer;
+  transition:
+    border-color 0.18s,
+    box-shadow 0.18s;
+}
+:root body select:not(:disabled):hover {
+  border-color: #c6b7c1;
+}
+:root body select:focus {
+  outline: none;
+  border-color: #ff4081;
+  box-shadow: 0 0 0 3px #ff408118;
+}
+:root body select:disabled {
+  background-color: #f7f4f6;
+  color: #a0969e;
+  cursor: not-allowed;
+  opacity: 0.75;
+}
+:root body select[aria-invalid='true'] {
+  border-color: #b83957;
+}
+:root body select option {
+  font-family: inherit;
+  font-size: 13px;
+  background: #fff;
+  color: #332c33;
+}
+:root body select option:disabled {
+  color: #a0969e;
+}
+/* Modern browsers can also style the expanded picker without replacing select. */
+@supports (appearance: base-select) {
+  :root body select:not([multiple]):not([size]),
+  :root body select:not([multiple]):not([size])::picker(select) {
+    appearance: base-select;
+  }
+  :root body select:not([multiple]):not([size]) {
+    background-image: none;
+    padding-right: 13px;
+    align-items: center;
+    gap: 12px;
+  }
+  :root body select::picker-icon {
+    content: '';
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    background: currentColor;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='m4 6 4 4 4-4' fill='none' stroke='black' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+      center / contain no-repeat;
+    color: #786b76;
+    transition: rotate 0.18s;
+  }
+  :root body select:open::picker-icon {
+    rotate: 180deg;
+  }
+  :root body select::picker(select) {
+    margin-top: 7px;
+    padding: 6px;
+    border: 1px solid #e9e0e6;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 10px 28px #41233614;
+    max-height: min(320px, 60vh);
+    overflow-y: auto;
+  }
+  :root body select option {
+    padding: 10px 12px;
+    border-radius: 7px;
+    min-height: 39px;
+    gap: 10px;
+    line-height: 1.7;
+    white-space: normal;
+    cursor: pointer;
+  }
+  :root body select option:checked {
+    background: #fff0f5;
+    color: #a72d59;
+    font-weight: 500;
+  }
+  :root body select option:not(:disabled):not(:checked):hover,
+  :root body select option:not(:disabled):not(:checked):focus {
+    background: #f3f0f2;
+    color: #332c33;
+    outline: none;
+  }
+  :root body select option:disabled {
+    cursor: not-allowed;
+  }
+  :root body select option::checkmark {
+    display: none;
+    content: '';
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :root body select,
+  :root body select::picker-icon {
+    transition: none;
+  }
+}
+
+.styled-date-time {
+  position: relative;
+  min-width: 0;
+}
+:root body .styled-date-time > input {
+  padding-right: 44px;
+  min-width: 0;
+  width: 100%;
+  color: #332c33;
+  border-color: #e3dce2;
+  border-radius: 10px;
+  background: #fff;
+}
+.styled-date-time > input::-webkit-calendar-picker-indicator {
+  display: none;
+}
+.styled-date-time > input::-webkit-datetime-edit {
+  padding: 0;
+}
+:root body .styled-date-time > input:focus {
+  outline: none;
+  border-color: #ff4081;
+  box-shadow: 0 0 0 3px #ff408118;
+}
+.styled-date-time .date-time-trigger {
+  position: absolute;
+  right: 7px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: #8b7080;
+  cursor: pointer;
+}
+.date-time-trigger svg {
+  width: 17px;
+  height: 17px;
+}
+.styled-date-time .date-time-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 49;
+  width: min(310px, calc(100vw - 76px));
+  padding: 16px;
+  border: 1px solid #e9e0e6;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 12px 35px #38222f18;
+}
+.date-time-month {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 13px;
+}
+.date-time-month strong {
+  font-size: 13px;
+  font-weight: 600;
+}
+.date-time-month button {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 7px;
+  cursor: pointer;
+}
+.date-time-month svg {
+  width: 16px;
+  height: 16px;
+}
+.date-time-days {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 3px;
+}
+.date-time-days > span {
+  font-size: 10px;
+  color: #8d7d88;
+  text-align: center;
+  padding: 5px 0;
+}
+.date-time-days button {
+  min-height: 32px;
+  border-radius: 7px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.date-time-days button[aria-pressed='true'] {
+  background: #ff4081;
+  color: #fff;
+}
+.date-time-days button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.date-time-clock {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 17px;
+  padding-top: 15px;
+  border-top: 1px solid #eee8ec;
+}
+.date-time-clock > svg {
+  width: 15px;
+  height: 15px;
+  color: #a26d85;
+  flex-shrink: 0;
+}
+.date-time-clock > span {
+  font-size: 10px;
+  color: #85717e;
+}
+.date-time-clock > span:first-of-type {
+  margin-right: auto;
+}
+:root body .date-time-clock select {
+  width: 57px;
+  min-height: 34px;
+  padding: 5px 7px;
+  gap: 3px;
+  border-radius: 7px;
+}
+.styled-date-time .date-time-done {
+  display: block;
+  width: 100%;
+  min-height: 36px;
+  margin-top: 15px;
+  border-radius: 8px;
+  background: #2b282d;
+  color: #fff;
+  font-size: 12px;
+  cursor: pointer;
+}
+.date-time-popover button:focus-visible,
+.date-time-trigger:focus-visible {
+  outline: 2px solid #ff4081;
+  outline-offset: 2px;
+}

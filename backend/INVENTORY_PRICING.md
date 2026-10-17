@@ -64,3 +64,5 @@ Settings memvalidasi tipe, uang, jam buka/tutup, tanggal 1–28, persentase, dur
 Mutasi memeriksa auth di bawah user lock. Urutan inventory: user → settings jika diperlukan → item → unit → alokasi. Quote: shared settings → item berurutan → zona. Jalur booking berikutnya wajib mengikuti protokol kompatibel dan memeriksa keadaan setelah memperoleh lock; jangan menulis stok melalui CRUD lain. Perubahan settings diaudit per key dengan nilai sebelum/sesudah, revisi, dan ID setting yang benar.
 
 Tes mencakup perhitungan uang/jadwal, dua admin membuat aksesori bersamaan, otorisasi, snapshot lama, cache lintas instance, penonaktifan unit teralokasi, serta perawatan/persiapan. File tes database dijalankan serial pada database khusus; skenario konkurensi dijalankan secara eksplisit di dalam tes.
+
+Katalog publik `GET /api/items` mendukung `search` (nama, case-insensitive, 1-150 karakter) dan `category=iphone|accessory`, digabung dengan page/limit. Hasil dan total menerapkan filter yang sama; item nonaktif tetap tersembunyi. Parameter `isActive` hanya tersedia pada endpoint admin.

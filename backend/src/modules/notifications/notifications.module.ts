@@ -1,3 +1,5 @@
+import { InboxController } from './inbox.controller';
+import { InboxService } from './inbox.service';
 import {
   Body,
   Controller,
@@ -54,8 +56,9 @@ export class NotificationsController {
 }
 @Module({
   imports: [AuthModule, PrismaModule, PricingModule, RisksModule],
-  controllers: [NotificationsController],
+  controllers: [NotificationsController, InboxController],
   providers: [
+    InboxService,
     PushService,
     WhatsAppAdapter,
     NotificationTransport,

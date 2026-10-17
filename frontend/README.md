@@ -17,7 +17,7 @@ Form memakai review, error server/offline, dan UUID idempotensi untuk tindakan y
 
 Seed lengkap ada di [docs/demo-data.md](../docs/demo-data.md); screenshot terbaru di [docs/frontend](../docs/frontend/README.md). Audit database/browser nyata mencakup admin 360/390/768/1024/1440 px dan pelanggan 360/1440 px. Push Android/iPhone dan QRIS bank nyata membutuhkan HTTPS, VAPID dan QRIS resmi. Pengiriman perangkat fisik belum diverifikasi; WhatsApp ditunda sesuai PRD.
 
-Fondasi React/TypeScript untuk website pelanggan dan admin PWA. Acuan bisnis: [PRD](../PRD.md). Acuan visual: [DESIGN.md](../DESIGN.md) dan [layar FIX redesign](../STITCH_REDESIGN.md). Ekspor Stitch adalah referensi; komponen implementasi memakai Poppins, spacing, dan hierarki terbaru.
+Fondasi React/TypeScript untuk website pelanggan dan admin PWA. Acuan bisnis: [PRD](../PRD.md). Arah visual terbaru mengikuti referensi pengguna pada 15 Oktober 2026. Sidebar/navbar/katalog memakai workspace putih dominan dengan teks hitam, aksen pink pastel dan Poppins; ekspor Stitch lama tidak lagi menjadi acuan.
 
 ## Menjalankan lokal
 
@@ -37,7 +37,7 @@ Buka `http://127.0.0.1:5173`. Jalankan [backend](../backend/README.md) pada `127
 - `src/auth/`: kontrak login/session, guard role, halaman masuk, tujuan setelah login.
 - `src/account/pages/`: informasi akun; `src/customer/`: profil, katalog, booking dan pembayaran.
 - `src/admin/`: antrean pembayaran, daftar/detail booking, pemeriksaan bukti dan pelunasan.
-- `src/components/ui/`: komponen dasar shadcn/ui yang disesuaikan dengan DESIGN.md.
+- `src/components/ui/`: komponen dasar shadcn/ui yang dipakai bersama pada alur aplikasi.
 - `src/services/`: Axios dan React Query; `src/stores/`: state navigasi Zustand.
 - `src/hooks/`, `src/lib/`: utilitas bersama; `src/styles.css`: token dan layout.
 - `public/admin/`: aset PWA yang sudah ada; `tests/`: Vitest/MSW dan Playwright.
@@ -106,3 +106,9 @@ Regresi seluruh suite Chromium: 30 tes API simulasi lulus; empat tes API nyata d
 Verifikasi penyelesaian 12 Oktober 2026: build/typecheck/lint lulus; 76 tes Vitest/MSW (`npm test -- --maxWorkers=2`), 36 tes browser API simulasi dan audit demo API nyata terpisah (88 kunjungan halaman) lulus. Lima tes browser khusus API nyata dilewati pada regresi default. Backend: 26 tes unit dan 188 tes PostgreSQL/HTTP pada database kosong lulus. Batasi worker pada mesin dengan RAM terbatas. Screenshot dan seed tersedia pada tautan di atas.
 
 Refactor 12 Oktober 2026: daftar perpanjangan bersama ada di `src/extensions/components/extension-list.tsx`; halaman/form di `src/extensions/pages.tsx` hanya dimuat dinamis oleh router. Build bebas warning import dinamis tidak efektif; 76 tes UI dan 12 tes browser pada bundle produksi lulus. Navigasi/reload detail perpanjangan diuji pada 390/1440 px.
+
+Perapihan motion 15 Oktober 2026: navbar fixed transparan dengan blur, hero perangkat mengambang dan scroll reveal pada `/`, bagian alur sewa terpusat, serta tombol untuk tautan aksi. `prefers-reduced-motion` menonaktifkan animasi. Wordmark footer menggunakan pink yang lebih terlihat. Preview terbaru ada di docs/frontend/.
+
+Beranda admin `/admin/` kini mengutamakan indikator operasional, agenda pengambilan/pengembalian WIB dan satu antrean prioritas. Status booking dan lima transaksi terbaru memakai API aktual; suara serta pengakuan lokal tugas tetap tersedia. Footer pada beranda admin dipadatkan. Backend dan data tidak berubah.
+
+Notifikasi: toast bersama berada di `components/toast-viewport.tsx` dan dapat dipanggil melalui `notify({ kind, title, message })` dari `stores/notifications.ts`. Respons mutasi bisnis memicu feedback melalui interceptor API; request pengecekan availability/quote tidak menghasilkan toast. Lonceng navbar membaca `/api/notifications` tiap 30 detik dengan read state tersimpan di server.

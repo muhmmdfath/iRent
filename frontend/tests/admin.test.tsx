@@ -295,6 +295,8 @@ it('shows the payment queue from current backend tasks', async () => {
         data: [
           {
             id: 'proof-task',
+            kind: 'payment',
+            version: 'test-v1',
             bookingId: adminBooking.id,
             code: adminBooking.code,
             dueAt: adminBooking.confirmationDueAt,
@@ -308,11 +310,9 @@ it('shows the payment queue from current backend tasks', async () => {
   );
   mount('/admin/');
   const queue = await screen.findByRole('region', {
-    name: 'Periksa bukti pembayaran',
+    name: 'Perlu ditangani',
   });
-  expect(
-    await within(queue).findByText(/Melewati batas konfirmasi/),
-  ).toBeVisible();
+  expect(await within(queue).findByText('Terlambat')).toBeVisible();
   expect(
     within(queue).getByRole('link', { name: 'Periksa pembayaran' }),
   ).toHaveAttribute('href', '/admin/bookings/test-booking');

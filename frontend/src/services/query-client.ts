@@ -1,3 +1,4 @@
+import { notify, useToastStore } from '@/stores/notifications';
 import { useUiStore } from '@/stores/ui';
 import type { Session } from '@/auth/types';
 import { QueryClient } from '@tanstack/react-query';
@@ -37,6 +38,7 @@ const privateQuery = (query: { queryKey: readonly unknown[] }) =>
     query.queryKey[1] === 'session'
   );
 export async function discardPrivateData() {
+  useToastStore.getState().clear();
   await queryClient.cancelQueries({ predicate: privateQuery });
   queryClient.removeQueries({ predicate: privateQuery });
   queryClient.getMutationCache().clear();
@@ -47,6 +49,7 @@ export async function replaceSession(session: Session | null) {
   // Keep the active session query so guards observe the new value immediately.
   await discardPrivateData();
   queryClient.setQueryData(sessionKey, session);
+  if (session) notify({ kind: 'success', title: 'Berhasil masuk' });
 }
 export function clearSessionData() {
   return replaceSession(null);

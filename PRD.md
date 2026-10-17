@@ -701,7 +701,7 @@ Interval job baru adalah rancangan teknis untuk memenuhi alert tepat waktu. Sche
 - Isi audit/notifikasi mengecualikan password, NIK, kunci enkripsi, token, dan file bukti. Backup harus mencakup kunci enkripsi secara aman terpisah agar data NIK dapat dipulihkan; akses backup dan database dibatasi. Reset password admin memutus sesi pelanggan sebelumnya.
 - Responsif untuk HP/komputer, Bahasa Indonesia, WIB.
 - Tema pink pastel: primary `#F28CB1`, aksen `#FBD3E1`, latar pelanggan `#FFF5F8`, sidebar admin `#FFF0F5`, teks `#3A2A33`.
-- Seluruh UI memakai Poppins, termasuk tabel, angka, input, dan tombol. `DESIGN.md` menjadi acuan visual untuk spacing, hierarki, komponen, responsivitas, dan prompt Stitch; aturan bisnis tetap mengikuti PRD ini.
+- Seluruh UI memakai Poppins, termasuk tabel, angka, input, dan tombol. Arah visual mengikuti pilihan pengguna dan UI aplikasi saat ini; aturan bisnis tetap mengikuti PRD ini.
 - Target halaman utama pelanggan/admin di bawah tiga detik pada koneksi seluler normal; profil pengukuran konkret belum ditentukan.
 - Backup database harian, simpan minimal tujuh hari; backup foto/bukti mingguan di lokasi privat.
 

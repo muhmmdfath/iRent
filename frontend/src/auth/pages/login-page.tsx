@@ -1,11 +1,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
-import {
-  EyeOpenIcon,
-  EyeClosedIcon,
-  ArrowLeftIcon,
-} from '@radix-ui/react-icons';
+import { EyeOpenIcon, EyeClosedIcon } from '@radix-ui/react-icons';
 import { Link, Navigate, useSearchParams } from 'react-router-dom';
 import { Brand } from '@/components/brand';
 import { Button } from '@/components/ui/button';
@@ -59,7 +55,7 @@ export function LoginPage() {
           <p>Sewa perangkat untuk kebutuhanmu di Semarang.</p>
         </div>
         <Link className="back-link" to="/">
-          <ArrowLeftIcon aria-hidden="true" /> Kembali ke beranda
+          Kembali ke beranda
         </Link>
       </section>
       <section className="auth-form-area" aria-labelledby="login-title">

@@ -71,7 +71,7 @@ export function AdminBookingDetailPage() {
   return (
     <>
       <Link className="back-link" to="/admin/bookings">
-        ← Semua booking
+        Semua booking
       </Link>
       <header className="page-heading admin-detail-heading">
         <div>

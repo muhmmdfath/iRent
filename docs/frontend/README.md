@@ -1,3 +1,58 @@
+## Beranda admin operasional
+
+Dashboard menampilkan empat indikator di bagian atas, jadwal WIB bertab, satu antrean prioritas, distribusi status dan booking terbaru. Pembayaran tidak diulang dalam panel terpisah. Pengingat suara/pengakuan versi tugas tetap tersedia. Data berasal dari endpoint overview/tasks/bookings yang sudah ada; unit siap fisik tidak diklaim selalu tersedia untuk setiap jadwal.
+
+- [Desktop, layar awal](admin-dashboard-1440-viewport.png)
+- [HP, layar awal](admin-dashboard-390-viewport.png)
+- [Desktop, halaman penuh](admin-dashboard-desktop.png)
+- [HP, halaman penuh](admin-dashboard-mobile.png)
+
+Preview menggunakan database lokal nyata. Build/TypeScript/lint, 81 tes frontend dan 13 tes browser terkait lulus. Lima ukuran layar diperiksa tanpa overflow atau error JavaScript. Hierarki operasional mengacu pada [Booqable](https://help.booqable.com/en/articles/5603615-how-to-use-the-dashboard) dan prioritas pekerjaan pada [Shopify Home](https://help.shopify.com/en/manual/shopify-admin/shopify-home), dengan palet/tipografi yang dipilih pengguna.
+
+## Poppins dan posisi panel footer
+
+Seluruh antarmuka memakai Poppins 400/500/600/700 dari aset lokal. Panel footer diturunkan 40px di desktop, 32px di tablet dan 24px di HP; posisi wordmark tetap rendah. Build lulus dan delapan kombinasi halaman/viewport diperiksa tanpa overflow.
+
+- [Footer desktop](poppins-footer-desktop.png)
+- [Footer HP](poppins-footer-mobile.png)
+
+## Koreksi kontrol netral dan footer
+
+Tombol, logo dan sidebar menggunakan hitam-putih/abu, termasuk hover/fokus; pink pastel dipertahankan untuk dekorasi. Logo tidak dibungkus styling tombol. Wordmark footer berada lebih rendah dan terpotong pada tepi bawah.
+
+- [Kontrol desktop](neutral-controls-desktop.png)
+- [Footer desktop](footer-lowered-desktop.png)
+- [Footer HP](footer-lowered-mobile.png)
+
+## Pink pastel dan motion - 15 Oktober 2026
+
+Putih tetap dominan, teks hitam dan aksen pink pastel. Navbar fixed memakai transparansi/backdrop blur. Beranda menyediakan gerakan perangkat, parallax ringan, scroll reveal dan indikator progres tanpa mengunci scroll; prefers-reduced-motion menonaktifkan animasi. Aksi diberi bentuk tombol, bagian tiga langkah terpusat dan wordmark footer lebih jelas.
+
+| Preview            | Screenshot                               |
+| ------------------ | ---------------------------------------- |
+| Beranda desktop    | [Hero](pastel-home-desktop.png)          |
+| Beranda HP         | [Hero mobile](pastel-home-mobile.png)    |
+| Alur sewa terpusat | [Tiga langkah](pastel-steps-desktop.png) |
+| Footer pastel      | [Footer](pastel-footer-desktop.png)      |
+| Katalog HP         | [Katalog](pastel-catalog-mobile.png)     |
+
+Screenshot diambil dari API/database lokal nyata. Build/lint, 78 tes frontend dan 48 tes browser lulus; lima tes khusus API nyata dilewati pada regresi default. Catatan berikut menggambarkan tahap sebelumnya.
+
+## Sidebar, navbar dan katalog - 15 Oktober 2026
+
+Referensi terbaru berasal dari gambar pengguna. Layout publik/pelanggan/admin memakai sidebar berkelompok, navbar pencarian dan permukaan netral. Dokumen desain lama sudah dihentikan.
+
+| Preview         | Screenshot                                 |
+| --------------- | ------------------------------------------ |
+| Footer desktop  | [Footer](footer-refresh-desktop.png)       |
+| Footer HP       | [Footer mobile](footer-refresh-mobile.png) |
+| Katalog desktop | [Desktop](catalog-refresh-desktop.png)     |
+| Katalog HP      | [Mobile](catalog-refresh-mobile.png)       |
+| Sidebar HP      | [Menu terbuka](sidebar-refresh-mobile.png) |
+| Sidebar admin   | [Admin](sidebar-refresh-admin.png)         |
+
+Gambar direkam dari backend dan database demo nyata. Bagian selanjutnya adalah catatan tahap sebelumnya.
+
 # Preview implementasi frontend
 
 ## Penyelesaian frontend — 11 Oktober 2026
@@ -20,7 +75,7 @@ Screenshot dari aplikasi React/Vite langkah 1, bukan ekspor Stitch. Login memaka
 - [Login desktop 1440 px](login-desktop.png)
 - [Login mobile 390 px](login-mobile.png)
 
-Diambil melalui tes Playwright pada 9 Oktober 2026. Acuan visual tetap [DESIGN.md](../../DESIGN.md) dan [Stitch Redesign](../../STITCH_REDESIGN.md). [Setup dan cakupan implementasi](../../frontend/README.md) menjelaskan halaman yang sudah tersedia. Screenshot bukan bukti bahwa halaman bisnis/PWA perangkat nyata sudah selesai.
+Diambil melalui tes Playwright pada 9 Oktober 2026. Arah visual mengikuti pilihan pengguna dan UI aplikasi saat ini. Dokumen dan ekspor Stitch sudah dihapus. [Setup dan cakupan implementasi](../../frontend/README.md) menjelaskan halaman yang sudah tersedia. Screenshot bukan bukti bahwa halaman bisnis/PWA perangkat nyata sudah selesai.
 
 ## Alur pelanggan
 

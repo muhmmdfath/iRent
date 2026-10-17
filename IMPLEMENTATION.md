@@ -1,4 +1,129 @@
+## Halaman Booking saya (17 Oktober 2026)
+
+- [x] Kartu booking konsisten dengan beranda, shared styles diekstrak ke recent-booking-cards.css.
+- [x] Filter status server dan pagination dengan query URL, termasuk empty/loading/error states.
+- [x] Grid dua kolom desktop, satu kolom ponsel; badge status, foto, jadwal tiap booking dan CTA sesuai status.
+- Verifikasi: typecheck, 2 browser tests filter/payment link/empty reset/overflow, dan pengecekan data asli desktop/ponsel lulus.
+- Referensi: Airbnb reservations dan Shopify customer accounts.
+
+## Toast dan kotak masuk notifikasi (17 Oktober 2026)
+
+- [x] Toast pojok kanan bawah untuk respons aksi sukses/gagal; tersedia juga varian info/warning, dismiss dan auto-close.
+- [x] Lonceng navbar pelanggan/admin, badge unread, panel berhalaman, tautan booking dan tandai semua dibaca.
+- [x] GET /api/notifications mengambil event bisnis dari outbox dengan batas kepemilikan; pelanggan hanya melihat booking sendiri. Payload privat tidak dikirim.
+- [x] POST /api/notifications/:id/read dan /read-all menyimpan read marker per akun, idempotent. Migration 20261017140000_notification_inbox_reads diterapkan ke PostgreSQL lokal.
+- [x] Polling 30 detik dan invalidasi setelah aksi; cache dan toast dibersihkan saat sesi berganti.
+- Verifikasi: build frontend/backend; browser desktop/ponsel untuk inbox, mark-read, outside click dan toast sukses/gagal. API data asli: isolasi booking, penolakan mark-read milik pengguna lain (404), read marker persisten dan idempotent.
+
+## Validasi stok otomatis pada booking (17 Oktober 2026)
+
+- [x] Periksa unit tersedia per item/jadwal melalui API availability, termasuk item yang belum dipilih.
+- [x] Tombol plus dan input manual dibatasi stok terbaru; item kosong/hasil belum diketahui tidak bisa ditambahkan.
+- [x] Jadwal berubah memicu query baru; stok kurang memberi peringatan dan memblokir pembuatan booking, tanpa menghapus pilihan diam-diam.
+- [x] Refresh stok 30 detik; server tetap memeriksa ulang saat transaksi booking.
+- Verifikasi: typecheck dan browser test batas plus/manual, stok kosong, serta pergantian jadwal lulus.
+
+## Form booking - fase 3 (17 Oktober 2026)
+
+- [x] Empat bagian bernomor dengan pintasan: perangkat, jadwal, pengambilan, persetujuan.
+- [x] Perangkat memakai foto/quantity dan tombol hapus ikon. Panel ringkasan visual menampilkan perangkat, jadwal, dan biaya terverifikasi.
+- [x] Cek biaya dipindahkan ke panel ringkasan dengan submit form terkait. Validasi, fingerprint preview dan idempotency booking dipertahankan.
+- [x] Perkiraan waktu kembali otomatis; panel sticky desktop dan satu kolom ponsel. Label/isian tetap mengikuti tipografi global.
+- Referensi: Baymard checkout summaries dan Sharetribe calendar booking.
+- Verifikasi browser dengan data asli: cek harga/ketersediaan pada 390/768/1440px lulus tanpa overflow. Typecheck lulus.
+
+## Detail perangkat - fase 2 (17 Oktober 2026)
+
+- [x] Foto utama lega, panel pemesanan sticky desktop, dan isi paket terpisah.
+- [x] Pilihan 6/12/24 jam memperbarui harga serta diteruskan ke form booking.
+- [x] Layout ponsel menempatkan foto, panel tarif, lalu kelengkapan paket.
+- Verifikasi: typecheck lulus; browser data asli pada 390/768/1440px, pilihan durasi dan tautan booking tanpa overflow.
+- Referensi: Lensrentals Canon EOS R5 dan ShareGrid Sony FX3; palet iRent tetap berlaku.
+
+## Perapian kartu katalog beranda (17 Oktober 2026)
+
+- Foto sebagai satu area aksi, ikon tambah ringkas, badge ketersediaan kecil dan jarak kartu diperlebar.
+- Error ketersediaan disatukan di atas grid; tidak lagi ada pesan dan retry besar per kartu.
+- Harga mengikuti durasi filter. Pemilihan tanggal mulai memperhitungkan lead time 2 jam dan batas bulan pemesanan.
+- Referensi arah: Grover smartphone catalog dan Lensrentals catalog. Palet iRent dipertahankan.
+- Preview data asli: docs/frontend/customer-catalog-refined-desktop.png dan customer-catalog-refined-mobile.png.
+
+## Filter ketersediaan beranda (17 Oktober 2026)
+
+- [x] Ikon kalender membuka pemilih rentang tanggal; klik mulai lalu akhir langsung mengecek. Awal 10.00 WIB, tanggal sama 6 jam, beda tanggal kelipatan 24 jam maksimal 7 hari; jam dapat diubah saat booking.
+- [x] Kartu perangkat memeriksa ketersediaan melalui API booking per item, termasuk buffer/alokasi yang sudah diterapkan backend.
+- [x] Loading, error/retry, jumlah unit tersedia, tidak tersedia, dan reset filter.
+- [x] Jadwal pilihan diteruskan ke form booking; cek bukan reservasi dan tetap diperiksa ulang sebelum booking.
+
+## Pembaruan beranda pelanggan - fase 1 (17 Oktober 2026)
+
+- [x] Layout konten utama dan panel informasi sewa, terinspirasi pembagian konten Peduly.
+- [x] Pintasan kategori, enam perangkat dari katalog asli, serta booking terbaru.
+- [x] Pembayaran tertunda diprioritaskan, profil dan panduan tetap tersedia; panel berpindah pada layar kecil.
+- Verifikasi: build/typecheck dan lint lulus; 3 browser tests lulus (360/1440px, pembayaran, kategori, empty state, retry katalog). Preview browser memakai fixture pengujian.
+- [x] Fase 2: detail perangkat.
+- [x] Fase 3: form booking dan ringkasan.
+- [ ] Fase 4: instruksi pembayaran dan status verifikasi.
+
 # Implementasi iRent
+
+## Beranda admin operasional - 15 Oktober 2026
+
+- [x] Empat indikator aktual: booking terjadwal hari ini, booking berjalan, unit siap fisik dan unit terlambat.
+- [x] Jadwal WIB dengan tab pengambilan/pengembalian, navigasi keyboard dan akses detail booking.
+- [x] Satu antrean tugas berdasarkan tenggat; hapus pengulangan pembayaran, pertahankan filter/pagination, pengingat suara dan pengakuan versi lokal.
+- [x] Distribusi status booking dan lima booking terbaru dari API, lengkap dengan pelanggan, status, jadwal dan nominal string rupiah.
+- [x] Refresh, waktu pembaruan, loading/error/empty state; angka gagal tidak ditampilkan sebagai nol. Footer khusus dashboard dipadatkan.
+- [x] Preview API nyata pada 360/390/768/1024/1440px tanpa overflow atau error JavaScript.
+- [x] Build/TypeScript/lint lulus, 81 tes frontend dan 13 tes browser terkait lulus. Lima skenario dashboard diuji ulang setelah fixture navigasi dilengkapi.
+
+Tidak ada perubahan backend, migrasi atau data simulasi.
+
+- [x] Kembalikan ikon fungsional untuk mundur/maju/logout dengan label aksesibel dan tooltip. Panah dekoratif pada CTA tetap dihilangkan. Wordmark footer memakai lapisan blur progresif yang tidak menutupi tautan.
+
+- [x] Hover tombol hitam/putih/abu memakai isian pink solid yang lebih pekat dan teks gelap; kondisi normal, logo, sidebar dan tombol disabled tetap netral.
+
+## Penyesuaian footer dan Poppins
+
+- [x] Semua font antarmuka memakai Poppins, termasuk shortcut, logo dan wordmark; bobot 400/500/600/700 dimuat lokal.
+- [x] Panel footer diturunkan 40px di desktop, 32px di tablet dan 24px di HP, tanpa menaikkan kembali wordmark.
+
+## Koreksi warna kontrol dan footer - 15 Oktober 2026
+
+- [x] Tombol normal/hover/fokus, logo dan sidebar kembali netral hitam-putih/abu; pink hanya aksen dekoratif. Logo dikecualikan dari styling tautan aksi.
+- [x] Wordmark footer diposisikan pada tepi bawah dengan bagian bawah terpotong, sehingga hanya sekitar setengah bagian atas terlihat.
+- [x] Preview desktop/mobile memastikan logo transparan, menu aktif abu dan tombol netral tanpa overflow.
+
+## Pink pastel dan motion beranda - 15 Oktober 2026
+
+- [x] Palet putih dominan dengan teks hitam dan aksen pink pastel pada navigasi, filter, foto produk dan tombol.
+- [x] Navbar fixed dan transparan dengan backdrop blur untuk beranda serta workspace desktop/mobile.
+- [x] Hero dengan perangkat mengambang, parallax ringan, reveal berbasis viewport dan indikator progres scroll.
+- [x] Pusatkan judul/alur tiga langkah, tambahkan CTA nyata, dan hormati prefers-reduced-motion.
+- [x] Perjelas wordmark footer dan tampilkan tautan aksi sebagai tombol; navigasi tetap memakai anchor agar keyboard/open-tab bekerja.
+- [x] Verifikasi build/lint, 78 tes frontend dan 48 tes browser; lima tes khusus API nyata dilewati pada konfigurasi default. Kasus baru memeriksa fixed navbar, blur, scroll reveal/progress, teks alur terpusat dan reduced motion. Screenshot API nyata disertakan.
+
+## PostgreSQL lokal - 15 Oktober 2026
+
+- [x] Backup database Docker dan environment sebelum pemindahan.
+- [x] Restore database ke PostgreSQL lokal :5432 dengan role aplikasi khusus tanpa superuser.
+- [x] Bandingkan jumlah dan hash seluruh baris pada 31 tabel; foto/bukti dan kunci enkripsi tetap.
+- [x] Default setup lokal tanpa Docker, pemeriksaan koneksi, dan dokumentasi.
+- [x] Verifikasi API, login admin/pelanggan, katalog, tujuh gambar dan migrasi dengan Docker mati. Lima migrasi sudah terpasang tanpa pending migration.
+
+## Perapihan bertahap 15 Oktober 2026
+
+- [x] Footer bersama sesuai referensi baru: panel membulat, tautan halaman nyata, copyright dan wordmark samar. Preview browser pada halaman utama/katalog di lima ukuran layar lulus tanpa overflow.
+
+- [x] Ganti sidebar dan navbar publik/pelanggan/admin mengikuti referensi baru.
+- [x] Perbarui kartu katalog, kategori dan kontrol durasi.
+- [x] Sambungkan pencarian dan filter kategori ke API publik tanpa membuka item nonaktif.
+- [x] Hentikan acuan DESIGN.md dan STITCH_REDESIGN.md; seluruh ekspor Stitch dihapus dari repositori.
+- [x] Verifikasi tampilan desktop/mobile, navigasi, build dan regresi terkait.
+
+Verifikasi: 78 tes frontend lulus; 43 skenario browser unik tercakup (42 lulus pada regresi awal, kasus pagination inventaris diperbaiki dan diverifikasi ulang dalam 12 tes inventaris/workspace yang lulus). Lima tes API nyata khusus dilewati pada suite simulasi. Delapan tes PostgreSQL inventaris lulus, termasuk pencarian publik case-insensitive, kategori dan penyembunyian item nonaktif. Preview API nyata memeriksa pencarian katalog dan sidebar admin; screenshot tersedia di docs/frontend/. Tidak ada migrasi atau perubahan data dummy.
+
+Catatan desain pada bagian historis di bawah menggambarkan tahap sebelumnya.
 
 ## Status terkini - 12 Oktober 2026
 
@@ -27,7 +152,7 @@ Verifikasi refactor 12 Oktober 2026: build/typecheck/lint dan format file yang b
 
 Verifikasi akhir 12 Oktober 2026: build, TypeScript dan lint frontend/backend lulus; 76 tes frontend, 26 tes backend tanpa DB, 188 tes PostgreSQL/HTTP pada database baru, serta 36 tes browser API simulasi lulus. Lima tes browser berkonfigurasi khusus dilewati pada regresi default; audit demo API nyata dijalankan terpisah dan lulus (88 kunjungan halaman pada viewport 360-1440 px). Screenshot desktop/mobile dan petunjuk seed disertakan. Database demo berisi 7 model bergambar, 56 unit, 18 booking, 4 perpanjangan dan 3 refund; 17 entri skenario tercatat. Tidak ada migrasi baru. Web Push pada perangkat fisik masih memerlukan HTTPS/VAPID dan uji perangkat; QRIS resmi disediakan toko.
 
-PRD menjadi acuan fungsi; DESIGN.md dan 36 ekspor desktop/mobile terbaru di design/ menjadi acuan visual. Backend/data dikerjakan sebelum UI. Checklist ini adalah satu tempat pelacakan implementasi, bukan pengganti 65 skenario PRD.
+PRD menjadi acuan fungsi; arah visual mengikuti pilihan pengguna dan UI aplikasi saat ini. Backend/data dikerjakan sebelum UI. Checklist ini adalah satu tempat pelacakan implementasi, bukan pengganti 65 skenario PRD.
 
 ## Tahap 1 — fondasi backend dan struktur data
 
@@ -99,7 +224,7 @@ Verifikasi tahap notifikasi 9 Oktober 2026: build/typecheck/lint, 23 tes tanpa D
 ## Tahap 3 — UI, integrasi, dan deployment
 
 - [x] Kontrak API modul, OpenAPI runtime admin dan ekspor build untuk integrasi; response service rinci mengikuti dokumentasi modul.
-- [x] Frontend phase 1 mengikuti API dan DESIGN.md; hasilnya ada pada status terkini.
+- [x] Frontend phase 1 mengikuti API dan pilihan visual pengguna; hasilnya ada pada status terkini.
 - [x] Demo/panduan, audit halaman responsif dan kontrol notifikasi tersedia.
 - [ ] Web Push perangkat nyata, acceptance operasional dan deployment produksi.
 
@@ -113,14 +238,14 @@ Verifikasi perubahan PWA-only: build/typecheck/lint/format lulus; 24 tes tanpa D
 
 Backend phase 1 melengkapi laporan/Excel, media publik aman, read-model panel admin, koreksi receipt masuk dan koreksi pengembalian. [backend/API.md](backend/API.md) menghubungkan kontrak per modul; [backend/ACCEPTANCE.md](backend/ACCEPTANCE.md) memetakan aturan PRD ke tes dan acceptance eksternal. Migrasi receipt_corrections dan return_exemptions menambah riwayat reversal immutable, indeks antrean/laporan, serta interval pengecualian untuk koreksi denda.
 
-Folder design/ berisi 36 HTML + 36 PNG terbaru, DESIGN.md, registry screen dan [galeri filter desktop/mobile](design/index.html). Tujuh preview sebelumnya dipindahkan ke archive/legacy-previews. Ekspor tetap referensi; penerapan UI mengikuti hierarchy/spacing terbaru karena beberapa card Stitch masih padat.
+Ekspor HTML, gambar, registry, dan dokumen Stitch telah dihapus atas permintaan pengguna.
 
 Verifikasi akhir backend 9 Oktober 2026: 26 tes tanpa DB dan 185 tes PostgreSQL/HTTP lulus (211 total). Build/typecheck/lint/format dan Prisma validate lulus. Migrasi diterapkan dari kosong dan upgrade pada PostgreSQL 18; diff database/schema tanpa drift; audit dependency nol kerentanan. Tes koreksi/read-model/media juga berjalan dalam schema sementara dari SQL migrasi kosong dan membersihkan seluruh fixture tanpa menonaktifkan guard riwayat. Ekspor OpenAPI dan 36 pasangan HTML/PNG/registry/guide diperiksa. Tidak ada commit/push atau deployment pada tahap ini.
 
 ## Fondasi frontend - tahap 3, langkah 1
 
 - [x] React/Vite/TypeScript dengan dependensi terkunci; build menyertakan typecheck.
-- [x] Tailwind v4, komponen dasar shadcn/ui, Poppins lokal, dan token/layout DESIGN.md.
+- [x] Tailwind v4, komponen dasar shadcn/ui, Poppins lokal, dan token/layout aplikasi.
 - [x] Router pelanggan/admin dengan guard sesi/role dan tujuan login yang dibatasi.
 - [x] Axios cookie/CSRF, React Query untuk sesi/server, Zustand untuk state navigasi.
 - [x] Login nyata, pemulihan sesi, logout, cache privat, keadaan loading/error/offline.

@@ -14,6 +14,7 @@ import { AuthRequest, Public, Roles } from '../../auth/auth.guard';
 import { InventoryService } from './inventory.service';
 import {
   ActiveDto,
+  CatalogListDto,
   InventoryListDto,
   ItemDto,
   ItemPatchDto,
@@ -27,7 +28,7 @@ import {
 @Public()
 export class CatalogController {
   constructor(private readonly inventory: InventoryService) {}
-  @Get() list(@Query() query: PageDto) {
+  @Get() list(@Query() query: CatalogListDto) {
     return this.inventory.list(query);
   }
   @Get(':id') detail(@Param('id', new ParseUUIDPipe()) id: string) {

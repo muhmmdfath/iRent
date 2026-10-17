@@ -1,0 +1,187 @@
+.recent-rental-list {
+  display: grid;
+  gap: 18px;
+  margin-top: 22px;
+}
+.recent-rental-card {
+  border: 1px solid #e9e5e8;
+  border-radius: 18px;
+  background: #fff;
+  overflow: hidden;
+  min-width: 0;
+}
+.recent-rental-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 15px 20px;
+  border-bottom: 1px solid #f1eef0;
+  flex-wrap: wrap;
+}
+.recent-rental-code {
+  color: #79717a;
+  font-size: 11px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+.recent-rental-status {
+  background: #f4f2f4;
+  color: #655c66;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 6px 10px;
+  border-radius: 7px;
+}
+.recent-rental-status-menunggu_pembayaran {
+  background: #fff0f5;
+  color: #a52654;
+}
+.recent-rental-status-berjalan,
+.recent-rental-status-dikonfirmasi {
+  background: #fce7ef;
+  color: #8d2850;
+}
+.recent-rental-body {
+  display: flex;
+  gap: 20px;
+  padding: 23px 20px;
+  align-items: flex-start;
+}
+.recent-rental-photo {
+  width: 84px;
+  height: 92px;
+  flex: 0 0 84px;
+  border-radius: 12px;
+  background: #f8f6f7;
+  overflow: hidden;
+}
+.recent-rental-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.recent-rental-photo > span {
+  font-size: 10px;
+  line-height: 1.5;
+  padding: 8px;
+  text-align: center;
+}
+.recent-rental-info {
+  min-width: 0;
+  flex: 1;
+}
+.recent-rental-info h3 {
+  font-size: 16px;
+  line-height: 1.5;
+  font-weight: 600;
+  color: #29262b;
+}
+.recent-rental-extra {
+  font-size: 11px;
+  line-height: 1.7;
+  color: #79717a;
+  margin-top: 5px;
+}
+.recent-rental-dates {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 18px;
+}
+.recent-rental-dates dt {
+  font-size: 11px;
+  color: #79717a;
+  margin-bottom: 5px;
+}
+.recent-rental-dates dd {
+  font-size: 12px;
+  line-height: 1.8;
+  font-weight: 500;
+}
+.recent-rental-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px 20px;
+  border-top: 1px solid #f1eef0;
+}
+.recent-rental-bottom > div {
+  display: grid;
+  gap: 3px;
+}
+.recent-rental-bottom span {
+  font-size: 10px;
+  color: #79717a;
+}
+.recent-rental-bottom strong {
+  font-size: 16px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+@media (max-width: 599px) {
+  .recent-rental-top {
+    padding: 13px 15px;
+    gap: 8px;
+  }
+  .recent-rental-body {
+    padding: 18px 15px;
+    gap: 13px;
+  }
+  .recent-rental-photo {
+    width: 62px;
+    height: 74px;
+    flex-basis: 62px;
+  }
+  .recent-rental-info h3 {
+    font-size: 14px;
+  }
+  .recent-rental-dates {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .recent-rental-bottom {
+    padding: 14px 15px;
+    flex-wrap: wrap;
+  }
+  .recent-rental-bottom [data-slot='button'] {
+    min-height: 40px;
+    white-space: normal;
+  }
+}
+
+/* Semantic status colors distinguish the rental state at a glance. */
+.recent-rental-status-menunggu_pembayaran {
+  background: #fff2ce;
+  color: #805300;
+}
+.recent-rental-status-menunggu_konfirmasi {
+  background: #e8efff;
+  color: #3155a0;
+}
+.recent-rental-status-dikonfirmasi {
+  background: #e0f4ed;
+  color: #216449;
+}
+.recent-rental-status-berjalan {
+  background: #ffe2ed;
+  color: #a52254;
+}
+.recent-rental-status-selesai {
+  background: #e3f4df;
+  color: #35662b;
+}
+.recent-rental-status-kedaluwarsa {
+  background: #ffeadb;
+  color: #974517;
+}
+.recent-rental-status-ditolak {
+  background: #ffe2e5;
+  color: #a32e3d;
+}
+.recent-rental-status-dibatalkan {
+  background: #f1e8f7;
+  color: #77518b;
+}

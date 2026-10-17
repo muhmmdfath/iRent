@@ -1,6 +1,9 @@
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 export const server = setupServer(
+  http.get('http://localhost:3000/api/notifications', () =>
+    HttpResponse.json({ data: [], total: 0, unread: 0, page: 1, limit: 10 }),
+  ),
   http.get('http://localhost:3000/api/items', () =>
     HttpResponse.json({ data: [], total: 0, page: 1, limit: 12 }),
   ),
@@ -8,6 +11,9 @@ export const server = setupServer(
     HttpResponse.json({ qrisImagePath: null }),
   ),
   http.get('http://localhost:3000/api/admin/bookings/:id/receipts', () =>
+    HttpResponse.json([]),
+  ),
+  http.get('http://localhost:3000/api/admin/bookings', () =>
     HttpResponse.json([]),
   ),
   http.get('http://localhost:3000/api/admin/overview', () =>

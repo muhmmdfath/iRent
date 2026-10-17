@@ -18,9 +18,17 @@ export const customerApi = {
     (await api.get<Profile | null>('/customer/profile', { signal })).data,
   saveProfile: async (input: ProfileInput) =>
     (await api.put<Profile>('/customer/profile', input)).data,
-  catalog: async (page = 1, signal?: AbortSignal) =>
-    (await api.get<Catalog>('/items', { params: { page, limit: 12 }, signal }))
-      .data,
+  catalog: async (
+    page = 1,
+    signal?: AbortSignal,
+    filters?: { search?: string; category?: string },
+  ) =>
+    (
+      await api.get<Catalog>('/items', {
+        params: { page, limit: 12, ...filters },
+        signal,
+      })
+    ).data,
   item: async (id: string, signal?: AbortSignal) =>
     (await api.get<Item>('/items/' + id, { signal })).data,
   policy: async (signal?: AbortSignal) =>
@@ -37,10 +45,15 @@ export const customerApi = {
         headers: { 'Idempotency-Key': key },
       })
     ).data,
-  bookings: async (page = 1, signal?: AbortSignal) =>
+  bookings: async (page = 1, signal?: AbortSignal, status?: string) =>
     (
       await api.get<Booking[]>('/bookings', {
-        params: { page, limit: 20, sort: 'newest' },
+        params: {
+          page,
+          limit: 20,
+          sort: 'newest',
+          ...(status ? { status } : {}),
+        },
         signal,
       })
     ).data,

@@ -34,7 +34,18 @@ export class InventoryService {
           ...(page.category ? { category: page.category } : {}),
           ...(page.isActive ? { isActive: page.isActive === 'true' } : {}),
         }
-      : { isActive: true };
+      : {
+          isActive: true,
+          ...(page.search?.trim()
+            ? {
+                name: {
+                  contains: page.search.trim(),
+                  mode: 'insensitive' as const,
+                },
+              }
+            : {}),
+          ...(page.category ? { category: page.category } : {}),
+        };
     const [items, total] = await this.prisma.$transaction([
       this.prisma.item.findMany({
         where,

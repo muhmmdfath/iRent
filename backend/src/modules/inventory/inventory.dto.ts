@@ -40,7 +40,7 @@ export class PageDto {
   @Max(100)
   limit: number = 50;
 }
-export class InventoryListDto extends PageDto {
+export class CatalogListDto extends PageDto {
   @ApiPropertyOptional({
     minLength: 1,
     maxLength: 150,
@@ -54,6 +54,8 @@ export class InventoryListDto extends PageDto {
   @IsOptional()
   @IsIn(['iphone', 'accessory'])
   category?: 'iphone' | 'accessory';
+}
+export class InventoryListDto extends CatalogListDto {
   @ApiPropertyOptional({ enum: ['true', 'false'] })
   @IsOptional()
   @IsIn(['true', 'false'])

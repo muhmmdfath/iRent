@@ -1,0 +1,210 @@
+/* Order history: clear status filtering and consistent rental cards. */
+.customer-bookings-page {
+  max-width: 1160px;
+  margin: 0 auto;
+  min-width: 0;
+}
+.my-bookings-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 30px;
+}
+.my-bookings-heading h1 {
+  font-size: clamp(27px, 3vw, 35px);
+  font-weight: 600;
+  letter-spacing: -1px;
+}
+.my-bookings-heading > div > p:last-child {
+  font-size: 12px;
+  line-height: 1.9;
+  color: #83717d;
+  margin-top: 6px;
+}
+.my-bookings-heading > [data-slot='button'] {
+  display: inline-flex;
+  gap: 9px;
+  min-height: 41px;
+  font-size: 12px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+.my-bookings-heading svg {
+  width: 15px;
+  height: 15px;
+}
+.my-bookings-filters {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0 0 19px;
+  border-bottom: 1px solid #eee7ec;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+.my-bookings-filters button {
+  flex-shrink: 0;
+  padding: 9px 13px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #8b7885;
+  cursor: pointer;
+}
+.my-bookings-filters button[aria-pressed='true'] {
+  background: #fff0f6;
+  color: #b92b61;
+  border-color: #f7d5e2;
+}
+.my-bookings-filters button:focus-visible {
+  outline: 2px solid #ff4081;
+  outline-offset: -2px;
+}
+.my-bookings-list-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding: 22px 0 18px;
+}
+.my-bookings-list-heading > p {
+  font-size: 13px;
+  font-weight: 500;
+}
+.my-bookings-list-heading > span {
+  font-size: 10px;
+  color: #947e8d;
+}
+.customer-bookings-page .recent-rental-list {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+  margin-top: 0;
+}
+.customer-bookings-page .recent-rental-card {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+.customer-bookings-page .recent-rental-body {
+  flex: 1;
+  padding: 23px 20px;
+}
+.customer-bookings-page .recent-rental-bottom {
+  margin-top: auto;
+}
+.customer-bookings-page .recent-rental-bottom [data-slot='button'] {
+  font-size: 11px;
+  min-height: 37px;
+  border-radius: 8px;
+  padding: 8px 12px;
+  white-space: normal;
+  text-align: center;
+}
+.customer-bookings-page .recent-rental-dates {
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+.customer-bookings-page .recent-rental-info h3 {
+  font-size: 15px;
+}
+.my-bookings-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid #eee7ec;
+}
+.my-bookings-pagination > span {
+  font-size: 11px;
+  color: #947e8d;
+}
+.my-bookings-pagination > div {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  font-size: 12px;
+}
+.my-bookings-pagination button {
+  font-size: 11px;
+}
+.my-bookings-empty {
+  padding: 65px 20px;
+  text-align: center;
+  background: #fcfafb;
+  border: 1px dashed #e9dde5;
+  border-radius: 18px;
+}
+.my-bookings-empty-icon {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  background: #faedf3;
+  border-radius: 17px;
+  color: #b17793;
+  margin: 0 auto 19px;
+}
+.my-bookings-empty-icon svg {
+  width: 24px;
+  height: 24px;
+}
+.my-bookings-empty h2 {
+  font-size: 18px;
+  font-weight: 500;
+}
+.my-bookings-empty p {
+  font-size: 12px;
+  line-height: 1.9;
+  color: #947e8d;
+  margin: 10px 0 22px;
+}
+.my-bookings-empty [data-slot='button'] {
+  font-size: 12px;
+  gap: 8px;
+}
+.my-bookings-loading {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+}
+.my-bookings-loading > div {
+  height: 285px;
+  background: #f8f4f6;
+  border-radius: 18px;
+}
+@media (max-width: 1150px) {
+  .customer-bookings-page .recent-rental-list {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .customer-bookings-page .recent-rental-dates {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 599px) {
+  .my-bookings-heading {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 17px;
+  }
+  .my-bookings-list-heading {
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  .customer-bookings-page .recent-rental-dates {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .my-bookings-pagination {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .my-bookings-loading {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .customer-bookings-page .recent-rental-body {
+    padding: 18px 15px;
+  }
+}

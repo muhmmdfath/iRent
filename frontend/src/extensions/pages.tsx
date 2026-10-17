@@ -82,7 +82,7 @@ export function NewExtensionPage() {
   return (
     <>
       <Link className="back-link" to={'/app/bookings/' + id}>
-        ← Detail booking
+        Detail booking
       </Link>
       <header className="page-heading">
         <h1>Perpanjang sewa</h1>
@@ -192,7 +192,7 @@ export function ExtensionDetailPage() {
         className="back-link"
         to={`${admin ? '/admin' : '/app'}/bookings/${id}`}
       >
-        ← {parent.code}
+        {parent.code}
       </Link>
       <header className="page-heading">
         <p className="eyebrow">{parent.code}</p>

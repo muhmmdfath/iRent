@@ -228,6 +228,29 @@ test('inventory_settings_and_quotes_preserve_stock_history_and_money', async (t)
           result.data.map((value) => value.id),
           [accessoryId],
         );
+        const publicPhones = await call(
+          `/items?search=${suffix.toUpperCase()}&category=iphone&limit=12`,
+        );
+        assert.equal(publicPhones.status, 200);
+        const phoneResult = (await publicPhones.json()) as {
+          total: number;
+          data: { id: string }[];
+        };
+        assert.equal(phoneResult.total, 1);
+        assert.deepEqual(
+          phoneResult.data.map((item) => item.id),
+          [iphoneId],
+        );
+        const hiddenAccessories = await call(
+          `/items?search=${suffix}&category=accessory`,
+        );
+        assert.equal(hiddenAccessories.status, 200);
+        assert.equal(
+          ((await hiddenAccessories.json()) as { total: number }).total,
+          0,
+        );
+        assert.equal((await call('/items?category=other')).status, 400);
+        assert.equal((await call('/items?isActive=false')).status, 400);
         assert.equal((await call('/items/' + accessoryId)).status, 404);
         assert.equal(
           (await call('/admin/items/' + accessoryId, 'GET', undefined, 0))

@@ -85,7 +85,7 @@ it('acknowledges only the exact task version locally and disposes sound when lea
   );
   const view = mount('/admin');
   const user = userEvent.setup();
-  await screen.findByRole('heading', { name: 'Semua pekerjaan' });
+  await screen.findByRole('heading', { name: 'Perlu ditangani' });
   expect(clients.sound.enable).not.toHaveBeenCalled();
   await user.click(await screen.findByRole('button', { name: 'Saya tangani' }));
   expect(clients.sound.acknowledge).toHaveBeenCalledWith('payment:proof-id:v1');
