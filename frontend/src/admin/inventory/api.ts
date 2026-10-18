@@ -1,3 +1,4 @@
+import { PAGE_SIZE } from '@/lib/pagination';
 import { api } from '@/services/api';
 import type {
   InventoryFilters,
@@ -16,7 +17,7 @@ export const inventoryApi = {
           search: filters.search || undefined,
           category: filters.category || undefined,
           isActive: filters.isActive || undefined,
-          limit: 20,
+          limit: PAGE_SIZE,
         },
       })
     ).data,
@@ -26,7 +27,7 @@ export const inventoryApi = {
     (
       await api.get<Page<InventoryUnit>>(`/admin/items/${id}/units`, {
         signal,
-        params: { page, limit: 20 },
+        params: { page, limit: PAGE_SIZE },
       })
     ).data,
   create: async (input: ItemInput) =>

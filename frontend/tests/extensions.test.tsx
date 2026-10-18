@@ -188,7 +188,7 @@ it('records verified money with a stable key after an uncertain response and nev
     'Uang aktual sudah diperiksa.',
   );
   await confirm('verifikasi uang perpanjangan');
-  await screen.findByRole('alert');
+  await within(screen.getByRole('main')).findByRole('alert');
   await user.click(
     screen.getByRole('button', {
       name: 'Konfirmasi verifikasi uang perpanjangan',

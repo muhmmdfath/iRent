@@ -1,3 +1,8 @@
+import { PAGE_SIZE } from '@/lib/pagination';
+import {
+  ChevronLeftIcon as PaginationPreviousIcon,
+  ChevronRightIcon as PaginationNextIcon,
+} from '@radix-ui/react-icons';
 import { Link, useSearchParams } from 'react-router-dom';
 import { ReaderIcon, PlusIcon, ResetIcon } from '@radix-ui/react-icons';
 import { Button } from '@/components/ui/button';
@@ -91,19 +96,25 @@ export function BookingsPage() {
             <span>{query.data.length} booking pada halaman ini</span>
             <div>
               <Button
+                className="pagination-chevron"
+                aria-label="Sebelumnya"
+                title="Sebelumnya"
                 variant="outline"
                 disabled={page === 1}
                 onClick={() => go(page - 1)}
               >
-                Sebelumnya
+                <PaginationPreviousIcon aria-hidden="true" />
               </Button>
               <span aria-label={'Halaman ' + page}>{page}</span>
               <Button
+                className="pagination-chevron"
+                aria-label="Berikutnya"
+                title="Berikutnya"
                 variant="outline"
-                disabled={query.data.length < 20}
+                disabled={query.data.length < PAGE_SIZE}
                 onClick={() => go(page + 1)}
               >
-                Berikutnya
+                <PaginationNextIcon aria-hidden="true" />
               </Button>
             </div>
           </div>

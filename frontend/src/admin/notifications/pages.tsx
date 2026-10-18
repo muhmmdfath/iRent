@@ -1,3 +1,14 @@
+import { PAGE_SIZE } from '@/lib/pagination';
+import {
+  ChevronLeftIcon as PaginationPreviousIcon,
+  ChevronRightIcon as PaginationNextIcon,
+} from '@radix-ui/react-icons';
+import {
+  AdminWorkspace,
+  AdminHeader,
+  AdminBadge,
+} from '@/admin/manage/workspace';
+import { BellIcon, MobileIcon, DownloadIcon } from '@radix-ui/react-icons';
 import { useEffect, useState } from 'react';
 import { useSession } from '@/auth/session';
 import { useAdminRead } from '@/admin/manage/hooks';
@@ -29,7 +40,7 @@ export function NotificationsPage() {
   const history = useAdminRead<Delivery[]>(
     'notification-history',
     '/admin/notifications',
-    { page, limit: 20 },
+    { page, limit: PAGE_SIZE },
     true,
   );
   const [client, setClient] = useState<PushClient | null>(null);
@@ -97,71 +108,121 @@ export function NotificationsPage() {
     }
   }
   return (
-    <>
-      <header className="page-heading">
-        <h1>Notifikasi PWA</h1>
-        <p>
-          Aktifkan pada perangkat yang dipakai bertugas. Riwayat pengiriman
-          terpisah dari pekerjaan yang perlu ditangani.
-        </p>
-      </header>
-      <section className="form-section">
-        <h2>Perangkat ini</h2>
-        <p>{active ? 'Langganan push aktif' : 'Langganan push belum aktif'}</p>
-        <p className="muted">
-          Izin:{' '}
-          {permission === 'granted'
-            ? 'Diizinkan'
-            : permission === 'denied'
-              ? 'Ditolak'
-              : permission === 'unsupported'
-                ? 'Belum didukung'
-                : 'Belum diminta'}
-        </p>
-        {configuration.isPending ? (
-          <LoadingState text="Memuat konfigurasi push..." />
-        ) : configuration.isError ? (
-          <ErrorState
-            error={configuration.error}
-            retry={() => void configuration.refetch()}
-          />
-        ) : (
-          !configuration.data.enabled && (
-            <p className="info-note">
-              Web Push belum diaktifkan di server. Konfigurasi VAPID diperlukan
-              untuk mengirim notifikasi nyata.
-            </p>
-          )
-        )}
-        <div className="form-actions">
-          <Button
-            disabled={
-              busy || !online || !client || !configuration.data?.enabled
-            }
-            onClick={() => void enable()}
-          >
-            {busy ? 'Memproses...' : 'Aktifkan notifikasi'}
-          </Button>
-          <Button
-            variant="outline"
-            disabled={busy || !online || !active}
-            onClick={() => void disable()}
-          >
-            Nonaktifkan notifikasi
-          </Button>
-        </div>
-        {error && (
-          <p className="form-error" role="alert">
-            {error}
+    <AdminWorkspace kind="notifications">
+      <AdminHeader
+        section="Preferensi perangkat"
+        title="Notifikasi PWA"
+        description="Kelola izin notifikasi perangkat ini dan pantau riwayat pengiriman."
+      />
+      <div className="am-notification-setup">
+        <section className="form-section">
+          <div className="am-device-symbol">
+            <BellIcon aria-hidden="true" />
+          </div>
+          <h2>Perangkat ini</h2>
+          <AdminBadge tone={active ? 'green' : 'neutral'}>
+            {active ? 'Langganan push aktif' : 'Langganan push belum aktif'}
+          </AdminBadge>
+          <p className="muted">
+            Izin:{' '}
+            {permission === 'granted'
+              ? 'Diizinkan'
+              : permission === 'denied'
+                ? 'Ditolak'
+                : permission === 'unsupported'
+                  ? 'Belum didukung'
+                  : 'Belum diminta'}
           </p>
-        )}
-        <p className="muted text-sm">
-          Install dari menu browser. Pada iPhone, buka aplikasi dari layar
-          utama. Push dapat terlambat dan tidak menjamin bunyi pada layar
-          terkunci atau mode senyap. Suara dashboard diaktifkan terpisah dari
-          beranda admin.
-        </p>
-      </section>
+          {configuration.isPending ? (
+            <LoadingState text="Memuat konfigurasi push..." />
+          ) : configuration.isError ? (
+            <ErrorState
+              error={configuration.error}
+              retry={() => void configuration.refetch()}
+            />
+          ) : (
+            !configuration.data.enabled && (
+              <p className="info-note">
+                Pengiriman notifikasi belum tersedia. Pengelola server perlu
+                mengaktifkan layanan Web Push.
+              </p>
+            )
+          )}
+          <div className="form-actions">
+            <Button
+              disabled={
+                busy ||
+                active ||
+                permission === 'denied' ||
+                permission === 'unsupported' ||
+                !online ||
+                !client ||
+                !configuration.data?.enabled
+              }
+              onClick={() => void enable()}
+            >
+              {busy ? 'Memproses...' : 'Aktifkan notifikasi'}
+            </Button>
+            <Button
+              variant="outline"
+              disabled={busy || !online || !active}
+              onClick={() => void disable()}
+            >
+              Nonaktifkan notifikasi
+            </Button>
+          </div>
+          {error && (
+            <p className="form-error" role="alert">
+              {error}
+            </p>
+          )}
+          <p className="muted text-sm">
+            Install dari menu browser. Pada iPhone, buka aplikasi dari layar
+            utama. Push dapat terlambat dan tidak menjamin bunyi pada layar
+            terkunci atau mode senyap. Suara dashboard diaktifkan terpisah dari
+            beranda admin.
+          </p>
+        </section>
+        <aside className="form-section am-pwa-guide">
+          <h2>Siapkan perangkat bertugas</h2>
+          <ol>
+            <li>
+              <DownloadIcon aria-hidden="true" />
+              <div>
+                <h3>Pasang aplikasi</h3>
+                <p>
+                  Gunakan menu browser untuk menambahkan iRent ke layar utama.
+                </p>
+              </div>
+            </li>
+            <li>
+              <MobileIcon aria-hidden="true" />
+              <div>
+                <h3>Buka dari layar utama</h3>
+                <p>
+                  Pada iPhone, jalankan aplikasi yang sudah dipasang sebelum
+                  mengaktifkan push.
+                </p>
+              </div>
+            </li>
+            <li>
+              <BellIcon aria-hidden="true" />
+              <div>
+                <h3>Izinkan notifikasi</h3>
+                <p>
+                  {permission === 'denied'
+                    ? 'Izin ditolak. Ubah izin situs dari pengaturan browser sebelum mencoba lagi.'
+                    : 'Tekan Aktifkan notifikasi, lalu izinkan permintaan dari browser.'}
+                </p>
+              </div>
+            </li>
+          </ol>
+          <p className="am-muted-note">
+            Riwayat terkirim tidak berarti pekerjaan sudah ditangani. Periksa
+            antrean pada beranda admin.
+          </p>
+        </aside>
+      </div>
       <section className="form-section">
         <h2>Riwayat pengiriman</h2>
         {history.isPending ? (
@@ -182,8 +243,20 @@ export function NotificationsPage() {
                         'Pemberitahuan operasional'}
                     </h3>
                     <p>
-                      {deliveryLabels[row.status] || row.status} · Percobaan{' '}
-                      {row.attempts}
+                      <AdminBadge
+                        tone={
+                          row.status === 'sent'
+                            ? 'green'
+                            : row.status === 'failed'
+                              ? 'red'
+                              : 'neutral'
+                        }
+                      >
+                        {deliveryLabels[row.status] || row.status}
+                      </AdminBadge>
+                      <span className="am-attempt-count">
+                        Percobaan {row.attempts}
+                      </span>
                     </p>
                     {row.dueAt && (
                       <p className="muted">Tenggat {wib(row.dueAt)}</p>
@@ -202,25 +275,31 @@ export function NotificationsPage() {
             )}
             <div className="form-actions">
               <Button
+                className="pagination-chevron"
+                aria-label="Sebelumnya"
+                title="Sebelumnya"
                 variant="outline"
                 disabled={page === 1 || history.isFetching}
                 onClick={() => setPage(page - 1)}
               >
-                Sebelumnya
+                <PaginationPreviousIcon aria-hidden="true" />
               </Button>
               <span>Halaman {page}</span>
               <Button
+                className="pagination-chevron"
+                aria-label="Berikutnya"
+                title="Berikutnya"
                 variant="outline"
-                disabled={history.data.length < 20 || history.isFetching}
+                disabled={history.data.length < PAGE_SIZE || history.isFetching}
                 onClick={() => setPage(page + 1)}
               >
-                Berikutnya
+                <PaginationNextIcon aria-hidden="true" />
               </Button>
             </div>
           </>
         )}
       </section>
-    </>
+    </AdminWorkspace>
   );
 }
 const eventLabels: Record<string, string> = {

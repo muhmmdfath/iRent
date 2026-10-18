@@ -1,3 +1,7 @@
+import {
+  ChevronLeftIcon as PaginationPreviousIcon,
+  ChevronRightIcon as PaginationNextIcon,
+} from '@radix-ui/react-icons';
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -191,19 +195,25 @@ export function NotificationBell() {
           {query.data && query.data.total > 10 && (
             <footer>
               <button
+                className="pagination-chevron"
+                aria-label="Sebelumnya"
+                title="Sebelumnya"
                 type="button"
                 disabled={page === 1}
                 onClick={() => setPage(page - 1)}
               >
-                Sebelumnya
+                <PaginationPreviousIcon aria-hidden="true" />
               </button>
               <span>{page}</span>
               <button
+                className="pagination-chevron"
+                aria-label="Berikutnya"
+                title="Berikutnya"
                 type="button"
                 disabled={page * 10 >= query.data.total}
                 onClick={() => setPage(page + 1)}
               >
-                Berikutnya
+                <PaginationNextIcon aria-hidden="true" />
               </button>
             </footer>
           )}

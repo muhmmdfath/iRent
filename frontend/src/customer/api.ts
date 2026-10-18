@@ -1,3 +1,4 @@
+import { PAGE_SIZE } from '@/lib/pagination';
 import { api } from '@/services/api';
 import type {
   Catalog,
@@ -25,7 +26,7 @@ export const customerApi = {
   ) =>
     (
       await api.get<Catalog>('/items', {
-        params: { page, limit: 12, ...filters },
+        params: { page, limit: PAGE_SIZE, ...filters },
         signal,
       })
     ).data,
@@ -50,7 +51,7 @@ export const customerApi = {
       await api.get<Booking[]>('/bookings', {
         params: {
           page,
-          limit: 20,
+          limit: PAGE_SIZE,
           sort: 'newest',
           ...(status ? { status } : {}),
         },

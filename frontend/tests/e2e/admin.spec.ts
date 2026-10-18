@@ -24,6 +24,16 @@ for (const width of [360, 390, 768, 1024, 1440]) {
     await page.route('**/api/admin/bookings/test-booking/receipts', (route) =>
       route.fulfill({ json: [] }),
     );
+    await page.route('**/api/notifications?**', (r) =>
+      r.fulfill({
+        json: { data: [], total: 0, unreadCount: 0, page: 1, limit: 10 },
+      }),
+    );
+    await page.route('**/api/admin/tasks?**', (r) =>
+      r.fulfill({
+        json: { data: [], total: 0, asOf: new Date().toISOString() },
+      }),
+    );
     await page.goto('/admin/bookings');
     await expect(page.getByText('Penyewa Uji', { exact: true })).toBeVisible();
     expect(

@@ -1,3 +1,5 @@
+import { AuthRentalVisual } from '../components/auth-rental-visual';
+import '../auth-pages.css';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
@@ -59,8 +61,9 @@ export function RegisterPage() {
             akunmu sendiri.
           </h1>
           <p>Simpan booking dan pantau pembayaran dalam satu tempat.</p>
+          <AuthRentalVisual />
         </div>
-        <Link className="back-link" to="/catalog">
+        <Link className="auth-pink-link" to="/catalog">
           Lihat katalog
         </Link>
       </section>
@@ -92,6 +95,7 @@ export function RegisterPage() {
               <label htmlFor="register-name">Nama</label>
               <Input
                 id="register-name"
+                placeholder="Nama lengkap kamu"
                 autoComplete="name"
                 maxLength={100}
                 aria-invalid={!!errors.name}
@@ -107,6 +111,7 @@ export function RegisterPage() {
               <label htmlFor="register-email">Email</label>
               <Input
                 id="register-email"
+                placeholder="nama@email.com"
                 type="email"
                 autoComplete="email"
                 maxLength={254}
@@ -130,6 +135,7 @@ export function RegisterPage() {
               </label>
               <Input
                 id="register-phone"
+                placeholder="08xxxxxxxxxx"
                 type="tel"
                 autoComplete="tel"
                 maxLength={40}
@@ -181,7 +187,7 @@ export function RegisterPage() {
           <p className="login-help">
             Sudah punya akun?{' '}
             <Link
-              className="text-link"
+              className="auth-pink-link"
               to={
                 '/login' +
                 (params.get('returnTo')

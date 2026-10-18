@@ -463,110 +463,10 @@
   flex-wrap: wrap;
   margin: 0 0 22px;
 }
-.rental-calendar {
-  position: relative;
-}
-.rental-calendar > summary {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  width: fit-content;
-  min-width: 42px;
-  min-height: 42px;
-  padding: 10px 12px;
-  border: 1px solid #e4dfe3;
-  border-radius: 10px;
-  cursor: pointer;
-  list-style: none;
-  font-size: 12px;
-}
-.rental-calendar > summary::-webkit-details-marker {
-  display: none;
-}
-.rental-calendar > summary svg {
-  width: 20px;
-  height: 20px;
-}
-.rental-calendar > summary:hover {
-  background: #ff4081;
-  color: #fff;
-  border-color: #ff4081;
-}
-.rental-calendar > summary:focus-visible {
-  outline: 2px solid #ff4081;
-  outline-offset: 3px;
-}
-.rental-calendar-panel {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  z-index: 45;
-  width: min(340px, calc(100vw - 64px));
-  padding: 18px;
-  background: #fff;
-  border: 1px solid #e9e1e6;
-  border-radius: 16px;
-  box-shadow: 0 12px 35px #38222f18;
-}
-.rental-calendar-panel h3 {
-  font-size: 15px;
-  font-weight: 600;
-}
-.rental-calendar-panel p,
 .rental-calendar-note {
   font-size: 11px;
   line-height: 1.8;
   color: #766b75;
-}
-.rental-calendar-panel p {
-  margin-top: 8px;
-}
-.rental-calendar-month {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 5px;
-  margin: 14px 0 8px;
-}
-.rental-calendar-month strong {
-  font-size: 12px;
-}
-.customer-home .rental-calendar-month [data-slot='button'] {
-  font-size: 10px;
-  padding: 5px;
-}
-.rental-calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
-  gap: 3px;
-}
-.rental-calendar-grid > span {
-  text-align: center;
-  font-size: 10px;
-  padding: 6px 0;
-  color: #766b75;
-}
-.rental-calendar-grid button {
-  min-height: 34px;
-  border-radius: 7px;
-  font-size: 12px;
-  cursor: pointer;
-}
-.rental-calendar-grid button[aria-pressed='true'] {
-  background: #ff4081;
-  color: #fff;
-}
-.rental-calendar-grid button.in-range {
-  background: #ffe3ed;
-  color: #872e4c;
-}
-.rental-calendar-grid button:disabled {
-  opacity: 0.3;
-  cursor: default;
-}
-.rental-calendar-grid button:focus-visible {
-  outline: 2px solid #ff4081;
-  outline-offset: 1px;
 }
 
 .customer-catalog-actions {
@@ -578,15 +478,8 @@
 .customer-catalog-actions .rental-calendar-filter {
   margin: 0;
 }
-.customer-catalog-actions .rental-calendar-panel {
-  left: auto;
-  right: 0;
-}
 .customer-catalog-actions .rental-calendar-note {
   display: none;
-}
-.customer-catalog-actions .rental-calendar > summary {
-  min-height: 40px;
 }
 @media (max-width: 599px) {
   .customer-devices > .section-heading {
@@ -761,25 +654,6 @@
   .customer-home .home-device-visual .customer-device-photo img {
     transition: none;
   }
-}
-
-.customer-home .rental-calendar.has-active-filter > summary {
-  position: relative;
-  background: #fff;
-  border-color: #ff4081;
-  color: #d72565;
-}
-.customer-home .rental-calendar.has-active-filter > summary::after {
-  content: '';
-  position: absolute;
-  top: -4px;
-  right: -4px;
-  width: 9px;
-  height: 9px;
-  border: 2px solid #fff;
-  border-radius: 50%;
-  background: #ff4081;
-  box-sizing: content-box;
 }
 
 .customer-home .booking-view-all {

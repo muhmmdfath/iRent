@@ -23,10 +23,12 @@ export function ItemForm({
   item,
   onSaved,
   onCancel,
+  onBusy,
 }: {
   item?: InventoryItem;
   onSaved: (item: InventoryItem) => void;
   onCancel: () => void;
+  onBusy?: (busy: boolean) => void;
 }) {
   const online = useOnline();
   const [review, setReview] = useState<ItemInput | null>(null);
@@ -57,6 +59,7 @@ export function ItemForm({
     return (
       <InventoryConfirm
         createsRecords={!item}
+        onBusy={onBusy}
         save={() =>
           item
             ? inventoryApi.update(item.id, {
@@ -96,40 +99,56 @@ export function ItemForm({
       onSubmit={form.handleSubmit(prepare)}
       aria-label={item ? 'Edit model' : 'Tambah model'}
     >
-      <h2>{item ? 'Edit model' : 'Tambah model'}</h2>
-      <label>
-        Kategori
-        <select
-          aria-label="Kategori"
-          disabled={!!item}
-          {...form.register('category')}
-        >
-          <option value="iphone">iPhone</option>
-          <option value="accessory">Aksesori</option>
-        </select>
-      </label>
-      <label>
-        Nama model
-        <Input
-          maxLength={150}
-          {...form.register('name', {
-            required: 'Nama wajib diisi.',
-            validate: (value) => !!value.trim() || 'Nama wajib diisi.',
-          })}
-        />
-      </label>
-      {(['6', '12', '24'] as const).map((hours) => (
-        <label key={hours}>
-          Tarif {hours} jam (rupiah)
+      <h2>{item ? 'Edit model' : 'Informasi model'}</h2>
+      <div className="inv-form-identity">
+        <label>
+          Kategori
+          <select
+            aria-label="Kategori"
+            disabled={!!item}
+            {...form.register('category')}
+          >
+            <option value="iphone">iPhone</option>
+            <option value="accessory">Aksesori</option>
+          </select>
+        </label>
+        <label>
+          Nama model
           <Input
-            inputMode="numeric"
-            {...form.register(`price${hours}h`, { validate: validateMoney })}
+            maxLength={150}
+            placeholder="Contoh: iPhone 15 Pro"
+            {...form.register('name', {
+              required: 'Nama wajib diisi.',
+              validate: (value) => !!value.trim() || 'Nama wajib diisi.',
+            })}
           />
         </label>
-      ))}
+      </div>
+      <fieldset className="inv-form-prices">
+        <legend>Tarif sewa</legend>
+        <p>Masukkan nominal rupiah untuk setiap durasi.</p>
+        <div>
+          {(['6', '12', '24'] as const).map((hours) => (
+            <label key={hours}>
+              Tarif {hours} jam (rupiah)
+              <Input
+                inputMode="numeric"
+                placeholder="0"
+                {...form.register(`price${hours}h`, {
+                  validate: validateMoney,
+                })}
+              />
+            </label>
+          ))}
+        </div>
+      </fieldset>
       <label>
         Isi paket (satu per baris)
-        <textarea {...form.register('includes')} />
+        <textarea
+          rows={3}
+          placeholder={'Contoh: kabel pengisi daya'}
+          {...form.register('includes')}
+        />
       </label>
       {(error || Object.keys(form.formState.errors).length > 0) && (
         <p role="alert" className="field-error">
@@ -144,7 +163,7 @@ export function ItemForm({
           Periksa model
         </Button>
         <Button type="button" variant="outline" onClick={onCancel}>
-          Batal edit
+          {item ? 'Batal edit' : 'Batal'}
         </Button>
       </div>
     </form>

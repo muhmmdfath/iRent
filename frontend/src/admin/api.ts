@@ -1,3 +1,4 @@
+import { PAGE_SIZE } from '@/lib/pagination';
 import { api } from '@/services/api';
 import type { Financial } from '@/customer/types';
 import type {
@@ -49,7 +50,7 @@ export const adminApi = {
           ...filters,
           search: filters.search || undefined,
           status: filters.status || undefined,
-          limit: 20,
+          limit: PAGE_SIZE,
         },
       })
     ).data,

@@ -1,11 +1,5 @@
-import { beforeEach, expect, it, vi } from 'vitest';
-import {
-  render,
-  screen,
-  waitFor,
-  configure,
-  fireEvent,
-} from '@testing-library/react';
+import { beforeAll, beforeEach, expect, it, vi } from 'vitest';
+import { render, screen, waitFor, configure } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { http, HttpResponse } from 'msw';
@@ -26,6 +20,14 @@ const account = {
   _count: { bookings: 3 },
   profile: { completedAt: at(-60000) },
 };
+beforeAll(() => {
+  HTMLDialogElement.prototype.showModal = function () {
+    this.setAttribute('open', '');
+  };
+  HTMLDialogElement.prototype.close = function () {
+    this.removeAttribute('open');
+  };
+});
 beforeEach(() =>
   server.use(
     http.get(base + '/auth/session', () => HttpResponse.json(adminSession)),
@@ -204,28 +206,37 @@ it('patches only changed settings and converts numeric configuration without con
     }),
   );
 });
-it('rejects an inverted calendar range without sending invalid WIB dates to the API', async () => {
+it('applies only complete date ranges and uses an exclusive WIB upper bound', async () => {
   let reads = 0;
+  let params: URLSearchParams;
   server.use(
-    http.get(base + '/admin/calendar', () => {
+    http.get(base + '/admin/calendar', ({ request }) => {
       reads++;
-      return HttpResponse.json({ data: [], total: 0, page: 1, limit: 20 });
+      params = new URL(request.url).searchParams;
+      return HttpResponse.json({ data: [], total: 0, page: 1, limit: 10 });
     }),
     http.get(base + '/admin/items', () =>
-      HttpResponse.json({ data: [], total: 0, page: 1, limit: 20 }),
+      HttpResponse.json({ data: [], total: 0, page: 1, limit: 10 }),
     ),
   );
   mount('/admin/calendar');
   const user = userEvent.setup();
   await screen.findByRole('heading', { name: 'Jadwal per unit' });
   await waitFor(() => expect(reads).toBe(1));
-  const start = screen.getByLabelText('Dari tanggal (WIB)');
-  const end = screen.getByLabelText('Sampai sebelum tanggal (WIB)');
-  fireEvent.change(start, { target: { value: '2026-10-20' } });
-  fireEvent.change(end, { target: { value: '2026-10-19' } });
-  await user.click(screen.getByRole('button', { name: 'Tampilkan' }));
-  expect(await screen.findByRole('alert')).toHaveTextContent(
-    'maksimal 31 hari',
-  );
+  const today = new Date(Date.now() + 7 * 3600000).toISOString().slice(0, 10);
+  const label = new Intl.DateTimeFormat('id-ID', {
+    dateStyle: 'long',
+    timeZone: 'UTC',
+  }).format(new Date(today + 'T00:00:00Z'));
+  await user.click(screen.getByLabelText('Pilih rentang tanggal jadwal'));
+  await user.click(screen.getByRole('button', { name: label }));
   expect(reads).toBe(1);
+  await user.click(screen.getByRole('button', { name: label }));
+  await waitFor(() => expect(reads).toBe(2));
+  expect(params!.get('startAt')).toBe(today + 'T00:00:00+07:00');
+  expect(
+    new Date(params!.get('endAt')!).getTime() -
+      new Date(params!.get('startAt')!).getTime(),
+  ).toBe(86400000);
+  expect(params!.get('limit')).toBe('10');
 });

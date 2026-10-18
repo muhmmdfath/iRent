@@ -1,3 +1,18 @@
+import {
+  AdminWorkspace,
+  AdminHeader,
+  AdminHint,
+  AdminModal,
+} from './workspace';
+import {
+  GearIcon,
+  CalendarIcon,
+  CardStackIcon,
+  TimerIcon,
+  ResetIcon,
+  ImageIcon,
+} from '@radix-ui/react-icons';
+import { rupiah } from '@/customer/format';
 import { useState } from 'react';
 import { useAdminRead } from './hooks';
 import { BusinessForm, type ActionField } from '@/components/business-form';
@@ -37,9 +52,81 @@ const labels: Record<string, string> = {
   extension_confirm_minutes: 'Konfirmasi perpanjangan (menit)',
   extension_confirm_before_return_minutes: 'Konfirmasi sebelum kembali (menit)',
 };
+const groups = [
+  {
+    id: 'payment',
+    title: 'Pembayaran & konfirmasi',
+    description: 'DP, batas bayar, dan tenggat pemeriksaan.',
+    icon: CardStackIcon,
+    keys: [
+      'dp_amount',
+      'hold_minutes',
+      'urgent_threshold_minutes',
+      'urgent_hold_minutes',
+      'confirm_sla_hours',
+      'urgent_confirm_minutes',
+      'confirm_before_pickup_minutes',
+      'confirmation_reminder_minutes',
+      'pickup_escalation_minutes',
+    ],
+  },
+  {
+    id: 'schedule',
+    title: 'Jadwal & jam layanan',
+    description: 'Jam buka, durasi, dan batas pengambilan.',
+    icon: CalendarIcon,
+    keys: [
+      'open_time',
+      'close_time',
+      'min_lead_minutes',
+      'max_duration_hours',
+      'booking_open_day',
+      'no_show_minutes',
+    ],
+  },
+  {
+    id: 'operations',
+    title: 'Persiapan & denda',
+    description: 'Buffer unit dan biaya keterlambatan.',
+    icon: TimerIcon,
+    keys: ['buffer_minutes', 'late_tolerance_minutes', 'late_fee_per_hour'],
+  },
+  {
+    id: 'refund',
+    title: 'Pembatalan & refund',
+    description: 'Batas waktu dan persentase pengembalian.',
+    icon: ResetIcon,
+    keys: [
+      'cancel_refund_cutoff_days',
+      'cancel_refund_percent',
+      'cancel_full_refund_percent',
+    ],
+  },
+  {
+    id: 'extension',
+    title: 'Perpanjangan',
+    description: 'Pengajuan, pembayaran, dan persetujuan.',
+    icon: GearIcon,
+    keys: [
+      'extension_min_lead_minutes',
+      'extension_hold_minutes',
+      'extension_confirm_minutes',
+      'extension_confirm_before_return_minutes',
+    ],
+  },
+  {
+    id: 'qris',
+    title: 'QRIS toko',
+    description: 'Gambar QRIS untuk pembayaran pelanggan.',
+    icon: ImageIcon,
+    keys: [],
+  },
+];
 export function SettingsPage() {
   const query = useAdminRead<Settings>('settings', '/admin/settings');
   const [edit, setEdit] = useState(false);
+  const [group, setGroup] = useState('payment');
+  const [saving, setSaving] = useState(false);
   const [photo, setPhoto] = useState(false);
   const [removePhoto, setRemovePhoto] = useState(false);
   if (query.isPending) return <LoadingState text="Memuat pengaturan..." />;
@@ -64,122 +151,169 @@ export function SettingsPage() {
         ? 28
         : 2147483647,
   }));
+  const selected = groups.find((value) => value.id === group)!;
+  const visibleFields = fields.filter((field) =>
+    selected.keys.includes(field.name),
+  );
   return (
-    <>
-      <header className="page-heading">
-        <h1>Pengaturan sewa</h1>
-        <p>
-          Perubahan berlaku untuk transaksi berikutnya. Snapshot booking lama
-          tetap dipakai.
-        </p>
-      </header>
-      <section className="form-section">
-        <div className="section-heading">
-          <h2>Aturan bisnis</h2>
-          <Button
-            disabled={edit || photo || removePhoto}
-            onClick={() => setEdit(true)}
-          >
-            Ubah pengaturan
-          </Button>
-        </div>
-        <dl className="settings-values">
-          {fields.map((field) => (
-            <div key={field.name}>
-              <dt>{field.label}</dt>
-              <dd>{field.value}</dd>
-            </div>
+    <AdminWorkspace kind="settings">
+      <AdminHeader
+        section="Konfigurasi"
+        title="Pengaturan sewa"
+        description="Atur kebijakan rental dan pembayaran tanpa mengubah kesepakatan transaksi lama."
+      />
+      <AdminHint>
+        Perubahan berlaku untuk booking berikutnya. Harga dan aturan pada
+        transaksi lama mengikuti snapshot masing-masing.
+      </AdminHint>
+      <div className="am-settings-layout">
+        <nav className="am-settings-nav" aria-label="Kelompok pengaturan">
+          {groups.map((value) => (
+            <button
+              key={value.id}
+              type="button"
+              aria-pressed={group === value.id}
+              disabled={edit || photo || removePhoto}
+              onClick={() => setGroup(value.id)}
+            >
+              <value.icon aria-hidden="true" />
+              <span>{value.title}</span>
+            </button>
           ))}
-        </dl>
-      </section>
-      {edit && (
-        <BusinessForm
-          title="Simpan pengaturan sewa"
-          fields={fields}
-          execute={async (input) =>
-            api.patch('/admin/settings', {
-              values: Object.fromEntries(
-                Object.entries(input)
-                  .filter(([name]) => String(values[name]) !== input[name])
-                  .map(([name, value]) => [
-                    name,
-                    typeof values[name] === 'number' ? Number(value) : value,
-                  ]),
-              ),
-            })
-          }
-          validate={(input) => {
-            if (
-              !Object.keys(input).some(
-                (name) => String(values[name]) !== input[name],
-              )
-            )
-              throw new Error('Belum ada pengaturan yang berubah.');
-          }}
-          onDone={() => {
-            setEdit(false);
-            void query.refetch();
-          }}
-          onCancel={() => setEdit(false)}
-        />
-      )}
-      <section className="form-section">
-        <h2>Gambar QRIS</h2>
-        <p>
-          Unggah QRIS resmi toko. Jangan memakai QRIS dummy untuk pembayaran
-          nyata.
-        </p>
-        {values.qris_image_path && (
-          <ItemPhoto
-            path={String(values.qris_image_path)}
-            name="QRIS toko"
-            className="qris-image"
-          />
-        )}
-        <Button
-          variant="outline"
-          disabled={photo || edit || removePhoto}
-          onClick={() => setPhoto(true)}
-        >
-          Upload QRIS
-        </Button>
-        {values.qris_image_path && (
-          <Button
-            variant="outline"
-            disabled={photo || edit || removePhoto}
-            onClick={() => setRemovePhoto(true)}
-          >
-            Hapus QRIS
-          </Button>
-        )}
-        {removePhoto && (
-          <BusinessForm
-            title="Hapus QRIS toko"
-            description="QRIS tidak akan ditampilkan untuk pembayaran berikutnya."
-            execute={async () =>
-              api.patch('/admin/settings', {
-                values: { qris_image_path: null },
-              })
-            }
-            onDone={() => {
-              setRemovePhoto(false);
-              void query.refetch();
-            }}
-            onCancel={() => setRemovePhoto(false)}
-          />
-        )}
-        {photo && (
-          <PhotoForm
-            id="qris"
-            qris
-            onDone={() => {
-              setPhoto(false);
-              void query.refetch();
-            }}
-            onCancel={() => setPhoto(false)}
-          />
-        )}
-      </section>
-    </>
+        </nav>
+        <div>
+          {group !== 'qris' && (
+            <section className="form-section">
+              <header className="am-panel-heading">
+                <div>
+                  <h2>{selected.title}</h2>
+                  <p>{selected.description}</p>
+                </div>
+                <Button
+                  disabled={edit || photo || removePhoto}
+                  onClick={() => setEdit(true)}
+                >
+                  Ubah pengaturan
+                </Button>
+              </header>
+              <dl className="am-settings-values">
+                {visibleFields.map((field) => (
+                  <div key={field.name}>
+                    <dt>{field.label}</dt>
+                    <dd>
+                      {field.type === 'money'
+                        ? rupiah(field.value || '0')
+                        : field.value}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </section>
+          )}
+          {edit && (
+            <AdminModal
+              title="Ubah pengaturan"
+              description={selected.title}
+              busy={saving}
+              onClose={() => setEdit(false)}
+            >
+              <BusinessForm
+                onBusy={setSaving}
+                title="Simpan pengaturan sewa"
+                fields={visibleFields}
+                execute={async (input) =>
+                  api.patch('/admin/settings', {
+                    values: Object.fromEntries(
+                      Object.entries(input)
+                        .filter(
+                          ([name]) => String(values[name]) !== input[name],
+                        )
+                        .map(([name, value]) => [
+                          name,
+                          typeof values[name] === 'number'
+                            ? Number(value)
+                            : value,
+                        ]),
+                    ),
+                  })
+                }
+                validate={(input) => {
+                  if (
+                    !Object.keys(input).some(
+                      (name) => String(values[name]) !== input[name],
+                    )
+                  )
+                    throw new Error('Belum ada pengaturan yang berubah.');
+                }}
+                onDone={() => {
+                  setEdit(false);
+                  void query.refetch();
+                }}
+                onCancel={() => setEdit(false)}
+              />
+            </AdminModal>
+          )}
+          {group === 'qris' && (
+            <section className="form-section am-qris-panel">
+              <h2>Gambar QRIS</h2>
+              <p>
+                Unggah QRIS resmi toko. Jangan memakai QRIS dummy untuk
+                pembayaran nyata.
+              </p>
+              {values.qris_image_path && (
+                <ItemPhoto
+                  path={String(values.qris_image_path)}
+                  name="QRIS toko"
+                  className="qris-image"
+                />
+              )}
+              <Button
+                variant="outline"
+                disabled={photo || edit || removePhoto}
+                onClick={() => setPhoto(true)}
+              >
+                Upload QRIS
+              </Button>
+              {values.qris_image_path && (
+                <Button
+                  variant="outline"
+                  disabled={photo || edit || removePhoto}
+                  onClick={() => setRemovePhoto(true)}
+                >
+                  Hapus QRIS
+                </Button>
+              )}
+              {removePhoto && (
+                <BusinessForm
+                  title="Hapus QRIS toko"
+                  description="QRIS tidak akan ditampilkan untuk pembayaran berikutnya."
+                  execute={async () =>
+                    api.patch('/admin/settings', {
+                      values: { qris_image_path: null },
+                    })
+                  }
+                  onDone={() => {
+                    setRemovePhoto(false);
+                    void query.refetch();
+                  }}
+                  onCancel={() => setRemovePhoto(false)}
+                />
+              )}
+              {photo && (
+                <PhotoForm
+                  id="qris"
+                  qris
+                  onDone={() => {
+                    setPhoto(false);
+                    void query.refetch();
+                  }}
+                  onCancel={() => setPhoto(false)}
+                />
+              )}
+            </section>
+          )}
+        </div>
+      </div>
+    </AdminWorkspace>
   );
 }

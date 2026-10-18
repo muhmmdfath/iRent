@@ -1,3 +1,62 @@
+## Komposisi detail inventaris (18 Oktober 2026)
+
+- [x] Tombol kembali Inventaris dihapus dari detail; navigasi sidebar tetap tersedia.
+- [x] Kode unit 14-15px, badge 10px, metadata 11px; badge status fisik memakai warna semantik yang ringan.
+- [x] Aksi foto/katalog dan aktif/perawatan unit dipindahkan ke menu titik tiga; aksi penyelesaian perawatan/persiapan tetap terlihat sesuai status.
+- [x] Menu mendukung klik luar/Escape, kondisi disabled dan nama aksesibel; semua guard alokasi/pengembalian dan persiapan dipertahankan.
+- Verifikasi: typecheck/lint, 7 browser tests dan 11 inventory tests lulus. Detail asli dicek pada 390/1440px tanpa overflow; screenshot admin-inventory-detail-composition-*.
+
+## Rombak seluruh halaman manajemen admin (18 Oktober 2026)
+
+- [x] Jadwal unit: timeline sewa/buffer, filter rentang/model dan kondisi fisik.
+- [x] Perpanjangan/refund: antrean status, identitas, nominal dan tindakan detail.
+- [x] Risiko: penyebab risiko dan tindak lanjut delivery dipisahkan.
+- [x] Data penyewa/admin: direktori, pencarian, detail dan tambah admin modal.
+- [x] Laporan: ringkasan kas, mutasi, transaksi berhasil dan item populer.
+- [x] Zona ongkir: daftar tarif/status, pencarian dan modal tambah/ubah.
+- [x] Notifikasi PWA: kesiapan perangkat dan riwayat pengiriman.
+- [x] Pengaturan: kelompok aturan sewa dan QRIS.
+- [x] Verifikasi behavior, responsive dan screenshot tiap halaman.
+
+- Verifikasi: build/typecheck dan lint lulus; 6 browser tests mencakup sepuluh halaman pada 390/1440px beserta filter, modal dan penyimpanan; 5 management tests serta 13 tests perpanjangan/refund lulus. Pengecekan data lokal dan 20 screenshot tidak menemukan overflow.
+- Referensi per halaman: [docs/frontend/admin-management-references.md](docs/frontend/admin-management-references.md).
+
+## Rombak inventaris dan modal tambah (18 Oktober 2026)
+
+- [x] Kartu foto perangkat, tarif 6/12/24 jam, badge aktif dan stok fisik; kategori cepat, pencarian/status server dan pagination dipertahankan.
+- [x] Ringkasan membedakan total hasil pencarian dari hitungan unit pada halaman yang tampil. Stok fisik tidak diklaim sebagai ketersediaan tanggal.
+- [x] Tambah model dan unit memakai native dialog; Escape/klik luar, focus trap dan pengembalian fokus, scroll lock, serta penguncian tutup selama simpan.
+- [x] Pemeriksaan sebelum submit, validasi nominal BigInt, kode unit unik dan guard hasil simpan tidak pasti tetap berlaku. URL /admin/inventory/new membuka modal di atas daftar.
+- [x] Ukuran teks, kartu detail, hover tab, mobile dan kondisi loading/empty/error disesuaikan dengan palet pengguna.
+- Referensi: [Square Item Library](https://squareup.com/help/us/en/article/8335-create-and-edit-items), [Shopify product search/filter](https://help.shopify.com/en/manual/products/searching-filtering).
+- Verifikasi: 12 browser scenarios (daftar/detail, maintenance, foto, modal, keyboard, pending save, 360-1440px) dan 11 inventory tests lulus. Build/typecheck dan lint diperiksa. Screenshot docs/frontend/admin-inventory-redesign-* dan admin-inventory-add-modal-*.
+
+## Rombak booking dan pembayaran admin (18 Oktober 2026)
+
+- [x] Daftar transaksi dengan kolom penyewa/perangkat, jadwal, badge status, total awal dan akses detail yang ringkas; berubah menjadi kartu pada ponsel.
+- [x] Filter cepat status, pencarian/sort server, reset dan pagination tetap memakai query URL. Tidak menampilkan total global dari hitungan satu halaman.
+- [x] Banner antrean bukti memakai jumlah aktual API tasks; daftar bukti mendesak mencakup pembayaran awal, pelunasan dan perpanjangan.
+- [x] Detail menempatkan identitas/perangkat berdampingan, bukti sebelum operasional, navigasi bagian dan ringkasan keuangan sticky desktop. Validasi uang aktual, konfirmasi, idempotency dan kontrol akses dipertahankan.
+- [x] Palet putih, hitam dan #FF4081, Poppins, teks data 11-13px, judul bagian 14-16px; loading, empty dan error punya pemulihan.
+- Referensi: [Shopify order filters](https://help.shopify.com/en/manual/fulfillment/managing-orders/viewing-orders/filtering-orders), [Stripe payment tracking](https://stripe.com/resources/more/how-to-track-payments-in-real-time-and-resolve-issues-faster).
+- Verifikasi: build/typecheck dan lint lulus; 7 browser tests (360/390/768/1024/1440px, filter/pencarian/antrean/error/empty/verifikasi) dan 9 tests aturan pembayaran lulus. Screenshot data lokal tersedia di docs/frontend/admin-bookings-redesign-* dan admin-booking-detail-redesign-*.
+
+## Perapian login dan daftar (18 Oktober 2026)
+
+- [x] Kartu form putih, panel brand pastel dengan ilustrasi perangkat berbasis CSS, dan spacing konsisten.
+- [x] Input, focus, helper/error, tombol utama dan link pink mengikuti palet/ukuran teks pilihan pengguna.
+- [x] Responsif; ilustrasi disembunyikan pada ponsel agar form tetap menjadi fokus.
+- Verifikasi: build/typecheck dan lint komponen lulus; 6 browser tests pada 360/768/1440px memeriksa validasi, toggle password, link teks, serta overflow.
+
+## Perapian halaman akun (18 Oktober 2026)
+
+- [x] Ringkasan identitas dan checklist kelengkapan profil; status lengkap tidak diklaim sebagai identitas terverifikasi.
+- [x] Kartu informasi login, profil/alamat, kontak tambahan opsional, aktivitas sewa, serta ketentuan/bantuan.
+- [x] Data berasal dari sesi dan API profil; tidak ada field wajib baru, migrasi, atau perubahan data pelanggan.
+- [x] Loading/error/empty handling; halaman admin tetap memakai informasi akun tanpa meminta profil pelanggan.
+- Referensi: Airbnb account settings, Shopify customer accounts dan Grover account management.
+- Verifikasi: build/typecheck dan lint lulus; 4 browser tests untuk responsive links, profil kosong/error, serta isolasi admin. Data asli dicek pada 390/768/1440px tanpa overflow.
+
 ## Halaman Booking saya (17 Oktober 2026)
 
 - [x] Kartu booking konsisten dengan beranda, shared styles diekstrak ke recent-booking-cards.css.
@@ -317,3 +376,10 @@ Regresi browser akhir: 30 tes API simulasi lulus, empat tes API nyata dilewati p
 Backend yang sudah tersedia tetap menghitung hak refund dan menjaga transaksi/idempotensi/otorisasi. Suite refund PostgreSQL terpisah lulus: 17 tes termasuk batas tepat 48 jam, DP/lunas, pembatalan kendala toko, dana berlebih, pembatalan bersamaan approval, transfer bersamaan, CSRF dan bukti privat. Tidak ada migrasi, perubahan perhitungan atau transfer bank sungguhan. Berikutnya: perpanjangan dan laporan pengembalian pelanggan, pengaturan/zona/laporan admin, push/suara serta perangkat nyata.
 
 Verifikasi akhir 11 Oktober 2026: 61 tes Vitest/MSW, 36 tes Chromium API simulasi dan 17 tes refund PostgreSQL lulus; empat tes browser API nyata fase terdahulu dilewati pada konfigurasi default. Regresi dijalankan berurutan setelah timeout saat suite berjalan bersamaan. Browser refund mencakup 360/390/768/1024/1440 px serta pelanggan yang membatalkan, mengisi rekening dan mengunduh bukti privat setelah penyelesaian admin. Build/typecheck/lint dan format file berubah lulus. Screenshot tersimpan di docs/frontend; Vite dan readiness API demo utama merespons 200. Alur browser refund belum diuji end-to-end dengan API nyata; kontrak UI diperiksa lewat MSW/Chromium dan perilaku backend lewat PostgreSQL/HTTP.
+
+## Penyelarasan tabel dan Gantt ? 18 Oktober 2026
+
+- Daftar berpaginasi menggunakan 10 data per halaman; daftar zona, tindak lanjut pengiriman dan transaksi sukses juga dipaginasi di UI. Dropdown dan ringkasan mempertahankan batas sesuai fungsi.
+- Filter tanggal memakai satu komponen kalender ikon, pemilihan rentang, chevron, penanda aktif outline dan titik, serta penutupan klik luar/Escape. Periode laporan tetap tanggal/bulan sesuai kontrak API.
+- Jadwal unit menggunakan baris Gantt seragam, identitas ringkas dan kolom kiri tetap saat digeser. Booking berurutan berbagi jalur; alokasi yang beririsan memakai jalur berbeda. Detail waktu dan akses inventaris dipindahkan ke dialog informasi unit. Sewa, buffer dan hold tetap memakai waktu API asli.
+- Verifikasi: build/typecheck/lint; browser desktop/mobile untuk halaman manajemen, pagination dan kalender. Screenshot admin-calendar-gantt tersedia di docs/frontend.

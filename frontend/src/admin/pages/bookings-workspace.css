@@ -1,0 +1,875 @@
+/* Calm operational workspace: compact data, clear hierarchy, white-first surfaces. */
+:root body .admin-bookings-workspace,
+:root body .admin-booking-detail {
+  max-width: 1280px;
+  margin: 0 auto;
+  color: #29262b;
+  font-size: 13px;
+  line-height: 1.65;
+}
+:root body .abw-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 28px;
+}
+:root body .abw-kicker {
+  color: #817982;
+  font-size: 11px;
+  margin: 0 0 7px;
+}
+:root body .abw-heading h1,
+:root body .admin-booking-detail h1 {
+  font-size: clamp(24px, 2.2vw, 30px);
+  line-height: 1.3;
+  font-weight: 600;
+  letter-spacing: -0.8px;
+  margin: 0;
+}
+:root body .abw-heading h1 + p {
+  color: #777079;
+  font-size: 13px;
+  margin: 7px 0 0;
+}
+:root body .admin-bookings-workspace [data-slot='button'],
+:root body .admin-booking-detail [data-slot='button'] {
+  font-size: 12px;
+  min-height: 38px;
+  gap: 7px;
+  padding: 8px 13px;
+  border-radius: 9px;
+  flex-shrink: 0;
+}
+:root body .abw-review-banner {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  background: #fff5f8;
+  border: 1px solid #f5dbe5;
+  border-radius: 14px;
+  padding: 19px 22px;
+  margin-bottom: 24px;
+}
+:root body .abw-banner-icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  background: #fff;
+  border: 1px solid #f4dde6;
+  border-radius: 11px;
+  color: #d82b66;
+  flex-shrink: 0;
+}
+:root body .abw-banner-icon svg {
+  width: 21px;
+  height: 21px;
+}
+:root body .abw-review-banner h2 {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+}
+:root body .abw-review-banner p {
+  color: #81717a;
+  font-size: 12px;
+  margin: 3px 0 0;
+}
+:root body .abw-review-banner > [data-slot='button'] {
+  margin-left: auto;
+  background: #fff;
+}
+:root body .abw-register {
+  border: 1px solid #e9e5e8;
+  border-radius: 15px;
+  overflow: hidden;
+  background: #fff;
+}
+:root body .abw-tabs {
+  display: flex;
+  gap: 24px;
+  padding: 0 22px;
+  border-bottom: 1px solid #ede9ec;
+  overflow-x: auto;
+  scrollbar-width: thin;
+}
+:root body .abw-tabs button {
+  position: relative;
+  white-space: nowrap;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 17px 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: #777079;
+  min-height: 48px;
+}
+:root body .abw-tabs button[aria-pressed='true'] {
+  color: #d82b66;
+}
+:root body .abw-tabs button[aria-pressed='true']::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #ff4081;
+}
+:root body .abw-tabs button:focus-visible {
+  outline: 2px solid #ff4081;
+  outline-offset: -4px;
+}
+:root body .abw-tabs button:hover {
+  background: #fff5f8;
+  color: #b71e53;
+}
+:root body .abw-toolbar {
+  display: grid;
+  grid-template-columns: minmax(180px, 1fr) auto minmax(160px, 0.55fr) minmax(
+      130px,
+      0.4fr
+    );
+  align-items: center;
+  gap: 10px;
+  padding: 18px 22px;
+}
+:root body .abw-search {
+  position: relative;
+  min-width: 0;
+}
+:root body .abw-search > svg {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 17px;
+  height: 17px;
+  color: #8a818a;
+}
+:root body .abw-search input {
+  min-height: 40px;
+  padding-left: 37px;
+  background: #fcfbfc;
+}
+:root body .abw-filter-select {
+  min-width: 0;
+}
+:root body .abw-filter-select select {
+  width: 100%;
+  min-height: 40px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  font-size: 12px;
+}
+:root body .abw-active-filters {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 0 22px 15px;
+  color: #777079;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+:root body .abw-active-filters button {
+  color: #bd2359;
+  padding: 3px 7px;
+  border-radius: 5px;
+  font-size: 12px;
+  background: #fff0f5;
+  flex-shrink: 0;
+}
+:root body .abw-table-head,
+:root body .abw-row {
+  display: grid;
+  grid-template-columns:
+    minmax(200px, 1.45fr) minmax(135px, 1fr) minmax(135px, 0.95fr)
+    minmax(115px, 0.75fr) 34px;
+  align-items: center;
+  gap: 16px;
+  padding: 17px 22px;
+}
+:root body .abw-table-head {
+  padding-top: 11px;
+  padding-bottom: 11px;
+  background: #f9f8f9;
+  border-block: 1px solid #eee9ed;
+  font-size: 11px;
+  color: #827983;
+  font-weight: 500;
+}
+:root body .abw-row {
+  border-bottom: 1px solid #f0edf0;
+  min-height: 101px;
+  transition: background 0.18s;
+}
+:root body .abw-row:last-child {
+  border-bottom: 0;
+}
+:root body .abw-row:hover {
+  background: #fdfbfd;
+}
+:root body .abw-identity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+:root body .abw-identity > .item-photo {
+  flex: 0 0 48px;
+  width: 48px;
+  height: 54px;
+  border-radius: 9px;
+  object-fit: contain;
+  background: #f7f4f6;
+}
+:root body .abw-identity > div {
+  min-width: 0;
+}
+:root body .abw-identity h2 {
+  margin: 0 0 2px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+:root body .abw-code {
+  margin: 0;
+  font-size: 11px;
+  color: #827983;
+  font-variant-numeric: tabular-nums;
+}
+:root body .abw-devices {
+  margin: 3px 0 0;
+  font-size: 11px;
+  color: #827983;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+:root body .abw-schedule time {
+  display: block;
+  font-size: 12px;
+  line-height: 1.65;
+  font-variant-numeric: tabular-nums;
+}
+:root body .abw-row small {
+  display: block;
+  font-size: 11px;
+  color: #8a818a;
+  margin-top: 3px;
+  font-weight: 400;
+  line-height: 1.6;
+}
+:root body .abw-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 9px;
+  border-radius: 6px;
+  color: #69616b;
+  background: #f1eff2;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.7;
+  margin: 0;
+}
+:root body .abw-status i {
+  height: 5px;
+  width: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+:root body .abw-status-menunggu_konfirmasi {
+  color: #b42a5a;
+  background: #ffedf4;
+}
+:root body .abw-status-menunggu_pembayaran {
+  color: #946319;
+  background: #fff5df;
+}
+:root body .abw-status-dikonfirmasi {
+  color: #3665a0;
+  background: #edf4fc;
+}
+:root body .abw-status-berjalan {
+  color: #6550a1;
+  background: #f1edfa;
+}
+:root body .abw-status-selesai {
+  color: #31765b;
+  background: #eaf6ef;
+}
+:root body .abw-status-ditolak {
+  color: #b03c47;
+  background: #ffedf0;
+}
+:root body .abw-amount strong {
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+:root body .abw-row .abw-open {
+  width: 32px;
+  min-height: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid #eee9ed;
+  background: #fff;
+  border-radius: 8px;
+}
+:root body .abw-mobile-label {
+  display: none;
+}
+:root body .abw-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+  padding: 15px 22px;
+  border-top: 1px solid #eee9ed;
+  font-size: 11px;
+  color: #827983;
+}
+:root body .abw-pagination > div {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+:root body .abw-pagination [data-slot='button'] {
+  width: 31px;
+  padding: 0;
+  min-height: 31px;
+}
+:root body .abw-footnote {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex-wrap: wrap;
+  color: #8a818a;
+  font-size: 11px;
+  margin-top: 17px;
+}
+:root body .admin-inline-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+  min-height: 0;
+  color: #ce2b63;
+  text-decoration: none;
+  font-size: inherit;
+}
+:root body .admin-inline-link:hover {
+  color: #aa1c4d;
+  text-decoration: underline;
+  background: transparent;
+}
+:root body .admin-inline-link:focus-visible {
+  outline: 2px solid #ff4081;
+  outline-offset: 4px;
+}
+:root body .abw-empty {
+  padding: 65px 24px;
+  text-align: center;
+}
+:root body .abw-empty > svg {
+  width: 28px;
+  height: 28px;
+  color: #b5a7b1;
+  margin: 0 auto 16px;
+}
+:root body .abw-empty h2 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+:root body .abw-empty p {
+  font-size: 12px;
+  color: #827983;
+  margin: 6px 0 20px;
+}
+:root body .abw-skeleton {
+  padding: 0 22px;
+}
+:root body .abw-skeleton > div {
+  display: flex;
+  gap: 30px;
+  padding: 28px 0;
+  border-top: 1px solid #eee9ed;
+}
+:root body .abw-skeleton span {
+  height: 24px;
+  width: 30%;
+  border-radius: 6px;
+  background: #f4f1f3;
+}
+:root body .abw-task-list {
+  margin: -14px 0 24px;
+  padding: 4px 20px;
+  border: 1px solid #f1e3e9;
+  border-radius: 12px;
+}
+:root body .abw-task-list .abw-task {
+  display: flex;
+  gap: 12px;
+  padding: 14px 0;
+  width: 100%;
+  border-bottom: 1px solid #f0e9ed;
+  font-size: 12px;
+}
+:root body .abw-task strong {
+  font-size: 12px;
+  font-weight: 500;
+}
+:root body .abw-task span {
+  color: #827983;
+  font-size: 11px;
+  margin-left: auto;
+}
+:root body .abw-task-list > p {
+  color: #827983;
+  font-size: 11px;
+  padding: 10px 0;
+}
+/* Detail keeps the financial summary visible and puts proof review before operations. */
+:root body .abd-back {
+  font-size: 12px;
+}
+:root body .admin-booking-detail .admin-detail-heading {
+  margin: 22px 0;
+}
+:root body .admin-booking-detail .admin-detail-heading .eyebrow {
+  font-size: 11px;
+  color: #827983;
+  margin-bottom: 5px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+:root body .admin-booking-detail .admin-detail-heading .abw-status {
+  margin-top: 11px;
+}
+:root body .abd-section-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  border-bottom: 1px solid #e9e5e8;
+  margin: 0 0 24px;
+  padding-bottom: 15px;
+}
+:root body .abd-section-nav a {
+  font-size: 12px;
+  color: #746975;
+}
+:root body .admin-booking-detail .admin-detail-grid {
+  grid-template-columns: minmax(0, 1fr) minmax(270px, 310px);
+  gap: 24px;
+}
+:root body .admin-booking-detail .form-section {
+  border: 1px solid #e9e5e8;
+  border-radius: 13px;
+  padding: 24px;
+  margin: 0 0 20px;
+  background: #fff;
+}
+:root body .admin-booking-detail h2 {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+:root body .admin-booking-detail h3 {
+  font-size: 14px;
+  font-weight: 500;
+}
+:root body .admin-booking-detail p,
+:root body .admin-booking-detail dt,
+:root body .admin-booking-detail dd {
+  font-size: 12px;
+  line-height: 1.8;
+}
+:root body .admin-booking-detail .form-section > h2 {
+  margin-bottom: 18px;
+  padding-bottom: 12px;
+}
+:root body .admin-booking-detail .admin-customer-info h3 {
+  margin-top: 0;
+  margin-bottom: 6px;
+}
+:root body .admin-booking-detail .booking-unit-row {
+  padding: 16px 0;
+  gap: 16px;
+  align-items: start;
+}
+:root body .admin-booking-detail .booking-unit-row .item-photo {
+  width: 62px;
+  height: 72px;
+  border-radius: 9px;
+}
+:root body .admin-booking-detail .booking-unit-row h3 {
+  margin-bottom: 6px;
+}
+:root body .admin-booking-detail .admin-ledger {
+  position: sticky;
+  top: 120px;
+  padding: 24px;
+  border-radius: 13px;
+  gap: 14px;
+  background: #faf7f9;
+  border: 1px solid #eee4ea;
+}
+:root body .admin-booking-detail .admin-ledger h2 {
+  font-size: 14px;
+  margin: 0;
+}
+:root body .admin-booking-detail .admin-ledger .eyebrow {
+  font-size: 10px;
+  text-transform: none;
+  color: #827983;
+}
+:root body .admin-booking-detail .admin-review-amount {
+  font-size: 28px;
+  letter-spacing: -0.8px;
+  line-height: 1.3;
+  font-weight: 600;
+  margin: 0 0 10px;
+}
+:root body .admin-booking-detail .price-breakdown {
+  font-size: 12px;
+}
+:root body .admin-booking-detail .price-breakdown > div {
+  gap: 12px;
+  padding: 9px 0;
+}
+:root body .admin-booking-detail .price-breakdown dd {
+  font-weight: 500;
+}
+:root body .admin-booking-detail .admin-proof {
+  padding: 18px;
+  border: 1px solid #eee5eb;
+  border-radius: 10px;
+  margin-top: 18px;
+  background: #fdfbfc;
+}
+:root body .admin-booking-detail .admin-proof .section-heading {
+  align-items: start;
+  gap: 12px;
+}
+:root body .admin-booking-detail .admin-proof .status-badge {
+  font-size: 10px;
+  font-weight: 500;
+  padding: 4px 8px;
+}
+:root body .admin-booking-detail .admin-proof-viewer {
+  margin: 16px 0;
+}
+:root body .admin-booking-detail .admin-action-form {
+  margin-top: 20px;
+  padding-top: 20px;
+}
+:root body .admin-booking-detail .form-actions {
+  gap: 8px;
+  flex-wrap: wrap;
+}
+:root body .admin-booking-detail .info-note,
+:root body .admin-booking-detail .success-note {
+  padding: 14px 16px;
+  border-radius: 9px;
+  margin-bottom: 18px;
+}
+:root body .admin-booking-detail .optional-fields {
+  font-size: 12px;
+  margin-bottom: 20px;
+}
+:root body .admin-booking-detail .management-row {
+  padding-block: 18px;
+}
+:root body .admin-booking-detail .section-heading {
+  margin-bottom: 14px;
+}
+:root body .admin-booking-detail [id] {
+  scroll-margin-top: 125px;
+}
+@media (max-width: 1199px) {
+  :root body .abw-table-head,
+  :root body .abw-row {
+    grid-template-columns:
+      minmax(170px, 1.4fr) minmax(125px, 1fr) minmax(115px, 1fr)
+      34px;
+    gap: 12px;
+  }
+  :root body .abw-table-head > :nth-child(4) {
+    display: none;
+  }
+  :root body .abw-amount {
+    grid-column: 2;
+    grid-row: auto;
+  }
+  :root body .abw-open {
+    grid-column: 4;
+    grid-row: 1 / 3;
+  }
+  :root body .abw-identity {
+    grid-row: 1 / 3;
+  }
+  :root body .abw-row {
+    position: relative;
+  }
+  :root body .abw-row > :nth-child(3) {
+    grid-column: 3;
+    grid-row: 1 / 3;
+  }
+  :root body .abw-row .abw-amount small {
+    display: none;
+  }
+  :root body .admin-booking-detail .admin-detail-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  :root body .admin-booking-detail .admin-ledger {
+    grid-row: auto;
+    position: static;
+  }
+  :root body .abw-toolbar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+}
+@media (max-width: 767px) {
+  :root body .abw-heading {
+    align-items: start;
+    gap: 12px;
+    margin-bottom: 22px;
+  }
+  :root body .abw-heading h1 {
+    font-size: 24px;
+  }
+  :root body .abw-heading > [data-slot='button'] {
+    padding: 8px;
+    font-size: 0;
+    min-width: 36px;
+  }
+  :root body .abw-heading > [data-slot='button'] svg {
+    width: 16px;
+    height: 16px;
+  }
+  :root body .abw-review-banner {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 17px;
+  }
+  :root body .abw-review-banner > div {
+    flex: 1;
+    min-width: 170px;
+  }
+  :root body .abw-review-banner > [data-slot='button'] {
+    margin-left: 54px;
+  }
+  :root body .abw-toolbar {
+    padding: 16px;
+  }
+  :root body .abw-toolbar > .abw-filter-select {
+    grid-column: 1 / -1;
+  }
+  :root body .abw-tabs {
+    gap: 22px;
+    padding-inline: 16px;
+  }
+  :root body .abw-table-head {
+    display: none;
+  }
+  :root body .abw-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    padding: 20px 16px;
+    gap: 14px 12px;
+  }
+  :root body .abw-identity {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  :root body .abw-open {
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: end;
+  }
+  :root body .abw-row > :nth-child(3) {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+  :root body .abw-schedule {
+    grid-column: 1;
+    grid-row: 3;
+  }
+  :root body .abw-amount {
+    grid-column: 2;
+    grid-row: 3;
+    text-align: right;
+  }
+  :root body .abw-row .abw-amount small {
+    display: block;
+  }
+  :root body .abw-schedule time {
+    font-size: 11px;
+  }
+  :root body .abw-mobile-label {
+    display: block;
+    color: #8a818a;
+    font-size: 10px;
+    margin-bottom: 3px;
+  }
+  :root body .abw-row small.abw-deadline {
+    display: inline;
+    margin-left: 8px;
+    font-size: 10px;
+  }
+  :root body .abw-pagination {
+    padding: 14px 16px;
+    flex-wrap: wrap;
+  }
+  :root body .abw-task-list .abw-task {
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+  :root body .abw-task span {
+    flex-basis: 100%;
+    margin: 0;
+  }
+  :root body .abw-task > svg:last-child {
+    display: none;
+  }
+  :root body .admin-booking-detail .form-section {
+    padding: 18px;
+  }
+  :root body .admin-booking-detail .admin-detail-heading {
+    align-items: start;
+    gap: 12px;
+  }
+  :root
+    body
+    .admin-booking-detail
+    .admin-detail-heading
+    > [data-slot='button'] {
+    max-width: 115px;
+    white-space: normal;
+  }
+  :root body .abd-section-nav {
+    gap: 16px;
+  }
+  :root body .admin-booking-detail .admin-proof {
+    padding: 14px;
+  }
+  :root body .admin-booking-detail .admin-proof .section-heading {
+    flex-wrap: wrap;
+  }
+  :root body .admin-booking-detail [id] {
+    scroll-margin-top: 160px;
+  }
+}
+:root body .abw-identity > .item-photo {
+  padding: 5px;
+  overflow: hidden;
+  aspect-ratio: auto;
+}
+:root body .abw-identity > .item-photo > span {
+  font-size: 8px;
+  line-height: 1.3;
+  text-align: center;
+}
+:root body .admin-booking-detail .admin-customer-info > h3 {
+  border: 0;
+  padding: 0;
+  margin: 0 0 8px;
+}
+:root body .admin-booking-detail .booking-unit-row .item-photo {
+  padding: 7px;
+}
+:root body .abw-task-list .abw-task:last-of-type {
+  border-bottom: 0;
+}
+:root body .admin-booking-detail .abd-payment-panel > .section-heading {
+  border-bottom: 1px solid #e9e5e8;
+  padding-bottom: 14px;
+}
+:root body .admin-booking-detail .abd-payment-panel > .section-heading > span {
+  font-size: 11px;
+  color: #827983;
+}
+@media (hover: hover) {
+  :root
+    body
+    .admin-bookings-workspace
+    button[data-slot='button']:not(:disabled):hover,
+  :root body .admin-booking-detail button:not(:disabled):hover,
+  :root body .admin-bookings-workspace a[data-slot='button']:hover,
+  :root body .admin-booking-detail a[data-slot='button']:hover {
+    background-color: #ff4081;
+    border-color: #ff4081;
+    color: #fff;
+  }
+}
+:root body .admin-booking-detail .abd-overview {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 18px;
+  align-items: stretch;
+}
+:root body .admin-booking-detail .abd-overview .form-section {
+  margin-bottom: 20px;
+}
+:root body .admin-booking-detail .abd-overview .booking-unit-row {
+  gap: 10px;
+  padding-block: 8px;
+}
+:root body .admin-booking-detail .abd-overview .booking-unit-row .item-photo {
+  width: 42px;
+  height: 52px;
+  flex-shrink: 0;
+  padding: 4px;
+}
+:root body .admin-booking-detail .abd-overview .booking-unit-row h3 {
+  font-size: 13px;
+}
+:root body .admin-booking-detail .abd-overview .booking-unit-row p {
+  font-size: 11px;
+}
+@media (max-width: 767px) {
+  :root body .admin-booking-detail .abd-overview {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+  }
+}
+
+/* Navigation tabs have their own hover treatment, separate from action buttons. */
+:root body .admin-bookings-workspace .abw-tabs button {
+  isolation: isolate;
+  transition: color 160ms ease;
+}
+:root body .admin-bookings-workspace .abw-tabs button::before {
+  content: '';
+  position: absolute;
+  inset: 10px -10px;
+  z-index: -1;
+  border-radius: 7px;
+  background: #fff0f5;
+  opacity: 0;
+  transition: opacity 160ms ease;
+}
+:root body .admin-bookings-workspace .abw-tabs button:not(:disabled):hover {
+  background: transparent;
+  border-color: transparent;
+  color: #d82b66;
+}
+@media (hover: hover) {
+  :root body .admin-bookings-workspace .abw-tabs button:hover::before {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :root body .admin-bookings-workspace .abw-tabs button,
+  :root body .admin-bookings-workspace .abw-tabs button::before {
+    transition: none;
+  }
+}

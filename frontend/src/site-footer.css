@@ -213,3 +213,21 @@
     transition: none;
   }
 }
+
+.site-footer .site-footer-bottom .footer-terms-link {
+  display: inline;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #796672;
+  font-size: 12px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.site-footer .site-footer-bottom .footer-terms-link:hover {
+  color: #ff4081;
+}
+.footer-terms-link:focus-visible {
+  outline: 2px solid #ff4081;
+  outline-offset: 4px;
+}

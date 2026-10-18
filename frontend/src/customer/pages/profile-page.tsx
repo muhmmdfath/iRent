@@ -134,6 +134,11 @@ function ProfileForm({ profile }: { profile: Profile | null }) {
             </label>
             <Input
               id="nik"
+              placeholder={
+                profile
+                  ? String.fromCharCode(8226).repeat(16)
+                  : 'Masukkan 16 digit NIK'
+              }
               inputMode="numeric"
               type="password"
               autoComplete="off"
@@ -149,7 +154,7 @@ function ProfileForm({ profile }: { profile: Profile | null }) {
             />
             <p id="nik-help" className="muted text-sm mt-2">
               {profile
-                ? 'NIK sudah tersimpan. Kosongkan untuk mempertahankannya.'
+                ? 'NIK sudah tersimpan dan disamarkan. Isi hanya jika ingin mengganti NIK.'
                 : 'NIK disimpan secara privat dan tidak ditampilkan kembali.'}
             </p>
             {errors.nik && <p className="field-error">{errors.nik.message}</p>}

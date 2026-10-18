@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useEffect, type ReactNode } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { isAxiosError } from 'axios';
 import { Button } from '@/components/ui/button';
@@ -11,12 +11,14 @@ export function InventoryConfirm<T>({
   onCancel,
   children,
   createsRecords = false,
+  onBusy,
 }: {
   save: () => Promise<T>;
   onSaved: (result: T) => void;
   onCancel: () => void;
   children: ReactNode;
   createsRecords?: boolean;
+  onBusy?: (busy: boolean) => void;
 }) {
   const online = useOnline();
   const mutation = useMutation({
@@ -26,6 +28,10 @@ export function InventoryConfirm<T>({
       onSaved(result);
     },
   });
+  useEffect(() => {
+    onBusy?.(mutation.isPending);
+    return () => onBusy?.(false);
+  }, [mutation.isPending, onBusy]);
   const uncertain =
     createsRecords &&
     mutation.isError &&

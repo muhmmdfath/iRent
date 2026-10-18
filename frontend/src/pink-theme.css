@@ -134,7 +134,11 @@ main
     .catalog-image-link
   ):not(.landing-product-image):not(.booking-view-all):not(
     .product-nav-link
-  ):not(.checkout-section-link):not(.checkout-terms-link):not(.notification-entry),
+  ):not(.checkout-section-link):not(.checkout-terms-link):not(
+    .notification-entry
+  ):not(.auth-pink-link):not(.admin-inline-link):not(.am-cal-block):not(
+    .am-plain-link
+  ),
 .studio-login {
   display: inline-flex;
   align-items: center;
@@ -421,4 +425,41 @@ a.back-link:hover {
   background: rgb(255 255 255 / 20%);
   border-color: rgb(255 255 255 / 30%);
   color: #fff;
+}
+
+:root body .auth-layout a.auth-pink-link {
+  display: inline;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  color: #ff4081;
+  font-size: inherit;
+  font-weight: 500;
+  text-decoration: none;
+}
+:root body .auth-layout a.auth-pink-link:hover {
+  color: #d72564;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.auth-pink-link:focus-visible {
+  outline: 2px solid #ff4081;
+  outline-offset: 4px;
+}
+/* Compact icon-only pagination, with accessible names on each control. */
+:root body .studio-shell button.pagination-chevron[aria-label] {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
+  min-height: 34px;
+  padding: 0;
+  flex: 0 0 34px;
+  border-radius: 8px;
+}
+:root body button.pagination-chevron > svg {
+  width: 16px;
+  height: 16px;
 }

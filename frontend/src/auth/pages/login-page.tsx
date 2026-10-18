@@ -1,3 +1,5 @@
+import { AuthRentalVisual } from '../components/auth-rental-visual';
+import '../auth-pages.css';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
@@ -53,8 +55,9 @@ export function LoginPage() {
             rencana berikutnya.
           </h1>
           <p>Sewa perangkat untuk kebutuhanmu di Semarang.</p>
+          <AuthRentalVisual />
         </div>
-        <Link className="back-link" to="/">
+        <Link className="auth-pink-link" to="/">
           Kembali ke beranda
         </Link>
       </section>
@@ -78,6 +81,7 @@ export function LoginPage() {
               <label htmlFor="identity">Email atau nomor HP</label>
               <Input
                 id="identity"
+                placeholder="Email atau nomor HP kamu"
                 autoComplete="username"
                 autoCapitalize="none"
                 spellCheck={false}
@@ -145,7 +149,7 @@ export function LoginPage() {
           <p className="login-help">
             Belum punya akun?{' '}
             <Link
-              className="text-link"
+              className="auth-pink-link"
               to={
                 '/register' +
                 (params.get('returnTo')

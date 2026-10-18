@@ -1,4 +1,22 @@
+import { PAGE_SIZE } from '@/lib/pagination';
+import {
+  ChevronLeftIcon as PaginationPreviousIcon,
+  ChevronRightIcon as PaginationNextIcon,
+} from '@radix-ui/react-icons';
+import { InventoryActionMenu } from './action-menu';
 import { useState } from 'react';
+import {
+  PlusIcon,
+  Pencil2Icon,
+  ImageIcon,
+  MagnifyingGlassIcon,
+  ChevronRightIcon,
+  ReloadIcon,
+  CubeIcon,
+  InfoCircledIcon,
+} from '@radix-ui/react-icons';
+import { InventoryModal } from './inventory-modal';
+import './inventory-workspace.css';
 import {
   Link,
   useNavigate,
@@ -41,30 +59,44 @@ function Pagination({
       aria-label="Halaman inventaris"
     >
       <Button
+        className="pagination-chevron"
+        aria-label="Sebelumnya"
+        title="Sebelumnya"
         variant="outline"
         disabled={disabled || page <= 1}
         onClick={() => onPage(page - 1)}
       >
-        Sebelumnya
+        <PaginationPreviousIcon aria-hidden="true" />
       </Button>
       <span>
         Halaman {page} · {total} data
       </span>
       <Button
+        className="pagination-chevron"
+        aria-label="Berikutnya"
+        title="Berikutnya"
         variant="outline"
-        disabled={disabled || page * 20 >= total}
+        disabled={disabled || page * PAGE_SIZE >= total}
         onClick={() => onPage(page + 1)}
       >
-        Berikutnya
+        <PaginationNextIcon aria-hidden="true" />
       </Button>
     </nav>
   );
 }
-export function InventoryPage() {
+export function InventoryPage({
+  initiallyAdding = false,
+}: {
+  initiallyAdding?: boolean;
+}) {
   const [params, setParams] = useSearchParams();
+  const navigate = useNavigate();
+  const online = useOnline();
+  const [adding, setAdding] = useState(initiallyAdding);
+  const [saving, setSaving] = useState(false);
   const filters: InventoryFilters = {
     page: pageNumber(params.get('page')),
-    search: params.get('search') || '',
+    search: (params.get('search') || '').slice(0, 150),
     category:
       params.get('category') === 'iphone'
         ? 'iphone'
@@ -79,145 +111,304 @@ export function InventoryPage() {
           : '',
   };
   const query = useInventory(filters);
-  function search(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    const values = new FormData(event.currentTarget);
-    const next = new URLSearchParams();
-    for (const key of ['search', 'category', 'isActive']) {
-      const value = String(values.get(key) || '').trim();
+  function update(values: Record<string, string>) {
+    const next = new URLSearchParams(params);
+    next.delete('page');
+    for (const [key, value] of Object.entries(values)) {
       if (value) next.set(key, value);
+      else next.delete(key);
     }
     setParams(next);
   }
+  function search(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const values = new FormData(event.currentTarget);
+    update({
+      search: String(values.get('search') || '').trim(),
+      category: String(values.get('category') || ''),
+      isActive: String(values.get('isActive') || ''),
+    });
+  }
+  function closeCreate() {
+    if (saving) return;
+    setAdding(false);
+    if (initiallyAdding)
+      navigate(
+        '/admin/inventory' + (params.size ? '?' + params.toString() : ''),
+        { replace: true },
+      );
+  }
+  const ready = query.data?.data.reduce(
+    (sum, item) => sum + (item.stock?.readyPhysicalCount || 0),
+    0,
+  );
+  const activeUnits = query.data?.data.reduce(
+    (sum, item) => sum + (item.stock?.activeUnitCount || 0),
+    0,
+  );
+  const filtered = !!(filters.search || filters.category || filters.isActive);
   return (
-    <>
-      <header className="page-heading admin-detail-heading">
+    <div className="inventory-workspace">
+      <header className="inv-heading">
         <div>
-          <p className="eyebrow">Katalog & kesiapan fisik</p>
+          <p className="inv-kicker">Katalog / Manajemen perangkat</p>
           <h1>Inventaris</h1>
-          <p className="muted">
-            Kelola model, unit dan persiapan sebelum disewakan.
-          </p>
+          <p>Atur koleksi, tarif sewa, dan kesiapan setiap unit.</p>
         </div>
-        <Button asChild>
-          <Link to="/admin/inventory/new">Tambah model</Link>
-        </Button>
+        <div className="inv-heading-actions">
+          <Button
+            variant="outline"
+            aria-label="Perbarui inventaris"
+            disabled={query.isFetching}
+            onClick={() => void query.refetch()}
+          >
+            <ReloadIcon aria-hidden="true" />
+          </Button>
+          <Button disabled={!online} onClick={() => setAdding(true)}>
+            <PlusIcon aria-hidden="true" /> Tambah model
+          </Button>
+        </div>
       </header>
-      <form
-        className="admin-filter inventory-filter"
-        onSubmit={search}
-        key={params.toString()}
-      >
-        <label>
-          Nama model
-          <Input
-            name="search"
-            defaultValue={filters.search}
-            maxLength={150}
-            placeholder="Cari model..."
-          />
-        </label>
-        <label>
-          Kategori
-          <select name="category" defaultValue={filters.category}>
+      <section className="inv-summary" aria-label="Ringkasan inventaris">
+        <div>
+          <span>
+            Model {filtered ? 'sesuai filter' : 'terdaftar'}
+            <small>seluruh hasil</small>
+          </span>
+          <strong>{query.isError ? '-' : (query.data?.total ?? '-')}</strong>
+        </div>
+        <div>
+          <span>
+            Unit siap fisik <small>di halaman ini</small>
+          </span>
+          <strong>{query.isError ? '-' : (ready ?? '-')}</strong>
+        </div>
+        <div>
+          <span>
+            Unit aktif & layak <small>di halaman ini</small>
+          </span>
+          <strong>{query.isError ? '-' : (activeUnits ?? '-')}</strong>
+        </div>
+        <CubeIcon aria-hidden="true" />
+      </section>
+      <section className="inv-collection" aria-label="Koleksi perangkat">
+        <div className="inv-collection-header">
+          <div className="inv-category-tabs" aria-label="Filter cepat kategori">
+            {[
+              { value: '', label: 'Semua model' },
+              { value: 'iphone', label: 'iPhone' },
+              { value: 'accessory', label: 'Aksesori' },
+            ].map((tab) => (
+              <button
+                key={tab.value}
+                type="button"
+                aria-pressed={filters.category === tab.value}
+                onClick={() => update({ category: tab.value })}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+        </div>
+        <form className="inv-toolbar" onSubmit={search} key={params.toString()}>
+          <div className="inv-search">
+            <label htmlFor="inv-search" className="sr-only">
+              Nama model
+            </label>
+            <MagnifyingGlassIcon aria-hidden="true" />
+            <Input
+              id="inv-search"
+              name="search"
+              defaultValue={filters.search}
+              maxLength={150}
+              placeholder="Cari nama perangkat..."
+            />
+          </div>
+          <Button variant="outline" type="submit">
+            Cari
+          </Button>
+          <label className="sr-only" htmlFor="inv-category">
+            Kategori
+          </label>
+          <select
+            id="inv-category"
+            name="category"
+            defaultValue={filters.category}
+          >
             <option value="">Semua kategori</option>
             <option value="iphone">iPhone</option>
             <option value="accessory">Aksesori</option>
           </select>
-        </label>
-        <label>
-          Status katalog
-          <select name="isActive" defaultValue={filters.isActive}>
+          <label className="sr-only" htmlFor="inv-active">
+            Status katalog
+          </label>
+          <select
+            id="inv-active"
+            name="isActive"
+            defaultValue={filters.isActive}
+          >
             <option value="">Aktif & nonaktif</option>
             <option value="true">Aktif</option>
             <option value="false">Nonaktif</option>
           </select>
-        </label>
-        <Button type="submit">Cari</Button>
-      </form>
-      <p className="muted text-sm">
-        Stok siap menunjukkan kondisi fisik. Ketersediaan pada tanggal sewa
-        diperiksa terpisah.
-      </p>
-      {query.isPending ? (
-        <LoadingState text="Memuat inventaris..." />
-      ) : query.isError ? (
-        <ErrorState error={query.error} retry={() => void query.refetch()} />
-      ) : (
-        <>
-          {!query.data.data.length && (
-            <p className="info-note">Tidak ada model yang sesuai pencarian.</p>
-          )}
-          <div className="inventory-list">
-            {query.data.data.map((item) => (
-              <article className="inventory-row" key={item.id}>
-                <ItemPhoto
-                  key={item.photoPath}
-                  path={item.photoPath}
-                  name={item.name}
-                  className="item-photo-thumb"
-                />
-                <div>
-                  <h2>{item.name}</h2>
-                  <p className="muted text-sm">
-                    {item.category === 'iphone' ? 'iPhone' : 'Aksesori'} ·
-                    Katalog {item.isActive ? 'aktif' : 'nonaktif'}
-                  </p>
-                </div>
-                <div>
-                  <strong>
-                    {item.stock?.readyPhysicalCount || 0} siap fisik
-                  </strong>
-                  <p className="muted text-sm">
-                    {item.stock?.activeUnitCount || 0} aktif & layak
-                  </p>
-                </div>
-                <Button
-                  asChild
-                  variant="outline"
-                  className="inventory-row-action"
-                >
-                  <Link to={`/admin/inventory/${item.id}`}>
-                    Kelola {item.name}
-                  </Link>
-                </Button>
-              </article>
+        </form>
+        {filtered && (
+          <div className="inv-filter-caption">
+            <span>
+              {query.data && !query.isError
+                ? `${query.data.total} model ditemukan`
+                : 'Filter diterapkan'}
+              {filters.search ? ` untuk "${filters.search}"` : ''}
+            </span>
+            <button
+              type="button"
+              onClick={() => update({ search: '', category: '', isActive: '' })}
+            >
+              Reset filter
+            </button>
+          </div>
+        )}
+        {query.isPending ? (
+          <div
+            className="inv-card-grid inv-skeleton"
+            role="status"
+            aria-label="Memuat inventaris"
+          >
+            {[1, 2, 3].map((n) => (
+              <div key={n}>
+                <span />
+                <span />
+                <span />
+              </div>
             ))}
           </div>
-          <Pagination
-            page={filters.page}
-            total={query.data.total}
-            onPage={(page) => {
-              const next = new URLSearchParams(params);
-              next.set('page', String(page));
-              setParams(next);
-            }}
+        ) : query.isError ? (
+          <ErrorState error={query.error} retry={() => void query.refetch()} />
+        ) : !query.data.data.length ? (
+          <div className="inv-empty">
+            <CubeIcon aria-hidden="true" />
+            <h2>
+              {filtered
+                ? 'Tidak ada model yang sesuai'
+                : 'Koleksi perangkat masih kosong'}
+            </h2>
+            <p>
+              {filtered
+                ? 'Coba kata kunci atau kategori lain.'
+                : 'Tambahkan model dan tarif sebelum menyiapkan unit fisik.'}
+            </p>
+            <Button
+              variant="outline"
+              onClick={() =>
+                filtered
+                  ? update({ search: '', category: '', isActive: '' })
+                  : setAdding(true)
+              }
+              disabled={!filtered && !online}
+            >
+              {filtered ? 'Reset pencarian' : 'Tambah model pertama'}
+            </Button>
+          </div>
+        ) : (
+          <>
+            <div className="inv-card-grid">
+              {query.data.data.map((item) => (
+                <article className="inv-product" key={item.id}>
+                  <div className="inv-product-image">
+                    <ItemPhoto
+                      key={item.photoPath}
+                      path={item.photoPath}
+                      name={item.name}
+                    />
+                    <span
+                      className={
+                        'inv-catalog-badge' +
+                        (item.isActive ? ' is-active' : '')
+                      }
+                    >
+                      <i />
+                      {item.isActive ? 'Katalog aktif' : 'Nonaktif'}
+                    </span>
+                  </div>
+                  <div className="inv-product-body">
+                    <p className="inv-category">
+                      {item.category === 'iphone' ? 'iPhone' : 'Aksesori'}
+                    </p>
+                    <h2>{item.name}</h2>
+                    <div className="inv-main-price">
+                      <strong>{rupiah(item.price24h)}</strong>
+                      <span>/ 24 jam</span>
+                    </div>
+                    <div className="inv-other-prices">
+                      <span>
+                        6 jam <b>{rupiah(item.price6h)}</b>
+                      </span>
+                      <span>
+                        12 jam <b>{rupiah(item.price12h)}</b>
+                      </span>
+                    </div>
+                    <div className="inv-product-footer">
+                      <div>
+                        <span
+                          className={
+                            'inv-stock' +
+                            ((item.stock?.readyPhysicalCount || 0) > 0
+                              ? ' has-stock'
+                              : '')
+                          }
+                        >
+                          <i />
+                          {item.stock?.readyPhysicalCount || 0} siap fisik
+                        </span>
+                        <small>
+                          {item.stock?.activeUnitCount || 0} unit aktif & layak
+                        </small>
+                      </div>
+                      <Button variant="outline" asChild>
+                        <Link
+                          aria-label={'Kelola ' + item.name}
+                          to={'/admin/inventory/' + item.id}
+                        >
+                          Kelola
+                          <ChevronRightIcon aria-hidden="true" />
+                        </Link>
+                      </Button>
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+            <Pagination
+              page={filters.page}
+              total={query.data.total}
+              onPage={(page) => update({ page: String(page) })}
+            />
+          </>
+        )}
+      </section>
+      <p className="inv-stock-note">
+        <InfoCircledIcon aria-hidden="true" /> Stok siap menunjukkan kondisi
+        fisik. Ketersediaan pada tanggal sewa diperiksa terpisah.
+      </p>
+      {adding && (
+        <InventoryModal
+          title="Tambah model"
+          description="Isi informasi dan tarif. Foto dan unit fisik ditambahkan setelah model tersimpan."
+          busy={saving}
+          onClose={closeCreate}
+        >
+          <ItemForm
+            onBusy={setSaving}
+            onCancel={closeCreate}
+            onSaved={(item) => navigate('/admin/inventory/' + item.id)}
           />
-        </>
+        </InventoryModal>
       )}
-    </>
+    </div>
   );
 }
 export function NewInventoryItemPage() {
-  const navigate = useNavigate();
-  return (
-    <>
-      <Link className="back-link" to="/admin/inventory">
-        Inventaris
-      </Link>
-      <header className="page-heading">
-        <p className="eyebrow">Model baru</p>
-        <h1>Tambah ke katalog</h1>
-        <p className="muted">
-          Buat model, lalu tambahkan foto dan unit fisiknya.
-        </p>
-      </header>
-      <ItemForm
-        onCancel={() => navigate('/admin/inventory')}
-        onSaved={(item) => navigate(`/admin/inventory/${item.id}`)}
-      />
-    </>
-  );
+  return <InventoryPage initiallyAdding />;
 }
 export function InventoryDetailPage() {
   const { id = '' } = useParams();
@@ -232,6 +423,7 @@ function InventoryDetail({ id }: { id: string }) {
       'edit' | 'photo' | 'units' | 'active' | 'remove-photo' | null
     >(null),
     [unitBusy, setUnitBusy] = useState(false),
+    [modalBusy, setModalBusy] = useState(false),
     [message, setMessage] = useState('');
   function done(text: string) {
     setAction(null);
@@ -248,10 +440,7 @@ function InventoryDetail({ id }: { id: string }) {
   const model = item.data,
     busy = !!action || unitBusy;
   return (
-    <>
-      <Link className="back-link" to="/admin/inventory">
-        Inventaris
-      </Link>
+    <div className="inventory-workspace inv-detail-workspace">
       <header className="page-heading admin-detail-heading">
         <div>
           <p className="eyebrow">
@@ -268,7 +457,7 @@ function InventoryDetail({ id }: { id: string }) {
             void units.refetch();
           }}
         >
-          Perbarui inventaris
+          <ReloadIcon aria-hidden="true" /> Perbarui
         </Button>
       </header>
       {message && (
@@ -294,37 +483,42 @@ function InventoryDetail({ id }: { id: string }) {
             ))}
           </dl>
           <p>Isi paket: {model.includes.join(', ') || 'Tidak ada tambahan.'}</p>
-          <div className="form-actions">
+          <div className="inv-model-actions">
             <Button
               variant="outline"
               disabled={!online || busy}
               onClick={() => setAction('edit')}
             >
-              Edit model
+              <Pencil2Icon aria-hidden="true" /> Edit model
             </Button>
-            <Button
-              variant="outline"
+            <InventoryActionMenu
+              label="Tindakan model"
               disabled={!online || busy}
-              onClick={() => setAction('photo')}
             >
-              Ganti foto
-            </Button>
-            {model.photoPath && (
               <Button
                 variant="ghost"
                 disabled={!online || busy}
-                onClick={() => setAction('remove-photo')}
+                onClick={() => setAction('photo')}
               >
-                Lepas foto
+                <ImageIcon aria-hidden="true" /> Ganti foto
               </Button>
-            )}
-            <Button
-              variant="ghost"
-              disabled={!online || busy}
-              onClick={() => setAction('active')}
-            >
-              {model.isActive ? 'Nonaktifkan katalog' : 'Aktifkan katalog'}
-            </Button>
+              {model.photoPath && (
+                <Button
+                  variant="ghost"
+                  disabled={!online || busy}
+                  onClick={() => setAction('remove-photo')}
+                >
+                  Lepas foto
+                </Button>
+              )}
+              <Button
+                variant="ghost"
+                disabled={!online || busy}
+                onClick={() => setAction('active')}
+              >
+                {model.isActive ? 'Nonaktifkan katalog' : 'Aktifkan katalog'}
+              </Button>
+            </InventoryActionMenu>
           </div>
         </section>
         <section className="form-section inventory-unit-section">
@@ -332,7 +526,7 @@ function InventoryDetail({ id }: { id: string }) {
             <div>
               <h2>Unit fisik</h2>
               <p className="muted text-sm">
-                {units.data.total} unit · 20 per halaman
+                {units.data.total} unit · {PAGE_SIZE} per halaman
               </p>
             </div>
             <Button
@@ -340,7 +534,7 @@ function InventoryDetail({ id }: { id: string }) {
               disabled={!online || busy}
               onClick={() => setAction('units')}
             >
-              Tambah unit
+              <PlusIcon aria-hidden="true" /> Tambah unit
             </Button>
           </div>
           <p className="muted text-sm">
@@ -388,11 +582,21 @@ function InventoryDetail({ id }: { id: string }) {
         />
       )}
       {action === 'units' && (
-        <AddUnitsForm
-          item={model}
-          onCancel={() => setAction(null)}
-          onDone={() => done('Unit baru ditambahkan.')}
-        />
+        <InventoryModal
+          title="Tambah unit"
+          description={
+            model.name + ' - tambahkan unit fisik yang akan disewakan.'
+          }
+          busy={modalBusy}
+          onClose={() => setAction(null)}
+        >
+          <AddUnitsForm
+            onBusy={setModalBusy}
+            item={model}
+            onCancel={() => setAction(null)}
+            onDone={() => done('Unit baru ditambahkan.')}
+          />
+        </InventoryModal>
       )}
       {(action === 'active' || action === 'remove-photo') && (
         <InventoryConfirm
@@ -428,6 +632,6 @@ function InventoryDetail({ id }: { id: string }) {
           </p>
         </InventoryConfirm>
       )}
-    </>
+    </div>
   );
 }

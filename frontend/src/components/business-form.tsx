@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { isAxiosError } from 'axios';
 import { useMutation } from '@tanstack/react-query';
 import { Button } from './ui/button';
@@ -42,6 +42,7 @@ export function BusinessForm({
   file = false,
   idempotent = true,
   validate,
+  onBusy,
 }: {
   title: string;
   description?: string;
@@ -56,6 +57,7 @@ export function BusinessForm({
   file?: boolean;
   idempotent?: boolean;
   validate?: (input: ActionInput) => void;
+  onBusy?: (busy: boolean) => void;
 }) {
   const online = useOnline();
   const actionKey = useActionKey();
@@ -81,6 +83,10 @@ export function BusinessForm({
         setUncertain(true);
     },
   });
+  useEffect(() => {
+    onBusy?.(mutation.isPending);
+    return () => onBusy?.(false);
+  }, [mutation.isPending, onBusy]);
   function prepare(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setError(null);

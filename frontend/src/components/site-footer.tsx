@@ -62,9 +62,9 @@ export function SiteFooter() {
             <span aria-hidden="true">&copy;</span> {new Date().getFullYear()}{' '}
             iRent Semarang. Seluruh hak dilindungi.
           </p>
-          <Button variant="ghost" className="footer-action" asChild>
-            <Link to="/terms">Ketentuan sewa</Link>
-          </Button>
+          <Link className="footer-terms-link" to="/terms">
+            Ketentuan sewa
+          </Link>
         </div>
       </div>
       <div className="site-footer-wordmark" aria-hidden="true">

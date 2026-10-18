@@ -1,3 +1,4 @@
+import { InventoryActionMenu } from './action-menu';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,10 +20,12 @@ export function AddUnitsForm({
   item,
   onDone,
   onCancel,
+  onBusy,
 }: {
   item: InventoryItem;
   onDone: () => void;
   onCancel: () => void;
+  onBusy?: (busy: boolean) => void;
 }) {
   const online = useOnline();
   const [value, setValue] = useState(''),
@@ -73,6 +76,7 @@ export function AddUnitsForm({
     return (
       <InventoryConfirm
         createsRecords
+        onBusy={onBusy}
         save={() => inventoryApi.addUnits(item.id, review)}
         onSaved={onDone}
         onCancel={() => setReview(null)}
@@ -271,11 +275,76 @@ export function UnitRows({
         const disabled = !online || busy || !!selection;
         return (
           <article className="inventory-unit" key={unit.id}>
-            <header className="section-heading">
-              <h3>{unit.code}</h3>
-              <span className="status-badge">
-                {physicalLabels[unit.physicalStatus]}
-              </span>
+            <header className="inv-unit-header">
+              <div className="inv-unit-title">
+                <h3>{unit.code}</h3>
+                <span
+                  className={
+                    'inv-unit-status is-' +
+                    (unit.conditionStatus === 'maintenance'
+                      ? 'maintenance'
+                      : unit.physicalStatus)
+                  }
+                >
+                  <i />
+                  {unit.conditionStatus === 'maintenance'
+                    ? 'Dalam perawatan'
+                    : physicalLabels[unit.physicalStatus]}
+                </span>
+              </div>
+              <div className="inv-unit-actions">
+                {' '}
+                {unit.conditionStatus === 'maintenance' &&
+                  unit.physicalStatus === 'awaiting_check' && (
+                    <Button
+                      variant="outline"
+                      disabled={disabled}
+                      aria-label={'Selesaikan perawatan ' + unit.code}
+                      onClick={() => select(unit, 'maintenance')}
+                    >
+                      Selesaikan perawatan
+                    </Button>
+                  )}
+                {unit.conditionStatus === 'layak' &&
+                  unit.physicalStatus === 'preparing' && (
+                    <Button
+                      variant="outline"
+                      disabled={disabled || !canPrepare}
+                      aria-label={'Selesaikan persiapan ' + unit.code}
+                      onClick={() => select(unit, 'preparation')}
+                    >
+                      Tandai siap
+                    </Button>
+                  )}
+                {unit.conditionStatus === 'layak' &&
+                  unit.physicalStatus === 'ready' && (
+                    <InventoryActionMenu
+                      label={'Tindakan unit ' + unit.code}
+                      disabled={disabled}
+                    >
+                      <Button
+                        variant="outline"
+                        disabled={disabled || !free}
+                        aria-label={
+                          (unit.isActive ? 'Nonaktifkan' : 'Aktifkan') +
+                          ' ' +
+                          unit.code
+                        }
+                        onClick={() => select(unit, 'active')}
+                      >
+                        {unit.isActive ? 'Nonaktifkan unit' : 'Aktifkan unit'}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        disabled={disabled || !free}
+                        aria-label={'Mulai perawatan ' + unit.code}
+                        onClick={() => select(unit, 'start')}
+                      >
+                        Mulai perawatan
+                      </Button>
+                    </InventoryActionMenu>
+                  )}
+              </div>
             </header>
             <p className="muted text-sm">
               {unit.isActive ? 'Unit aktif' : 'Unit nonaktif'} · Kondisi{' '}
@@ -296,47 +365,6 @@ export function UnitRows({
                 detail booking.
               </p>
             )}
-            <div className="form-actions">
-              {unit.conditionStatus === 'layak' &&
-                unit.physicalStatus === 'ready' && (
-                  <>
-                    <Button
-                      variant="outline"
-                      disabled={disabled || !free}
-                      onClick={() => select(unit, 'active')}
-                    >
-                      {unit.isActive ? 'Nonaktifkan' : 'Aktifkan'} {unit.code}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      disabled={disabled || !free}
-                      onClick={() => select(unit, 'start')}
-                    >
-                      Mulai perawatan {unit.code}
-                    </Button>
-                  </>
-                )}
-              {unit.conditionStatus === 'maintenance' &&
-                unit.physicalStatus === 'awaiting_check' && (
-                  <Button
-                    variant="outline"
-                    disabled={disabled}
-                    onClick={() => select(unit, 'maintenance')}
-                  >
-                    Selesaikan perawatan {unit.code}
-                  </Button>
-                )}
-              {unit.conditionStatus === 'layak' &&
-                unit.physicalStatus === 'preparing' && (
-                  <Button
-                    variant="outline"
-                    disabled={disabled || !canPrepare}
-                    onClick={() => select(unit, 'preparation')}
-                  >
-                    Selesaikan persiapan {unit.code}
-                  </Button>
-                )}
-            </div>
             {selection?.unit.id === unit.id && (
               <UnitAction
                 key={selection.action}

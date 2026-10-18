@@ -1,3 +1,8 @@
+import { PAGE_SIZE } from '@/lib/pagination';
+import {
+  ChevronLeftIcon as PaginationPreviousIcon,
+  ChevronRightIcon as PaginationNextIcon,
+} from '@radix-ui/react-icons';
 import {
   CubeIcon,
   CalendarIcon,
@@ -539,24 +544,30 @@ export function NewBookingPage() {
                   </button>
                 </p>
               )}
-              {catalog.data && catalog.data.total > 12 && (
+              {catalog.data && catalog.data.total > PAGE_SIZE && (
                 <div className="pagination">
                   <Button
+                    className="pagination-chevron"
+                    aria-label="Sebelumnya"
+                    title="Sebelumnya"
                     type="button"
                     variant="ghost"
                     disabled={catalogPage === 1}
                     onClick={() => setCatalogPage(catalogPage - 1)}
                   >
-                    Sebelumnya
+                    <PaginationPreviousIcon aria-hidden="true" />
                   </Button>
                   <span>{catalogPage}</span>
                   <Button
+                    className="pagination-chevron"
+                    aria-label="Berikutnya"
+                    title="Berikutnya"
                     type="button"
                     variant="ghost"
-                    disabled={catalogPage * 12 >= catalog.data.total}
+                    disabled={catalogPage * PAGE_SIZE >= catalog.data.total}
                     onClick={() => setCatalogPage(catalogPage + 1)}
                   >
-                    Berikutnya
+                    <PaginationNextIcon aria-hidden="true" />
                   </Button>
                 </div>
               )}

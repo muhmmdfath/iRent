@@ -1,3 +1,8 @@
+import { PAGE_SIZE } from '@/lib/pagination';
+import {
+  ChevronLeftIcon as PaginationPreviousIcon,
+  ChevronRightIcon as PaginationNextIcon,
+} from '@radix-ui/react-icons';
 import { Button } from '@/components/ui/button';
 export function Pager({
   page,
@@ -11,23 +16,29 @@ export function Pager({
   busy?: boolean;
 }) {
   return (
-    <div className="form-actions">
+    <div className="form-actions am-pager">
       <Button
+        className="pagination-chevron"
+        aria-label="Sebelumnya"
+        title="Sebelumnya"
         variant="outline"
         disabled={busy || page === 1}
         onClick={() => setPage(page - 1)}
       >
-        Sebelumnya
+        <PaginationPreviousIcon aria-hidden="true" />
       </Button>
       <span>
         Halaman {page} · {total} hasil
       </span>
       <Button
+        className="pagination-chevron"
+        aria-label="Berikutnya"
+        title="Berikutnya"
         variant="outline"
-        disabled={busy || page * 20 >= total}
+        disabled={busy || page * PAGE_SIZE >= total}
         onClick={() => setPage(page + 1)}
       >
-        Berikutnya
+        <PaginationNextIcon aria-hidden="true" />
       </Button>
     </div>
   );

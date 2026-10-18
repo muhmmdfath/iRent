@@ -28,6 +28,9 @@ beforeAll(async () => {
 });
 beforeEach(() =>
   server.use(
+    http.get(base + '/admin/tasks', () =>
+      HttpResponse.json({ data: [], total: 0, asOf: new Date().toISOString() }),
+    ),
     http.get(base + '/auth/session', () => HttpResponse.json(adminSession)),
     http.get(base + '/bookings/test-booking', () =>
       HttpResponse.json(adminBooking),
@@ -130,7 +133,9 @@ it('requires receipt confirmation and keeps an underpaid booking unconfirmed', a
   await user.click(
     screen.getByRole('button', { name: 'Konfirmasi pencatatan' }),
   );
-  expect(await screen.findByRole('status')).toHaveTextContent('Sisa tagihan');
+  expect(
+    await within(screen.getByRole('main')).findByRole('status'),
+  ).toHaveTextContent('Sisa tagihan');
   expect(csrf).toBe('admin-csrf');
   expect(payload).toMatchObject({
     amount: '10000',
@@ -165,9 +170,9 @@ it('reuses the same idempotency key after an uncertain response without automati
   await user.click(
     screen.getByRole('button', { name: 'Konfirmasi pencatatan' }),
   );
-  expect(await screen.findByRole('alert')).toHaveTextContent(
-    'Layanan sedang bermasalah',
-  );
+  expect(
+    await within(screen.getByRole('main')).findByRole('alert'),
+  ).toHaveTextContent('Layanan sedang bermasalah');
   expect(keys).toHaveLength(1);
   await user.click(screen.getByRole('button', { name: 'Coba simpan lagi' }));
   await waitFor(() => expect(keys).toHaveLength(2));
@@ -197,9 +202,9 @@ it('rejects a proof with a reason without invoking booking cancellation', async 
   await user.click(
     screen.getByRole('button', { name: 'Konfirmasi penolakan bukti' }),
   );
-  expect(await screen.findByRole('status')).toHaveTextContent(
-    'Booking tidak dibatalkan',
-  );
+  expect(
+    await within(screen.getByRole('main')).findByRole('status'),
+  ).toHaveTextContent('Booking tidak dibatalkan');
   expect(reason).toEqual({ reason: 'Nominal tidak terlihat jelas.' });
 });
 it('requires transfer reference and actual receipt acknowledgement before review', async () => {
@@ -249,9 +254,9 @@ it('preserves rupiah beyond Number precision when recording a cash settlement', 
   await user.click(
     screen.getByRole('button', { name: 'Konfirmasi pencatatan' }),
   );
-  expect(await screen.findByRole('status')).toHaveTextContent(
-    'Tagihan sudah lunas',
-  );
+  expect(
+    await within(screen.getByRole('main')).findByRole('status'),
+  ).toHaveTextContent('Tagihan sudah lunas');
   expect(payload).toMatchObject({ amount: '9007199254740993', method: 'cash' });
 });
 it('blocks settlement entry while a customer settlement proof is pending', async () => {
@@ -279,7 +284,7 @@ it('does not expose administrator payment actions to a customer', async () => {
   );
   mount();
   expect(
-    await screen.findByRole('heading', { name: /Selamat datang/ }),
+    await screen.findByRole('heading', { name: 'Untuk rencana berikutnya' }),
   ).toBeVisible();
   expect(
     screen.queryByRole('heading', { name: 'Detail booking' }),

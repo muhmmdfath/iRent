@@ -1,0 +1,142 @@
+/* Fixed-height resource rows keep unit identities and time allocations aligned. */
+:root body .admin-workspace .am-calendar-board {
+  width: max(100%, calc(240px + var(--calendar-days) * 96px));
+}
+:root body .admin-workspace .am-cal-head,
+:root body .admin-workspace .am-cal-unit {
+  grid-template-columns: 240px minmax(0, 1fr);
+}
+:root body .admin-workspace .am-cal-head {
+  height: 64px;
+}
+:root body .admin-workspace .am-cal-head > strong {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  color: #55515b;
+}
+:root body .admin-workspace .am-cal-unit {
+  height: var(--calendar-row-height);
+}
+:root body .admin-workspace .am-cal-unit > header {
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  overflow: hidden;
+}
+:root body .admin-workspace .am-cal-unit > header > div {
+  flex: 1;
+}
+:root body .admin-workspace .am-cal-unit h2 {
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 0 0 2px;
+  white-space: nowrap;
+}
+:root body .admin-workspace .am-cal-unit header p {
+  font-size: 11px;
+  line-height: 1.5;
+  margin: 0 0 7px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #89828d;
+}
+:root body .admin-workspace .am-cal-unit .am-badge {
+  font-size: 9px;
+  line-height: 1.4;
+  padding: 3px 6px;
+  max-width: 100%;
+  white-space: nowrap;
+}
+:root body .admin-workspace button.gantt-detail-trigger {
+  padding: 0;
+  min-width: 28px;
+  width: 28px;
+  height: 28px;
+  min-height: 28px;
+  flex: 0 0 28px;
+  border: 0;
+  background: transparent;
+  color: #98909a;
+  border-radius: 7px;
+}
+:root body .admin-workspace button.gantt-detail-trigger:hover {
+  background: #fff0f5;
+  color: #ff4081;
+}
+:root body .admin-workspace .am-cal-tracks {
+  position: relative;
+  padding: 0;
+  min-width: 0;
+}
+:root body .admin-workspace .am-cal-track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 30px;
+  margin: 0;
+}
+:root body .admin-workspace .am-cal-tracks > p {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding: 0 24px;
+  font-size: 11px;
+  color: #aaa3ae;
+}
+:root body .admin-workspace .am-cal-unit:hover > header {
+  background: #fffbfd;
+}
+.gantt-detail-list {
+  display: grid;
+  gap: 20px;
+}
+.gantt-detail-list > article {
+  border: 1px solid #ece6eb;
+  padding: 18px;
+  border-radius: 12px;
+}
+.gantt-detail-list dl {
+  display: grid;
+  gap: 12px;
+  margin: 16px 0 0;
+}
+.gantt-detail-list dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.gantt-detail-list dt {
+  color: #89828d;
+  font-size: 11px;
+}
+.gantt-detail-list dd {
+  margin: 0;
+  font-size: 12px;
+}
+@media (max-width: 600px) {
+  :root body .admin-workspace .am-calendar-board {
+    width: calc(200px + var(--calendar-days) * 88px);
+  }
+  :root body .admin-workspace .am-cal-head,
+  :root body .admin-workspace .am-cal-unit {
+    grid-template-columns: 200px minmax(0, 1fr);
+  }
+  :root body .admin-workspace .am-cal-unit > header {
+    gap: 8px;
+    padding: 10px;
+  }
+  :root body .admin-workspace .am-cal-unit > header .item-photo {
+    width: 28px;
+    flex-basis: 28px;
+    height: 34px;
+  }
+}
+
+:root body .admin-workspace .am-cal-unit > header .item-photo {
+  flex: 0 0 34px;
+  width: 34px;
+  height: 42px;
+}

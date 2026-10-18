@@ -1,3 +1,4 @@
+import { PAGE_SIZE } from '@/lib/pagination';
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAdminRead, type Page } from '@/admin/manage/hooks';
@@ -30,7 +31,7 @@ export function TasksPanel() {
   const query = useAdminRead<Page<Task>>(
     'all-tasks',
     '/admin/tasks',
-    { kind, page, limit: 20 },
+    { kind, page, limit: PAGE_SIZE },
     true,
   );
   const sound = useRef<AlertSound | null>(null);
@@ -233,7 +234,7 @@ export function TasksPanel() {
               </Button>
             </div>
           )}
-          {query.data.total > 20 && (
+          {query.data.total > PAGE_SIZE && (
             <Pager
               page={page}
               total={query.data.total}

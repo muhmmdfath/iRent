@@ -1,5 +1,11 @@
 import { beforeAll, beforeEach, expect, it, vi } from 'vitest';
-import { render, screen, waitFor, configure } from '@testing-library/react';
+import {
+  render,
+  screen,
+  waitFor,
+  configure,
+  within,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
 import { http, HttpResponse } from 'msw';
@@ -13,6 +19,14 @@ const base = 'http://localhost:3000/api';
 configure({ asyncUtilTimeout: 5000 });
 vi.setConfig({ testTimeout: 15000 });
 beforeAll(async () => {
+  // JSDOM does not implement the native dialog lifecycle; browser tests cover focus/Escape.
+  HTMLDialogElement.prototype.showModal = function () {
+    this.setAttribute('open', '');
+  };
+  HTMLDialogElement.prototype.close = function () {
+    this.removeAttribute('open');
+  };
+
   await import('@/admin/inventory/pages');
 });
 let item: typeof inventoryItem, units: ReturnType<typeof inventoryUnits>;
@@ -72,22 +86,22 @@ it('creates a model only after review and keeps large rupiah values as strings',
   );
   mount('/admin/inventory/new');
   const user = userEvent.setup();
-  await screen.findByRole('heading', { name: 'Tambah ke katalog' });
-  await user.type(screen.getByLabelText('Nama model'), 'iPhone Model Baru');
+  const modal = within(
+    await screen.findByRole('dialog', { name: 'Tambah model' }),
+  );
+  await user.type(modal.getByLabelText('Nama model'), 'iPhone Model Baru');
   for (const hour of ['6', '12', '24'])
     await user.type(
-      screen.getByLabelText(`Tarif ${hour} jam (rupiah)`),
+      modal.getByLabelText(`Tarif ${hour} jam (rupiah)`),
       '9007199254740993',
     );
   await user.type(
-    screen.getByLabelText('Isi paket (satu per baris)'),
+    modal.getByLabelText('Isi paket (satu per baris)'),
     'Kabel\nTas',
   );
-  await user.click(screen.getByRole('button', { name: 'Periksa model' }));
+  await user.click(modal.getByRole('button', { name: 'Periksa model' }));
   expect(calls).toBe(0);
-  await user.click(
-    screen.getByRole('button', { name: 'Konfirmasi perubahan' }),
-  );
+  await user.click(modal.getByRole('button', { name: 'Konfirmasi perubahan' }));
   await waitFor(() => expect(calls).toBe(1));
   expect(body).toMatchObject({
     category: 'iphone',
@@ -168,9 +182,9 @@ it('blocks repeated accessory creation after an uncertain server response', asyn
   await user.click(
     screen.getByRole('button', { name: 'Konfirmasi perubahan' }),
   );
-  expect(await screen.findByRole('alert')).toHaveTextContent(
-    'belum dapat dipastikan',
-  );
+  expect(
+    await within(screen.getByRole('dialog')).findByRole('alert'),
+  ).toHaveTextContent('belum dapat dipastikan');
   expect(
     screen.getByRole('button', { name: 'Konfirmasi perubahan' }),
   ).toBeDisabled();
@@ -233,6 +247,7 @@ it('enables preparation at its deadline but never while a return is unverified',
 it('keeps reserved or rented units out of maintenance and deactivation', async () => {
   units[0].activeAllocationCount = 1;
   mount();
+  await userEvent.click(await screen.findByLabelText('Tindakan unit IPH-001'));
   expect(
     await screen.findByRole('button', { name: 'Nonaktifkan IPH-001' }),
   ).toBeDisabled();
@@ -258,6 +273,7 @@ it('records maintenance reason and marks the selected unit for repair', async ()
   );
   mount();
   const user = userEvent.setup();
+  await user.click(await screen.findByLabelText('Tindakan unit IPH-001'));
   await user.click(
     await screen.findByRole('button', { name: 'Mulai perawatan IPH-001' }),
   );
@@ -310,6 +326,7 @@ it('finishes preparation through the API and refreshes physical readiness', asyn
   await screen.findByText(
     'Kondisi unit diperbarui. Periksa status dan batas persiapan terbaru.',
   );
+  await user.click(await screen.findByLabelText('Tindakan unit IPH-003'));
   expect(
     screen.getByRole('button', { name: 'Nonaktifkan IPH-003' }),
   ).toBeEnabled();
@@ -320,7 +337,7 @@ it('prevents customer access to inventory routes', async () => {
   );
   mount('/admin/inventory');
   expect(
-    await screen.findByRole('heading', { name: /Selamat datang/ }),
+    await screen.findByRole('heading', { name: 'Untuk rencana berikutnya' }),
   ).toBeVisible();
   expect(
     screen.queryByRole('heading', { name: 'Inventaris' }),

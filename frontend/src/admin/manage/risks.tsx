@@ -1,3 +1,11 @@
+import { PAGE_SIZE } from '@/lib/pagination';
+import {
+  AdminWorkspace,
+  AdminHeader,
+  AdminBadge,
+  AdminHint,
+  AdminEmpty,
+} from './workspace';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAdminRead, type Page } from './hooks';
@@ -23,24 +31,26 @@ const reasons: Record<string, string> = {
 };
 export function RisksPage() {
   const [page, setPage] = useState(1);
+  const [followUpPage, setFollowUpPage] = useState(1);
   const query = useAdminRead<Page<Risk>>(
     'risks',
     '/admin/bookings/at-risk',
-    { page, limit: 20 },
+    { page, limit: PAGE_SIZE },
     true,
   );
   const followUp = useAdminRead<
     { id: string; code: string; initialStartAt: string; noShowDueAt: string }[]
   >('delivery-follow-up', '/admin/bookings/delivery-follow-up', {}, true);
   return (
-    <>
-      <header className="page-heading">
-        <h1>Risiko & tindak lanjut</h1>
-        <p>
-          Booking tetap aktif. Periksa unit pengganti atau hubungi pelanggan
-          untuk penanganan dan refund penuh jika diperlukan.
-        </p>
-      </header>
+    <AdminWorkspace kind="risks">
+      <AdminHeader
+        title="Risiko & tindak lanjut"
+        description="Prioritaskan unit yang bermasalah dan pengambilan yang perlu penanganan."
+      />
+      <AdminHint>
+        Booking tetap aktif. Periksa unit pengganti atau hubungi pelanggan
+        sebelum mengambil keputusan.
+      </AdminHint>
       <section className="form-section">
         <h2>Unit berisiko</h2>
         {query.isPending ? (
@@ -51,7 +61,7 @@ export function RisksPage() {
           <>
             {query.data.data.map((row) => (
               <article
-                className="management-row task-overdue"
+                className="management-row am-risk-row"
                 key={row.bookingItemId}
               >
                 <div>
@@ -61,11 +71,13 @@ export function RisksPage() {
                   <p>
                     {row.itemName} · {wib(row.startAt)}
                   </p>
-                  <p>
-                    {row.reasons
-                      .map((reason) => reasons[reason] || reason)
-                      .join(' · ')}
-                  </p>
+                  <div className="am-reason-tags">
+                    {row.reasons.map((reason) => (
+                      <AdminBadge key={reason} tone="red">
+                        {reasons[reason] || reason}
+                      </AdminBadge>
+                    ))}
+                  </div>
                 </div>
                 <Link
                   className="text-link"
@@ -76,7 +88,10 @@ export function RisksPage() {
               </article>
             ))}
             {!query.data.data.length && (
-              <p className="muted">Tidak ada unit berisiko saat ini.</p>
+              <AdminEmpty
+                title="Tidak ada unit berisiko saat ini."
+                description="Risiko baru akan muncul jika kesiapan unit mengancam jadwal booking."
+              />
             )}
             <Pager page={page} total={query.data.total} setPage={setPage} />
           </>
@@ -97,20 +112,27 @@ export function RisksPage() {
           />
         ) : (
           <>
-            {followUp.data.map((row) => (
-              <article className="management-row" key={row.id}>
-                <div>
-                  <h3>{row.code}</h3>
-                  <p>
-                    Ambil {wib(row.initialStartAt)} · Batas no-show{' '}
-                    {wib(row.noShowDueAt)}
-                  </p>
-                </div>
-                <Link className="text-link" to={'/admin/bookings/' + row.id}>
-                  Periksa delivery
-                </Link>
-              </article>
-            ))}
+            {followUp.data
+              .slice((followUpPage - 1) * PAGE_SIZE, followUpPage * PAGE_SIZE)
+              .map((row) => (
+                <article className="management-row" key={row.id}>
+                  <div>
+                    <h3>{row.code}</h3>
+                    <p>
+                      Ambil {wib(row.initialStartAt)} · Batas no-show{' '}
+                      {wib(row.noShowDueAt)}
+                    </p>
+                  </div>
+                  <Link className="text-link" to={'/admin/bookings/' + row.id}>
+                    Periksa delivery
+                  </Link>
+                </article>
+              ))}
+            <Pager
+              page={followUpPage}
+              total={followUp.data.length}
+              setPage={setFollowUpPage}
+            />
             {!followUp.data.length && (
               <p className="muted">
                 Tidak ada delivery yang perlu ditindaklanjuti.
@@ -119,6 +141,6 @@ export function RisksPage() {
           </>
         )}
       </section>
-    </>
+    </AdminWorkspace>
   );
 }

@@ -1,6 +1,11 @@
 import { test, expect } from '@playwright/test';
 import { adminSession } from '../admin-fixtures';
 import { inventoryItem, inventoryUnits } from '../inventory-fixtures';
+test.beforeEach(async ({ page }) => {
+  await page.route('**/api/notifications?**', (r) =>
+    r.fulfill({ json: { data: [], total: 0, unread: 0, page: 1, limit: 10 } }),
+  );
+});
 for (const width of [360, 390, 768, 1024, 1440]) {
   test(`inventory and maintenance review remain usable at ${width}px`, async ({
     page,
@@ -93,6 +98,7 @@ test('photo upload uses multipart and restores the model image after a failed ol
   );
   await page.goto('/admin/inventory/test-item');
   await expect(page.getByText('Foto belum tersedia')).toBeVisible();
+  await page.getByLabel('Tindakan model', { exact: true }).click();
   await page.getByRole('button', { name: 'Ganti foto' }).click();
   await page.getByLabel('Pilih foto').setInputFiles({
     name: 'foto.png',

@@ -1,3 +1,11 @@
+import './bookings-workspace.css';
+import {
+  ChevronLeftIcon,
+  ReloadIcon,
+  PersonIcon,
+  CalendarIcon,
+  FileTextIcon,
+} from '@radix-ui/react-icons';
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -69,15 +77,18 @@ export function AdminBookingDetailPage() {
     setMessage(text);
   }
   return (
-    <>
-      <Link className="back-link" to="/admin/bookings">
-        Semua booking
+    <div className="admin-booking-detail">
+      <Link className="admin-inline-link abd-back" to="/admin/bookings">
+        <ChevronLeftIcon aria-hidden="true" /> Semua booking
       </Link>
       <header className="page-heading admin-detail-heading">
         <div>
-          <p className="eyebrow">{booking.code}</p>
+          <p className="eyebrow">Transaksi / {booking.code}</p>
           <h1>Detail booking</h1>
-          <p className="status-badge">{statusLabels[money.booking.status]}</p>
+          <p className={'abw-status abw-status-' + money.booking.status}>
+            <i />
+            {statusLabels[money.booking.status]}
+          </p>
         </div>
         <Button
           variant="outline"
@@ -87,7 +98,7 @@ export function AdminBookingDetailPage() {
             void financial.refetch();
           }}
         >
-          Perbarui data
+          <ReloadIcon aria-hidden="true" /> Perbarui data
         </Button>
       </header>
       {message && (
@@ -101,90 +112,59 @@ export function AdminBookingDetailPage() {
           tidak dibatalkan otomatis karena keterlambatan pemeriksaan.
         </p>
       )}
+      <nav className="abd-section-nav" aria-label="Bagian detail booking">
+        <a className="admin-inline-link" href="#abd-renter">
+          <PersonIcon aria-hidden="true" /> Penyewa & perangkat
+        </a>
+        <a className="admin-inline-link" href="#abd-payments">
+          <FileTextIcon aria-hidden="true" /> Bukti pembayaran
+        </a>
+        <a className="admin-inline-link" href="#abd-operations">
+          <CalendarIcon aria-hidden="true" /> Operasional
+        </a>
+      </nav>
       <div className="admin-detail-grid">
         <div>
-          <section className="form-section admin-customer-info">
-            <h2>Penyewa & pengambilan</h2>
-            <h3>{booking.customer?.name || 'Pelanggan'}</h3>
-            {booking.customer?.phone && <p>{booking.customer.phone}</p>}
-            {booking.customer?.email && <p>{booking.customer.email}</p>}
-            <p>
-              {booking.deliveryType === 'pickup'
-                ? 'Ambil di toko'
-                : `Antar-jemput · ${booking.deliveryZoneNameSnapshot}`}
-            </p>
-            {booking.deliveryAddress && (
-              <p className="muted">{booking.deliveryAddress}</p>
-            )}
-          </section>
-          <section className="form-section">
-            <h2>Perangkat & jadwal</h2>
-            {booking.items?.map((item) => (
-              <div className="booking-unit-row" key={item.id}>
-                <ItemPhoto
-                  path={item.item?.photoPath || null}
-                  name={item.itemNameSnapshot}
-                  className="item-photo-thumb"
-                />
-                <div>
-                  <h3>{item.itemNameSnapshot}</h3>
-                  <p className="muted text-sm">Unit {item.unitCodeSnapshot}</p>
-                  <p>Ambil {wib(item.startAt)}</p>
-                  <p>Kembali {wib(item.currentEndAt)}</p>
+          <div className="abd-overview">
+            <section
+              id="abd-renter"
+              className="form-section admin-customer-info"
+            >
+              <h2>Penyewa & pengambilan</h2>
+              <h3>{booking.customer?.name || 'Pelanggan'}</h3>
+              {booking.customer?.phone && <p>{booking.customer.phone}</p>}
+              {booking.customer?.email && <p>{booking.customer.email}</p>}
+              <p>
+                {booking.deliveryType === 'pickup'
+                  ? 'Ambil di toko'
+                  : `Antar-jemput · ${booking.deliveryZoneNameSnapshot}`}
+              </p>
+              {booking.deliveryAddress && (
+                <p className="muted">{booking.deliveryAddress}</p>
+              )}
+            </section>
+            <section className="form-section">
+              <h2>Perangkat & jadwal</h2>
+              {booking.items?.map((item) => (
+                <div className="booking-unit-row" key={item.id}>
+                  <ItemPhoto
+                    path={item.item?.photoPath || null}
+                    name={item.itemNameSnapshot}
+                    className="item-photo-thumb"
+                  />
+                  <div>
+                    <h3>{item.itemNameSnapshot}</h3>
+                    <p className="muted text-sm">
+                      Unit {item.unitCodeSnapshot}
+                    </p>
+                    <p>Ambil {wib(item.startAt)}</p>
+                    <p>Kembali {wib(item.currentEndAt)}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </section>
-          <BookingOperations
-            booking={booking}
-            money={money}
-            paymentBusy={!!action || refundBusy || extraBusy}
-            onBusy={setOperationBusy}
-            onDone={done}
-          />
-          <ExtensionList booking={money.booking} admin />
-          <RefundPanel
-            key={id}
-            booking={booking}
-            money={money}
-            admin
-            disabled={!!action || operationBusy || extraBusy}
-            onBusy={setRefundBusy}
-          />
-          <UnitReplacement
-            booking={money.booking}
-            disabled={
-              !!action ||
-              operationBusy ||
-              refundBusy ||
-              receiptBusy ||
-              deliveryBusy
-            }
-            onBusy={setReplacementBusy}
-          />
-          <DeliveryFailure
-            booking={money.booking}
-            disabled={
-              !!action ||
-              operationBusy ||
-              refundBusy ||
-              receiptBusy ||
-              replacementBusy
-            }
-            onBusy={setDeliveryBusy}
-          />
-          <AdvancedPayments
-            money={money}
-            disabled={
-              !!action ||
-              operationBusy ||
-              refundBusy ||
-              replacementBusy ||
-              deliveryBusy
-            }
-            onBusy={setReceiptBusy}
-          />
-          <section className="form-section">
+              ))}
+            </section>
+          </div>
+          <section id="abd-payments" className="form-section abd-payment-panel">
             <div className="section-heading">
               <h2>Bukti & verifikasi</h2>
               <span className="muted text-sm">Booking awal dan pelunasan</span>
@@ -298,6 +278,57 @@ export function AdminBookingDetailPage() {
               )),
             )}
           </section>
+          <div id="abd-operations" className="abd-operation-sections">
+            <BookingOperations
+              booking={booking}
+              money={money}
+              paymentBusy={!!action || refundBusy || extraBusy}
+              onBusy={setOperationBusy}
+              onDone={done}
+            />
+            <ExtensionList booking={money.booking} admin />
+            <RefundPanel
+              key={id}
+              booking={booking}
+              money={money}
+              admin
+              disabled={!!action || operationBusy || extraBusy}
+              onBusy={setRefundBusy}
+            />
+            <UnitReplacement
+              booking={money.booking}
+              disabled={
+                !!action ||
+                operationBusy ||
+                refundBusy ||
+                receiptBusy ||
+                deliveryBusy
+              }
+              onBusy={setReplacementBusy}
+            />
+            <DeliveryFailure
+              booking={money.booking}
+              disabled={
+                !!action ||
+                operationBusy ||
+                refundBusy ||
+                receiptBusy ||
+                replacementBusy
+              }
+              onBusy={setDeliveryBusy}
+            />
+            <AdvancedPayments
+              money={money}
+              disabled={
+                !!action ||
+                operationBusy ||
+                refundBusy ||
+                replacementBusy ||
+                deliveryBusy
+              }
+              onBusy={setReceiptBusy}
+            />
+          </div>
           <details className="optional-fields">
             <summary>Riwayat status booking</summary>
             {booking.statusLogs?.map((log) => (
@@ -383,6 +414,6 @@ export function AdminBookingDetailPage() {
           )}
         </aside>
       </div>
-    </>
+    </div>
   );
 }

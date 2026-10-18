@@ -173,9 +173,7 @@ test('calendar range checks availability and carries the selected dates', async 
   await expect(page.getByText('2 unit tersedia', { exact: true })).toHaveCount(
     0,
   );
-  await expect(page.locator('.rental-calendar')).not.toHaveClass(
-    /has-active-filter/,
-  );
+  await expect(page.locator('.calendar-filter')).not.toHaveClass(/is-filtered/);
   await page.keyboard.press('Escape');
   await expect(
     page.getByRole('heading', { name: 'Pilih rentang tanggal', exact: true }),

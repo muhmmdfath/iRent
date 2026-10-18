@@ -1,3 +1,8 @@
+import { PAGE_SIZE } from '@/lib/pagination';
+import {
+  ChevronLeftIcon as PaginationPreviousIcon,
+  ChevronRightIcon as PaginationNextIcon,
+} from '@radix-ui/react-icons';
 import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useSearchParams } from 'react-router-dom';
@@ -160,19 +165,25 @@ export function CatalogPage() {
           </div>
           <div className="pagination">
             <Button
+              className="pagination-chevron"
+              aria-label="Sebelumnya"
+              title="Sebelumnya"
               variant="outline"
               disabled={page === 1}
               onClick={() => setPage(page - 1)}
             >
-              Sebelumnya
+              <PaginationPreviousIcon aria-hidden="true" />
             </Button>
             <span>Halaman {page}</span>
             <Button
+              className="pagination-chevron"
+              aria-label="Berikutnya"
+              title="Berikutnya"
               variant="outline"
-              disabled={page * 12 >= query.data.total}
+              disabled={page * PAGE_SIZE >= query.data.total}
               onClick={() => setPage(page + 1)}
             >
-              Berikutnya
+              <PaginationNextIcon aria-hidden="true" />
             </Button>
           </div>
         </>

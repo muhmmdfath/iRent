@@ -1,3 +1,12 @@
+import { PAGE_SIZE } from '@/lib/pagination';
+import {
+  AdminWorkspace,
+  AdminHeader,
+  AdminBadge,
+  AdminHint,
+  AdminTabs,
+  AdminEmpty,
+} from '@/admin/manage/workspace';
 import { reasonField } from '@/components/action-fields';
 import { useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -187,7 +196,7 @@ export function ExtensionDetailPage() {
     });
   }
   return (
-    <>
+    <div className={admin ? 'admin-workspace am-extension-detail' : undefined}>
       <Link
         className="back-link"
         to={`${admin ? '/admin' : '/app'}/bookings/${id}`}
@@ -584,7 +593,7 @@ export function ExtensionDetailPage() {
           )}
         </section>
       )}
-    </>
+    </div>
   );
 }
 export function ExtensionQueuePage() {
@@ -595,33 +604,52 @@ export function ExtensionQueuePage() {
   >(
     'extensions',
     '/admin/extensions',
-    { status: status || undefined, page, limit: 20 },
+    { status: status || undefined, page, limit: PAGE_SIZE },
     true,
   );
+  function filter(value: string) {
+    setStatus(value);
+    setPage(1);
+  }
   return (
-    <>
-      <header className="page-heading">
-        <h1>Perpanjangan</h1>
-        <p>Periksa quotation ongkir, dana tambahan dan jadwal seluruh unit.</p>
-      </header>
-      <label className="field">
-        Status pengajuan
-        <select
-          className="select-input"
-          value={status}
-          onChange={(event) => {
-            setStatus(event.target.value);
-            setPage(1);
-          }}
-        >
-          <option value="">Semua status</option>
-          {Object.entries(extensionLabels).map(([value, label]) => (
-            <option key={value} value={value}>
-              {label}
-            </option>
-          ))}
-        </select>
-      </label>
+    <AdminWorkspace kind="extensions">
+      <AdminHeader
+        title="Perpanjangan"
+        description="Periksa ongkir tambahan, pembayaran, dan usulan jadwal setiap unit."
+      />
+      <AdminHint>
+        Jadwal awal tetap berlaku sampai perpanjangan disetujui. Quotation
+        ongkir belum menahan slot unit.
+      </AdminHint>
+      <AdminTabs
+        value={status}
+        onChange={filter}
+        label="Filter cepat perpanjangan"
+        options={[
+          { value: '', label: 'Semua pengajuan' },
+          { value: 'draft_quote', label: 'Perlu ongkir' },
+          { value: 'menunggu_konfirmasi', label: 'Perlu verifikasi' },
+          { value: 'disetujui', label: 'Disetujui' },
+        ]}
+      />
+      <div className="am-queue-filter">
+        <label className="field">
+          Status pengajuan
+          <select
+            className="select-input"
+            value={status}
+            onChange={(event) => filter(event.target.value)}
+          >
+            <option value="">Semua status</option>
+            {Object.entries(extensionLabels).map(([value, label]) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
+          </select>
+        </label>
+        {query.data && <p>{query.data.total} pengajuan sesuai filter</p>}
+      </div>
       {query.isPending ? (
         <LoadingState text="Memuat perpanjangan..." />
       ) : query.isError ? (
@@ -629,29 +657,55 @@ export function ExtensionQueuePage() {
       ) : (
         <>
           <section className="form-section">
+            <header className="am-panel-heading">
+              <h2>Antrean pengajuan</h2>
+              <span>Jadwal & pembayaran tambahan</span>
+            </header>
             {query.data.data.map((extension) => (
-              <article className="management-row" key={extension.id}>
+              <article className="am-queue-row" key={extension.id}>
                 <div>
-                  <h2>{extension.booking.code}</h2>
-                  <p>
-                    {extension.booking.customer.name} ·{' '}
-                    {extensionLabels[extension.status]}
-                  </p>
-                  <p>
-                    {rupiah(extension.amountDue)} · {extension.items.length}{' '}
-                    unit
-                  </p>
+                  <h2>{extension.booking.customer.name}</h2>
+                  <p>{extension.booking.code}</p>
+                  <small>{extension.items.length} unit diajukan</small>
                 </div>
-                <Link
-                  className="text-link"
-                  to={`/admin/bookings/${extension.bookingId}/extensions/${extension.id}`}
-                >
-                  Periksa perpanjangan
-                </Link>
+                <div>
+                  <AdminBadge
+                    tone={
+                      extension.status === 'disetujui'
+                        ? 'green'
+                        : extension.status === 'menunggu_konfirmasi'
+                          ? 'pink'
+                          : extension.status === 'draft_quote'
+                            ? 'amber'
+                            : 'neutral'
+                    }
+                  >
+                    {extensionLabels[extension.status]}
+                  </AdminBadge>
+                  {extension.confirmationDueAt && (
+                    <small>
+                      Batas konfirmasi {wib(extension.confirmationDueAt)}
+                    </small>
+                  )}
+                </div>
+                <div className="am-queue-amount">
+                  <strong>{rupiah(extension.amountDue)}</strong>
+                  <small>Nominal pengajuan</small>
+                </div>
+                <Button variant="outline" asChild>
+                  <Link
+                    to={`/admin/bookings/${extension.bookingId}/extensions/${extension.id}`}
+                  >
+                    Periksa perpanjangan
+                  </Link>
+                </Button>
               </article>
             ))}
             {!query.data.data.length && (
-              <p className="muted">Belum ada pengajuan yang sesuai.</p>
+              <AdminEmpty
+                title="Belum ada pengajuan yang sesuai."
+                description="Pengajuan baru akan muncul di antrean sesuai statusnya."
+              />
             )}
           </section>
           <Pager
@@ -662,6 +716,6 @@ export function ExtensionQueuePage() {
           />
         </>
       )}
-    </>
+    </AdminWorkspace>
   );
 }
