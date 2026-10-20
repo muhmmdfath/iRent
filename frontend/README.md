@@ -40,7 +40,9 @@ Buka `http://127.0.0.1:5180`. Jalankan [backend](../backend/README.md) pada `127
 - `src/components/ui/`: komponen dasar shadcn/ui yang dipakai bersama pada alur aplikasi.
 - `src/services/`: Axios dan React Query; `src/stores/`: state navigasi Zustand.
 - `src/hooks/`, `src/lib/`: utilitas bersama; `src/styles.css`: token dan layout.
-- `public/admin/`: aset PWA yang sudah ada; `tests/`: Vitest/MSW dan Playwright.
+- `public/admin/`: aset PWA/push admin; `public/manifest.webmanifest` dan `public/sw.js`: instalasi pelanggan tanpa cache offline. `tests/`: Vitest/MSW dan Playwright.
+
+Ajakan memasang PWA tersedia untuk admin dan pelanggan setelah login, dengan tombol pemasangan browser atau panduan Safari untuk iPhone. Pilihan **Nanti saja** menunda tujuh hari. Pemasangan pelanggan tidak mengaktifkan Web Push; push tetap khusus admin. Detail hosting dan batas dukungan perangkat ada di [PWA.md](PWA.md).
 
 ## Perintah verifikasi
 

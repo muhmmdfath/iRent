@@ -101,7 +101,10 @@ describe('session and access', () => {
       }),
     ).toBeVisible();
     expect(screen.queryByText('Administrator')).not.toBeInTheDocument();
-    expect(document.querySelector('link[rel="manifest"]')).toBeNull();
+    expect(document.querySelector('link[rel="manifest"]')).toHaveAttribute(
+      'href',
+      '/manifest.webmanifest',
+    );
   });
   it('restores an admin session and attaches the admin manifest only inside admin routes', async () => {
     current = session('admin');

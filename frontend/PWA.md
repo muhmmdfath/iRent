@@ -1,6 +1,14 @@
-# Integrasi PWA admin
+# Integrasi PWA admin dan pelanggan
 
-Panel React sudah terpasang: `/admin/notifications` mengatur izin/langganan push dan riwayat pengiriman; beranda `/admin/` menampilkan tugas, aktivasi suara serta pengakuan lokal. Layout memasang manifest hanya saat sesi admin aktif. Implementasi memakai `src/admin/notifications/` dan aset `public/admin/*`.
+Panel React sudah terpasang: `/admin/notifications` mengatur izin/langganan push dan riwayat pengiriman; beranda `/admin/` menampilkan tugas, aktivasi suara serta pengakuan lokal. Layout memilih manifest sesuai role. Implementasi push memakai `src/admin/notifications/` dan aset `public/admin/*`.
+
+## Ajakan pemasangan
+
+Admin dan pelanggan mendapat banner ringkas di halaman aplikasi setelah login. Pada browser yang menyediakan `beforeinstallprompt`, tombol **Pasang aplikasi** membuka dialog browser hanya setelah diklik. iPhone/iPad mendapat **Cara pasang** dengan panduan Safari. **Nanti saja** menyembunyikan ajakan selama tujuh hari per role pada browser tersebut. Ajakan disembunyikan ketika aplikasi dibuka dalam mode standalone atau browser melaporkan pemasangan berhasil. Kemunculan dialog native mengikuti dukungan dan kelayakan pemasangan dari browser.
+
+Pelanggan memakai `/manifest.webmanifest`, mulai di `/app/`, dengan scope `/` agar katalog tetap terbuka dalam aplikasi. Worker `/sw.js` hanya mendukung instalasi, tanpa cache offline atau push pelanggan. Admin tetap memakai manifest dan worker dengan scope `/admin/`; scope yang lebih spesifik mempertahankan penanganan push admin. Instalasi tidak meminta izin notifikasi secara otomatis.
+
+Hosting harus menyajikan `/manifest.webmanifest`, `/sw.js`, serta aset `/admin/*` sebagai file asli sebelum fallback SPA. Gunakan HTTPS pada produksi; localhost dapat dipakai untuk development. Tes browser menyimulasikan event pemasangan, penundaan, mode standalone dan panduan iPhone; pemasangan melalui sistem operasi tetap perlu diverifikasi pada perangkat nyata.
 
 Kontrol UI dan helper telah diuji otomatis. Pengiriman push ke perangkat fisik, pemasangan PWA, perilaku saat aplikasi ditutup/layar terkunci dan deployment HTTPS belum diverifikasi. Konfigurasi VAPID/worker diperlukan untuk pengiriman sebenarnya; tersedianya tombol tidak berarti perangkat sudah menerima notifikasi.
 

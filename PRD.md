@@ -642,6 +642,10 @@ Laporan kas memakai waktu pembayaran/refund sebenarnya. Pembayaran pending dan r
 
 ## 15. PWA dan worker; WhatsApp ditunda
 
+### Pemasangan PWA admin dan pelanggan
+
+Keputusan 20 Oktober 2026: admin dan pelanggan mendapat ajakan memasang aplikasi pada halaman setelah login. Tombol pemasangan memakai dialog browser jika tersedia; iPhone/iPad mendapat panduan Safari. Ajakan dapat ditunda tujuh hari dan tidak tampil saat aplikasi dibuka dalam mode standalone. Manifest admin tetap berscope `/admin/`; pelanggan mulai di `/app/` dengan scope `/` untuk mencakup katalog. Tidak ada cache offline data privat. Web Push tetap khusus admin; pemasangan pelanggan tidak menambahkan langganan push atau meminta izin notifikasi otomatis.
+
 ### PWA admin
 
 Cakupan panel `/admin/`, tanpa Play Store/App Store. `/admin` diarahkan ke `/admin/`. Manifest: name/short_name `iRent Admin`, start_url `/admin/`, scope `/admin/`, display `standalone`, background `#FFF0F5`, theme `#F28CB1`, ikon PNG 192 dan 512. Start URL berada di dalam scope mengikuti [spesifikasi Web App Manifest W3C](https://www.w3.org/TR/appmanifest/#scope-member).
