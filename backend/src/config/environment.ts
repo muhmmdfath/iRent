@@ -20,7 +20,7 @@ class Environment {
   @IsInt()
   @Min(1)
   @Max(65535)
-  PORT = 3000;
+  PORT = 3030;
 
   @IsString()
   @IsNotEmpty()

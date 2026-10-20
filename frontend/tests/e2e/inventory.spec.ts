@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import { adminSession } from '../admin-fixtures';
 import { inventoryItem, inventoryUnits } from '../inventory-fixtures';
 test.beforeEach(async ({ page }) => {

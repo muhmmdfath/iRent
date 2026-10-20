@@ -116,14 +116,20 @@ it('completes the profile without exposing the stored NIK after saving', async (
   await user.type(screen.getByLabelText('Alamat'), 'Alamat uji Semarang');
   await user.type(screen.getByLabelText('Nomor HP aktif'), '081234567890');
   await user.type(screen.getByLabelText('NIK'), '0000000000000001');
+  await user.click(screen.getByRole('button', { name: 'Tampilkan NIK' }));
+  expect(screen.getByLabelText('NIK')).toHaveAttribute('type', 'text');
   await user.click(screen.getByRole('button', { name: 'Simpan profil' }));
-  expect(await screen.findByRole('status')).toHaveTextContent(
-    'Profil tersimpan',
-  );
+  expect(
+    await screen.findByText('Profil tersimpan. Kamu bisa melanjutkan booking.'),
+  ).toBeVisible();
   expect(saved?.nik).toBe('0000000000000001');
   expect(
     screen.queryByDisplayValue('0000000000000001'),
   ).not.toBeInTheDocument();
+  expect(screen.getByLabelText('Ganti NIK (opsional)')).toHaveAttribute(
+    'type',
+    'password',
+  );
 });
 
 it('shows the catalog photograph and package price without claiming calendar availability', async () => {
@@ -246,7 +252,7 @@ it('checks price and availability then retries booking with the same action key'
   ])
     await user.click(screen.getByLabelText(label));
   await user.click(screen.getByRole('button', { name: 'Buat booking' }));
-  await screen.findByRole('alert');
+  await screen.findAllByRole('alert');
   await user.click(screen.getByRole('button', { name: 'Buat booking' }));
   expect(
     await screen.findByRole('heading', { name: 'Pembayaran booking' }),
@@ -313,7 +319,7 @@ it('uploads immediately, keeps the retry key, and awaits admin verification with
   await user.click(
     screen.getByRole('button', { name: 'Upload bukti pembayaran' }),
   );
-  await screen.findByRole('alert');
+  await screen.findAllByRole('alert');
   await user.click(
     screen.getByRole('button', { name: 'Upload bukti pembayaran' }),
   );

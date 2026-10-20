@@ -271,7 +271,7 @@ it('keeps the same action key when retrying a lost response', async () => {
   mount();
   const user = await reviewReturn();
   await user.click(screen.getByRole('button', { name: 'Konfirmasi tindakan' }));
-  await screen.findByRole('alert');
+  await screen.findAllByRole('alert');
   await user.click(screen.getByRole('button', { name: 'Konfirmasi tindakan' }));
   await waitFor(() => expect(keys).toHaveLength(2));
   expect(keys[0]).toBe(keys[1]);

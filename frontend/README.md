@@ -29,7 +29,7 @@ Copy-Item .env.example .env
 npm run dev
 ```
 
-Buka `http://127.0.0.1:5173`. Jalankan [backend](../backend/README.md) pada `127.0.0.1:3000`, dengan `CORS_ORIGINS=http://127.0.0.1:5173`. Vite memproksikan `/api` dan `/media` tanpa mengubah Origin. Gunakan hostname yang sama agar cookie konsisten. `.env` opsional karena API default `/api`; semua `VITE_*` bersifat publik.
+Buka `http://127.0.0.1:5180`. Jalankan [backend](../backend/README.md) pada `127.0.0.1:3030`, dengan `CORS_ORIGINS=http://127.0.0.1:5180`. Vite memproksikan `/api` dan `/media` tanpa mengubah Origin. Gunakan hostname yang sama agar cookie konsisten. `.env` opsional karena API default `/api`; semua `VITE_*` bersifat publik.
 
 ## Struktur
 
@@ -112,3 +112,7 @@ Perapihan motion 15 Oktober 2026: navbar fixed transparan dengan blur, hero pera
 Beranda admin `/admin/` kini mengutamakan indikator operasional, agenda pengambilan/pengembalian WIB dan satu antrean prioritas. Status booking dan lima transaksi terbaru memakai API aktual; suara serta pengakuan lokal tugas tetap tersedia. Footer pada beranda admin dipadatkan. Backend dan data tidak berubah.
 
 Notifikasi: toast bersama berada di `components/toast-viewport.tsx` dan dapat dipanggil melalui `notify({ kind, title, message })` dari `stores/notifications.ts`. Respons mutasi bisnis memicu feedback melalui interceptor API; request pengecekan availability/quote tidak menghasilkan toast. Lonceng navbar membaca `/api/notifications` tiap 30 detik dengan read state tersimpan di server.
+
+## Simulasi sewa nyata
+
+[Laporan 20 Oktober 2026](../docs/qa/2026-10-20-rental-simulation.md) mencakup daftar sampai return/persiapan, kontensi stok, kurang bayar, bukti ditolak, inbox privat dan refund manual. Jalankan helper `node scripts/start-rental-qa.cjs` dari root, set `IRENT_QA_CONTROL` ke file lokal yang ditampilkan, lalu dari frontend jalankan `npx playwright test --config playwright.qa.config.ts`. Backend harus sudah dibangun. Port QA 3031/5181 dan database acak terpisah dari aplikasi utama. Hentikan helper dan jalankan `node scripts/cleanup-rental-qa.cjs` dari root setelah selesai. Pengiriman push dan transfer bank nyata tidak termasuk simulasi ini.

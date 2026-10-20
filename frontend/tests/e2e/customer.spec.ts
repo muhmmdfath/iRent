@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import { item, financial, policy, customerSession } from '../customer-fixtures';
 for (const width of [360, 390, 768, 1024, 1440]) {
   test(`customer catalog and payment fit ${width}px`, async ({
@@ -45,6 +45,17 @@ for (const width of [360, 390, 768, 1024, 1440]) {
       path: info.outputPath(`catalog-${width}.png`),
       fullPage: true,
     });
+    await page.route('**/api/bookings/availability', (route) =>
+      route.fulfill({
+        json: {
+          available: true,
+          reservesStock: false,
+          items: [
+            { itemId: item.id, requestedQuantity: 1, availableQuantity: 1 },
+          ],
+        },
+      }),
+    );
     await page.goto('/app/new?itemId=test-item');
     await expect(
       page.getByRole('heading', { name: 'Atur jadwal sewamu.' }),

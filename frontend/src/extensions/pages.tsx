@@ -8,13 +8,14 @@ import {
   AdminEmpty,
 } from '@/admin/manage/workspace';
 import { reasonField } from '@/components/action-fields';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useSession } from '@/auth/session';
 import { api } from '@/services/api';
 import { customerApi } from '@/customer/api';
-import { BusinessForm, type ActionField } from '@/components/business-form';
+import { BusinessForm } from '@/components/business-form';
+import { ExtensionRequestForm } from './components/extension-request-form';
 import { receiptFields, validateReceipt } from '@/components/receipt-fields';
 import { DownloadButton } from '@/components/download-button';
 import { Button } from '@/components/ui/button';
@@ -23,7 +24,6 @@ import { ProofViewer } from '@/admin/components/proof-viewer';
 import { ItemPhoto } from '@/customer/components/item-photo';
 import { rupiah, wib } from '@/customer/format';
 import { useInventoryClock } from '@/admin/inventory/hooks';
-import type { Financial } from '@/customer/types';
 import type { Extension, ExtensionDetail } from './types';
 import { extensionLabels, pendingExtension } from './types';
 import { useAdminRead, type Page } from '@/admin/manage/hooks';
@@ -55,39 +55,11 @@ export function NewExtensionPage() {
   const { id = '' } = useParams();
   const navigate = useNavigate();
   const { money } = useExtensionContext(id);
-  const created = useRef('');
   if (money.isPending) return <LoadingState text="Memuat unit sewa..." />;
   if (money.isError)
     return (
       <ErrorState error={money.error} retry={() => void money.refetch()} />
     );
-  const booking = money.data.booking;
-  const busy = new Set(
-    (booking.extensions || [])
-      .filter((extension) => pendingExtension(extension.status))
-      .flatMap((extension) =>
-        extension.items.map((item) => item.bookingItemId),
-      ),
-  );
-  const units =
-    booking.items?.filter(
-      (item) =>
-        ['in_use', 'return_pending'].includes(item.useStatus) &&
-        !busy.has(item.id),
-    ) || [];
-  const fields: ActionField[] = units.map((item) => ({
-    name: item.id,
-    label: `${item.itemNameSnapshot} · ${item.unitCodeSnapshot} · kembali ${wib(item.currentEndAt)}`,
-    type: 'select',
-    optional: true,
-    options: [
-      { value: '', label: 'Tidak diperpanjang' },
-      ...[6, 12, 24].map((hours) => ({
-        value: String(hours),
-        label: `Tambah ${hours} jam${(hours === 6 ? item.tariff6hSnapshot : hours === 12 ? item.tariff12hSnapshot : item.tariff24hSnapshot) ? ' · ' + rupiah((hours === 6 ? item.tariff6hSnapshot : hours === 12 ? item.tariff12hSnapshot : item.tariff24hSnapshot)!) : ''}`,
-      })),
-    ],
-  }));
   return (
     <>
       <Link className="back-link" to={'/app/bookings/' + id}>
@@ -100,44 +72,13 @@ export function NewExtensionPage() {
           jadwal kembali setiap unit.
         </p>
       </header>
-      {booking.status !== 'berjalan' || !units.length ? (
-        <p className="info-note">
-          Tidak ada unit yang dapat diajukan saat ini. Unit mungkin sudah
-          kembali atau memiliki pengajuan aktif.
-        </p>
-      ) : (
-        <BusinessForm
-          title="Ajukan perpanjangan"
-          description="Tambahan dimulai dari jadwal kembali lama, maksimal total tujuh hari dan dalam jam operasional. Penjemputan terpisah menunggu quotation ongkir admin tanpa menahan slot; setelah disetujui, batas bayar 30 menit dimulai. Server memeriksa jadwal dan stok saat pengajuan."
-          fields={fields}
-          validate={(input) => {
-            if (!Object.values(input).some(Boolean))
-              throw new Error('Pilih minimal satu unit.');
-          }}
-          execute={async (input, key) => {
-            const result = (
-              await api.post<Financial & { decision: string }>(
-                `/bookings/${id}/extensions`,
-                {
-                  items: Object.entries(input)
-                    .filter(([, value]) => value)
-                    .map(([bookingItemId, addedHours]) => ({
-                      bookingItemId,
-                      addedHours: Number(addedHours),
-                    })),
-                },
-                { headers: { 'Idempotency-Key': key } },
-              )
-            ).data;
-            created.current = result.decision;
-            return result;
-          }}
-          onDone={() =>
-            navigate(`/app/bookings/${id}/extensions/${created.current}`)
-          }
-          onCancel={() => navigate('/app/bookings/' + id)}
-        />
-      )}
+      <ExtensionRequestForm
+        booking={money.data.booking}
+        onDone={(extensionId) =>
+          navigate(`/app/bookings/${id}/extensions/${extensionId}`)
+        }
+        onCancel={() => navigate('/app/bookings/' + id)}
+      />
     </>
   );
 }

@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import { item } from '../customer-fixtures';
 for (const width of [360, 390, 768, 1024, 1440]) {
   test(`catalog shell navigation, search and filters work at ${width}px`, async ({

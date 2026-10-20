@@ -1,6 +1,9 @@
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 export const server = setupServer(
+  http.get('http://localhost:3000/api/customer/profile', () =>
+    HttpResponse.json(null),
+  ),
   http.get('http://localhost:3000/api/notifications', () =>
     HttpResponse.json({ data: [], total: 0, unread: 0, page: 1, limit: 10 }),
   ),

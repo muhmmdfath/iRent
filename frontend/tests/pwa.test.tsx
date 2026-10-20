@@ -1,4 +1,4 @@
-import { beforeEach, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { render, screen, waitFor, configure } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router-dom';
@@ -31,10 +31,12 @@ configure({ asyncUtilTimeout: 5000 });
 vi.setConfig({ testTimeout: 15000 });
 beforeEach(() => {
   vi.clearAllMocks();
+  vi.stubGlobal('Notification', { permission: 'default' });
   server.use(
     http.get(base + '/auth/session', () => HttpResponse.json(adminSession)),
   );
 });
+afterEach(() => vi.unstubAllGlobals());
 function mount(route: string) {
   return render(
     <Providers>

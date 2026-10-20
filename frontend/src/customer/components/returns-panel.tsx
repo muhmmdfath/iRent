@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { api } from '@/services/api';
 import { BusinessForm } from '@/components/business-form';
+import { ActionDialog } from '@/components/action-dialog';
 import { Button } from '@/components/ui/button';
 import { rupiah, wib } from '../format';
 import type { Booking } from '../types';
 export function CustomerReturns({ booking }: { booking: Booking }) {
   const [selected, setSelected] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
   if (!['berjalan', 'selesai'].includes(booking.status)) return null;
   return (
     <section className="form-section">
@@ -51,8 +53,9 @@ export function CustomerReturns({ booking }: { booking: Booking }) {
           </div>
           {item.useStatus === 'in_use' && (
             <Button
+              className="rental-action"
               variant="outline"
-              disabled={!!selected}
+              disabled={busy}
               onClick={() => setSelected(item.id)}
             >
               Sudah mengembalikan {item.unitCodeSnapshot}
@@ -61,20 +64,27 @@ export function CustomerReturns({ booking }: { booking: Booking }) {
         </article>
       ))}
       {selected && (
-        <BusinessForm
-          key={selected}
+        <ActionDialog
           title="Laporkan pengembalian unit"
-          description={`Unit ${booking.items?.find((item) => item.id === selected)?.unitCodeSnapshot}: pastikan sudah diserahkan ke toko atau petugas penjemput. Waktu laporan ini tidak digunakan sebagai dasar denda; admin memverifikasi waktu penerimaan fisik.`}
-          execute={async (_, key) =>
-            api.post(
-              `/bookings/${booking.id}/items/${selected}/return-report`,
-              {},
-              { headers: { 'Idempotency-Key': key } },
-            )
-          }
-          onDone={() => setSelected(null)}
-          onCancel={() => setSelected(null)}
-        />
+          busy={busy}
+          onClose={() => setSelected(null)}
+        >
+          <BusinessForm
+            key={selected}
+            title="Laporkan pengembalian unit"
+            description={`Unit ${booking.items?.find((item) => item.id === selected)?.unitCodeSnapshot}: pastikan sudah diserahkan ke toko atau petugas penjemput. Waktu laporan ini tidak digunakan sebagai dasar denda; admin memverifikasi waktu penerimaan fisik.`}
+            execute={async (_, key) =>
+              api.post(
+                `/bookings/${booking.id}/items/${selected}/return-report`,
+                {},
+                { headers: { 'Idempotency-Key': key } },
+              )
+            }
+            onDone={() => setSelected(null)}
+            onCancel={() => setSelected(null)}
+            onBusy={setBusy}
+          />
+        </ActionDialog>
       )}
     </section>
   );

@@ -1,4 +1,7 @@
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { ActionDialog } from '@/components/action-dialog';
+import { ExtensionRequestForm } from './extension-request-form';
 import { Button } from '@/components/ui/button';
 import { rupiah, wib } from '@/customer/format';
 import type { Booking } from '@/customer/types';
@@ -11,15 +14,19 @@ export function ExtensionList({
   booking: Booking;
   admin?: boolean;
 }) {
+  const navigate = useNavigate();
+  const [requestOpen, setRequestOpen] = useState(false);
+  const [busy, setBusy] = useState(false);
   return (
     <section className="form-section">
       <div className="section-heading">
         <h2>Perpanjangan</h2>
         {!admin && booking.status === 'berjalan' && (
-          <Button asChild>
-            <Link to={`/app/bookings/${booking.id}/extensions/new`}>
-              Ajukan perpanjangan
-            </Link>
+          <Button
+            className="rental-action"
+            onClick={() => setRequestOpen(true)}
+          >
+            Ajukan perpanjangan
           </Button>
         )}
       </div>
@@ -51,6 +58,23 @@ export function ExtensionList({
         ))
       ) : (
         <p className="muted">Belum ada pengajuan perpanjangan.</p>
+      )}
+      {requestOpen && (
+        <ActionDialog
+          title="Ajukan perpanjangan"
+          busy={busy}
+          onClose={() => setRequestOpen(false)}
+        >
+          <ExtensionRequestForm
+            booking={booking}
+            onCancel={() => setRequestOpen(false)}
+            onBusy={setBusy}
+            onDone={(extensionId) => {
+              setRequestOpen(false);
+              navigate(`/app/bookings/${booking.id}/extensions/${extensionId}`);
+            }}
+          />
+        </ActionDialog>
       )}
     </section>
   );

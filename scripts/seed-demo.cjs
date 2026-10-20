@@ -4,7 +4,8 @@ const path = require("node:path");
 const { randomUUID } = require("node:crypto");
 const root = path.resolve(__dirname, "..");
 const sharp = require(path.join(root, "backend/node_modules/sharp"));
-const base = process.env.IRENT_DEMO_BASE_URL || "http://127.0.0.1:5173";
+const base = process.env.IRENT_DEMO_BASE_URL || "http://127.0.0.1:5180";
+const inventoryOnly = process.argv.includes("--inventory-only");
 const directory = path.join(root, "backend/storage/demo");
 const manifestPath = path.join(directory, "manifest.json");
 fs.mkdirSync(directory, { recursive: true });
@@ -52,6 +53,12 @@ const products = [
   },
   {
     slug: "airpods-pro",
+    includes: [
+      "AirPods Pro kiri dan kanan",
+      "Charging case",
+      "Kabel pengisian",
+      "Ear tips cadangan",
+    ],
     name: "AirPods Pro",
     category: "accessory",
     prices: ["15000", "25000", "40000"],
@@ -61,6 +68,7 @@ const products = [
   },
   {
     slug: "tripod",
+    includes: ["Tripod", "Phone holder", "Tas penyimpanan"],
     name: "Tripod & Phone Holder",
     category: "accessory",
     prices: ["10000", "15000", "25000"],
@@ -68,6 +76,12 @@ const products = [
   },
   {
     slug: "powerbank",
+    includes: [
+      "Powerbank 20.000 mAh",
+      "Kabel USB-C",
+      "Kabel Lightning",
+      "Pouch penyimpanan",
+    ],
     name: "Powerbank 20.000 mAh",
     category: "accessory",
     prices: ["10000", "15000", "20000"],
@@ -177,7 +191,7 @@ async function main() {
       .replace(/^\uFEFF/, ""),
   );
   const admin = await login(credentials.admin);
-  const customer = await login(credentials.customer);
+  const customer = inventoryOnly ? null : await login(credentials.customer);
   try {
     const existing = await api(admin, "/admin/items?limit=100");
     for (const product of products) {
@@ -205,8 +219,7 @@ async function main() {
                   "Paket simulasi lokal iRent",
                 ]
               : [
-                  "Unit aksesori",
-                  "Tas penyimpanan",
+                  ...(product.includes || ["Unit aksesori", "Tas penyimpanan"]),
                   "Paket simulasi lokal iRent",
                 ],
           price6h: product.prices[0],
@@ -242,6 +255,12 @@ async function main() {
         await api(admin, `/admin/items/${item.id}/photo`, "POST", form);
       }
       console.log(`Item tersedia: ${product.name}, ${product.quantity} unit.`);
+    }
+    if (inventoryOnly) {
+      console.log(
+        "Seed inventaris selesai: hanya model, unit, tarif, kelengkapan, dan foto.",
+      );
+      return;
     }
     const zones = await api(admin, "/admin/delivery-zones");
     for (const [name, fee] of [
@@ -378,7 +397,7 @@ async function main() {
   } finally {
     await Promise.allSettled([
       api(admin, "/auth/logout", "POST", {}),
-      api(customer, "/auth/logout", "POST", {}),
+      ...(customer ? [api(customer, "/auth/logout", "POST", {})] : []),
     ]);
   }
 }

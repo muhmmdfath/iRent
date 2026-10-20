@@ -1,4 +1,5 @@
 import { CustomerHomePage } from '@/customer/pages/customer-home-page';
+import { ProfileOnboarding } from '@/customer/components/profile-onboarding';
 import { Link } from 'react-router-dom';
 import { useSession } from '@/auth/session';
 import { roleHome } from '@/auth/navigation';
@@ -6,7 +7,13 @@ import { Button } from '@/components/ui/button';
 export function HomePage() {
   const user = useSession().data?.user;
   if (!user) return null;
-  if (user.role === 'customer') return <CustomerHomePage />;
+  if (user.role === 'customer')
+    return (
+      <>
+        <CustomerHomePage />
+        <ProfileOnboarding />
+      </>
+    );
   return (
     <>
       <header className="page-heading">

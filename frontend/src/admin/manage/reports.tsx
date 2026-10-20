@@ -1,5 +1,6 @@
 import { dateLabel, shiftDate } from '@/lib/calendar-dates';
 import { CalendarFilter } from '@/components/ui/calendar-filter';
+import { DisclosureSummary } from '@/components/ui/disclosure-summary';
 import { PAGE_SIZE } from '@/lib/pagination';
 import { AdminWorkspace, AdminHeader, AdminHint } from './workspace';
 import {
@@ -246,7 +247,9 @@ export function ReportsPage() {
                           : 'Transfer'}
                     </p>
                     <details className="am-journal-details">
-                      <summary>Catatan & jejak transaksi</summary>
+                      <DisclosureSummary>
+                        Catatan & jejak transaksi
+                      </DisclosureSummary>
                       <p className="muted">
                         Dicatat {wib(row.recordedAt)} oleh{' '}
                         {row.recordedActor?.name || 'Sistem'}

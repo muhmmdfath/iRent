@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import { item } from '../customer-fixtures';
 for (const width of [390, 1440]) {
   test(`pastel landing scroll motion and fixed transparent header work at ${width}px`, async ({

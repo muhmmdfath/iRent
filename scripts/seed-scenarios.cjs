@@ -351,7 +351,9 @@ async function main() {
           items: [
             {
               bookingItemId: picked.id,
-              addedHours: kind === "approved" ? 12 : 24,
+              // Leave room for the baseline iPhone 14 booking on day +2,
+              // including its one-hour preparation buffer.
+              addedHours: kind === "quote" ? 24 : 12,
             },
           ],
         },
@@ -547,7 +549,21 @@ async function main() {
     const riskyUse = await prisma.bookingItem.findUniqueOrThrow({
       where: { id: risky.created.items[0].id },
     });
-    if (riskyUse.itemUnitId !== lateUse.itemUnitId) {
+    // The baseline demo may already allocate this overdue tripod to another
+    // upcoming booking. Reuse that risk instead of forcing an overlapping swap.
+    const priorRisk = await prisma.bookingItem.findFirst({
+      where: {
+        itemUnitId: lateUse.itemUnitId,
+        useStatus: "allocated",
+        booking: { status: { in: ["menunggu_konfirmasi", "dikonfirmasi"] } },
+      },
+      orderBy: { startAt: "asc" },
+    });
+    if (priorRisk) {
+      risky.record.riskBookingId = priorRisk.bookingId;
+      save();
+    }
+    if (riskyUse.itemUnitId !== lateUse.itemUnitId && !priorRisk) {
       now = dayAt(11, -1);
       await step(
         risky.record,

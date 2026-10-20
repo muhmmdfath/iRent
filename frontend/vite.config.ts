@@ -6,15 +6,15 @@ export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: { alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) } },
   server: {
-    port: 5173,
+    port: 5180,
     strictPort: true,
     proxy: {
       '/api': {
-        target: process.env.IRENT_API_PROXY_TARGET || 'http://127.0.0.1:3000',
+        target: process.env.IRENT_API_PROXY_TARGET || 'http://127.0.0.1:3030',
         changeOrigin: false,
       },
       '/media': {
-        target: process.env.IRENT_API_PROXY_TARGET || 'http://127.0.0.1:3000',
+        target: process.env.IRENT_API_PROXY_TARGET || 'http://127.0.0.1:3030',
         changeOrigin: false,
       },
     },

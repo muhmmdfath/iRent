@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { ArrowLeftIcon } from '@radix-ui/react-icons';
 import { Link, useParams } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
@@ -15,6 +16,7 @@ import { rupiah, statusLabels, wib } from '../format';
 import { ItemPhoto } from '../components/item-photo';
 import { Deadline } from '../components/deadline';
 import type { Financial, Obligation } from '../types';
+import './payment-page.css';
 export function PaymentPage() {
   const { id = '' } = useParams();
   const query = useFinancial(id);
@@ -62,16 +64,21 @@ export function PaymentPage() {
     await queryClient.invalidateQueries({ queryKey: ['customer', userId] });
   };
   return (
-    <>
-      <header className="page-heading">
-        <p className="eyebrow">{booking.code}</p>
-        <h1>Pembayaran booking</h1>
+    <div className="booking-payment">
+      <Link className="bp-back" to={'/app/bookings/' + id}>
+        <ArrowLeftIcon aria-hidden="true" /> Detail booking
+      </Link>
+      <header className="bp-heading">
+        <div>
+          <p className="eyebrow">{booking.code}</p>
+          <h1>Pembayaran booking</h1>
+        </div>
         <p>
           <span className="status-badge">{statusLabels[booking.status]}</span>
         </p>
       </header>
       <div className="payment-columns">
-        <section>
+        <section className="bp-main" aria-label="Pembayaran dan bukti">
           <div className="payment-overview">
             {booking.items?.[0] && (
               <ItemPhoto
@@ -147,7 +154,7 @@ export function PaymentPage() {
             </p>
           )}
           {!terminal && obligation && !pending && (
-            <>
+            <div className="bp-upload-grid">
               <section className="form-section">
                 <h2>Pembayaran QRIS</h2>
                 {options.isPending ? (
@@ -185,7 +192,7 @@ export function PaymentPage() {
                 obligation={obligation}
                 refresh={refresh}
               />
-            </>
+            </div>
           )}
           {!terminal &&
             !obligation &&
@@ -213,7 +220,7 @@ export function PaymentPage() {
                 )}
               </div>
             )}
-          <section className="form-section">
+          <section className="form-section bp-proof-history">
             <h2>Riwayat bukti</h2>
             {booking.obligations.flatMap((row) => row.proofs || []).length ===
             0 ? (
@@ -285,8 +292,8 @@ export function PaymentPage() {
             )}
           </section>
         </section>
-        <aside className="quote-panel">
-          <h2>Rincian pembayaran</h2>
+        <aside className="quote-panel" aria-labelledby="bp-summary-title">
+          <h2 id="bp-summary-title">Rincian pembayaran</h2>
           <dl className="price-breakdown">
             <div>
               <dt>Total tagihan</dt>
@@ -322,7 +329,7 @@ export function PaymentPage() {
           </button>
         </aside>
       </div>
-    </>
+    </div>
   );
 }
 function UploadForm({

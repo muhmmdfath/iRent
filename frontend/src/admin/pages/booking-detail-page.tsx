@@ -9,6 +9,7 @@ import {
 import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
+import { DisclosureSummary } from '@/components/ui/disclosure-summary';
 import { LoadingState, ErrorState } from '@/components/feedback';
 import { ItemPhoto } from '@/customer/components/item-photo';
 import { rupiah, statusLabels, wib } from '@/customer/format';
@@ -330,7 +331,7 @@ export function AdminBookingDetailPage() {
             />
           </div>
           <details className="optional-fields">
-            <summary>Riwayat status booking</summary>
+            <DisclosureSummary>Riwayat status booking</DisclosureSummary>
             {booking.statusLogs?.map((log) => (
               <div className="proof-row" key={log.id}>
                 <div>

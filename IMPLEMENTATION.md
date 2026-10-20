@@ -383,3 +383,13 @@ Verifikasi akhir 11 Oktober 2026: 61 tes Vitest/MSW, 36 tes Chromium API simulas
 - Filter tanggal memakai satu komponen kalender ikon, pemilihan rentang, chevron, penanda aktif outline dan titik, serta penutupan klik luar/Escape. Periode laporan tetap tanggal/bulan sesuai kontrak API.
 - Jadwal unit menggunakan baris Gantt seragam, identitas ringkas dan kolom kiri tetap saat digeser. Booking berurutan berbagi jalur; alokasi yang beririsan memakai jalur berbeda. Detail waktu dan akses inventaris dipindahkan ke dialog informasi unit. Sewa, buffer dan hold tetap memakai waktu API asli.
 - Verifikasi: build/typecheck/lint; browser desktop/mobile untuk halaman manajemen, pagination dan kalender. Screenshot admin-calendar-gantt tersedia di docs/frontend.
+
+## Simulasi sewa menyeluruh - 20 Oktober 2026
+
+- [x] Database QA dari enam migrasi kosong, terpisah dari aplikasi utama.
+- [x] UI nyata: daftar/profil, booking/upload, verifikasi DP/pelunasan, handover, return dan persiapan admin satu jam.
+- [x] API nyata: perebutan unit, replay, kurang bayar, penolakan bukti, verifikasi bersamaan, privasi inbox/bukti dan refund manual 75%.
+- [x] Rapikan fixture profil/inbox/toast, dukungan Notification dan pemilihan status/alert agar regresi mengikuti UI terbaru.
+- [x] Helper dan konfigurasi QA yang bisa diulang; jam simulasi hanya di proses QA.
+
+Hasil: 188 tes PostgreSQL/HTTP, 26 unit backend, 81 UI, 92 Chromium API simulasi dan dua simulasi nyata lulus. Lima tes Chromium berkonfigurasi khusus dilewati pada regresi default. [Laporan dan batas pengujian](docs/qa/2026-10-20-rental-simulation.md) menjelaskan bukti per kelompok. Tidak ada perubahan aturan bisnis untuk membuat tes lulus; perangkat fisik/push/QRIS/transfer bank dan kapasitas produksi tetap di luar cakupan.

@@ -42,6 +42,8 @@ Script membaca akun admin/pelanggan dari `backend/.env.simulation`, yang diabaik
 
 ## Katalog dan tarif dummy
 
+Untuk mengisi inventaris saja tanpa membuat pelanggan, zona, booking, atau pembayaran, jalankan `node scripts/seed-demo.cjs --inventory-only` setelah server menyala dan akun admin tersedia di `backend/.env.simulation`. Mode ini menambahkan model, unit, tarif, kelengkapan, dan foto yang belum ada; menjalankan ulang tidak menggandakan model/unit. Kredensial lokal tetap diabaikan Git. Pada 20 Oktober 2026, database lokal yang kosong diisi tujuh model dan 22 unit melalui mode ini, dengan akun admin pertama dibuat melalui bootstrap resmi.
+
 | Item                  | Unit |     6 jam |    12 jam |    24 jam |
 | --------------------- | ---: | --------: | --------: | --------: |
 | iPhone 13             |    3 |  Rp75.000 | Rp100.000 | Rp150.000 |
@@ -57,6 +59,8 @@ Total 22 unit dibuat dalam kondisi layak/ready. Ketersediaan kalender tetap meng
 Foto ilustratif produk berasal dari Apple Newsroom: [iPhone 13](https://www.apple.com/newsroom/2021/09/apple-introduces-iphone-13-and-iphone-13-mini/), [iPhone 14](https://www.apple.com/newsroom/2022/09/apple-introduces-iphone-14-and-iphone-14-plus/), [iPhone 15](https://www.apple.com/newsroom/2023/09/apple-debuts-iphone-15-and-iphone-15-plus/), [iPhone 15 Pro](https://www.apple.com/newsroom/2023/09/apple-unveils-iphone-15-pro-and-iphone-15-pro-max/), dan [AirPods Pro](https://www.apple.com/newsroom/2019/10/apple-reveals-new-airpods-pro-available-october-30/). Tripod/powerbank memakai ilustrasi vektor demo. Gambar disalin lokal, disanitasi oleh endpoint upload, dan disajikan sebagai WebP dari storage backend; frontend tidak bergantung pada CDN untuk menampilkannya.
 
 ## Pelanggan, zona dan booking
+
+Pada 20 Oktober 2026, seed akun, baseline, dan skenario dijalankan pada database lokal: total 18 booking untuk lima pelanggan simulasi (2 menunggu pembayaran, 2 menunggu konfirmasi, 3 dikonfirmasi, 6 berjalan, 2 selesai, 3 dibatalkan). Tiga refund mewakili diajukan, disetujui, dan sudah dikembalikan. Seed skenario menambah stok contoh menjadi 56 unit agar beberapa alur bisa ditampilkan bersamaan. Durasi perpanjangan pending memakai 12 jam agar tidak berbenturan dengan booking baseline beserta buffer persiapan; risiko unit terlambat memakai alokasi baseline yang sudah ada bila tersedia. Tenggat/status tetap dapat berubah setelah worker aplikasi berjalan. Kredensial admin dan pelanggan ada di `backend/.env.simulation`; akun `dina@irent.test` memiliki contoh riwayat selesai dan refund, sedangkan `customer@irent.test` memiliki tiga booking baseline.
 
 Profil pelanggan simulasi dilengkapi dengan nama/alamat/HP/NIK dummy melalui API profil; NIK tetap terenkripsi. Profil yang sudah lengkap tidak diubah.
 

@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import { customerSession, item, policy } from '../customer-fixtures';
 test('stock limits plus/manual quantity, disables unavailable extras and rechecks changed schedules', async ({
   page,

@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 const account = {
   user: {
     id: 'visual-fixture',
@@ -54,7 +54,7 @@ for (const width of [360, 390, 768, 1024, 1440]) {
     await page.getByRole('button', { name: 'Masuk', exact: true }).click();
     await expect(page).toHaveURL(/\/app\//);
     await expect(
-      page.getByRole('heading', { name: 'Selamat datang, Penyewa iRent.' }),
+      page.getByRole('heading', { name: 'Untuk rencana berikutnya' }),
     ).toBeVisible();
     expect(
       await page.evaluate(

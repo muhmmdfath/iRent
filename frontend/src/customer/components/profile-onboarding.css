@@ -1,0 +1,46 @@
+.profile-onboarding {
+  width: min(40rem, calc(100% - 2rem));
+  max-height: calc(100dvh - 2rem);
+  margin: auto;
+  padding: clamp(1.25rem, 4vw, 2.5rem);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border: 0;
+  border-radius: 1.25rem;
+  background: #fff;
+  color: #29232a;
+  box-shadow: 0 24px 80px rgb(55 27 42 / 18%);
+}
+.profile-onboarding::backdrop {
+  background: rgb(36 24 32 / 48%);
+}
+.profile-onboarding-heading {
+  margin-bottom: 2rem;
+}
+.profile-onboarding-heading h1 {
+  margin: 0.5rem 0 0.75rem;
+  font-size: clamp(1.5rem, 4vw, 2rem);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.03em;
+}
+.profile-onboarding-heading > p:last-child {
+  color: #70636d;
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+.profile-onboarding .form-section {
+  display: grid;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+.profile-onboarding .form-section h2 {
+  font-size: 1rem;
+}
+.profile-onboarding .form-actions {
+  margin-top: 1.5rem;
+}
+.profile-onboarding .form-actions button {
+  width: 100%;
+}

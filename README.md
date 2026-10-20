@@ -19,7 +19,9 @@ powershell -ExecutionPolicy Bypass -File scripts/dev.ps1 backend
 powershell -ExecutionPolicy Bypass -File scripts/dev.ps1 frontend
 ```
 
-Buka `http://127.0.0.1:5173`; readiness API tersedia di `http://127.0.0.1:3000/api/health/ready`. PostgreSQL lokal memakai port `5432` melalui service Windows `postgresql-x64-17`; Docker tidak diperlukan. Periksa koneksi dengan `node scripts/check-database.cjs`. Seed hanya mengisi pengaturan; katalog dan QRIS perlu diisi dengan data toko. Pembuatan admin pertama mengikuti [AUTH.md](backend/AUTH.md).
+Port aplikasi lokal: frontend **5180**, backend **3030**. Port ini dipilih untuk memisahkan iRent dari project lain; proxy Vite, CORS, Playwright dan seed demo mengikuti pasangan yang sama. Jika port terpakai saat akan menjalankan, hentikan proses iRent lama atau sesuaikan port/proxy/CORS bersama; jangan menghentikan project lain.
+
+Buka `http://127.0.0.1:5180`; readiness API tersedia di `http://127.0.0.1:3030/api/health/ready`. PostgreSQL lokal memakai port `5432` melalui service Windows `postgresql-x64-17`; Docker tidak diperlukan. Periksa koneksi dengan `node scripts/check-database.cjs`. Seed hanya mengisi pengaturan; katalog dan QRIS perlu diisi dengan data toko. Pembuatan admin pertama mengikuti [AUTH.md](backend/AUTH.md).
 
 Data simulasi lokal tersedia melalui `powershell -ExecutionPolicy Bypass -File scripts/seed-demo.ps1` setelah kedua server berjalan dan kredensial akun simulasi tersedia di `backend/.env.simulation`. Detail item, booking, gambar dan batas simulasi ada di [docs/demo-data.md](docs/demo-data.md). Seed demo terpisah dari seed pengaturan dan tidak dijalankan otomatis saat setup.
 

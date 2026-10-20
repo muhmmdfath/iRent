@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import { adminSession, adminBooking } from '../admin-fixtures';
 import { booking, customerSession, financial } from '../customer-fixtures';
 for (const width of [360, 390, 768, 1024, 1440]) {

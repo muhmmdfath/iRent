@@ -1,32 +1,43 @@
 import { useState } from 'react';
+import { EyeOpenIcon, EyeClosedIcon } from '@radix-ui/react-icons';
 import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { DisclosureSummary } from '@/components/ui/disclosure-summary';
 import { LoadingState, ErrorState } from '@/components/feedback';
 import { useOnline } from '@/hooks/use-online';
 import { useSession } from '@/auth/session';
+import type { Session } from '@/auth/types';
 import { safeReturnTo } from '@/auth/navigation';
 import { queryClient, sessionKey } from '@/services/query-client';
 import { errorMessage } from '@/services/api';
 import { useProfile } from '../hooks';
 import { customerApi } from '../api';
 import type { Profile, ProfileInput } from '../types';
-export function ProfilePage() {
+export function ProfilePage({ onboarding = false }: { onboarding?: boolean }) {
   const query = useProfile();
   if (query.isPending) return <LoadingState text="Memuat profil..." />;
   if (query.isError)
     return (
       <ErrorState error={query.error} retry={() => void query.refetch()} />
     );
-  return <ProfileForm profile={query.data} />;
+  return <ProfileForm profile={query.data} onboarding={onboarding} />;
 }
-function ProfileForm({ profile }: { profile: Profile | null }) {
-  const userId = useSession().data!.user.id;
+function ProfileForm({
+  profile,
+  onboarding,
+}: {
+  profile: Profile | null;
+  onboarding: boolean;
+}) {
+  const user = useSession().data!.user;
+  const userId = user.id;
   const online = useOnline();
   const [params] = useSearchParams();
   const [saved, setSaved] = useState(false);
+  const [nikVisible, setNikVisible] = useState(false);
   const {
     register,
     handleSubmit,
@@ -36,7 +47,7 @@ function ProfileForm({ profile }: { profile: Profile | null }) {
     defaultValues: {
       fullName: profile?.fullName || '',
       address: profile?.address || '',
-      phoneActive: profile?.phoneActive || '',
+      phoneActive: profile?.phoneActive || user.phone || '',
       nik: '',
       phoneAlt: profile?.phoneAlt || '',
       instagram: profile?.instagram || '',
@@ -48,8 +59,20 @@ function ProfileForm({ profile }: { profile: Profile | null }) {
     gcTime: 0,
     onSuccess: async (result) => {
       reset({ ...result, nik: '' });
+      setNikVisible(false);
       await queryClient.invalidateQueries({ queryKey: sessionKey });
       queryClient.setQueryData(['customer', userId, 'profile'], result);
+      queryClient.setQueryData<Session>(sessionKey, (session) =>
+        session?.user.id === userId
+          ? {
+              ...session,
+              user: {
+                ...session.user,
+                profile: { completedAt: result.completedAt },
+              },
+            }
+          : session,
+      );
       setSaved(true);
       mutation.reset();
     },
@@ -57,11 +80,13 @@ function ProfileForm({ profile }: { profile: Profile | null }) {
   const destination = safeReturnTo(params.get('returnTo'), 'customer');
   return (
     <>
-      <header className="page-heading">
-        <p className="eyebrow">Data penyewa</p>
-        <h1>Profil pelanggan</h1>
-        <p>Lengkapi data sebelum membuat booking pertama.</p>
-      </header>
+      {!onboarding && (
+        <header className="page-heading">
+          <p className="eyebrow">Data penyewa</p>
+          <h1>Profil pelanggan</h1>
+          <p>Lengkapi data sebelum membuat booking pertama.</p>
+        </header>
+      )}
       <form
         className="profile-form"
         noValidate
@@ -132,26 +157,43 @@ function ProfileForm({ profile }: { profile: Profile | null }) {
             <label htmlFor="nik">
               {profile ? 'Ganti NIK (opsional)' : 'NIK'}
             </label>
-            <Input
-              id="nik"
-              placeholder={
-                profile
-                  ? String.fromCharCode(8226).repeat(16)
-                  : 'Masukkan 16 digit NIK'
-              }
-              inputMode="numeric"
-              type="password"
-              autoComplete="off"
-              maxLength={16}
-              aria-invalid={!!errors.nik}
-              aria-describedby="nik-help"
-              {...register('nik', {
-                validate: (value) =>
-                  (!value && !!profile) ||
-                  /^\d{16}$/.test(value || '') ||
-                  'NIK harus 16 digit.',
-              })}
-            />
+            <div className="password-field">
+              <Input
+                id="nik"
+                className="pr-14"
+                placeholder={
+                  profile
+                    ? String.fromCharCode(8226).repeat(16)
+                    : 'Masukkan 16 digit NIK'
+                }
+                inputMode="numeric"
+                type={nikVisible ? 'text' : 'password'}
+                autoComplete="off"
+                maxLength={16}
+                aria-invalid={!!errors.nik}
+                aria-describedby="nik-help"
+                {...register('nik', {
+                  validate: (value) =>
+                    (!value && !!profile) ||
+                    /^\d{16}$/.test(value || '') ||
+                    'NIK harus 16 digit.',
+                })}
+              />
+              <button
+                type="button"
+                className="password-toggle"
+                aria-label={nikVisible ? 'Sembunyikan NIK' : 'Tampilkan NIK'}
+                aria-controls="nik"
+                aria-pressed={nikVisible}
+                onClick={() => setNikVisible((value) => !value)}
+              >
+                {nikVisible ? (
+                  <EyeClosedIcon aria-hidden="true" />
+                ) : (
+                  <EyeOpenIcon aria-hidden="true" />
+                )}
+              </button>
+            </div>
             <p id="nik-help" className="muted text-sm mt-2">
               {profile
                 ? 'NIK sudah tersimpan dan disamarkan. Isi hanya jika ingin mengganti NIK.'
@@ -161,7 +203,7 @@ function ProfileForm({ profile }: { profile: Profile | null }) {
           </div>
         </section>
         <details className="optional-fields">
-          <summary>Kontak tambahan (opsional)</summary>
+          <DisclosureSummary>Kontak tambahan (opsional)</DisclosureSummary>
           <div className="field">
             <label htmlFor="phoneAlt">Nomor HP alternatif</label>
             <Input
@@ -199,7 +241,7 @@ function ProfileForm({ profile }: { profile: Profile | null }) {
           <Button disabled={!online || mutation.isPending || isSubmitting}>
             {mutation.isPending ? 'Menyimpan...' : 'Simpan profil'}
           </Button>
-          {(saved || profile) && (
+          {!onboarding && (saved || profile) && (
             <Button asChild variant="outline">
               <Link to={params.get('returnTo') ? destination : '/catalog'}>
                 Lanjutkan

@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import { customerSession, policy, item } from '../customer-fixtures';
 test('signed-in customers can log out from public catalog and terms layouts', async ({
   page,

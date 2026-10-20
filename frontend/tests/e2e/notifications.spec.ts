@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import { customerSession } from '../customer-fixtures';
 for (const width of [390, 1440]) {
   test(`inbox read states, dismissal and action feedback work at ${width}px`, async ({

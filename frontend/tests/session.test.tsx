@@ -69,7 +69,9 @@ describe('session and access', () => {
     expect(
       await screen.findByRole('heading', { name: 'Akun saya' }),
     ).toBeVisible();
-    expect(screen.getByText('penyewa@example.test')).toBeVisible();
+    expect(screen.getAllByText('penyewa@example.test').length).toBeGreaterThan(
+      0,
+    );
     expect(localStorage.length).toBe(0);
     expect(sessionStorage.length).toBe(0);
   });
@@ -95,7 +97,7 @@ describe('session and access', () => {
     mount('/admin/account');
     expect(
       await screen.findByRole('heading', {
-        name: 'Selamat datang, Penyewa iRent.',
+        name: 'Untuk rencana berikutnya',
       }),
     ).toBeVisible();
     expect(screen.queryByText('Administrator')).not.toBeInTheDocument();
@@ -132,9 +134,11 @@ describe('session and access', () => {
     mount();
     await screen.findByRole('heading', { name: 'Akun saya' });
     await userEvent.click(screen.getByRole('button', { name: 'Keluar' }));
-    expect(await screen.findByRole('alert')).toHaveTextContent(
-      'Tidak dapat terhubung',
-    );
+    expect(
+      (await screen.findAllByRole('alert'))
+        .map((value) => value.textContent)
+        .join(' '),
+    ).toContain('Tidak dapat terhubung');
     expect(screen.getByRole('heading', { name: 'Akun saya' })).toBeVisible();
   });
   it('removes old private data and redirects when a protected request returns 401', async () => {
@@ -193,9 +197,11 @@ describe('session and access', () => {
     );
     await user.type(screen.getByLabelText('Password'), 'salah');
     await user.click(screen.getByRole('button', { name: 'Masuk' }));
-    expect(await screen.findByRole('alert')).toHaveTextContent(
-      'password tidak sesuai',
-    );
+    expect(
+      (await screen.findAllByRole('alert'))
+        .map((value) => value.textContent)
+        .join(' '),
+    ).toContain('password tidak sesuai');
     expect(screen.getByLabelText('Email atau nomor HP')).toHaveValue(
       'penyewa@example.test',
     );

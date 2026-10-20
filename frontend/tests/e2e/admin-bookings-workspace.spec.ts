@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import { adminSession, adminBooking } from '../admin-fixtures';
 test.beforeEach(async ({ page }) => {
   await page.route('**/api/auth/session', (r) =>

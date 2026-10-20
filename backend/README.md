@@ -17,7 +17,7 @@ npm run db:seed
 npm run dev
 ```
 
-Default development memakai instalasi PostgreSQL lokal port `5432`, bukan Docker. Buat role aplikasi dan database baru yang dimiliki role tersebut, lalu sesuaikan `DATABASE_URL`; jangan menimpa database yang sudah berisi data. Akun aplikasi tidak memerlukan hak superuser. `scripts/setup.ps1` tidak menyalakan Docker dan memeriksa koneksi sebelum migrasi. Compose hanya alternatif eksplisit (`scripts/setup.ps1 -UseDocker` dengan URL port `55432`). Server gagal start tanpa URL PostgreSQL yang valid. `GET /api/health/live` memeriksa proses; `/api/health/ready` memeriksa koneksi database. Port default 3000; frontend lokal diizinkan melalui `CORS_ORIGINS` eksplisit.
+Default development memakai instalasi PostgreSQL lokal port `5432`, bukan Docker. Buat role aplikasi dan database baru yang dimiliki role tersebut, lalu sesuaikan `DATABASE_URL`; jangan menimpa database yang sudah berisi data. Akun aplikasi tidak memerlukan hak superuser. `scripts/setup.ps1` tidak menyalakan Docker dan memeriksa koneksi sebelum migrasi. Compose hanya alternatif eksplisit (`scripts/setup.ps1 -UseDocker` dengan URL port `55432`). Server gagal start tanpa URL PostgreSQL yang valid. `GET /api/health/live` memeriksa proses; `/api/health/ready` memeriksa koneksi database. Port default 3030; frontend lokal diizinkan melalui `CORS_ORIGINS` eksplisit.
 
 ## Perintah
 

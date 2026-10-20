@@ -1,0 +1,27 @@
+summary.disclosure-summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  list-style: none;
+  cursor: pointer;
+}
+summary.disclosure-summary::marker {
+  content: '';
+}
+summary.disclosure-summary::-webkit-details-marker {
+  display: none;
+}
+summary.disclosure-summary > .disclosure-chevron {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  transition: transform 160ms ease;
+}
+details[open] > summary.disclosure-summary > .disclosure-chevron {
+  transform: rotate(90deg);
+}
+@media (prefers-reduced-motion: reduce) {
+  summary.disclosure-summary > .disclosure-chevron {
+    transition: none;
+  }
+}

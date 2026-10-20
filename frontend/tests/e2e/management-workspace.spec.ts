@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 import { adminSession } from '../admin-fixtures';
 import { policy } from '../customer-fixtures';
 const date = new Date(Date.now() + 7 * 3600000).toISOString().slice(0, 10);

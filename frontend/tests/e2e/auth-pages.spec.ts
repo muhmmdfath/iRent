@@ -1,5 +1,5 @@
 import { fileURLToPath } from 'node:url';
-import { test, expect } from '@playwright/test';
+import { test, expect } from './fixtures';
 for (const width of [360, 768, 1440]) {
   for (const route of ['/login', '/register']) {
     test(`authentication layout and validation work on ${route} at ${width}px`, async ({

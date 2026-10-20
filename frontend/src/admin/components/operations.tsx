@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
+import { DisclosureSummary } from '@/components/ui/disclosure-summary';
 import { Input } from '@/components/ui/input';
 import type { BookingItem, Financial } from '@/customer/types';
 import { localWib, rupiah, wib } from '@/customer/format';
@@ -472,7 +473,9 @@ function OperationForm({
                 </label>
               )}
               <details className="optional-fields">
-                <summary>Pengecualian keterlambatan admin/petugas</summary>
+                <DisclosureSummary>
+                  Pengecualian keterlambatan admin/petugas
+                </DisclosureSummary>
                 <p className="muted text-sm">
                   Catat interval keterlambatan pihak toko. Interval yang tumpang
                   tindih dihitung sekali oleh backend.

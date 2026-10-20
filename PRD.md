@@ -597,6 +597,8 @@ Jadwal, bentrok, deadline, pengembalian, dan persiapan dicatat per unit. Satu pe
 
 ## 13. Halaman pelanggan
 
+Setelah daftar atau masuk ke beranda (`/app/`), pelanggan dengan profil belum lengkap wajib mengisi modal data diri. Modal tidak memiliki tombol tutup, tidak dapat ditutup dengan Escape atau klik di luar, dan baru hilang setelah server menyimpan profil lengkap. Nama lengkap, alamat, nomor HP aktif, dan NIK wajib; kontak tambahan tetap opsional. Profil lengkap tidak memunculkan modal kembali, termasuk setelah reload.
+
 | Route | Isi |
 |---|---|
 | /register | Email atau nomor HP, password; tanpa kode verifikasi |

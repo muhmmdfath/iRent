@@ -131,7 +131,7 @@ export function RegisterPage() {
             </div>
             <div className="field">
               <label htmlFor="register-phone">
-                Nomor HP (opsional jika ada email)
+                Nomor HP
               </label>
               <Input
                 id="register-phone"
