@@ -25,6 +25,7 @@ import { AppLayout } from './layout';
 import { Connectivity } from './connectivity';
 import { WelcomePage } from './pages/welcome-page';
 import { NotFoundPage } from './pages/not-found-page';
+import { RouteMetadata } from '@/seo/route-metadata';
 const AdminDashboardPage = lazy(() =>
   import('@/admin/pages/dashboard-page').then((module) => ({
     default: module.AdminDashboardPage,
@@ -203,6 +204,7 @@ export function AppRoutes() {
       </a>
       <Connectivity />
       <RouteAccessibility />
+      <RouteMetadata />
       <Routes>
         <Route path="/" element={<WelcomePage />} />
         <Route element={<PublicLayout />}>

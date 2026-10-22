@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
 import { Brand } from './brand';
 import { Button } from './ui/button';
+import { InstagramLogoIcon, ArrowTopRightIcon } from '@radix-ui/react-icons';
+import { site } from '@/seo/site';
 export function SiteFooter() {
   return (
     <footer className="site-footer">
@@ -17,6 +19,16 @@ export function SiteFooter() {
               <span aria-hidden="true" />
               Semarang, Jawa Tengah
             </span>
+            <a
+              className="site-instagram-link"
+              href={site.instagram}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <InstagramLogoIcon aria-hidden="true" />
+              @irent_semarang
+              <ArrowTopRightIcon aria-hidden="true" />
+            </a>
           </div>
           <nav className="site-footer-links" aria-label="Tautan footer">
             <div>

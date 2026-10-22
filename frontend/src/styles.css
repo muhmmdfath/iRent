@@ -460,7 +460,9 @@ a {
   outline: 2px solid #a34b70;
   outline-offset: 3px;
 }
-main[tabindex="-1"]:focus { outline: none; }
+main[tabindex='-1']:focus {
+  outline: none;
+}
 h1,
 h2,
 h3,
@@ -513,6 +515,23 @@ svg {
   color: white;
   font-size: 20px;
   letter-spacing: -0.05em;
+}
+.brand .brand-logo {
+  display: block;
+  width: 150px;
+  height: 72px;
+  object-fit: cover;
+  flex: none;
+}
+.studio-brand .brand-logo {
+  background: #fff;
+  border-radius: 10px;
+}
+@media (max-width: 767px) {
+  .brand .brand-logo {
+    width: 125px;
+    height: 60px;
+  }
 }
 .brand-location {
   display: block;
@@ -719,14 +738,49 @@ svg {
   font-size: 14px;
   color: #606570;
 }
-.welcome-page header nav, .welcome-page footer { display: flex; align-items: center; justify-content: space-between; gap: 1.25rem; flex-wrap: wrap; }
-.welcome-devices { margin-top: 5rem; }
-.welcome-steps { margin-top: 5rem; max-width: 1100px; }
-.welcome-steps ol { list-style: none; display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 2rem; padding: 0; margin-block: 2rem; }
-.welcome-steps li { border-top: 1px solid #e6e8ed; padding-top: 1rem; }
-.welcome-steps li p { color: #606570; margin-top: .75rem; }
-.task-overdue h3 { color: #a63048; }
-@media(max-width:767px) { .welcome-steps ol { grid-template-columns: minmax(0,1fr); } .welcome-devices, .welcome-steps { margin-top: 3.5rem; } }
+.welcome-page header nav,
+.welcome-page footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+}
+.welcome-devices {
+  margin-top: 5rem;
+}
+.welcome-steps {
+  margin-top: 5rem;
+  max-width: 1100px;
+}
+.welcome-steps ol {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem;
+  padding: 0;
+  margin-block: 2rem;
+}
+.welcome-steps li {
+  border-top: 1px solid #e6e8ed;
+  padding-top: 1rem;
+}
+.welcome-steps li p {
+  color: #606570;
+  margin-top: 0.75rem;
+}
+.task-overdue h3 {
+  color: #a63048;
+}
+@media (max-width: 767px) {
+  .welcome-steps ol {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .welcome-devices,
+  .welcome-steps {
+    margin-top: 3.5rem;
+  }
+}
 .workspace {
   width: 100%;
   margin: 0;

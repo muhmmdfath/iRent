@@ -5,6 +5,8 @@
         Referrer-Policy strict-origin-when-cross-origin
         X-Frame-Options DENY
     }
+    @private path /admin /admin/* /app /app/* /login /register
+    header @private X-Robots-Tag "noindex, nofollow"
     @api path /api/* /media/*
     handle @api {
         reverse_proxy api:3030
@@ -15,12 +17,17 @@
         header @worker Cache-Control "no-cache"
         @assets path /assets/*
         header @assets Cache-Control "public, max-age=31536000, immutable"
-        @static path /assets/* /admin/*.js /admin/*.png /admin/*.webmanifest /sw.js /manifest.webmanifest
+        @static path /assets/* /brand/* /images/* /robots.txt /sitemap.xml /admin/*.js /admin/*.png /admin/*.webmanifest /sw.js /manifest.webmanifest
         handle @static {
             file_server
         }
+        @homepage path /
+        handle @homepage {
+            rewrite * /index.html
+            file_server
+        }
         handle {
-            try_files {path} /index.html
+            try_files {path} {path}.html /app-shell.html
             file_server
         }
     }

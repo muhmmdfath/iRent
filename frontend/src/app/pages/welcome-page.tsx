@@ -5,6 +5,8 @@ import {
   CubeIcon,
   CalendarIcon,
   CheckCircledIcon,
+  InstagramLogoIcon,
+  ArrowTopRightIcon,
 } from '@radix-ui/react-icons';
 import { Brand } from '@/components/brand';
 import { Button } from '@/components/ui/button';
@@ -16,6 +18,7 @@ import { LoadingState, ErrorState } from '@/components/feedback';
 import { useSession } from '@/auth/session';
 import { roleHome } from '@/auth/navigation';
 import { useLandingMotion } from '@/hooks/use-landing-motion';
+import { site } from '@/seo/site';
 export function WelcomePage() {
   const root = useRef<HTMLDivElement>(null);
   const user = useSession().data?.user;
@@ -29,7 +32,6 @@ export function WelcomePage() {
         Number(b.category === 'iphone') - Number(a.category === 'iphone'),
     )
     .slice(0, 3);
-  const featured = devices[0];
   useLandingMotion(root, query.dataUpdatedAt);
   return (
     <div ref={root} className="welcome-page landing-pastel">
@@ -55,13 +57,14 @@ export function WelcomePage() {
               Sewa perangkat di Semarang
             </p>
             <h1 id="landing-title">
-              Untuk rencana
+              Sewa iPhone
               <br />
-              yang sudah kamu <span>siapkan.</span>
+              untuk momenmu <span>di Semarang.</span>
             </h1>
             <p className="welcome-description">
-              iPhone dan aksesori untuk kebutuhan harian, perjalanan, dan acara.
-              Pilih perangkatnya, nikmati momennya.
+              iPhone dan aksesori untuk bikin konten, perjalanan, dan acara.
+              Booking lewat website, ambil di toko atau gunakan layanan
+              antar-jemput sesuai zona yang tersedia.
             </p>
             <div className="landing-hero-actions">
               <Button asChild>
@@ -86,49 +89,25 @@ export function WelcomePage() {
               Pilihan durasi 6, 12, dan 24 jam.
             </p>
           </div>
-          <div className="landing-hero-visual" data-reveal="scale">
-            <div className="landing-orbit" aria-hidden="true" />
-            <div
-              className="landing-orbit landing-orbit-inner"
-              aria-hidden="true"
+          <figure
+            className="landing-hero-visual landing-cinematic"
+            data-reveal="scale"
+          >
+            <img
+              src="/images/iphone-cinematic-1280.webp"
+              srcSet="/images/iphone-cinematic-640.webp 640w, /images/iphone-cinematic-1280.webp 1280w"
+              sizes="(max-width: 767px) calc(100vw - 40px), 520px"
+              width="1280"
+              height="1920"
+              alt="Detail kamera dan bodi iPhone dengan pencahayaan cinematic gelap"
+              fetchPriority="high"
             />
-            <div className="landing-device-stage">
-              <div className="landing-device-float">
-                {featured ? (
-                  <ItemPhoto path={featured.photoPath} name={featured.name} />
-                ) : (
-                  <div className="landing-device-placeholder">
-                    <CubeIcon aria-hidden="true" />
-                    <span>iPhone & aksesori</span>
-                  </div>
-                )}
-              </div>
-            </div>
-            <div className="landing-device-label">
-              <span className="landing-label-icon">
-                <CubeIcon aria-hidden="true" />
-              </span>
-              <div>
-                <span>Pilihan untuk momenmu</span>
-                <strong>{featured?.name || 'Koleksi iRent'}</strong>
-              </div>
-            </div>
-            <span className="landing-duration-badge">
-              <CalendarIcon aria-hidden="true" />6 / 12 / 24 jam
-            </span>
-            <span
-              className="landing-spark landing-spark-one"
-              aria-hidden="true"
-            >
-              +
-            </span>
-            <span
-              className="landing-spark landing-spark-two"
-              aria-hidden="true"
-            >
-              +
-            </span>
-          </div>
+            <figcaption>
+              <span>iRent Semarang</span>
+              <strong>Capture your moment.</strong>
+              <span>Foto ilustrasi · pilihan perangkat ada di katalog</span>
+            </figcaption>
+          </figure>
         </section>
         <section
           className="welcome-devices"
@@ -240,6 +219,32 @@ export function WelcomePage() {
               <Link to="/terms">Baca ketentuan sewa</Link>
             </Button>
           </div>
+        </section>
+        <section
+          className="landing-social"
+          aria-labelledby="landing-social-title"
+          data-reveal="up"
+        >
+          <div>
+            <p className="landing-section-label">
+              Dari Semarang, untuk ceritamu
+            </p>
+            <h2 id="landing-social-title">Kenalan dengan iRent.</h2>
+            <p>
+              Lihat perangkat, inspirasi konten, dan kabar terbaru dari kami di
+              Instagram resmi iRent Semarang.
+            </p>
+          </div>
+          <a
+            href={site.instagram}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="landing-instagram"
+          >
+            <InstagramLogoIcon aria-hidden="true" />
+            @irent_semarang
+            <ArrowTopRightIcon aria-hidden="true" />
+          </a>
         </section>
         <section className="landing-final-cta" data-reveal="up">
           <p className="landing-section-label">
