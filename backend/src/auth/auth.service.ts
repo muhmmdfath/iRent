@@ -262,4 +262,41 @@ export class AuthService {
       });
     });
   }
+
+  async changePassword(
+    context: AuthContext,
+    currentPassword: string,
+    newPassword: string,
+  ): Promise<void> {
+    await this.throttle('password.change.user', context.user.id, 5, 900);
+    if (currentPassword === newPassword)
+      throw new BadRequestException(
+        'Password baru harus berbeda dari password lama.',
+      );
+    const passwordHash = await hashPassword(newPassword);
+    await this.prisma.$transaction(async (tx) => {
+      await this.authorizeLocked(tx, context);
+      const user = await tx.user.findUniqueOrThrow({
+        where: { id: context.user.id },
+      });
+      if (!(await verifyPassword(currentPassword, user.passwordHash)))
+        throw new BadRequestException('Password lama tidak sesuai.');
+      await tx.user.update({
+        where: { id: user.id },
+        data: { passwordHash, authVersion: { increment: 1 } },
+      });
+      await tx.authSession.deleteMany({ where: { userId: user.id } });
+      // Devices must opt into push again after a security credential change.
+      await tx.pushSubscription.deleteMany({ where: { userId: user.id } });
+      await tx.auditLog.create({
+        data: {
+          actorId: user.id,
+          action: 'auth.password_changed',
+          entityType: 'user',
+          entityId: user.id,
+          changes: {},
+        },
+      });
+    });
+  }
 }

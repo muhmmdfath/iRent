@@ -19,6 +19,8 @@ Acuan: 65 skenario PRD ?17. Tabel ini memetakan aturan server ke suite pengujian
 
 ## Tambahan penyelesaian backend
 
+`database/password-change.test.ts` memeriksa ganti password sendiri bagi admin/customer pada database uji: password lama/CSRF/DTO, batas 8 karakter, penolakan userId tambahan, seluruh sesi dan push dicabut, akun lain tetap, audit tanpa secret, perubahan bersamaan, serta rate limit. Jalankan dengan database kosong sementara, bukan deployment; helper terisolasi ada di `deploy/test-password-change.sh`.
+
 `reports.test.ts` memeriksa periode WIB dan kalender invalid. `database/admin-reports-media.test.ts` menerapkan seluruh migrasi dari kosong pada schema sementara, kemudian menguji role/privacy daftar, kalender, antrean dari state bisnis, laporan kas/pending refund/selesai-lunas, XLSX BIGINT/formula-as-text, foto/QRIS tersanitasi dan serving privat, koreksi receipt immutable/idempotent, uniqueness referensi bank, refund hanya dari receipt terbaru, saldo scope extension, serta koreksi pengembalian tanpa reset readiness.
 
 Migrasi melindungi nominal/waktu/reference receipt dan riwayat koreksi. Uji berlangsung pada PostgreSQL asli, bukan SQLite/mock. Data/report bisnis disimpan dengan WIB wall time dan rupiah string pada API.

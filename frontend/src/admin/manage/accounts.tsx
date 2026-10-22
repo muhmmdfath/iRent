@@ -92,7 +92,7 @@ export function AccountsPage({ admins = false }: { admins?: boolean }) {
                 name: 'password',
                 label: 'Password baru',
                 type: 'password',
-                min: 12,
+                min: 8,
                 max: 128,
               },
             ]}
@@ -284,7 +284,7 @@ export function CustomerDetailPage() {
                   name: 'password',
                   label: 'Password baru',
                   type: 'password',
-                  min: 12,
+                  min: 8,
                   max: 128,
                 },
               ]}

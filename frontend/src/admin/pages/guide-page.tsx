@@ -1,76 +1,169 @@
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  InfoCircledIcon,
+} from '@radix-ui/react-icons';
+import { guideGroups, guideTopics } from './guide-content';
+import './guide-page.css';
+
 export function GuidePage() {
-  const sections = [
-    {
-      title: 'Mulai bertugas',
-      text: 'Periksa pekerjaan di beranda dan kalender unit. Aktifkan suara secara manual jika diperlukan. “Saya tangani” hanya membisukan pengingat di tab ini.',
-      path: '/admin',
-      label: 'Buka pekerjaan',
-    },
-    {
-      title: 'Verifikasi pembayaran',
-      text: 'Buka bukti dan cocokkan uang yang benar-benar masuk. Catat nominal, waktu, metode, rekening toko dan referensi transaksi. Bukti unggahan belum berarti lunas; pembayaran kurang tetap memerlukan pelengkapan.',
-      path: '/admin/bookings',
-      label: 'Buka booking',
-    },
-    {
-      title: 'Serah terima dan pengembalian',
-      text: 'Serahkan barang setelah sewa dan ongkir lunas serta unit siap. Periksa identitas dan kondisi. Saat kembali, verifikasi setiap unit dengan waktu penerimaan fisik, kondisi, kerusakan dan pengecualian keterlambatan toko. Laporan pelanggan belum melepas unit.',
-      path: '/admin/calendar',
-      label: 'Periksa jadwal',
-    },
-    {
-      title: 'Persiapan dan perawatan',
-      text: 'Unit layak yang kembali menjalani persiapan satu jam. Selesaikan pemeriksaan secara eksplisit setelah waktunya; unit tidak otomatis siap. Unit rusak masuk perawatan dan kembali menjalani persiapan setelah perawatan selesai.',
-      path: '/admin/inventory',
-      label: 'Kelola unit',
-    },
-    {
-      title: 'Perpanjangan dan risiko',
-      text: 'Perpanjangan berlaku setelah dana dan seluruh unit disetujui. Penjemputan terpisah memerlukan quotation ongkir dan persetujuan pelanggan. Jika ada kendala unit berikutnya, periksa pengganti dari model yang sama atau pembatalan oleh toko.',
-      path: '/admin/extensions',
-      label: 'Periksa perpanjangan',
-    },
-    {
-      title: 'Refund manual',
-      text: 'Periksa alasan, sumber dana dan rekening penerima, lalu setujui jumlah yang memenuhi kebijakan. Transfer melalui bank dilakukan oleh petugas di luar aplikasi; setelahnya catat jumlah, waktu, referensi dan bukti transfer privat. Persetujuan saja belum berarti uang sudah dikembalikan.',
-      path: '/admin/refunds',
-      label: 'Proses refund',
-    },
-    {
-      title: 'Koreksi dan laporan',
-      text: 'Gunakan koreksi receipt atau pengembalian pada detail booking jika ada salah catat; isi alasan dan data pengganti. Riwayat asli tetap tersimpan. Laporan kas memakai waktu uang masuk/keluar dan dapat diunduh sebagai Excel.',
-      path: '/admin/reports',
-      label: 'Buka laporan',
-    },
-    {
-      title: 'Notifikasi perangkat',
-      text: 'Aktifkan notifikasi dari perangkat saat bertugas. Pada iPhone, tambahkan aplikasi ke layar utama melalui Safari lalu buka dari sana. Izin dapat ditolak atau dinonaktifkan di pengaturan perangkat. Tetap periksa pekerjaan karena push dapat terlambat.',
-      path: '/admin/notifications',
-      label: 'Atur notifikasi',
-    },
-  ];
+  const [params, setParams] = useSearchParams();
+  const index = Math.max(
+    0,
+    guideTopics.findIndex((topic) => topic.id === params.get('topik')),
+  );
+  const topic = guideTopics[index];
+  const previous = guideTopics[index - 1];
+  const next = guideTopics[index + 1];
+  const topicUrl = (id: string) => {
+    const search = new URLSearchParams(params);
+    search.set('topik', id);
+    return { pathname: '/admin/guide', search: '?' + search.toString() };
+  };
   return (
-    <>
-      <header className="page-heading">
-        <p className="eyebrow">Operasional iRent</p>
+    <div className="admin-guide">
+      <header className="guide-heading">
+        <p>Operasional iRent</p>
         <h1>Panduan admin</h1>
-        <p>
-          Urutan kerja untuk menjaga jadwal, kondisi unit, dan catatan uang
-          tetap sesuai.
-        </p>
+        <div>
+          Langkah kerja dan hal yang perlu diperiksa saat melayani sewa.
+        </div>
       </header>
-      <div className="management-grid">
-        {sections.map((section) => (
-          <section key={section.title} className="form-section">
-            <h2>{section.title}</h2>
-            <p>{section.text}</p>
-            <Link className="text-link" to={section.path}>
-              {section.label}
-            </Link>
-          </section>
-        ))}
+      <div className="guide-mobile-topics">
+        <label htmlFor="guide-topic">Pilih topik panduan</label>
+        <div>
+          <select
+            id="guide-topic"
+            value={topic.id}
+            onChange={(event) =>
+              setParams(
+                (previous) => {
+                  const updated = new URLSearchParams(previous);
+                  updated.set('topik', event.target.value);
+                  return updated;
+                },
+                { preventScrollReset: true },
+              )
+            }
+          >
+            {guideGroups.map((group) => (
+              <optgroup label={group.label} key={group.id}>
+                {guideTopics
+                  .filter((item) => item.group === group.id)
+                  .map((item) => (
+                    <option value={item.id} key={item.id}>
+                      {item.title}
+                    </option>
+                  ))}
+              </optgroup>
+            ))}
+          </select>
+          <ChevronRightIcon aria-hidden="true" />
+        </div>
       </div>
-    </>
+      <div className="guide-body">
+        <nav className="guide-sidebar" aria-label="Topik panduan">
+          {guideGroups.map((group) => (
+            <div className="guide-topic-group" key={group.id}>
+              <h2>{group.label}</h2>
+              {guideTopics
+                .filter((item) => item.group === group.id)
+                .map((item) => (
+                  <Link
+                    className="guide-link"
+                    key={item.id}
+                    to={topicUrl(item.id)}
+                    preventScrollReset
+                    aria-current={item.id === topic.id ? 'page' : undefined}
+                  >
+                    <span>{item.title}</span>
+                    {item.id === topic.id && (
+                      <ChevronRightIcon aria-hidden="true" />
+                    )}
+                  </Link>
+                ))}
+            </div>
+          ))}
+        </nav>
+        <article
+          className="guide-article"
+          aria-labelledby="guide-article-title"
+        >
+          <header className="guide-article-heading">
+            <p>
+              {guideGroups.find((group) => group.id === topic.group)?.label}
+            </p>
+            <h2 id="guide-article-title">{topic.title}</h2>
+            <div>{topic.summary}</div>
+          </header>
+          <ol className="guide-steps">
+            {topic.steps.map((step, stepIndex) => (
+              <li key={step.title}>
+                <span className="guide-step-number" aria-hidden="true">
+                  {stepIndex + 1}
+                </span>
+                <div>
+                  <h3>{step.title}</h3>
+                  <p>{step.text}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+          <aside className="guide-note" aria-label="Catatan penting">
+            <InfoCircledIcon aria-hidden="true" />
+            <div>
+              <h3>{topic.note.title}</h3>
+              <p>{topic.note.text}</p>
+            </div>
+          </aside>
+          <div className="guide-actions">
+            <Link to={topic.path} className="guide-link guide-primary-action">
+              {topic.action}
+              <ChevronRightIcon aria-hidden="true" />
+            </Link>
+            {topic.related && (
+              <Link
+                to={topic.related.path}
+                className="guide-link guide-related-action"
+              >
+                {topic.related.label}
+                <ChevronRightIcon aria-hidden="true" />
+              </Link>
+            )}
+          </div>
+          <nav className="guide-pagination" aria-label="Urutan panduan">
+            {previous ? (
+              <Link
+                className="guide-link"
+                to={topicUrl(previous.id)}
+                preventScrollReset
+              >
+                <ChevronLeftIcon aria-hidden="true" />
+                <span>
+                  <small>Sebelumnya</small>
+                  {previous.title}
+                </span>
+              </Link>
+            ) : (
+              <span />
+            )}
+            {next && (
+              <Link
+                className="guide-link"
+                to={topicUrl(next.id)}
+                preventScrollReset
+              >
+                <span>
+                  <small>Selanjutnya</small>
+                  {next.title}
+                </span>
+                <ChevronRightIcon aria-hidden="true" />
+              </Link>
+            )}
+          </nav>
+        </article>
+      </div>
+    </div>
   );
 }

@@ -61,6 +61,8 @@ Tes API nyata hanya dijalankan dengan backend lokal pada **database pengujian ya
 
 ## Aturan integrasi
 
+Admin dan pelanggan dapat mengganti password sendiri melalui **Akun saya → Keamanan akun**. Modal memverifikasi password lama, minimum delapan karakter, password baru berbeda dan konfirmasi yang cocok. Setelah berhasil, seluruh sesi dicabut, cache privat dibersihkan dan pengguna kembali ke login; admin perlu mengaktifkan kembali push. Password tidak disimpan pada storage browser. Endpoint dan pembatasan percobaan didokumentasikan dalam [AUTH.md](../backend/AUTH.md).
+
 React Query memiliki sesi dan data server; Zustand hanya state UI. Cookie sesi HttpOnly dikelola backend. CSRF disimpan dalam cache memori, dipulihkan melalui `GET /auth/session`, dan dipasang pada mutasi. Jangan menyimpan sesi, password, NIK atau bukti pembayaran ke localStorage, sessionStorage, maupun cache service worker.
 
 Gunakan Axios `api` dengan path relatif. Berikan AbortSignal query, sertakan ID pengguna pada query key data privat, dan invalidasi query terkait setelah aksi berhasil. Logout/pergantian sesi membatalkan query lama dan membuang cache privat. Sesi diperiksa kembali saat window mendapat fokus; perubahan akun/role dari tab lain membuang data akun sebelumnya; 401 protected mengakhiri sesi lokal, sedangkan gangguan server menyediakan retry. Guard frontend membantu navigasi; backend tetap memutuskan otorisasi.

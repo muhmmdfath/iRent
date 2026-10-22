@@ -1,0 +1,10 @@
+[Unit]
+Description=Daily iRent backup at 02:15 WIB (19:15 UTC)
+
+[Timer]
+OnCalendar=*-*-* 19:15:00 UTC
+Persistent=true
+RandomizedDelaySec=300
+
+[Install]
+WantedBy=timers.target

@@ -10,13 +10,16 @@ Semua path memakai prefix /api. Mutasi memakai JSON dan Origin yang terdaftar di
 | POST /auth/login                   | Publik: identity (email/HP), password                                                                                               |
 | GET /auth/session                  | Pengguna aktif: user dan csrfToken                                                                                                  |
 | POST /auth/logout                  | Pengguna aktif + CSRF; 204 dan hapus sesi/cookie                                                                                    |
+| POST /auth/password                | Admin/customer aktif + CSRF: currentPassword, newPassword; 204, cabut seluruh sesi dan hapus cookie                                 |
 | GET /customer/profile              | Customer; profil atau null, tanpa NIK                                                                                               |
 | PUT /customer/profile              | Customer + CSRF: fullName, address, phoneActive; nik 16 digit wajib pada profil pertama; phoneAlt, instagram, emailContact opsional |
 | POST /admin/accounts               | Admin + CSRF: body seperti register; membuat admin tanpa mengganti sesi pembuat                                                     |
 | GET /admin/customers/:id           | Admin; detail profil dengan NIK, akses NIK diaudit                                                                                  |
 | POST /admin/customers/:id/password | Admin + CSRF: password baru; 204 dan seluruh sesi pelanggan dicabut                                                                 |
 
-Nama/alamat tidak boleh kosong setelah trim. HP dinormalisasi ke E.164; 08…/62… menjadi +62…. Email dinormalisasi lowercase. Password baru 12–128 karakter. Edit profil dapat mempertahankan NIK tanpa mengirim ulang; completedAt berasal dari server. Unknown fields, termasuk role/userId/completedAt, ditolak. Response memakai field terpilih dan Cache-Control: no-store.
+Nama/alamat tidak boleh kosong setelah trim. HP dinormalisasi ke E.164; 08…/62… menjadi +62…. Email dinormalisasi lowercase. Password baru 8–128 karakter. Edit profil dapat mempertahankan NIK tanpa mengirim ulang; completedAt berasal dari server. Unknown fields, termasuk role/userId/completedAt, ditolak. Response memakai field terpilih dan Cache-Control: no-store.
+
+Ganti password sendiri tersedia di halaman **Akun saya → Keamanan akun**. Password lama wajib benar, password baru 8–128 karakter dan berbeda dari password lama. Konfirmasi password diperiksa frontend; API hanya menerima currentPassword/newPassword dan menolak userId atau field tambahan. Salah password lama menghasilkan 400 tanpa mengakhiri sesi. Batas percobaan lima kali per akun dalam 15 menit. Perubahan memakai user lock, menaikkan authVersion, mencabut semua sesi/langganan push dalam transaksi yang sama, dan mencatat audit tanpa password/hash. Setelah berhasil, masuk kembali dan aktifkan kembali push admin bila diperlukan. Request bersamaan dari sesi yang sama hanya dapat menyelesaikan satu perubahan.
 
 ## Setup kunci dan admin pertama
 
@@ -41,7 +44,7 @@ Setelah migrasi/build, buat admin pertama melalui environment lokal, tanpa passw
 ```powershell
 $env:IRENT_ADMIN_NAME = 'Admin iRent'
 $env:IRENT_ADMIN_EMAIL = 'admin@example.com'
-$adminPassword = Read-Host 'Password admin (12–128 karakter)' -AsSecureString
+$adminPassword = Read-Host 'Password admin (8–128 karakter)' -AsSecureString
 $env:IRENT_ADMIN_PASSWORD = [System.Net.NetworkCredential]::new('', $adminPassword).Password
 try { npm run admin:create }
 finally { Remove-Item Env:IRENT_ADMIN_PASSWORD }

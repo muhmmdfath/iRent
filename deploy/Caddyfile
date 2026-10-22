@@ -1,0 +1,27 @@
+{$DOMAIN} {
+    encode zstd gzip
+    header {
+        X-Content-Type-Options nosniff
+        Referrer-Policy strict-origin-when-cross-origin
+        X-Frame-Options DENY
+    }
+    @api path /api/* /media/*
+    handle @api {
+        reverse_proxy api:3030
+    }
+    handle {
+        root * /srv
+        @worker path /sw.js /admin/sw.js /manifest.webmanifest /admin/manifest.webmanifest
+        header @worker Cache-Control "no-cache"
+        @assets path /assets/*
+        header @assets Cache-Control "public, max-age=31536000, immutable"
+        @static path /assets/* /admin/*.js /admin/*.png /admin/*.webmanifest /sw.js /manifest.webmanifest
+        handle @static {
+            file_server
+        }
+        handle {
+            try_files {path} /index.html
+            file_server
+        }
+    }
+}

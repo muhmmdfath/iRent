@@ -100,6 +100,39 @@
         "x-irent-roles": ["customer", "admin"]
       }
     },
+    "/api/auth/password": {
+      "post": {
+        "operationId": "AuthController_changePassword",
+        "parameters": [
+          {
+            "name": "Origin",
+            "in": "header",
+            "description": "Origin frontend dari CORS_ORIGINS.",
+            "required": true,
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "X-CSRF-Token",
+            "in": "header",
+            "description": "Token dari login/session.",
+            "required": true,
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/ChangePasswordDto" }
+            }
+          }
+        },
+        "responses": { "204": { "description": "" } },
+        "security": [{ "cookie": [] }],
+        "tags": ["Auth"],
+        "x-irent-roles": ["customer", "admin"]
+      }
+    },
     "/api/customer/profile": {
       "get": {
         "operationId": "ProfileController_get",
@@ -3776,7 +3809,7 @@
           "name": { "type": "string", "minLength": 1, "maxLength": 100 },
           "email": { "type": "string", "minLength": 1, "maxLength": 254 },
           "phone": { "type": "string", "minLength": 1, "maxLength": 40 },
-          "password": { "type": "string", "minLength": 12, "maxLength": 128 }
+          "password": { "type": "string", "minLength": 8, "maxLength": 128 }
         },
         "required": ["name", "password"]
       },
@@ -3787,6 +3820,18 @@
           "password": { "type": "string", "minLength": 1, "maxLength": 128 }
         },
         "required": ["identity", "password"]
+      },
+      "ChangePasswordDto": {
+        "type": "object",
+        "properties": {
+          "currentPassword": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "newPassword": { "type": "string", "minLength": 8, "maxLength": 128 }
+        },
+        "required": ["currentPassword", "newPassword"]
       },
       "ProfileDto": {
         "type": "object",
@@ -3808,7 +3853,7 @@
       "ResetPasswordDto": {
         "type": "object",
         "properties": {
-          "password": { "type": "string", "minLength": 12, "maxLength": 128 }
+          "password": { "type": "string", "minLength": 8, "maxLength": 128 }
         },
         "required": ["password"]
       },

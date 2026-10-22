@@ -20,6 +20,11 @@ export function setupApp(app: NestExpressApplication): void {
     },
   );
   app.disable('x-powered-by');
+  // Production API is private, behind the single Caddy edge proxy.
+  // Preserve client IPs so authentication limits are not shared by all users.
+  if (app.get(ConfigService).get<string>('NODE_ENV') === 'production') {
+    app.set('trust proxy', 1);
+  }
   app.useGlobalPipes(
     new ValidationPipe({
       transform: true,

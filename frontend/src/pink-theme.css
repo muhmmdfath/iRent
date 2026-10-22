@@ -130,7 +130,7 @@ html {
   border-color: #c9c9c7;
 }
 main
-  a:not([data-slot='button']):not(.brand):not(:has(img)):not(
+  a:not([data-slot='button']):not(.guide-link):not(.brand):not(:has(img)):not(
     .catalog-image-link
   ):not(.landing-product-image):not(.booking-view-all):not(
     .product-nav-link
@@ -158,7 +158,7 @@ main
     border-color 0.2s;
 }
 main
-  a:not([data-slot='button']):not(.brand):not(:has(img)):not(
+  a:not([data-slot='button']):not(.guide-link):not(.brand):not(:has(img)):not(
     .catalog-image-link
   ):not(.landing-product-image):not(.booking-view-all):not(
     .product-nav-link

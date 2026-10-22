@@ -11,6 +11,27 @@ import {
   verifyPassword,
 } from '../src/auth/crypto';
 import { normalizeEmail, normalizePhone } from '../src/auth/identity';
+import { validate } from 'class-validator';
+import {
+  ChangePasswordDto,
+  RegisterDto,
+  ResetPasswordDto,
+} from '../src/auth/auth.dto';
+
+test('new_passwords_accept_eight_characters_and_reject_shorter_or_oversized_values', async () => {
+  for (const Dto of [RegisterDto, ResetPasswordDto, ChangePasswordDto]) {
+    for (const length of [7, 8, 128, 129]) {
+      const input = Object.assign(new Dto(), {
+        name: 'Penyewa',
+        password: 'a'.repeat(length),
+        currentPassword: 'before12',
+        newPassword: 'a'.repeat(length),
+      });
+      const errors = await validate(input);
+      assert.equal(errors.length === 0, length >= 8 && length <= 128);
+    }
+  }
+});
 
 test('password_hashes_are_salted_and_reject_wrong_or_malformed_credentials', async () => {
   const password = 'Fixture password 123!';

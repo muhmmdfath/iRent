@@ -1,0 +1,10 @@
+[Unit]
+Description=iRent database, private files and encryption keys backup
+Requires=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash /opt/irent/source/deploy/backup.sh
+User=root
+UMask=0077

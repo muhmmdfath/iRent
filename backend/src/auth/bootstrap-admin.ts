@@ -10,7 +10,7 @@ export async function createFirstAdmin(
   if (
     !input.name.trim() ||
     input.name.length > 100 ||
-    input.password.length < 12 ||
+    input.password.length < 8 ||
     input.password.length > 128
   )
     throw new Error('Nama/password admin tidak valid.');

@@ -1,3 +1,31 @@
+## Perapihan panduan admin (22 Oktober 2026)
+
+- [x] Audit halaman lama dan referensi Shopify Help/Stripe Docs; pola kartu paragraf diganti navigasi topik dan satu artikel dengan langkah bernomor.
+- [x] Sembilan topik dalam tiga kelompok, judul 24/22 px dan isi sekitar 12 px, satu catatan penting, aksi menuju halaman operasional serta navigasi sebelumnya/selanjutnya.
+- [x] Dropdown topik di HP, query URL yang bertahan saat reload/history, keyboard, ikon chevron, tombol pink/hover hitam dan footer ringkas khusus panduan.
+- [x] Build/typecheck/lint/format dan enam tes browser pada 360/390/768/1024/1440 px lulus. Domain online diperiksa dengan sesi admin simulasi; API/database tetap sehat. Tidak mengubah aturan bisnis atau data produksi.
+- [x] Diterapkan pada `https://irentsmg.tech/admin/guide`. [Acuan desain dan verifikasi](docs/frontend/admin-guide-redesign.md), [desktop](docs/frontend/admin-guide-1440.png), [mobile](docs/frontend/admin-guide-390.png).
+- Belum otomatis commit/push.
+
+## Ganti password sendiri (22 Oktober 2026)
+
+- [x] Admin dan pelanggan: Akun saya → Keamanan akun → Ganti password, modal ringkas dengan password lama, password baru 8–128 karakter, konfirmasi dan ikon mata.
+- [x] `POST /api/auth/password`: otorisasi/CSRF, verifikasi password lama, batas lima percobaan per 15 menit, password baru berbeda, dan user lock untuk perubahan bersamaan.
+- [x] Keberhasilan mencabut seluruh sesi/langganan push, menghapus cookie dan cache privat, lalu kembali ke login. Audit tidak menyimpan password/hash; salah password lama tidak mengakhiri sesi.
+- [x] Build/typecheck/lint, 27 tes unit backend, tiga tes PostgreSQL/HTTP pada database sementara, serta 29 tes frontend lulus. Browser live memeriksa modal desktop/mobile, ikon mata, Escape, pengosongan draft dan akses login/logout.
+- [x] Diterapkan pada `https://irentsmg.tech`; tidak ada migrasi schema dan password admin produksi tidak diubah oleh pengujian. Database QA sudah dihapus.
+- Kode dan dokumentasi masih working tree; belum otomatis commit/push.
+
+## Deployment pertama dan password minimum (22 Oktober 2026)
+
+- [x] Password baru 8–128 karakter: registrasi, reset pelanggan, akun admin dan bootstrap admin; form, OpenAPI serta PRD disamakan.
+- [x] Deployment satu VPS untuk `https://irentsmg.tech`: build, migrasi database kosong, settings, admin pertama, HTTPS dan storage persisten.
+- [x] Worker aktif, IP pelanggan melalui satu proxy, database privat/port API loopback, firewall dan restart policy.
+- [x] Backup harian dan satu salinan di laptop; checksum serta restore database sementara lulus.
+- [x] 27 tes backend, 25 tes frontend, serta pemeriksaan browser live login/logout, cookie, akses privat, mobile dan aset PWA lulus.
+- [ ] Penyalinan backup eksternal berkala/retensi, data usaha/item/QRIS asli, uji beban dan Web Push pada HP nyata.
+- Detail dan batas verifikasi: [laporan deployment](docs/deployment/2026-10-22-deployment.md). Sumber deployment mencakup perubahan working tree; belum otomatis commit/push.
+
 ## Komposisi detail inventaris (18 Oktober 2026)
 
 - [x] Tombol kembali Inventaris dihapus dari detail; navigasi sidebar tetap tersedia.

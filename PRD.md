@@ -95,7 +95,7 @@ Controller menangani HTTP dan guard, service memiliki aturan serta otorisasi ent
 
 Autentikasi dikelola iRent dengan akun dan password hash di database sendiri; tidak bergantung pada Auth Server ME atau SSO. Mekanisme sesi, cookie/token, refresh/logout, serta CORS/CSRF ditetapkan saat implementasi auth dan harus konsisten antara frontend/backend. Protected route frontend membantu UX; pemeriksaan hak akses tetap di backend.
 
-Keputusan implementasi auth: sesi PostgreSQL dengan token acak yang hanya disimpan sebagai hash, cookie HttpOnly/SameSite=Lax (Secure dan prefix __Host- di produksi), batas absolut delapan jam tanpa refresh token, serta GET session untuk memulihkan konteks/CSRF setelah reload. Mutasi memakai origin allowlist dan CSRF yang terikat sesi; login/registrasi memvalidasi origin dan menerima JSON. Password baru 12–128 karakter di-hash dengan scrypt. Reset password admin menaikkan auth_version dan mencabut semua sesi pelanggan; service mutasi memeriksa ulang otorisasi di bawah user lock. NIK memakai AES-256-GCM dengan keyring/version dan AAD user ID. Kontrak, perintah admin pertama, serta setup kunci di [backend/AUTH.md](backend/AUTH.md).
+Keputusan implementasi auth: sesi PostgreSQL dengan token acak yang hanya disimpan sebagai hash, cookie HttpOnly/SameSite=Lax (Secure dan prefix __Host- di produksi), batas absolut delapan jam tanpa refresh token, serta GET session untuk memulihkan konteks/CSRF setelah reload. Mutasi memakai origin allowlist dan CSRF yang terikat sesi; login/registrasi memvalidasi origin dan menerima JSON. Password baru 8–128 karakter di-hash dengan scrypt. Reset password admin menaikkan auth_version dan mencabut semua sesi pelanggan; service mutasi memeriksa ulang otorisasi di bawah user lock. NIK memakai AES-256-GCM dengan keyring/version dan AAD user ID. Kontrak, perintah admin pertama, serta setup kunci di [backend/AUTH.md](backend/AUTH.md).
 
 React Query menjadi sumber data server; mutation menginvalidasi daftar, detail, stok, jadwal, serta agregasi yang terdampak. Zustand tidak menggandakan seluruh data server. HTTP client berada di `services/`, komponen/hook dikelompokkan per fitur, dan type mengikuti response API aktual. UI menggunakan bahasa Indonesia dan satu arah visual Taste yang sesuai iRent.
 
@@ -696,7 +696,9 @@ Interval job baru adalah rancangan teknis untuk memenuhi alert tepat waktu. Sche
 
 ## 16. Keamanan dan kebutuhan nonfungsional
 
-- Password hash scrypt dengan salt acak dan parameter sesuai §3; password baru 12–128 karakter. Tidak menyimpan password plaintext.
+Keputusan keamanan akun 22 Oktober 2026: admin dan pelanggan dapat mengganti password sendiri di halaman Akun saya. Wajib memverifikasi password lama, memakai password baru 8–128 karakter yang berbeda, serta mengisi konfirmasi yang cocok. Keberhasilan mencabut seluruh sesi dan langganan push akun; pengguna masuk kembali dan admin mengaktifkan push kembali. Audit tidak menyimpan password/hash. Percobaan dibatasi lima per akun per 15 menit; otorisasi diperiksa ulang dalam transaksi di bawah user lock. Reset pelanggan oleh admin tetap merupakan alur terpisah.
+
+- Password hash scrypt dengan salt acak dan parameter sesuai §3; password baru 8–128 karakter. Tidak menyimpan password plaintext.
 - NIK terenkripsi, hanya detail penyewa bagi admin; tidak pada tabel atau notifikasi.
 - Bukti pembayaran/refund privat, otorisasi pemilik/admin di server, validasi MIME dan ukuran, nama acak.
 - Throttle login, registrasi, upload; CSRF dan validasi server mengikuti framework.

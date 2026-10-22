@@ -17,6 +17,7 @@ import { useProfile } from '@/customer/hooks';
 import { errorMessage } from '@/services/api';
 import type { User } from '@/auth/types';
 import './account-page.css';
+import { ChangePasswordPanel } from '../components/change-password-panel';
 function LoginDetails({ user }: { user: User }) {
   return (
     <section className="account-panel" aria-labelledby="login-details-title">
@@ -152,6 +153,7 @@ function CustomerAccount({ user }: { user: User }) {
       </aside>
       <div className="account-settings-column">
         <LoginDetails user={user} />
+        <ChangePasswordPanel />
         <section
           className="account-panel"
           aria-labelledby="renter-details-title"
@@ -315,7 +317,10 @@ export function AccountPage() {
       {user.role === 'customer' ? (
         <CustomerAccount user={user} />
       ) : (
-        <LoginDetails user={user} />
+        <>
+          <LoginDetails user={user} />
+          <ChangePasswordPanel admin />
+        </>
       )}
     </div>
   );

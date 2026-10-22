@@ -55,7 +55,7 @@ it('registers a customer with email and opens their account without storing cred
   await user.type(screen.getByLabelText('Email'), 'baru@example.test');
   await user.type(
     screen.getByLabelText('Password', { exact: true }),
-    'password-panjang',
+    'abcdefgh',
   );
   await user.click(screen.getByRole('button', { name: 'Buat akun' }));
   expect(
@@ -66,7 +66,7 @@ it('registers a customer with email and opens their account without storing cred
   expect(received).toEqual({
     name: 'Penyewa Baru',
     email: 'baru@example.test',
-    password: 'password-panjang',
+    password: 'abcdefgh',
   });
   expect(localStorage.length + sessionStorage.length).toBe(0);
 });

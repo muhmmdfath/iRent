@@ -11,7 +11,7 @@ import { ConfigService } from '@nestjs/config';
 import { Response } from 'express';
 import { AuthService } from './auth.service';
 import { AuthRequest, Public, sessionCookieName } from './auth.guard';
-import { LoginDto, RegisterDto } from './auth.dto';
+import { ChangePasswordDto, LoginDto, RegisterDto } from './auth.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -63,6 +63,23 @@ export class AuthController {
     @Res({ passthrough: true }) response: Response,
   ) {
     await this.auth.logout(req.auth);
+    this.clearCookie(response);
+  }
+  @Post('password')
+  @HttpCode(204)
+  async changePassword(
+    @Req() req: AuthRequest,
+    @Body() dto: ChangePasswordDto,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    await this.auth.changePassword(
+      req.auth,
+      dto.currentPassword,
+      dto.newPassword,
+    );
+    this.clearCookie(response);
+  }
+  private clearCookie(response: Response): void {
     const production = this.config.get<string>('NODE_ENV') === 'production';
     response.clearCookie(sessionCookieName(production), {
       httpOnly: true,

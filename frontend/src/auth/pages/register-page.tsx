@@ -130,9 +130,7 @@ export function RegisterPage() {
               )}
             </div>
             <div className="field">
-              <label htmlFor="register-phone">
-                Nomor HP
-              </label>
+              <label htmlFor="register-phone">Nomor HP</label>
               <Input
                 id="register-phone"
                 placeholder="08xxxxxxxxxx"
@@ -154,14 +152,14 @@ export function RegisterPage() {
                 {...register('password', {
                   required: 'Isi password.',
                   minLength: {
-                    value: 12,
-                    message: 'Gunakan minimal 12 karakter.',
+                    value: 8,
+                    message: 'Gunakan minimal 8 karakter.',
                   },
                   maxLength: 128,
                 })}
               />
               <p id="password-help" className="muted text-sm mt-2">
-                Minimal 12 karakter.
+                Minimal 8 karakter.
               </p>
               {errors.password && (
                 <p className="field-error">{errors.password.message}</p>

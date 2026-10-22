@@ -16,12 +16,16 @@ export class RegisterDto {
   @IsString()
   @Length(1, 40)
   phone?: string;
-  @IsString() @MinLength(12) @MaxLength(128) password!: string;
+  @IsString() @MinLength(8) @MaxLength(128) password!: string;
 }
 export class LoginDto {
   @IsString() @Length(1, 254) identity!: string;
   @IsString() @Length(1, 128) password!: string;
 }
 export class ResetPasswordDto {
-  @IsString() @MinLength(12) @MaxLength(128) password!: string;
+  @IsString() @MinLength(8) @MaxLength(128) password!: string;
+}
+export class ChangePasswordDto {
+  @IsString() @Length(1, 128) currentPassword!: string;
+  @IsString() @MinLength(8) @MaxLength(128) newPassword!: string;
 }

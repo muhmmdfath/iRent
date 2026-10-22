@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>iRent Semarang — Opsi Hosting dan Domain</title>
+<style>
+@font-face{font-family:Poppins;src:url('../../frontend/node_modules/@fontsource/poppins/files/poppins-latin-400-normal.woff2')}@font-face{font-family:Poppins;src:url('../../frontend/node_modules/@fontsource/poppins/files/poppins-latin-600-normal.woff2');font-weight:600}
+*{box-sizing:border-box}body{margin:0;color:#24232a;background:#eae8eb;font:10px/1.65 Poppins,Arial,sans-serif} .page{width:210mm;height:297mm;padding:17mm 18mm 16mm;background:white;position:relative;margin:10px auto;overflow:hidden}header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #e7e2e6;padding-bottom:12px;margin-bottom:24px}.brand{font-size:15px;font-weight:600}.brand b{color:#e62f72}.label{font-size:8px;letter-spacing:1.4px;text-transform:uppercase;color:#776b75}h1{font-size:30px;line-height:1.25;font-weight:600;letter-spacing:-1px;margin:10px 0 16px}h2{font-size:18px;line-height:1.35;margin:22px 0 10px;letter-spacing:-.4px}h3{font-size:11px;margin:0 0 6px;font-weight:600}p{margin:0 0 10px}.lead{font-size:12px;color:#655e68;line-height:1.8}.accent{background:#fff3f8;border-left:3px solid #ef3e80;padding:15px 17px;margin:18px 0}.accent p:last-child{margin:0}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.block{border-top:1px solid #e6e1e5;padding-top:12px}.num{color:#e62f72;font-size:9px;font-weight:600;margin-bottom:4px}table{width:100%;border-collapse:collapse;margin:12px 0 10px;font-size:9px;line-height:1.6}th{text-align:left;background:#f5f2f5;font-weight:600}td,th{padding:10px 9px;border-bottom:1px solid #e7e1e6;vertical-align:top}td:first-child{font-weight:600}small,.muted{font-size:8.5px;color:#746b76}.flow{background:#27232b;color:#fff;padding:14px 16px;margin:15px 0;font-size:10px;border-radius:5px}.flow span{color:#ff94bd}ul,ol{padding-left:17px;margin:8px 0 12px}li{padding-left:3px;margin-bottom:6px}a{color:#ad2459;text-decoration:none}.sources{font-size:8px;line-height:1.6;columns:2;column-gap:20px}.sources p{break-inside:avoid;margin-bottom:8px}footer{position:absolute;bottom:11mm;left:18mm;right:18mm;border-top:1px solid #e7e2e6;padding-top:8px;display:flex;justify-content:space-between;font-size:8px;color:#817681}.tag{display:inline-block;background:#ffe0ed;color:#9b2452;padding:3px 7px;font-size:8px;border-radius:3px}.tight h2{margin-top:17px}.tight table td,.tight table th{padding:8px}.check{display:flex;gap:10px;border-bottom:1px solid #eee8ed;padding:9px 0}.check b{color:#bd3265;font-size:10px;min-width:18px}@page{size:A4;margin:0}@media print{body{background:white}.page{margin:0;break-after:page}.page:last-child{break-after:auto}}
+</style>
+</head>
+<body>
+<section class="page">
+<header><div class="brand">iRent <b>Semarang</b></div><div class="label">Bahan keputusan · 20 Oktober 2026</div></header>
+<div class="label">01 / Ringkasan pilihan</div>
+<h1>Hosting yang sesuai.<br>Biaya yang jelas.</h1>
+<p class="lead">Opsi deployment website sewa, aplikasi pelanggan, dan panel admin iRent. Dokumen ini menjadi bahan memilih layanan; belum ada pembelian atau deployment produksi.</p>
+<div class="accent"><h3>Rekomendasi: VPS + satu domain .com</h3><p>Jalankan frontend, API, PostgreSQL, dan worker pada satu VPS terlebih dahulu. Pilih kapasitas menurut anggaran; target awal 2 vCPU dan RAM 4–8 GB memberi ruang lebih nyaman. Ini perkiraan engineering, belum hasil uji beban produksi.</p></div>
+<h2>Apa yang sebenarnya kita hosting?</h2>
+<div class="grid">
+<div class="block"><div class="num">WEBSITE & PWA</div><h3>Halaman pelanggan dan admin</h3><p>Frontend React/Vite berupa hasil build statis. Aset ini relatif mudah ditempatkan di hosting yang menyediakan HTTPS dan pengaturan route.</p></div>
+<div class="block"><div class="num">API & WORKER</div><h3>Proses bisnis yang terus aktif</h3><p>Backend NestJS/Node.js menjalankan booking, pembayaran, tenggat, dan pengingat. Proses server perlu tetap berjalan, termasuk saat tidak ada pengunjung.</p></div>
+<div class="block"><div class="num">DATABASE</div><h3>PostgreSQL</h3><p>Alokasi stok dan transaksi bergantung pada transaksi database, locking, serta aturan yang sudah dibangun untuk PostgreSQL. Mengganti ke MySQL bukan sekadar mengubah konfigurasi.</p></div>
+<div class="block"><div class="num">FILE & BACKUP</div><h3>Penyimpanan persisten</h3><p>Foto item dan bukti pembayaran harus bertahan saat aplikasi diperbarui. Bukti privat dilayani melalui otorisasi API; backup perlu disalin ke luar server utama.</p></div>
+</div>
+<div class="flow">Internet → <span>domain + HTTPS</span> → frontend / API → PostgreSQL & file persisten<br><span>Worker</span> memproses tenggat dan pengingat di sisi server.</div>
+<p class="muted">Dasar kebutuhan: backend/package.json, backend/.env.example, frontend/package.json, dan PRD repository iRent saat dokumen disusun. Tidak memerlukan Redis sebagai syarat deployment implementasi saat ini.</p>
+<footer><span>iRent · Opsi hosting dan domain</span><span>01 / 04</span></footer>
+</section>
+
+<section class="page tight">
+<header><div class="brand">iRent <b>Semarang</b></div><div class="label">Kesesuaian dengan aplikasi</div></header>
+<div class="label">02 / Shared hosting</div>
+<h1>Kenapa tidak langsung<br>pakai shared hosting?</h1>
+<p class="lead">Bisa untuk bagian frontend. Untuk menjalankan seluruh iRent, paketnya harus memenuhi kebutuhan backend dan database, bukan hanya bisa membuka file website.</p>
+<table><thead><tr><th style="width:25%">Kebutuhan iRent</th><th>Yang harus diperiksa pada shared hosting</th></tr></thead><tbody>
+<tr><td>Backend Node.js</td><td>Dukungan versi Node yang sesuai manifest: backend saat ini Node 24.15–24.x; fitur aplikasi Node, restart otomatis, dan proses yang tetap aktif.</td></tr>
+<tr><td>PostgreSQL</td><td>Tersedia PostgreSQL yang kompatibel, koneksi dan izin migrasi Prisma, serta dukungan transaksi/locking. Paket MySQL saja tidak memenuhi kebutuhan.</td></tr>
+<tr><td>Worker pengingat</td><td>Proses latar belakang boleh berjalan terus dan tidak diputus oleh kebijakan idle/resource. Adanya cron saja belum membuktikan worker saat ini bisa berjalan.</td></tr>
+<tr><td>Upload privat</td><td>Direktori persisten terpisah dari file publik, batas upload yang sesuai, akses tulis, serta mekanisme backup dan pemulihan.</td></tr>
+<tr><td>Deployment & PWA</td><td>HTTPS, environment rahasia, route SPA/API, serta manifest dan service worker dilayani dengan benar. Koneksi keluar untuk Web Push harus diizinkan.</td></tr>
+</tbody></table>
+<div class="accent"><h3>Contoh keterbatasan yang nyata</h3><p>Dokumentasi Hostinger menyatakan PostgreSQL tidak tersedia pada paket Web/Cloud yang dibahas di halaman dukungannya dan mengarahkan pengguna ke VPS. Ini contoh spesifik provider, bukan aturan untuk seluruh shared hosting. <a href="https://support.hostinger.com/en/articles/1583659-is-postgresql-supported-at-hostinger">[S3]</a></p></div>
+<h2>Kapan shared hosting tetap masuk akal?</h2>
+<ul><li><strong>Frontend saja:</strong> hasil build React ditempatkan di shared hosting; API dan database tetap di layanan lain. Ada tambahan konfigurasi proxy atau cookie/CORS bila berbeda origin.</li><li><strong>Paket khusus aplikasi:</strong> provider mengonfirmasi seluruh persyaratan di atas. Label “Node.js supported” saja belum cukup untuk memutuskan.</li><li><strong>Website informasi sederhana:</strong> bila hanya beranda/katalog statis tanpa operasional sewa, kebutuhan hosting jauh lebih ringan.</li></ul>
+<p><strong>Pilihan untuk iRent:</strong> VPS lebih mudah disesuaikan dengan implementasi sekarang. Shared hosting bisa dievaluasi jika ada paket konkret yang memenuhi persyaratan; kita tidak perlu mengganti arsitektur bisnis demi paket yang kurang cocok.</p>
+<footer><span>Kesimpulan berlaku untuk kebutuhan iRent saat ini</span><span>02 / 04</span></footer>
+</section>
+
+<section class="page tight">
+<header><div class="brand">iRent <b>Semarang</b></div><div class="label">Harga indikatif · bukan penawaran pembelian</div></header>
+<div class="label">03 / Hosting, domain & anggaran</div>
+<h1>Pilih tingkat biaya<br>dan pengelolaannya.</h1>
+<table><thead><tr><th style="width:22%">Opsi</th><th style="width:29%">Harga yang ditampilkan</th><th>Penilaian untuk iRent</th></tr></thead><tbody>
+<tr><td>Hostinger<br>KVM 1 <a href="https://www.hostinger.com/id/hosting-vps">[S1]</a></td><td>Promo Rp116.900/bln<br>Perpanjangan Rp193.900/bln<br>1 vCPU · 4 GB · 50 GB</td><td>Opsi hemat untuk trafik awal rendah. Perlu monitoring dan uji beban; sumber daya lebih sempit saat build atau backup.</td></tr>
+<tr><td>Hostinger<br>KVM 2 <a href="https://www.hostinger.com/id/hosting-vps">[S1]</a></td><td>Promo Rp151.900/bln<br>Perpanjangan Rp232.900/bln<br>2 vCPU · 8 GB · 100 GB</td><td><span class="tag">Pilihan utama</span><br>Ruang lebih longgar untuk API, database dan worker bersama. Administrasi server tetap tanggung jawab kita.</td></tr>
+<tr><td>Railway <a href="https://railway.com/pricing">[S4]</a></td><td>Hobby minimum US$5/bln<br>Pro minimum US$20/bln<br>Kredit penggunaan termasuk</td><td>Deployment lebih praktis. Pro diposisikan provider untuk produksi profesional. Total mengikuti pemakaian; database dan volume perlu direncanakan.</td></tr>
+</tbody></table>
+<p class="muted">Harga diperiksa 20 Oktober 2026. Promo dapat mensyaratkan pembayaran beberapa tahun di muka; nominal bulanan bukan jaminan bisa dibayar bulanan. Perpanjangan VPS di atas tercantum untuk dua tahun. Pajak, kurs, lokasi server, dan total kontrak harus dicek pada checkout. Angka minimum Railway bukan harga paket lengkap tetap.</p>
+<h2>Domain yang disarankan</h2>
+<table><thead><tr><th>Nama kandidat</th><th>Harga ekstensi tahun pertama <a href="https://www.hostinger.com/id/domain-murah">[S2]</a></th><th>Alasan</th></tr></thead><tbody>
+<tr><td>irentsemarang.com</td><td>.com: Rp109.900</td><td>Pilihan utama; mudah dikaitkan dengan brand dan kota.</td></tr>
+<tr><td>irentsemarang.id</td><td>.id: Rp210.900</td><td>Alternatif identitas Indonesia.</td></tr></tbody></table>
+<p class="muted">Ketersediaan nama dan kemungkinan harga premium belum diverifikasi. Angka di atas adalah promo ekstensi umum, bukan penawaran untuk nama tersebut. Harga perpanjangan domain belum terverifikasi. Domain dan server boleh dibeli dari provider berbeda.</p>
+<h2>Gambaran biaya untuk opsi utama</h2>
+<p>KVM 2 + .com, jika tarif promo berlaku: <strong>Rp1.932.700 setara 12 bulan</strong> (12 × Rp151.900 + Rp109.900). Ini perhitungan pembanding, bukan total checkout atau janji kontrak satu tahun.</p>
+<p>Anggaran kerja awal: <strong>Rp200–300 ribu/bulan + domain tahunan</strong>, sebagai estimasi internal untuk server dan cadangan biaya backup kecil. Belum termasuk tenaga pengelolaan, email/OTP, WhatsApp, iklan, atau penambahan kapasitas. Tetapkan biaya backup berdasarkan ukuran data dan retensinya.</p>
+<footer><span>Satu domain cukup: / · /app/ · /admin/ · /api/</span><span>03 / 04</span></footer>
+</section>
+
+<section class="page tight">
+<header><div class="brand">iRent <b>Semarang</b></div><div class="label">Penemuan di Google & langkah berikutnya</div></header>
+<div class="label">04 / Setelah memilih layanan</div>
+<h1>Siap tayang.<br>Lalu mudah ditemukan.</h1>
+<p class="lead">Hosting dan domain membuat situs bisa diakses. Untuk mendatangkan pelanggan dari pencarian, perlu pekerjaan SEO dan profil bisnis secara terpisah.</p>
+<div class="grid">
+<div class="block"><h3>Google Maps / Profil Bisnis</h3><p>Verifikasi bisnis yang memenuhi syarat, isi alamat atau area layanan secara akurat, jam buka, foto asli, dan kontak. Dorong ulasan jujur dari pelanggan. Peringkat lokal dipengaruhi relevansi, jarak, dan popularitas. <a href="https://support.google.com/business/answer/7091?hl=id">[S5]</a></p></div>
+<div class="block"><h3>Pencarian organik website</h3><p>Siapkan halaman sewa iPhone Semarang yang informatif, harga, syarat dan detail perangkat; judul unik, sitemap dan Search Console. Google tidak menjamin posisi pertama atau pengindeksan. <a href="https://developers.google.com/search/docs/fundamentals/seo-starter-guide">[S6]</a></p></div>
+</div>
+<p style="margin-top:12px">Untuk React/Vite, evaluasi prerender halaman publik agar konten utama tersedia sebagai HTML. Halaman akun/admin tidak ditargetkan untuk pencarian; otorisasi server tetap melindungi data. <a href="https://developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics">[S7]</a> Google Ads dapat menambah visibilitas berbayar; posisi tetap mengikuti lelang dan kualitas. <a href="https://support.google.com/google-ads/answer/1752122">[S8]</a></p>
+<h2>Urutan eksekusi yang disarankan</h2>
+<div class="check"><b>01</b><div>Pilih anggaran, provider dan lokasi server yang tersedia; cek latensi dari Semarang, kontrak, pajak, perpanjangan, serta ketersediaan domain.</div></div>
+<div class="check"><b>02</b><div>Siapkan server, DNS, HTTPS, Node yang kompatibel, PostgreSQL, secret produksi dan penyimpanan persisten. Aktifkan worker dan konfigurasi VAPID.</div></div>
+<div class="check"><b>03</b><div>Deploy build dan migrasi; buat admin, isi data riil, uji booking sampai return/refund, PWA dan push perangkat fisik. Aktifkan monitoring, backup eksternal dan uji restore.</div></div>
+<div class="check"><b>04</b><div>Publikasikan setelah pemeriksaan selesai; daftarkan Search Console dan Profil Bisnis. Ukur trafik, konversi booking dan beban server sebelum menaikkan paket.</div></div>
+<h2>Sumber resmi</h2>
+<p class="muted">Tautan dapat diklik. Diakses 20 Oktober 2026. Fakta provider berasal dari sumber berikut; rekomendasi kapasitas dan anggaran merupakan penilaian untuk implementasi iRent.</p>
+<div class="sources">
+<p><a href="https://www.hostinger.com/id/hosting-vps">S1 · Hostinger — paket VPS, spesifikasi dan harga</a><br><a href="https://www.hostinger.com/id/domain-murah">S2 · Hostinger — harga domain tahun pertama</a></p>
+<p><a href="https://support.hostinger.com/en/articles/1583659-is-postgresql-supported-at-hostinger">S3 · Hostinger — dukungan PostgreSQL</a><br><a href="https://railway.com/pricing">S4 · Railway — paket dan penagihan penggunaan</a></p>
+<p><a href="https://support.google.com/business/answer/7091?hl=id">S5 · Google — peringkat pencarian lokal</a><br><a href="https://developers.google.com/search/docs/fundamentals/seo-starter-guide">S6 · Google — panduan dasar SEO</a></p>
+<p><a href="https://developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics">S7 · Google — JavaScript SEO</a><br><a href="https://support.google.com/google-ads/answer/1752122">S8 · Google Ads — Ad Rank</a></p>
+</div>
+<footer><span>Keputusan yang dibutuhkan: anggaran · provider · nama domain</span><span>04 / 04</span></footer>
+</section>
+</body></html>

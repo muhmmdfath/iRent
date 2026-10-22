@@ -1,0 +1,12 @@
+**/node_modules
+**/dist
+**/dist-test
+**/.env
+**/.env.*
+!**/.env.example
+backend/storage
+backend/src/generated
+**/test-results
+**/playwright-report
+.git
+docs
