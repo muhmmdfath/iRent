@@ -185,3 +185,89 @@
   background: #f1e8f7;
   color: #77518b;
 }
+
+/* Homepage preview: one compact row of bookings before discovery. */
+.recent-rental-list-compact {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+  margin-top: 16px;
+}
+.recent-rental-list-compact .recent-rental-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 12px;
+}
+.recent-rental-list-compact .recent-rental-top {
+  padding: 12px 14px;
+  gap: 8px;
+  align-items: flex-start;
+}
+.recent-rental-list-compact .recent-rental-status {
+  font-size: 10px;
+  padding: 4px 7px;
+  max-width: 100%;
+}
+.recent-rental-list-compact .recent-rental-body {
+  padding: 14px;
+  gap: 12px;
+  flex: 1;
+}
+.recent-rental-list-compact .recent-rental-photo {
+  width: 46px;
+  height: 58px;
+  flex: 0 0 46px;
+  border-radius: 8px;
+}
+.recent-rental-list-compact .recent-rental-info h3 {
+  font-size: 13px;
+  font-weight: 500;
+}
+.recent-rental-list-compact .recent-rental-dates {
+  grid-template-columns: minmax(0, 1fr);
+  margin-top: 10px;
+  gap: 7px;
+}
+.recent-rental-list-compact .recent-rental-dates > div {
+  display: grid;
+  grid-template-columns: 43px minmax(0, 1fr);
+  gap: 8px;
+  align-items: baseline;
+}
+.recent-rental-list-compact .recent-rental-dates dt,
+.recent-rental-list-compact .recent-rental-dates dd {
+  font-size: 10px;
+  line-height: 1.6;
+  margin: 0;
+}
+.recent-rental-list-compact .recent-rental-bottom {
+  padding: 12px 14px;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.recent-rental-list-compact .recent-rental-bottom strong {
+  font-size: 13px;
+}
+.recent-rental-list-compact .recent-rental-bottom [data-slot='button'] {
+  min-height: 36px;
+  font-size: 10px;
+  padding: 8px 10px;
+}
+@media (max-width: 1279px) {
+  .recent-rental-list-compact {
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(270px, 1fr);
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    padding: 2px 2px 12px;
+  }
+  .recent-rental-list-compact .recent-rental-card {
+    scroll-snap-align: start;
+  }
+}
+@media (max-width: 599px) {
+  .recent-rental-list-compact {
+    grid-auto-columns: calc(100% - 20px);
+  }
+}

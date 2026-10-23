@@ -17,7 +17,25 @@ for (const width of [360, 1440]) {
       r.fulfill({ json: { data: [item], total: 1, page: 1 } }),
     );
     await page.route('**/api/bookings?**', (r) =>
-      r.fulfill({ json: [booking] }),
+      r.fulfill({
+        json: new URL(r.request().url()).searchParams.has('status')
+          ? [booking]
+          : [
+              booking,
+              {
+                ...booking,
+                id: 'confirmed-preview',
+                code: 'IRN-CONFIRMED',
+                status: 'dikonfirmasi',
+              },
+              {
+                ...booking,
+                id: 'completed-preview',
+                code: 'IRN-COMPLETED',
+                status: 'selesai',
+              },
+            ],
+      }),
     );
     await page.route('**/api/bookings/test-booking/payments', (r) =>
       r.fulfill({ json: financial() }),
@@ -27,6 +45,37 @@ for (const width of [360, 1440]) {
     await expect(
       page.getByRole('heading', { name: 'Untuk rencana berikutnya' }),
     ).toBeVisible();
+    const latest = page.getByRole('region', { name: 'Booking terbaru' });
+    await expect(latest).toBeVisible();
+    await expect(latest.locator('.recent-rental-card')).toHaveCount(3);
+    if (width < 600) {
+      const preview = latest.locator('.recent-rental-list');
+      expect(
+        (await preview.locator('.recent-rental-card').first().boundingBox())!
+          .width,
+      ).toBeGreaterThan(240);
+      expect(
+        await preview.evaluate(
+          (element) => element.scrollWidth > element.clientWidth,
+        ),
+      ).toBe(true);
+    }
+    const devices = page.getByRole('region', {
+      name: 'Untuk rencana berikutnya',
+    });
+    expect((await latest.boundingBox())!.y).toBeLessThan(
+      (await devices.boundingBox())!.y,
+    );
+    expect(
+      await latest.evaluate(
+        (element) =>
+          !!(
+            element.compareDocumentPosition(
+              document.querySelector('.customer-devices')!,
+            ) & Node.DOCUMENT_POSITION_FOLLOWING
+          ),
+      ),
+    ).toBe(true);
     await expect(
       page.getByRole('link', { name: 'Lihat perangkat', exact: true }),
     ).toHaveAttribute('href', '/catalog/test-item');

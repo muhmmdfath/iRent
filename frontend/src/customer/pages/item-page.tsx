@@ -14,8 +14,14 @@ import { customerApi } from '../api';
 import { ItemPhoto } from '../components/item-photo';
 import { rupiah, defaultStart, localWib, wib } from '../format';
 import { DateTimeInput } from '@/components/ui/date-time-input';
+import { usePolicy } from '../hooks';
 import './item-detail.css';
 export function ItemPage() {
+  const policy = usePolicy();
+  const serviceHours = {
+    from: policy.data?.values.open_time || '08:00',
+    to: policy.data?.values.close_time || '22:00',
+  };
   const { id = '' } = useParams();
   const [duration, setDuration] = useState<6 | 12 | 24>(6);
   const [scheduleOpen, setScheduleOpen] = useState(false);
@@ -49,12 +55,12 @@ export function ItemPage() {
     if (Date.parse(startAt) < Date.now() + 2 * 3600000)
       scheduleError = 'Pilih waktu mulai minimal 2 jam dari sekarang.';
     else if (
-      start.slice(11) < '08:00' ||
-      start.slice(11) > '22:00' ||
-      endTime < '08:00' ||
-      endTime > '22:00'
+      start.slice(11) < serviceHours.from ||
+      start.slice(11) > serviceHours.to ||
+      endTime < serviceHours.from ||
+      endTime > serviceHours.to
     )
-      scheduleError = 'Waktu ambil dan kembali harus pukul 08.00-22.00 WIB.';
+      scheduleError = `Waktu ambil dan kembali harus pukul ${serviceHours.from}–${serviceHours.to} WIB.`;
   } catch {
     scheduleError = 'Pilih tanggal dan jam yang valid.';
   }
@@ -170,6 +176,7 @@ export function ItemPage() {
                 value={start}
                 onChange={(event) => setStart(event.target.value)}
                 initiallyOpen
+                timeRange={serviceHours}
               />
               <div className="product-schedule-return">
                 <span>Jadwal kembali</span>

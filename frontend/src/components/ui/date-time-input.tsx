@@ -18,8 +18,12 @@ export function DateTimeInput({
   className,
   onChange,
   initiallyOpen = false,
+  timeRange,
   ...props
-}: ComponentProps<'input'> & { initiallyOpen?: boolean }) {
+}: ComponentProps<'input'> & {
+  initiallyOpen?: boolean;
+  timeRange?: { from: string; to: string };
+}) {
   const input = useRef<HTMLInputElement>(null);
   const container = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
@@ -72,6 +76,13 @@ export function DateTimeInput({
     setOpen(!open);
   };
   const update = (date: string, clock: string) => {
+    if (timeRange)
+      clock =
+        clock < timeRange.from
+          ? timeRange.from
+          : clock > timeRange.to
+            ? timeRange.to
+            : clock;
     setSelected(date);
     setTime(clock);
     if (input.current && date) {
@@ -96,6 +107,22 @@ export function DateTimeInput({
         .toISOString()
         .slice(0, 10),
     );
+  const firstHour = timeRange ? Number(timeRange.from.slice(0, 2)) : 0;
+  const lastHour = timeRange ? Number(timeRange.to.slice(0, 2)) : 23;
+  const visibleValue = String(props.value ?? selected + 'T' + time);
+  const displayDate =
+    /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/.test(visibleValue) &&
+    Number.isFinite(Date.parse(visibleValue))
+      ? new Intl.DateTimeFormat('id-ID', {
+          day: 'numeric',
+          month: 'short',
+          year: 'numeric',
+          timeZone: 'UTC',
+        }).format(new Date(visibleValue.slice(0, 10) + 'T00:00:00Z')) +
+        ' · ' +
+        visibleValue.slice(11, 16) +
+        ' WIB'
+      : 'Pilih tanggal dan jam';
   return (
     <div className="styled-date-time" ref={container}>
       <input
@@ -103,20 +130,24 @@ export function DateTimeInput({
         ref={input}
         data-slot="input"
         className={className}
-        type="datetime-local"
+        id={timeRange && props.id ? props.id + '-value' : props.id}
+        type={timeRange ? 'hidden' : 'datetime-local'}
         onChange={onChange}
       />
       <button
         ref={trigger}
-        className="date-time-trigger"
+        id={timeRange ? props.id : undefined}
+        className={timeRange ? 'date-time-value' : 'date-time-trigger'}
         type="button"
-        aria-label="Buka kalender dan jam"
+        aria-label={timeRange ? props['aria-label'] : 'Buka kalender dan jam'}
+        aria-describedby={props['aria-describedby']}
         aria-expanded={open}
         aria-controls={panelId}
         disabled={props.disabled}
         onClick={toggle}
       >
         <CalendarIcon aria-hidden="true" />
+        {timeRange && <span>{displayDate}</span>}
       </button>
       {open && (
         <div
@@ -191,7 +222,10 @@ export function DateTimeInput({
                 update(selected, event.target.value + time.slice(2))
               }
             >
-              {Array.from({ length: 24 }, (_, hour) => (
+              {Array.from(
+                { length: lastHour - firstHour + 1 },
+                (_, index) => firstHour + index,
+              ).map((hour) => (
                 <option key={hour} value={String(hour).padStart(2, '0')}>
                   {String(hour).padStart(2, '0')}
                 </option>
@@ -205,13 +239,27 @@ export function DateTimeInput({
                 update(selected, time.slice(0, 3) + event.target.value)
               }
             >
-              {Array.from({ length: 60 }, (_, minute) => (
-                <option key={minute} value={String(minute).padStart(2, '0')}>
-                  {String(minute).padStart(2, '0')}
-                </option>
-              ))}
+              {Array.from({ length: 60 }, (_, minute) => minute)
+                .filter((minute) => {
+                  const clock =
+                    time.slice(0, 3) + String(minute).padStart(2, '0');
+                  return (
+                    !timeRange ||
+                    (clock >= timeRange.from && clock <= timeRange.to)
+                  );
+                })
+                .map((minute) => (
+                  <option key={minute} value={String(minute).padStart(2, '0')}>
+                    {String(minute).padStart(2, '0')}
+                  </option>
+                ))}
             </select>
           </div>
+          {timeRange && (
+            <p className="date-time-hours-note">
+              Jam layanan {timeRange.from}–{timeRange.to} WIB · format 24 jam
+            </p>
+          )}
           <button
             type="button"
             className="date-time-done"

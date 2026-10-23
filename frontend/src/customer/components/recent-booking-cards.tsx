@@ -5,9 +5,19 @@ import { ItemPhoto } from './item-photo';
 import { rupiah, statusLabels, wib } from '../format';
 import type { Booking } from '../types';
 
-export function RecentBookingCards({ bookings }: { bookings: Booking[] }) {
+export function RecentBookingCards({
+  bookings,
+  compact = false,
+}: {
+  bookings: Booking[];
+  compact?: boolean;
+}) {
   return (
-    <div className="recent-rental-list">
+    <div
+      className={
+        'recent-rental-list' + (compact ? ' recent-rental-list-compact' : '')
+      }
+    >
       {bookings.map((booking) => {
         const first = booking.items?.[0];
         const extraCount = Math.max(0, (booking.items?.length || 0) - 1);

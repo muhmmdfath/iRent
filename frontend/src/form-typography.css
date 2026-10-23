@@ -158,6 +158,38 @@
   position: relative;
   min-width: 0;
 }
+.styled-date-time .date-time-value {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  padding: 11px 13px;
+  border: 1px solid #e3dce2;
+  border-radius: 10px;
+  background: #fff;
+  color: #332c33;
+  font: inherit;
+  font-size: 13px;
+  text-align: left;
+  cursor: pointer;
+}
+.date-time-value svg {
+  width: 17px;
+  height: 17px;
+  flex: none;
+  color: #8b7080;
+}
+.styled-date-time .date-time-value:focus-visible {
+  outline: 2px solid #ff4081;
+  outline-offset: 3px;
+}
+.date-time-hours-note {
+  font-size: 10px;
+  line-height: 1.6;
+  color: #776c76;
+  margin: 10px 0;
+}
 :root body .styled-date-time > input {
   padding-right: 44px;
   min-width: 0;

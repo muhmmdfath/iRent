@@ -20,6 +20,7 @@ import { useQuery, useQueries, useMutation } from '@tanstack/react-query';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { DateTimeInput } from '@/components/ui/date-time-input';
 import { LoadingState, ErrorState } from '@/components/feedback';
 import { useSession } from '@/auth/session';
 import { useOnline } from '@/hooks/use-online';
@@ -591,10 +592,11 @@ export function NewBookingPage() {
                 <label htmlFor="startAt">
                   Tanggal dan jam pengambilan (WIB)
                 </label>
-                <Input
+                <DateTimeInput
                   id="startAt"
-                  type="datetime-local"
                   {...form.register('startAt')}
+                  value={values.startAt}
+                  timeRange={{ from: rule.open_time, to: rule.close_time }}
                 />
                 {form.formState.errors.startAt && (
                   <p className="field-error">

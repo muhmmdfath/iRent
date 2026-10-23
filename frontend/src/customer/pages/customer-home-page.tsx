@@ -38,6 +38,39 @@ export function CustomerHomePage() {
   );
   return (
     <div className="customer-home">
+      <section
+        className="dashboard-bookings customer-latest-bookings"
+        aria-labelledby="latest-bookings-title"
+      >
+        <div className="section-heading">
+          <h2 id="latest-bookings-title">Booking terbaru</h2>
+          <Link className="booking-view-all" to="/app/bookings">
+            Lihat semua <ArrowTopRightIcon aria-hidden="true" />
+          </Link>
+        </div>
+        {bookings.isPending ? (
+          <p role="status" className="muted">
+            Memuat booking...
+          </p>
+        ) : bookings.isError ? (
+          <p className="form-error">
+            {errorMessage(bookings.error)}{' '}
+            <button
+              className="text-link"
+              onClick={() => void bookings.refetch()}
+            >
+              Coba lagi
+            </button>
+          </p>
+        ) : bookings.data.length ? (
+          <RecentBookingCards bookings={bookings.data.slice(0, 3)} compact />
+        ) : (
+          <div className="empty-state">
+            <h3>Belum ada booking</h3>
+            <p>Pilih perangkat dan jadwal yang kamu butuhkan.</p>
+          </div>
+        )}
+      </section>
       <div className="customer-home-grid">
         <div className="customer-home-main">
           <section
@@ -90,36 +123,6 @@ export function CustomerHomePage() {
             ) : (
               <div className="customer-inline-state">
                 <p>Perangkat belum tersedia di katalog.</p>
-              </div>
-            )}
-          </section>
-          <section className="dashboard-bookings">
-            <div className="section-heading">
-              <h2>Booking terbaru</h2>
-              <Link className="booking-view-all" to="/app/bookings">
-                Lihat semua <ArrowTopRightIcon aria-hidden="true" />
-              </Link>
-            </div>
-            {bookings.isPending ? (
-              <p role="status" className="muted">
-                Memuat booking...
-              </p>
-            ) : bookings.isError ? (
-              <p className="form-error">
-                {errorMessage(bookings.error)}{' '}
-                <button
-                  className="text-link"
-                  onClick={() => void bookings.refetch()}
-                >
-                  Coba lagi
-                </button>
-              </p>
-            ) : bookings.data.length ? (
-              <RecentBookingCards bookings={bookings.data.slice(0, 3)} />
-            ) : (
-              <div className="empty-state">
-                <h3>Belum ada booking</h3>
-                <p>Pilih perangkat dan jadwal yang kamu butuhkan.</p>
               </div>
             )}
           </section>

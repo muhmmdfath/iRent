@@ -58,10 +58,27 @@ test('real rental lifecycle: registration, DP, settlement, handover, verified re
   });
   let id = '';
   await test.step('Create a six-hour booking and upload the DP immediately', async () => {
-    await page.goto('/app/new?itemId=' + cfg.itemId);
+    await page.goto(
+      '/app/new?itemId=' +
+        cfg.itemId +
+        '&startAt=' +
+        encodeURIComponent(instant(10)),
+    );
     await page
-      .getByLabel('Tanggal dan jam pengambilan (WIB)')
-      .fill(day + 'T10:00');
+      .getByRole('button', { name: 'Tanggal dan jam pengambilan (WIB)' })
+      .click();
+    await page
+      .getByRole('button', {
+        name: new Intl.DateTimeFormat('id-ID', {
+          dateStyle: 'long',
+          timeZone: 'UTC',
+        }).format(new Date(day + 'T00:00:00Z')),
+        exact: true,
+      })
+      .click();
+    await page.getByLabel('Jam', { exact: true }).selectOption('10');
+    await page.getByLabel('Menit', { exact: true }).selectOption('00');
+    await page.getByRole('button', { name: 'Selesai', exact: true }).click();
     await page
       .getByRole('button', { name: 'Periksa jadwal & biaya', exact: true })
       .click();
