@@ -1,9 +1,13 @@
+import {
+  rentalDurations,
+  durationLabel,
+  durationPrice,
+} from '../rental-duration';
 import { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import {
   CheckIcon,
-  ClockIcon,
   CubeIcon,
   ChevronLeftIcon,
   CalendarIcon,
@@ -13,7 +17,7 @@ import { LoadingState, ErrorState } from '@/components/feedback';
 import { customerApi } from '../api';
 import { ItemPhoto } from '../components/item-photo';
 import { rupiah, defaultStart, localWib, wib } from '../format';
-import { DateTimeInput } from '@/components/ui/date-time-input';
+import { RentalDateTimeInput } from '../components/rental-date-time-input';
 import { usePolicy } from '../hooks';
 import './item-detail.css';
 export function ItemPage() {
@@ -23,7 +27,8 @@ export function ItemPage() {
     to: policy.data?.values.close_time || '22:00',
   };
   const { id = '' } = useParams();
-  const [duration, setDuration] = useState<6 | 12 | 24>(6);
+  const [duration, setDuration] = useState(6);
+  const [scheduleAvailable, setScheduleAvailable] = useState(false);
   const [scheduleOpen, setScheduleOpen] = useState(false);
   const [start, setStart] = useState(defaultStart);
   const query = useQuery({
@@ -36,12 +41,7 @@ export function ItemPage() {
       <ErrorState error={query.error} retry={() => void query.refetch()} />
     );
   const item = query.data;
-  const price =
-    duration === 6
-      ? item.price6h
-      : duration === 12
-        ? item.price12h
-        : item.price24h;
+  const price = durationPrice(item, duration);
   let startAt = '';
   let endAt = '';
   let scheduleError = '';
@@ -123,7 +123,7 @@ export function ItemPage() {
             </p>
             <h1>{item.name}</h1>
             <p className="rental-product-intro">
-              Pilih paket dan jadwal sewa yang sesuai dengan kebutuhanmu.
+              Pilih durasi dan tanggal sewa.
             </p>
           </header>
           <div className="rental-product-price" aria-live="polite">
@@ -132,29 +132,19 @@ export function ItemPage() {
           </div>
           <div className="rental-product-plan">
             <h2>Pilih durasi</h2>
-            <div
-              className="rental-product-options"
-              aria-label="Durasi paket sewa"
+            <select
+              aria-label="Durasi sewa"
+              value={duration}
+              onChange={(event) => setDuration(Number(event.target.value))}
             >
-              {([6, 12, 24] as const).map((hours) => (
-                <button
-                  key={hours}
-                  type="button"
-                  aria-pressed={duration === hours}
-                  onClick={() => setDuration(hours)}
-                >
-                  <span>{hours} jam</span>
-                  <small>
-                    {hours === 24
-                      ? 'Sehari penuh'
-                      : hours === 12
-                        ? 'Lebih lama'
-                        : 'Singkat'}
-                  </small>
-                </button>
-              ))}
-            </div>
-            <p>Tarif sama setiap hari, termasuk akhir pekan.</p>
+              {rentalDurations(policy.data?.values.max_duration_hours).map(
+                (hours) => (
+                  <option key={hours} value={hours}>
+                    {durationLabel(hours)}
+                  </option>
+                ),
+              )}
+            </select>
           </div>
           <Button
             type="button"
@@ -170,7 +160,10 @@ export function ItemPage() {
           {scheduleOpen && (
             <div id="product-schedule" className="product-schedule-panel">
               <label htmlFor="product-start">Mulai sewa (WIB)</label>
-              <DateTimeInput
+              <RentalDateTimeInput
+                items={[{ itemId: item.id, quantity: 1 }]}
+                durationHours={duration}
+                onAvailabilityChange={setScheduleAvailable}
                 id="product-start"
                 name="productStart"
                 value={start}
@@ -189,13 +182,14 @@ export function ItemPage() {
               )}
               <Button
                 asChild
-                disabled={!!scheduleError}
+                disabled={!!scheduleError || !scheduleAvailable}
                 className="rental-product-cta"
               >
                 <Link
-                  aria-disabled={!!scheduleError}
+                  aria-disabled={!!scheduleError || !scheduleAvailable}
                   onClick={(event) => {
-                    if (scheduleError) event.preventDefault();
+                    if (scheduleError || !scheduleAvailable)
+                      event.preventDefault();
                   }}
                   to={
                     '/app/new?' +
@@ -212,31 +206,8 @@ export function ItemPage() {
             </div>
           )}
           <p className="rental-product-availability">
-            Ketersediaan diperiksa sesuai tanggal dan jam pilihan. Belum ada
-            unit yang dipesan pada tahap ini.
+            Ambil di toko atau pilih antar-jemput.
           </p>
-          <div className="rental-product-notes">
-            <div>
-              <ClockIcon aria-hidden="true" />
-              <p>
-                <strong>Butuh lebih dari satu hari?</strong>
-                <span>
-                  Paket kelipatan 24 jam hingga 7 hari tersedia saat memilih
-                  jadwal.
-                </span>
-              </p>
-            </div>
-            <div>
-              <CheckIcon aria-hidden="true" />
-              <p>
-                <strong>Pengambilan sesuai kebutuhan</strong>
-                <span>
-                  Ambil sendiri atau pilih antar-jemput sesuai zona yang
-                  tersedia.
-                </span>
-              </p>
-            </div>
-          </div>
         </aside>
       </div>
     </div>

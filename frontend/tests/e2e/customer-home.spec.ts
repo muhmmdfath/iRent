@@ -43,7 +43,7 @@ for (const width of [360, 1440]) {
     await page.route('**/media/**', (r) => r.fulfill({ status: 204 }));
     await page.goto('/app/');
     await expect(
-      page.getByRole('heading', { name: 'Untuk rencana berikutnya' }),
+      page.getByRole('heading', { name: 'Pilih perangkat' }),
     ).toBeVisible();
     const latest = page.getByRole('region', { name: 'Booking terbaru' });
     await expect(latest).toBeVisible();
@@ -61,7 +61,7 @@ for (const width of [360, 1440]) {
       ).toBe(true);
     }
     const devices = page.getByRole('region', {
-      name: 'Untuk rencana berikutnya',
+      name: 'Pilih perangkat',
     });
     expect((await latest.boundingBox())!.y).toBeLessThan(
       (await devices.boundingBox())!.y,
@@ -255,7 +255,7 @@ for (const width of [390, 1440]) {
       .click();
     await expect(heading).toBeVisible();
     await page
-      .getByRole('heading', { name: 'Untuk rencana berikutnya', exact: true })
+      .getByRole('heading', { name: 'Pilih perangkat', exact: true })
       .click();
     await expect(heading).toBeHidden();
     await trigger.click();

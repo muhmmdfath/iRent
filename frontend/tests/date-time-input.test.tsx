@@ -64,3 +64,26 @@ describe('booking clock', () => {
     expect(screen.getByRole('combobox', { name: 'Menit' })).toHaveValue('30');
   });
 });
+
+it('disables unavailable and past dates without changing the selection', () => {
+  render(
+    <DateTimeInput
+      value="2026-10-25T10:00"
+      initiallyOpen
+      timeRange={{ from: '08:00', to: '22:00' }}
+      min="2026-10-25T10:00"
+      disabledDate={(date) => date === '2026-10-29'}
+    />,
+  );
+  expect(
+    screen.getByRole('button', { name: '24 Oktober 2026' }),
+  ).toBeDisabled();
+  expect(
+    screen.getByRole('button', { name: '29 Oktober 2026' }),
+  ).toBeDisabled();
+  expect(screen.getByRole('button', { name: '30 Oktober 2026' })).toBeEnabled();
+  fireEvent.click(screen.getByRole('button', { name: '29 Oktober 2026' }));
+  expect(
+    screen.getByRole('button', { name: '25 Oktober 2026' }),
+  ).toHaveAttribute('aria-pressed', 'true');
+});

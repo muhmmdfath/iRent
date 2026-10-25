@@ -60,7 +60,7 @@ it('registers a customer with email and opens their account without storing cred
   await user.click(screen.getByRole('button', { name: 'Buat akun' }));
   expect(
     await screen.findByRole('heading', {
-      name: 'Untuk rencana berikutnya',
+      name: 'Pilih perangkat',
     }),
   ).toBeVisible();
   expect(received).toEqual({
@@ -244,13 +244,9 @@ it('checks price and availability then retries booking with the same action key'
     await screen.findByRole('button', { name: 'Periksa jadwal & biaya' }),
   );
   await screen.findByText('Jadwal tersedia saat diperiksa');
-  for (const label of [
-    /Saya menyetujui ketentuan/,
-    /Saya menyiapkan KTP/,
-    /Saya memahami pembayaran/,
-    /Saya menyetujui jam/,
-  ])
-    await user.click(screen.getByLabelText(label));
+  await user.click(
+    screen.getByRole('checkbox', { name: /Saya setuju ketentuan sewa/ }),
+  );
   await user.click(screen.getByRole('button', { name: 'Buat booking' }));
   await screen.findAllByRole('alert');
   await user.click(screen.getByRole('button', { name: 'Buat booking' }));
@@ -323,7 +319,7 @@ it('uploads immediately, keeps the retry key, and awaits admin verification with
   await user.click(
     screen.getByRole('button', { name: 'Upload bukti pembayaran' }),
   );
-  expect(await screen.findByText(/Bukti sudah diterima/)).toBeVisible();
+  expect(await screen.findByText(/Bukti terkirim/)).toBeVisible();
   expect(
     screen.queryByText('Pembayaran telah lunas dan terverifikasi.'),
   ).not.toBeInTheDocument();

@@ -54,7 +54,7 @@ for (const width of [360, 390, 768, 1024, 1440]) {
     await page.getByRole('button', { name: 'Masuk', exact: true }).click();
     await expect(page).toHaveURL(/\/app\//);
     await expect(
-      page.getByRole('heading', { name: 'Untuk rencana berikutnya' }),
+      page.getByRole('heading', { name: 'Pilih perangkat' }),
     ).toBeVisible();
     expect(
       await page.evaluate(

@@ -10,6 +10,7 @@ import { AuthContext, AuthService } from '../../auth/auth.service';
 import { publicImage, rupiah } from '../settings/settings.rules';
 import { BusinessClock } from '../../shared/time/business-clock';
 import {
+  ItemCalendarDto,
   ItemDto,
   InventoryListDto,
   ItemPatchDto,
@@ -18,13 +19,64 @@ import {
   ZoneDto,
 } from './inventory.dto';
 
+import { SettingsService } from '../settings/settings.service';
+import { validateSchedule } from '../pricing/pricing.rules';
+import { unitAvailable } from '../bookings/bookings.rules';
+
 @Injectable()
 export class InventoryService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly auth: AuthService,
     private readonly clock: BusinessClock,
+    private readonly settings: SettingsService,
   ) {}
+  async calendar(id: string, query: ItemCalendarDto) {
+    return this.prisma.$transaction(async (tx) => {
+      const item = await tx.item.findFirst({ where: { id, isActive: true } });
+      if (!item) throw new NotFoundException('Perangkat tidak ditemukan.');
+      const rules = (await this.settings.read(tx)).values;
+      const units = await tx.itemUnit.findMany({ where: { itemId: id } });
+      const ids = units.map((unit) => unit.id);
+      const allocations = await tx.unitAllocation.findMany({
+        where: { itemUnitId: { in: ids }, state: 'active' },
+        include: {
+          bookingItem: { include: { booking: true } },
+          extensionItem: { include: { extension: true } },
+        },
+      });
+      const uses = await tx.bookingItem.findMany({
+        where: {
+          itemUnitId: { in: ids },
+          useStatus: { in: ['in_use', 'return_pending'] },
+        },
+      });
+      const now = this.clock.now();
+      const [year, month] = query.month.split('-').map(Number);
+      const count = new Date(Date.UTC(year, month, 0)).getUTCDate();
+      const days = Array.from({ length: count }, (_, index) => {
+        const date = query.month + '-' + String(index + 1).padStart(2, '0');
+        let available = false;
+        try {
+          const { startAt, endAt } = validateSchedule(
+            date + 'T' + query.time + ':00+07:00',
+            query.durationHours,
+            rules,
+            now,
+          );
+          available =
+            units.filter((unit) =>
+              unitAvailable(unit, allocations, uses, startAt, endAt, now),
+            ).length >= query.quantity;
+        } catch (error) {
+          if (!(error instanceof BadRequestException)) throw error;
+        }
+        return { date, available };
+      });
+      return { month: query.month, days, reservesStock: false, checkedAt: now };
+    });
+  }
+
   async list(page: PageDto & Partial<InventoryListDto>, admin = false) {
     const where: Prisma.ItemWhereInput = admin
       ? {

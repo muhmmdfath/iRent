@@ -1,7 +1,7 @@
 import type { Booking, BookingStatus } from '@/customer/types';
 export interface HandoverInput {
   pickedUpAt: string;
-  conditionNote: string;
+  conditionNote?: string;
   shopDelayReason?: string;
 }
 export interface ReturnInput {

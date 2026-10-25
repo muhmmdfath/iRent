@@ -183,10 +183,6 @@ it('records verified money with a stable key after an uncertain response and nev
     await screen.findByRole('button', { name: 'Verifikasi uang perpanjangan' }),
   );
   await user.selectOptions(screen.getByLabelText('Metode pembayaran'), 'cash');
-  await user.type(
-    screen.getByLabelText('Catatan pemeriksaan'),
-    'Uang aktual sudah diperiksa.',
-  );
   await confirm('verifikasi uang perpanjangan');
   await within(screen.getByRole('main')).findByRole('alert');
   await user.click(
@@ -227,10 +223,6 @@ it('an approved extension settlement carries its extension ID rather than reduci
     await screen.findByRole('button', { name: 'Catat pelunasan perpanjangan' }),
   );
   await user.selectOptions(screen.getByLabelText('Metode pembayaran'), 'cash');
-  await user.type(
-    screen.getByLabelText('Catatan pemeriksaan'),
-    'Pelunasan tambahan sudah diterima.',
-  );
   await confirm('catat pelunasan perpanjangan');
   await waitFor(() =>
     expect(payload).toMatchObject({

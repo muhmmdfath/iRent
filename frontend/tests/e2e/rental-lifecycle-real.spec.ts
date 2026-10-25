@@ -28,6 +28,8 @@ test('real rental lifecycle: registration, DP, settlement, handover, verified re
   const admin = await adminContext.newPage();
   async function clock(hour: number) {
     const value = instant(hour);
+    await page.clock.setFixedTime(new Date(value));
+    await admin.clock.setFixedTime(new Date(value));
     writeFileSync(cfg.clockFile + '.tmp', JSON.stringify({ instant: value }));
     renameSync(cfg.clockFile + '.tmp', cfg.clockFile);
     await page.clock.setFixedTime(new Date(value));
@@ -85,13 +87,9 @@ test('real rental lifecycle: registration, DP, settlement, handover, verified re
     await expect(
       page.getByText('Jadwal tersedia saat diperiksa'),
     ).toBeVisible();
-    for (const label of [
-      /Saya menyetujui ketentuan/,
-      /Saya menyiapkan KTP/,
-      /Saya memahami pembayaran/,
-      /Saya menyetujui jam/,
-    ])
-      await page.getByLabel(label).check();
+    await page
+      .getByRole('checkbox', { name: /Saya setuju ketentuan sewa/ })
+      .check();
     await page
       .getByRole('button', { name: 'Buat booking', exact: true })
       .click();
@@ -109,7 +107,7 @@ test('real rental lifecycle: registration, DP, settlement, handover, verified re
     await page
       .getByRole('button', { name: 'Upload bukti pembayaran', exact: true })
       .click();
-    await expect(page.getByText(/Bukti sudah diterima/)).toBeVisible();
+    await expect(page.getByText(/Bukti terkirim/)).toBeVisible();
   });
   const money = async () => {
     const r = await page.request.get('/api/bookings/' + id + '/payments');
@@ -127,10 +125,9 @@ test('real rental lifecycle: registration, DP, settlement, handover, verified re
     await admin.getByRole('button', { name: 'Masuk', exact: true }).click();
     await expect(admin).toHaveURL(/\/admin\/?$/);
     await admin.goto('/admin/bookings/' + id);
-    async function receipt(button: string, note: string) {
+    async function receipt(button: string) {
       await admin.getByRole('button', { name: button, exact: true }).click();
       await admin.getByLabel('Metode pembayaran').selectOption('cash');
-      await admin.getByLabel('Catatan pemeriksaan').fill(note);
       await admin.getByRole('checkbox', { name: /memastikan uang/ }).check();
       await admin.getByRole('button', { name: 'Periksa pencatatan' }).click();
       await admin
@@ -140,18 +137,12 @@ test('real rental lifecycle: registration, DP, settlement, handover, verified re
         admin.getByRole('status').filter({ hasText: 'Pembayaran dicatat' }),
       ).toHaveText(/dicatat|lunas/);
     }
-    await receipt(
-      'Verifikasi uang masuk',
-      'SIMULASI DP aktual diterima tunai.',
-    );
+    await receipt('Verifikasi uang masuk');
     data = await money();
     expect(data.booking.status).toBe('dikonfirmasi');
     expect(data.summary.received).toBe('20000');
     expect(data.summary.remaining).toBe('40000');
-    await receipt(
-      'Catat pelunasan',
-      'SIMULASI pelunasan aktual diterima tunai.',
-    );
+    await receipt('Catat pelunasan');
     data = await money();
     expect(data.summary.received).toBe('60000');
     expect(data.summary.remaining).toBe('0');
@@ -159,7 +150,8 @@ test('real rental lifecycle: registration, DP, settlement, handover, verified re
   });
   async function operation(button: string, note: string) {
     await admin.getByRole('button', { name: button, exact: true }).click();
-    await admin.getByLabel('Catatan kondisi', { exact: true }).fill(note);
+    if (button !== 'Catat serah-terima')
+      await admin.getByLabel('Catatan kondisi', { exact: true }).fill(note);
     await admin
       .getByRole('checkbox', { name: /sudah memeriksa barang/ })
       .check();

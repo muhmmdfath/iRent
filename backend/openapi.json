@@ -454,6 +454,56 @@
         "tags": ["Catalog"]
       }
     },
+    "/api/items/{id}/calendar": {
+      "get": {
+        "operationId": "CatalogController_calendar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": { "type": "string" }
+          },
+          {
+            "name": "month",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "pattern": "^\\d{4}-(0[1-9]|1[0-2])$",
+              "type": "string"
+            }
+          },
+          {
+            "name": "time",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$",
+              "type": "string"
+            }
+          },
+          {
+            "name": "durationHours",
+            "required": true,
+            "in": "query",
+            "schema": { "minimum": 6, "maximum": 168, "type": "number" }
+          },
+          {
+            "name": "quantity",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "minimum": 1,
+              "maximum": 100,
+              "default": 1,
+              "type": "number"
+            }
+          }
+        ],
+        "responses": { "200": { "description": "" } },
+        "tags": ["Catalog"]
+      }
+    },
     "/api/items/{id}": {
       "get": {
         "operationId": "CatalogController_detail",
@@ -4248,7 +4298,7 @@
             "maxLength": 1000
           }
         },
-        "required": ["pickedUpAt", "conditionNote"]
+        "required": ["pickedUpAt"]
       },
       "VerifyReturnDto": {
         "type": "object",

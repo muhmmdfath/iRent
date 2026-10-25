@@ -83,7 +83,7 @@ for (const width of [360, 1440]) {
     await expect(modal).toHaveCount(0);
     await page.reload();
     await expect(
-      page.getByRole('heading', { name: 'Untuk rencana berikutnya' }),
+      page.getByRole('heading', { name: 'Pilih perangkat' }),
     ).toBeVisible();
     await expect(page.getByRole('dialog')).toHaveCount(0);
   });

@@ -97,7 +97,7 @@ describe('session and access', () => {
     mount('/admin/account');
     expect(
       await screen.findByRole('heading', {
-        name: 'Untuk rencana berikutnya',
+        name: 'Pilih perangkat',
       }),
     ).toBeVisible();
     expect(screen.queryByText('Administrator')).not.toBeInTheDocument();

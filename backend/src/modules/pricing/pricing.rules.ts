@@ -5,18 +5,21 @@ export function rentalPrice(
   tariffs: { price6h: bigint; price12h: bigint; price24h: bigint },
   hours: number,
 ): bigint {
+  const remainder = hours % 24;
   if (
-    hours !== 6 &&
-    hours !== 12 &&
-    (hours < 24 || hours > 168 || hours % 24 !== 0)
+    !Number.isInteger(hours) ||
+    hours < 6 ||
+    hours > 168 ||
+    ![0, 6, 12].includes(remainder)
   )
     throw new BadRequestException('Durasi sewa tidak valid.');
   const price =
-    hours === 6
+    tariffs.price24h * BigInt(Math.floor(hours / 24)) +
+    (remainder === 6
       ? tariffs.price6h
-      : hours === 12
+      : remainder === 12
         ? tariffs.price12h
-        : tariffs.price24h * BigInt(hours / 24);
+        : 0n);
   if (price < 0n || price > MAX_RUPIAH)
     throw new BadRequestException('Harga melampaui rentang rupiah.');
   return price;

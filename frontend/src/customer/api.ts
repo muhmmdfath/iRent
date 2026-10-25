@@ -32,6 +32,22 @@ export const customerApi = {
     ).data,
   item: async (id: string, signal?: AbortSignal) =>
     (await api.get<Item>('/items/' + id, { signal })).data,
+  itemCalendar: async (
+    id: string,
+    params: {
+      month: string;
+      time: string;
+      durationHours: number;
+      quantity: number;
+    },
+    signal?: AbortSignal,
+  ) =>
+    (
+      await api.get<{
+        month: string;
+        days: { date: string; available: boolean }[];
+      }>('/items/' + id + '/calendar', { params, signal })
+    ).data,
   policy: async (signal?: AbortSignal) =>
     (await api.get<Policy>('/rental-policy', { signal })).data,
   zones: async (signal?: AbortSignal) =>

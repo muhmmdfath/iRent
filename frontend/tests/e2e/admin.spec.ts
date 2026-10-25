@@ -52,11 +52,6 @@ for (const width of [360, 390, 768, 1024, 1440]) {
     await page
       .getByRole('button', { name: 'Verifikasi uang masuk', exact: true })
       .click();
-    await page.getByLabel('Rekening penerima').fill('rekening-toko');
-    await page.getByLabel('Referensi transaksi').fill('BANK-TEST-123');
-    await page
-      .getByLabel('Catatan pemeriksaan')
-      .fill('Uang masuk sudah diperiksa.');
     await page.getByRole('checkbox', { name: /memastikan uang/ }).check();
     await page.getByRole('button', { name: 'Periksa pencatatan' }).click();
     await expect(

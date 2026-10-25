@@ -297,7 +297,7 @@ Diagram menunjukkan relasi utama; refund Sources menunjuk payment masuk, sedangk
 Semua validasi server diperiksa ulang dalam transaksi alokasi:
 
 1. Minimal satu item. Maksimal satu unit iPhone; aksesori dibatasi stok.
-2. Durasi awal 6/12 jam atau kelipatan 24 jam hingga 168 jam.
+2. Durasi awal 6/12 jam atau hari (24 jam) ditambah paket opsional 6/12 jam, maksimal 168 jam. Tarif = jumlah hari x tarif 24 jam + tarif paket tambahan. Contoh 60 jam = 2 x tarif 24 jam + tarif 12 jam.
 3. Semua paket sewa awal tersedia setiap hari, termasuk Sabtu dan Minggu. Tidak ada pembatasan atau perbedaan tarif berdasarkan weekday/weekend; perpanjangan mengikuti aturan yang sama.
 4. Pengambilan dan pengembalian dalam 08.00–22.00. Pilihan jam yang melanggar disembunyikan dan tetap divalidasi server. Sewa 12 jam paling lambat mulai 10.00.
 5. Pengambilan minimal dua jam dari saat booking dibuat.
@@ -502,7 +502,7 @@ Job mengunci booking dan membaca ulang status sebelum keputusan agar tidak memba
 
 ### Serah terima
 
-Hanya booking dikonfirmasi yang dapat diserahterimakan, setelah admin mencatat pelunasan sewa dan ongkir. Metode pelunasan: tunai, QRIS, atau transfer. Catat waktu dan kondisi unit. Unit harus benar-benar siap, dengan persiapan selesai dan bukan sedang perawatan/terpakai. Verifikasi kesiapan, perubahan use_status/physical_status, dan waktu serah terima atomik. Tidak boleh memakai dana perpanjangan pending untuk memenuhi pelunasan awal.
+Hanya booking dikonfirmasi yang dapat diserahterimakan, setelah admin mencatat pelunasan sewa dan ongkir. Metode pelunasan: tunai, QRIS, atau transfer. Waktu serah terima dicatat otomatis saat pemeriksaan admin; catatan kondisi serah terima opsional dan tidak ditampilkan pada form standar. Pengambilan lebih awal pada hari yang sama diperbolehkan setelah konfirmasi dan pelunasan, sepanjang unit siap, jam operasional sah, dan tidak bertabrakan dengan alokasi lain. Rentang pemakaian/alokasi diperluas ke waktu pengambilan aktual tanpa memajukan atau memperpanjang jadwal kembali. Unit harus benar-benar siap, dengan persiapan selesai dan bukan sedang perawatan/terpakai. Verifikasi kesiapan, perubahan use_status/physical_status, dan waktu serah terima atomik. Tidak boleh memakai dana perpanjangan pending untuk memenuhi pelunasan awal.
 
 ### Keterlambatan pengantaran oleh toko
 
@@ -875,3 +875,15 @@ Setelah persetujuan urutan data/backend sebelum UI pada 8 Oktober 2026, fondasi 
 ### Penyelesaian backend phase 1
 
 Laporan/Excel, foto item dan QRIS, read-model admin, koreksi receipt masuk dan koreksi pengembalian telah diimplementasikan. Entitas receipt_corrections, superseded_at pada payments, dan manual_exemptions pada return_records melengkapi schema/migrasi runtime. Source dan migrasi menjadi acuan DDL aktual; blueprint historis di atas tetap menjelaskan domain. Cakupan otomatis dan acceptance yang membutuhkan UI/perangkat/hosting dilacak di [backend/ACCEPTANCE.md](backend/ACCEPTANCE.md) serta [IMPLEMENTATION.md](IMPLEMENTATION.md). Tidak ada perubahan tarif weekday/weekend atau kewajiban menunggu admin sebelum upload bukti.
+
+### Revisi operasional 25 Oktober 2026
+
+- Form standar verifikasi/pelunasan tidak meminta rekening penerima dan referensi transaksi; API menerima keduanya kosong, atau berpasangan jika digunakan pada rekonsiliasi/koreksi. Idempotensi, status bukti dan pencatatan kas tetap diberlakukan. Pencegahan duplikasi melalui referensi bank hanya berlaku ketika referensinya tersedia; admin tetap memeriksa mutasi dan bukti.
+- Booking kedaluwarsa otomatis tidak ditampilkan pada daftar utama admin/pelanggan. Filter Kedaluwarsa dan halaman detail tetap tersedia untuk audit dan penanganan dana; tidak ada penghapusan histori transaksi.
+- Kalender pelanggan menonaktifkan tanggal yang lewat, belum dibuka, di luar jam/lead time, atau tidak memenuhi stok untuk jam, durasi dan jumlah pilihan. Endpoint kalender publik hanya memberikan tanggal dan flag tersedia, tanpa identitas unit/pelanggan. Kalender tidak menahan stok; pemeriksaan atomik saat membuat booking tetap wajib.
+
+### Penyederhanaan booking dan approval ? 25 Oktober 2026
+
+Pelanggan dapat memilih hari + 6/12 jam (30, 36, 54, 60 jam, dst.), selama ambil/kembali memenuhi jam layanan dan total tidak melebihi batas sewa. Sisa 18 jam bukan paket tambahan tersendiri. Perpanjangan tetap paket 6/12/24 jam dengan batas total yang sama. Persetujuan pelanggan disajikan dalam satu checkbox eksplisit yang mencakup ketentuan, identitas, pembayaran tepat waktu dan jam layanan; empat flag persetujuan API tetap wajib benar. Teks bantuan dipersingkat; ketentuan lengkap tetap dapat dibaca pada halaman ketentuan.
+
+Verifikasi/pelunasan standar admin hanya meminta nominal, waktu uang diterima dan metode. Catatan audit otomatis mencatat konfirmasi admin; catatan manual tidak wajib pada form standar. Penolakan, koreksi, biaya tambahan, kerusakan dan pengecualian tetap memerlukan alasan sesuai aturan masing-masing.

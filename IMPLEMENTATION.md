@@ -421,3 +421,20 @@ Verifikasi akhir 11 Oktober 2026: 61 tes Vitest/MSW, 36 tes Chromium API simulas
 - [x] Helper dan konfigurasi QA yang bisa diulang; jam simulasi hanya di proses QA.
 
 Hasil: 188 tes PostgreSQL/HTTP, 26 unit backend, 81 UI, 92 Chromium API simulasi dan dua simulasi nyata lulus. Lima tes Chromium berkonfigurasi khusus dilewati pada regresi default. [Laporan dan batas pengujian](docs/qa/2026-10-20-rental-simulation.md) menjelaskan bukti per kelompok. Tidak ada perubahan aturan bisnis untuk membuat tes lulus; perangkat fisik/push/QRIS/transfer bank dan kapasitas produksi tetap di luar cakupan.
+
+## Revisi feedback operasional ? 25 Oktober 2026
+
+- [x] Hapus rekening penerima/referensi transaksi dari form standar verifikasi dan pelunasan. API menerima pasangan referensi opsional, tetap menjaga idempotensi dan status bukti; deteksi duplikasi referensi bank tetap aktif jika referensi tersedia.
+- [x] Form serah-terima tanpa input waktu/catatan kondisi. Waktu WIB diisi otomatis saat pemeriksaan; waktu aktual dan admin tetap tercatat. Catatan pemeriksaan pengembalian dan alasan keterlambatan delivery tetap tersedia.
+- [x] Izinkan pengambilan lebih awal pada hari yang sama setelah pelunasan, kesiapan unit, jam operasional dan konflik alokasi diperiksa. Jadwal kembali pickup tetap; pembaruan awal pemakaian/alokasi atomik. Jadwal awal tetap tersimpan dan kompensasi keterlambatan delivery tetap berlaku.
+- [x] Sembunyikan booking kedaluwarsa pada query daftar utama sebelum pagination, untuk admin/pelanggan. Filter Kedaluwarsa dan detail tetap dapat diakses; tanpa menghapus data dan riwayat kas.
+- [x] Kalender item/checkout memakai endpoint publik ketersediaan bulanan berdasarkan jam, durasi dan jumlah. Tanggal yang tidak memenuhi aturan/stok dinonaktifkan dan berwarna abu-abu. Loading/gagal memuat tidak mengizinkan pilihan tanggal; retry tersedia. Stok tetap diperiksa atomik saat booking.
+- [x] Verifikasi: 31 tes frontend, 27 tes unit backend, 20 tes PostgreSQL/HTTP operasional pada database lokal terpisah, 8 tes Chromium (360?1440 px), build/typecheck dan lint. Tidak mengubah database atau layanan produksi; deployment revisi belum dilakukan.
+
+## Durasi kombinasi dan alur ringkas ? 25 Oktober 2026
+
+- [x] Paket awal mendukung hari + 6/12 jam: 30, 36, 54, 60 jam, dst. Maksimal 168 jam. Tarif memakai kelipatan tarif 24 jam ditambah tarif paket sisa, dengan BigInt; transaksi lama tetap menggunakan snapshotnya.
+- [x] Pemilihan durasi pada detail item dan checkout sama, memakai label hari + jam. Query parameter, harga tampilan, quote, kalender, stok dan booking mendukung paket kombinasi.
+- [x] Copy pelanggan dipersingkat pada beranda, detail item, checkout, profil, daftar/detail booking dan pembayaran. Persetujuan checkout menjadi satu checkbox eksplisit; seluruh flag persetujuan backend tetap dikirim setelah dicentang. Ketentuan lengkap tetap tersedia.
+- [x] Form standar verifikasi/pelunasan booking dan perpanjangan hanya nominal, waktu dan metode; catatan audit terisi otomatis. Rekonsiliasi/koreksi dan penolakan tetap mempunyai alasan yang relevan.
+- [x] Pemeriksaan: 23 tes frontend, 28 tes unit backend, 21 tes PostgreSQL/HTTP operasional (database lokal terpisah), dan 9 skenario Chromium; build/typecheck/lint backend/frontend lulus. Alur mobile 60 jam memverifikasi nominal, satu persetujuan, keempat flag API dan layout checkbox. Screenshot checkout-simple-60-hours-390 tersimpan di docs/frontend. Belum push/deploy revisi ke VPS.

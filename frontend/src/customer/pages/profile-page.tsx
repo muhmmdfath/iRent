@@ -84,7 +84,7 @@ function ProfileForm({
         <header className="page-heading">
           <p className="eyebrow">Data penyewa</p>
           <h1>Profil pelanggan</h1>
-          <p>Lengkapi data sebelum membuat booking pertama.</p>
+          <p>Isi data untuk mulai sewa.</p>
         </header>
       )}
       <form

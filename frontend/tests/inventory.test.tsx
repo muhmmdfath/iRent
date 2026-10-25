@@ -337,7 +337,7 @@ it('prevents customer access to inventory routes', async () => {
   );
   mount('/admin/inventory');
   expect(
-    await screen.findByRole('heading', { name: 'Untuk rencana berikutnya' }),
+    await screen.findByRole('heading', { name: 'Pilih perangkat' }),
   ).toBeVisible();
   expect(
     screen.queryByRole('heading', { name: 'Inventaris' }),

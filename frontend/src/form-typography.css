@@ -333,3 +333,12 @@
   outline: 2px solid #ff4081;
   outline-offset: 2px;
 }
+
+:root body .date-time-days button:disabled,
+:root body .date-time-days button:disabled:hover {
+  background: #f4f3f5;
+  color: #aaa6ad;
+  opacity: 1;
+  cursor: not-allowed;
+  box-shadow: none;
+}

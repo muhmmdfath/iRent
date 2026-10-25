@@ -47,7 +47,7 @@ export function BookingsPage() {
         <div>
           <p className="eyebrow">Riwayat & jadwal</p>
           <h1>Booking saya</h1>
-          <p>Kelola jadwal sewa dan ikuti perkembangan booking kamu.</p>
+          <p>Cek jadwal dan status sewa kamu.</p>
         </div>
         <Button asChild>
           <Link to="/catalog">

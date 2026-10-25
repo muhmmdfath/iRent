@@ -1,3 +1,4 @@
+import { rentalDurations, durationLabel } from '../rental-duration';
 import { PAGE_SIZE } from '@/lib/pagination';
 import {
   ChevronLeftIcon as PaginationPreviousIcon,
@@ -20,7 +21,7 @@ import { useQuery, useQueries, useMutation } from '@tanstack/react-query';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { DateTimeInput } from '@/components/ui/date-time-input';
+import { RentalDateTimeInput } from '../components/rental-date-time-input';
 import { LoadingState, ErrorState } from '@/components/feedback';
 import { useSession } from '@/auth/session';
 import { useOnline } from '@/hooks/use-online';
@@ -103,7 +104,7 @@ export function NewBookingPage() {
           ? new Date(date.getTime() + 7 * 3600000).toISOString().slice(0, 16)
           : defaultStart();
       })(),
-      durationHours: [6, 12, 24, 48, 72, 96, 120, 144, 168].includes(
+      durationHours: rentalDurations().includes(
         Number(params.get('durationHours')),
       )
         ? Number(params.get('durationHours'))
@@ -334,7 +335,7 @@ export function NewBookingPage() {
       <header className="page-heading checkout-heading">
         <p className="eyebrow">Booking baru</p>
         <h1>Atur jadwal sewamu.</h1>
-        <p>Periksa jadwal dan biaya sebelum membuat booking.</p>
+        <p>Pilih perangkat, jadwal, lalu booking.</p>
       </header>
       <nav className="checkout-sections" aria-label="Bagian booking">
         {[
@@ -585,14 +586,19 @@ export function NewBookingPage() {
               Jadwal sewa
             </legend>
             <p className="checkout-section-description">
-              Pilih waktu mulai. Waktu kembali dihitung dari durasi sewa.
+              Jam kembali dihitung otomatis.
             </p>
             <div className="checkout-schedule-fields">
               <div className="field">
                 <label htmlFor="startAt">
                   Tanggal dan jam pengambilan (WIB)
                 </label>
-                <DateTimeInput
+                <RentalDateTimeInput
+                  items={selected.map((row) => ({
+                    itemId: row.item.id,
+                    quantity: row.quantity,
+                  }))}
+                  durationHours={Number(values.durationHours)}
                   id="startAt"
                   {...form.register('startAt')}
                   value={values.startAt}
@@ -615,14 +621,7 @@ export function NewBookingPage() {
                   className="select-input"
                   {...form.register('durationHours', { valueAsNumber: true })}
                 >
-                  {[
-                    6,
-                    12,
-                    ...Array.from(
-                      { length: Math.floor(rule.max_duration_hours / 24) },
-                      (_, index) => (index + 1) * 24,
-                    ),
-                  ].map((hours) => (
+                  {rentalDurations(rule.max_duration_hours).map((hours) => (
                     <option
                       key={hours}
                       value={hours}
@@ -630,9 +629,9 @@ export function NewBookingPage() {
                         !validDuration(values.startAt, hours, policy.data!)
                       }
                     >
-                      {hours} jam
+                      {durationLabel(hours)}
                       {!validDuration(values.startAt, hours, policy.data!)
-                        ? ' - kembali di luar jam operasional'
+                        ? ' - di luar jam layanan'
                         : ''}
                     </option>
                   ))}
@@ -667,7 +666,7 @@ export function NewBookingPage() {
               Pengambilan & pembayaran
             </legend>
             <p className="checkout-section-description">
-              Ambil di toko atau gunakan antar-jemput sesuai zona.
+              Pilih cara ambil dan pembayaran.
             </p>
             <div className="field">
               <label htmlFor="deliveryType">Cara pengambilan</label>
@@ -748,13 +747,24 @@ export function NewBookingPage() {
               <CheckIcon aria-hidden="true" />
               Persetujuan
             </legend>
-            <p className="checkout-section-description">
-              Periksa ketentuan berikut sebelum membuat booking.
-            </p>
             <label className="check-label">
-              <input type="checkbox" {...form.register('agreeTerms')} />
+              <input
+                type="checkbox"
+                checked={!!values.agreeTerms}
+                onChange={(event) => {
+                  for (const field of [
+                    'agreeTerms',
+                    'prepareIdentity',
+                    'understandPayment',
+                    'agreeOperatingHours',
+                  ] as const)
+                    form.setValue(field, event.target.checked, {
+                      shouldDirty: true,
+                    });
+                }}
+              />
               <span>
-                Saya menyetujui{' '}
+                Saya setuju{' '}
                 <Link
                   className="checkout-terms-link"
                   to="/terms"
@@ -763,24 +773,9 @@ export function NewBookingPage() {
                 >
                   ketentuan sewa
                 </Link>
-                .
+                , membawa KTP/SIM, membayar tepat waktu, dan mengikuti jam
+                layanan.
               </span>
-            </label>
-            <label className="check-label">
-              <input type="checkbox" {...form.register('prepareIdentity')} />
-              Saya menyiapkan KTP/SIM saat pengambilan.
-            </label>
-            <label className="check-label">
-              <input type="checkbox" {...form.register('understandPayment')} />
-              Saya memahami pembayaran dan bukti harus diselesaikan sesuai
-              tenggat.
-            </label>
-            <label className="check-label">
-              <input
-                type="checkbox"
-                {...form.register('agreeOperatingHours')}
-              />
-              Saya menyetujui jam operasional pengambilan dan pengembalian.
             </label>
             {form.formState.errors.agreeTerms && (
               <p className="field-error">
@@ -815,7 +810,7 @@ export function NewBookingPage() {
               </div>
               <div>
                 <dt>Durasi</dt>
-                <dd>{quoteInput.durationHours} jam</dd>
+                <dd>{durationLabel(quoteInput.durationHours)}</dd>
               </div>
               <div>
                 <dt>Pengambilan</dt>
@@ -875,9 +870,7 @@ export function NewBookingPage() {
             <div className="checkout-unchecked">
               <CalendarIcon aria-hidden="true" />
               <p>Jadwal sudah sesuai?</p>
-              <span>
-                Cek ketersediaan untuk mendapatkan rincian biaya terbaru.
-              </span>
+              <span>Cek jadwal untuk melihat total biaya.</span>
             </div>
           )}
           {error && (
@@ -914,8 +907,7 @@ export function NewBookingPage() {
             {create.isPending ? 'Membuat booking...' : 'Buat booking'}
           </Button>
           <p className="muted text-sm">
-            Harga dan stok diperiksa ulang saat booking dibuat. Setelah
-            berhasil, kamu dapat langsung upload bukti pembayaran.
+            Setelah booking, lanjut bayar dan upload bukti.
           </p>
         </aside>
       </div>

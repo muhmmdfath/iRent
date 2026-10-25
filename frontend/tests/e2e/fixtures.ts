@@ -5,6 +5,23 @@ export { expect } from '@playwright/test';
 export const test = base.extend({
   page: async ({ page }, providePage, info) => {
     if (!info.title.startsWith('real API:')) {
+      await page.route('**/api/items/*/calendar?**', (route) => {
+        const month =
+          new URL(route.request().url()).searchParams.get('month') || '2026-10';
+        const [year, number] = month.split('-').map(Number);
+        return route.fulfill({
+          json: {
+            month,
+            days: Array.from(
+              { length: new Date(Date.UTC(year, number, 0)).getUTCDate() },
+              (_, i) => ({
+                date: month + '-' + String(i + 1).padStart(2, '0'),
+                available: true,
+              }),
+            ),
+          },
+        });
+      });
       await page.route(/\/api\/notifications(?:\?.*)?$/, (route) =>
         route.fulfill({
           json: { data: [], total: 0, unread: 0, page: 1, limit: 10 },

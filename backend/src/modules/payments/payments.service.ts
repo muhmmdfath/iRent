@@ -556,9 +556,9 @@ export class PaymentsService {
       );
     const account = input.receivingAccountReference?.trim().toLowerCase(),
       reference = input.transactionReference?.trim().toUpperCase();
-    if (input.method !== 'cash' && (!account || !reference))
+    if (!!account !== !!reference)
       throw new BadRequestException(
-        'Rekening penerima dan referensi transaksi wajib diisi.',
+        'Jika memakai referensi bank, isi rekening dan referensi secara berpasangan.',
       );
     if (input.method === 'cash' && (account || reference))
       throw new BadRequestException(

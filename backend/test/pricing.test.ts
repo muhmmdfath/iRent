@@ -15,10 +15,22 @@ import { parseWibDateTime } from '../src/shared/time/wib';
 test('prices_6_12_24_48_168_hours_without_weekday_or_weekend_adjustments', () => {
   const tariffs = { price6h: 50000n, price12h: 80000n, price24h: 120000n };
   assert.deepEqual(
-    [6, 12, 24, 48, 168].map((hours) => rentalPrice(tariffs, hours)),
-    [50000n, 80000n, 120000n, 240000n, 840000n],
+    [6, 12, 24, 30, 36, 48, 54, 60, 168].map((hours) =>
+      rentalPrice(tariffs, hours),
+    ),
+    [
+      50000n,
+      80000n,
+      120000n,
+      170000n,
+      200000n,
+      240000n,
+      290000n,
+      320000n,
+      840000n,
+    ],
   );
-  for (const hours of [0, 7, 18, 30, 192])
+  for (const hours of [0, 7, 18, 42, 169, 192, 6.5, NaN])
     assert.throws(() => rentalPrice(tariffs, hours));
   const now = parseWibDateTime('2026-10-08T08:00:00+07:00');
   for (const start of [
@@ -98,4 +110,27 @@ test('settings_reject_invalid_types_unknown_keys_and_contradictory_deadlines', (
   const isolated = structuredClone(settings);
   isolated.dp_amount = '50000';
   assert.equal(settings.dp_amount, '20000');
+});
+
+test('mixed_day_duration_uses_exact_tariffs_and_validates_return_hours', () => {
+  const now = parseWibDateTime('2026-10-08T08:00:00+07:00');
+  assert.equal(
+    validateSchedule(
+      '2026-10-09T10:00:00+07:00',
+      60,
+      settingsDefaults,
+      now,
+    ).endAt.toISOString(),
+    '2026-10-11T22:00:00.000Z',
+  );
+  assert.throws(() =>
+    validateSchedule('2026-10-09T11:00:00+07:00', 60, settingsDefaults, now),
+  );
+  assert.equal(
+    rentalPrice(
+      { price24h: 9007199254740993n, price12h: 80001n, price6h: 50001n },
+      60,
+    ),
+    18014398509561987n,
+  );
 });

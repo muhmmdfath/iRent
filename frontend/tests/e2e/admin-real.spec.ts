@@ -140,11 +140,6 @@ test('real API: administrator rejects proof, verifies partial DP and records set
       .getByRole('button', { name: 'Verifikasi uang masuk', exact: true })
       .click();
     await page.getByLabel('Nominal uang masuk (rupiah)').fill(amount);
-    await page.getByLabel('Rekening penerima').fill('fixture-rekening');
-    await page.getByLabel('Referensi transaksi').fill('ADM-' + randomUUID());
-    await page
-      .getByLabel('Catatan pemeriksaan')
-      .fill('Penerimaan dana fixture sudah diperiksa.');
     await page.getByRole('checkbox', { name: /memastikan uang/ }).check();
     await page.getByRole('button', { name: 'Periksa pencatatan' }).click();
     await page.getByRole('button', { name: 'Konfirmasi pencatatan' }).click();
@@ -166,9 +161,6 @@ test('real API: administrator rejects proof, verifies partial DP and records set
   expect(money.booking.status).toBe('dikonfirmasi');
   expect(money.summary.remaining).toBe('40000');
   await page.getByRole('button', { name: 'Catat pelunasan' }).click();
-  await page
-    .getByLabel('Catatan pemeriksaan')
-    .fill('Pelunasan tunai fixture diterima.');
   await page.getByRole('checkbox', { name: /memastikan uang/ }).check();
   await page.getByRole('button', { name: 'Periksa pencatatan' }).click();
   await page.getByRole('button', { name: 'Konfirmasi pencatatan' }).click();

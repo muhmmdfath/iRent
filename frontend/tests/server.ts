@@ -1,6 +1,20 @@
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
 export const server = setupServer(
+  http.get('http://localhost:3000/api/items/:id/calendar', ({ request }) => {
+    const month = new URL(request.url).searchParams.get('month') || '2026-10';
+    const [year, number] = month.split('-').map(Number);
+    return HttpResponse.json({
+      month,
+      days: Array.from(
+        { length: new Date(Date.UTC(year, number, 0)).getUTCDate() },
+        (_, i) => ({
+          date: month + '-' + String(i + 1).padStart(2, '0'),
+          available: true,
+        }),
+      ),
+    });
+  }),
   http.get('http://localhost:3000/api/customer/profile', () =>
     HttpResponse.json(null),
   ),

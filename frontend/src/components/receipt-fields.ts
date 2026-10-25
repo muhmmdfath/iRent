@@ -1,6 +1,6 @@
 import type { ActionField, ActionInput } from './business-form';
-export function receiptFields(amount = ''): ActionField[] {
-  return [
+export function receiptFields(amount = '', simple = false): ActionField[] {
+  const fields: ActionField[] = [
     {
       name: 'amount',
       label: 'Nominal uang diterima (rupiah)',
@@ -44,17 +44,20 @@ export function receiptFields(amount = ''): ActionField[] {
       max: 1000,
     },
   ];
+  return simple ? fields.slice(0, 3) : fields;
 }
 export function validateReceipt(input: ActionInput) {
   if (BigInt(input.amount) <= 0n)
     throw new Error('Nominal uang harus lebih dari nol.');
   if (new Date(input.occurredAt).getTime() > Date.now())
     throw new Error('Waktu uang diterima tidak boleh di masa depan.');
-  if (
-    input.method !== 'cash' &&
-    (!input.transactionReference || !input.receivingAccountReference)
-  )
+  if (!!input.transactionReference !== !!input.receivingAccountReference)
     throw new Error(
-      'Transfer/QRIS memerlukan rekening penerima dan referensi transaksi.',
+      'Isi rekening dan referensi secara berpasangan jika digunakan.',
     );
+}
+
+export function validateSimpleReceipt(input: ActionInput) {
+  validateReceipt(input);
+  input.note = 'Uang masuk diperiksa dan dikonfirmasi admin.';
 }

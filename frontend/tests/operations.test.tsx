@@ -190,10 +190,10 @@ it('confirms handover once and refreshes the booking status', async () => {
   await user.click(
     await screen.findByRole('button', { name: 'Catat serah-terima' }),
   );
-  await user.type(
-    screen.getByLabelText('Catatan kondisi'),
-    'Semua unit lengkap dan siap digunakan.',
-  );
+  expect(screen.queryByLabelText('Catatan kondisi')).not.toBeInTheDocument();
+  expect(
+    screen.queryByLabelText('Waktu serah-terima (WIB)'),
+  ).not.toBeInTheDocument();
   await user.click(
     screen.getByRole('checkbox', { name: /sudah memeriksa barang/ }),
   );
@@ -202,9 +202,8 @@ it('confirms handover once and refreshes the booking status', async () => {
   await user.click(screen.getByRole('button', { name: 'Konfirmasi tindakan' }));
   await screen.findByText('Serah-terima tercatat. Booking sedang disewa.');
   expect(calls).toBe(1);
-  expect(payload).toMatchObject({
-    conditionNote: 'Semua unit lengkap dan siap digunakan.',
-  });
+  expect(payload).not.toHaveProperty('conditionNote');
+  expect(payload).toHaveProperty('pickedUpAt');
   expect(
     screen.queryByRole('button', { name: 'Catat serah-terima' }),
   ).not.toBeInTheDocument();
@@ -398,7 +397,7 @@ it('validates courier chronology and preserves WIB delivery exceptions', async (
   expect(screen.getByText(/Pengecualian petugas:/)).toBeVisible();
 });
 
-it('requires the reason for a late shop delivery and preserves seconds in handover', async () => {
+it('requires the reason for a late shop delivery and records handover time automatically', async () => {
   booking = operationBooking('dikonfirmasi');
   booking.deliveryType = 'delivery';
   money = operationFinancial(booking);
@@ -417,19 +416,10 @@ it('requires the reason for a late shop delivery and preserves seconds in handov
   await user.click(
     await screen.findByRole('button', { name: 'Catat serah-terima' }),
   );
-  await user.type(
-    screen.getByLabelText('Catatan kondisi'),
-    'Seluruh barang lengkap dan fungsi diperiksa.',
-  );
+
   await user.click(
     screen.getByRole('checkbox', { name: /sudah memeriksa barang/ }),
   );
-  const value = new Date(Date.now() + 7 * 3600000 - 120000)
-    .toISOString()
-    .slice(0, 19);
-  fireEvent.change(screen.getByLabelText('Waktu serah-terima (WIB)'), {
-    target: { value },
-  });
   await user.click(screen.getByRole('button', { name: 'Periksa tindakan' }));
   expect(await screen.findByRole('alert')).toHaveTextContent(
     'Catatan dan alasan',
@@ -443,7 +433,6 @@ it('requires the reason for a late shop delivery and preserves seconds in handov
   await user.click(screen.getByRole('button', { name: 'Konfirmasi tindakan' }));
   await waitFor(() =>
     expect(payload).toMatchObject({
-      pickedUpAt: value + '+07:00',
       shopDelayReason: 'Petugas toko terlambat mengantar.',
     }),
   );

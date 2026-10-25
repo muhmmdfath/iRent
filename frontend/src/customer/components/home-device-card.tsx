@@ -1,3 +1,4 @@
+import { durationPrice } from '../rental-duration';
 import { Link } from 'react-router-dom';
 import { PlusIcon } from '@radix-ui/react-icons';
 import { rupiah } from '../format';
@@ -24,12 +25,7 @@ export function HomeDeviceCard({
     params.set('durationHours', String(window.durationHours));
   }
   const hours = window?.durationHours || 6;
-  const price =
-    hours === 6
-      ? item.price6h
-      : hours === 12
-        ? item.price12h
-        : String(BigInt(item.price24h) * BigInt(hours / 24));
+  const price = durationPrice(item, hours);
   return (
     <article className="customer-device">
       <Link

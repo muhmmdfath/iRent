@@ -67,7 +67,7 @@ export function CustomerHomePage() {
         ) : (
           <div className="empty-state">
             <h3>Belum ada booking</h3>
-            <p>Pilih perangkat dan jadwal yang kamu butuhkan.</p>
+            <p>Pilih perangkat untuk mulai sewa.</p>
           </div>
         )}
       </section>
@@ -80,7 +80,7 @@ export function CustomerHomePage() {
             <div className="section-heading">
               <div>
                 <p className="eyebrow">Temukan perangkatmu</p>
-                <h2 id="customer-devices-title">Untuk rencana berikutnya</h2>
+                <h2 id="customer-devices-title">Pilih perangkat</h2>
               </div>
               <div className="customer-catalog-actions">
                 <RentalDateFilter
@@ -93,7 +93,7 @@ export function CustomerHomePage() {
               </div>
             </div>
             <p className="customer-section-copy">
-              Pilih perangkat, lalu cek ketersediaan sesuai jadwal sewamu.
+              Pilih perangkat dan tanggal sewa.
             </p>
             {catalog.isPending ? (
               <div
@@ -134,10 +134,7 @@ export function CustomerHomePage() {
           <section className="customer-welcome-card">
             <p>Sewa di iRent Semarang</p>
             <h2>Perangkat untuk setiap rencana.</h2>
-            <p>
-              Pilih iPhone dan aksesori, tentukan jadwal, lalu siapkan
-              kebutuhanmu.
-            </p>
+            <p>Pilih perangkat, booking, lalu bayar.</p>
             <Button asChild variant="outline">
               <Link to="/catalog">Mulai pilih perangkat</Link>
             </Button>
@@ -249,8 +246,8 @@ export function CustomerHomePage() {
                       <strong>Profil penyewa</strong>
                       <small>
                         {user.profile?.completedAt
-                          ? 'Data profil sudah lengkap. Siapkan KTP/SIM saat serah terima.'
-                          : 'Data belum lengkap. Klik untuk melengkapi profil.'}
+                          ? 'Profil lengkap. Siapkan KTP/SIM.'
+                          : 'Lengkapi profil dulu.'}
                       </small>
                     </span>
                   </Link>
@@ -299,15 +296,15 @@ export function CustomerHomePage() {
                       <strong>Pembayaran dan bukti</strong>
                       <small>
                         {action
-                          ? 'Ada pembayaran tertunda. Klik untuk bayar dan upload bukti.'
-                          : 'Lihat status pembayaran pada booking kamu.'}
+                          ? 'Bayar dan upload bukti.'
+                          : 'Cek pembayaran booking kamu.'}
                       </small>
                     </span>
                   </Link>
                 </Button>
               </li>
             </ol>
-            <p>Booking menunggu verifikasi admin setelah bukti diterima.</p>
+            <p>Upload bukti, lalu tunggu konfirmasi admin.</p>
             <Button asChild variant="outline">
               <Link to="/terms">Ketentuan sewa</Link>
             </Button>

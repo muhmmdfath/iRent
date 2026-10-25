@@ -427,7 +427,7 @@ export class BookingsService {
     const owner = Prisma.sql`WHERE TRUE
       ${admin ? Prisma.empty : Prisma.sql`AND b.user_id=${context.user.id}::uuid`}
       ${admin && page.customerId ? Prisma.sql`AND b.user_id=${page.customerId}::uuid` : Prisma.empty}
-      ${page.status ? Prisma.sql`AND b.status=${page.status}::booking_status` : Prisma.empty}
+      ${page.status ? Prisma.sql`AND b.status=${page.status}::booking_status` : Prisma.sql`AND b.status <> 'kedaluwarsa'::booking_status`}
       ${admin && page.search ? Prisma.sql`AND (b.code ILIKE ${'%' + page.search.trim() + '%'} OR u.name ILIKE ${'%' + page.search.trim() + '%'})` : Prisma.empty}`;
     const ordering =
       page.sort === 'deadline'

@@ -103,8 +103,7 @@ export function PaymentPage() {
           ) : pending ? (
             <>
               <p className="success-note">
-                Bukti sudah diterima. Menunggu pemeriksaan uang masuk oleh
-                admin.
+                Bukti terkirim. Tunggu konfirmasi admin.
               </p>
               {booking.confirmationDueAt && (
                 <Deadline
@@ -113,10 +112,7 @@ export function PaymentPage() {
                 />
               )}
               {financial.confirmationOverdue && (
-                <p className="info-note">
-                  Konfirmasi admin terlambat. Booking tetap menunggu
-                  pemeriksaan.
-                </p>
+                <p className="info-note">Admin masih memeriksa pembayaran.</p>
               )}
             </>
           ) : BigInt(financial.summary.bill) === 0n ? (
@@ -127,9 +123,7 @@ export function PaymentPage() {
                 : ''}
             </p>
           ) : completed ? (
-            <p className="success-note">
-              Pembayaran telah lunas dan terverifikasi.
-            </p>
+            <p className="success-note">Pembayaran lunas.</p>
           ) : obligation ? (
             <div className="amount-focus">
               <p>
@@ -176,14 +170,10 @@ export function PaymentPage() {
                     className="qris-image"
                   />
                 ) : (
-                  <p className="muted">
-                    QRIS belum tersedia. Hubungi admin iRent untuk instruksi
-                    pembayaran.
-                  </p>
+                  <p className="muted">QRIS belum tersedia. Hubungi admin.</p>
                 )}
                 <p className="muted text-sm">
-                  Bayar sesuai nominal, lalu upload bukti. Admin akan memeriksa
-                  uang yang benar-benar masuk.
+                  Bayar sesuai nominal, lalu upload bukti.
                 </p>
               </section>
               <UploadForm

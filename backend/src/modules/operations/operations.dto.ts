@@ -12,7 +12,10 @@ import {
 
 export class HandoverDto {
   @IsString() @Length(25, 29) pickedUpAt!: string;
-  @IsString() @Length(5, 1000) conditionNote!: string;
+  @ValidateIf((_, value: unknown) => value !== undefined)
+  @IsString()
+  @Length(5, 1000)
+  conditionNote?: string;
   @ValidateIf((_, value: unknown) => value !== undefined)
   @IsString()
   @Length(5, 1000)

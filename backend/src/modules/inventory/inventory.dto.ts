@@ -128,3 +128,10 @@ export class ZoneDto {
   @IsString() @Matches(/^(0|[1-9][0-9]{0,18})$/) fee!: string;
   @ValidateIf(supplied) @IsBoolean() isActive?: boolean;
 }
+
+export class ItemCalendarDto {
+  @IsString() @Matches(/^\d{4}-(0[1-9]|1[0-2])$/) month!: string;
+  @IsString() @Matches(/^([01]\d|2[0-3]):[0-5]\d$/) time!: string;
+  @Type(() => Number) @IsInt() @Min(6) @Max(168) durationHours!: number;
+  @Type(() => Number) @IsInt() @Min(1) @Max(100) quantity: number = 1;
+}

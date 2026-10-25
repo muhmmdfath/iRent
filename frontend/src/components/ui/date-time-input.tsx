@@ -19,9 +19,13 @@ export function DateTimeInput({
   onChange,
   initiallyOpen = false,
   timeRange,
+  disabledDate,
+  onMonthChange,
   ...props
 }: ComponentProps<'input'> & {
   initiallyOpen?: boolean;
+  disabledDate?: (date: string) => boolean;
+  onMonthChange?: (month: string) => void;
   timeRange?: { from: string; to: string };
 }) {
   const input = useRef<HTMLInputElement>(null);
@@ -63,6 +67,9 @@ export function DateTimeInput({
       document.removeEventListener('keydown', escape);
     };
   }, [open]);
+  useEffect(() => {
+    onMonthChange?.(month.slice(0, 7));
+  }, [month, onMonthChange]);
   const toggle = () => {
     if (!open) {
       const value =
@@ -200,6 +207,7 @@ export function DateTimeInput({
                   aria-label={label}
                   aria-pressed={date === selected}
                   disabled={
+                    disabledDate?.(date) ||
                     (typeof props.min === 'string' &&
                       date < props.min.slice(0, 10)) ||
                     (typeof props.max === 'string' &&

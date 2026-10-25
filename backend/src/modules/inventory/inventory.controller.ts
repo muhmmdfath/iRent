@@ -13,6 +13,7 @@ import {
 import { AuthRequest, Public, Roles } from '../../auth/auth.guard';
 import { InventoryService } from './inventory.service';
 import {
+  ItemCalendarDto,
   ActiveDto,
   CatalogListDto,
   InventoryListDto,
@@ -30,6 +31,12 @@ export class CatalogController {
   constructor(private readonly inventory: InventoryService) {}
   @Get() list(@Query() query: CatalogListDto) {
     return this.inventory.list(query);
+  }
+  @Get(':id/calendar') calendar(
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Query() query: ItemCalendarDto,
+  ) {
+    return this.inventory.calendar(id, query);
   }
   @Get(':id') detail(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.inventory.detail(id);

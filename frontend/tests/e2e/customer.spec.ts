@@ -114,13 +114,9 @@ test('real API: customer registers, completes profile, books and uploads without
   await page.getByRole('link', { name: /Pilih jadwal/ }).click();
   await page.getByRole('button', { name: 'Periksa jadwal & biaya' }).click();
   await expect(page.getByText('Jadwal tersedia saat diperiksa')).toBeVisible();
-  for (const label of [
-    /Saya menyetujui ketentuan/,
-    /Saya menyiapkan KTP/,
-    /Saya memahami pembayaran/,
-    /Saya menyetujui jam/,
-  ])
-    await page.getByLabel(label).check();
+  await page
+    .getByRole('checkbox', { name: /Saya setuju ketentuan sewa/ })
+    .check();
   await page.getByRole('button', { name: 'Buat booking', exact: true }).click();
   await expect(
     page.getByRole('heading', { name: 'Pembayaran booking' }),
@@ -137,7 +133,7 @@ test('real API: customer registers, completes profile, books and uploads without
   await page
     .getByRole('button', { name: 'Upload bukti pembayaran', exact: true })
     .click();
-  await expect(page.getByText(/Bukti sudah diterima/)).toBeVisible();
+  await expect(page.getByText(/Bukti terkirim/)).toBeVisible();
   await expect(
     page.getByText('Pembayaran telah lunas dan terverifikasi.'),
   ).toHaveCount(0);
@@ -153,5 +149,5 @@ test('real API: customer registers, completes profile, books and uploads without
   expect(data.summary.applied).toBe('0');
   expect(data.booking.obligations[0].proofs).toHaveLength(1);
   await page.reload();
-  await expect(page.getByText(/Bukti sudah diterima/)).toBeVisible();
+  await expect(page.getByText(/Bukti terkirim/)).toBeVisible();
 });

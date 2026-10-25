@@ -100,9 +100,12 @@ export class OperationsService {
     key?: string,
   ) {
     const pickedUpAt = parseWibDateTime(input.pickedUpAt),
-      note = input.conditionNote.trim(),
+      note = input.conditionNote?.trim() || null,
       reason = input.shopDelayReason?.trim();
-    if (note.length < 5 || (reason !== undefined && reason.length < 5))
+    if (
+      (note !== null && note.length < 5) ||
+      (reason !== undefined && reason.length < 5)
+    )
       throw new BadRequestException('Catatan kondisi/alasan wajib lengkap.');
     return this.payments.action(
       context,
@@ -132,7 +135,9 @@ export class OperationsService {
           pickedUpAt > now ||
           booking.items.some(
             (item) =>
-              pickedUpAt < item.startAt || pickedUpAt >= item.currentEndAt,
+              pickedUpAt.toISOString().slice(0, 10) <
+                item.startAt.toISOString().slice(0, 10) ||
+              pickedUpAt >= item.currentEndAt,
           ) ||
           !withinOperating(pickedUpAt, rules)
         )
@@ -203,7 +208,9 @@ export class OperationsService {
           );
         for (const item of booking.items) {
           const unit = units.find((row) => row.id === item.itemUnitId)!;
-          const start = new Date(item.startAt.getTime() + delay),
+          const start = new Date(
+              Math.min(item.startAt.getTime() + delay, pickedUpAt.getTime()),
+            ),
             end = new Date(item.currentEndAt.getTime() + delay);
           if (
             !unit ||
@@ -270,7 +277,9 @@ export class OperationsService {
             );
         }
         for (const item of booking.items) {
-          const startAt = new Date(item.startAt.getTime() + delay),
+          const startAt = new Date(
+              Math.min(item.startAt.getTime() + delay, pickedUpAt.getTime()),
+            ),
             currentEndAt = new Date(item.currentEndAt.getTime() + delay);
           await tx.bookingItem.update({
             where: { id: item.id },
@@ -282,12 +291,13 @@ export class OperationsService {
               startAt,
               currentEndAt,
               shopDelaySeconds: Math.ceil(
-                (startAt.getTime() - item.initialStartAt.getTime()) / 1000,
+                Math.max(0, startAt.getTime() - item.initialStartAt.getTime()) /
+                  1000,
               ),
               version: { increment: 1 },
             },
           });
-          if (delay > 0)
+          if (delay > 0 || pickedUpAt < item.startAt)
             await tx.unitAllocation.updateMany({
               where: {
                 bookingItemId: item.id,

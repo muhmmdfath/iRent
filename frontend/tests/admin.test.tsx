@@ -56,10 +56,6 @@ async function fillReceipt(amount = '20000') {
   await user.clear(input);
   await user.type(input, amount);
   await user.selectOptions(screen.getByLabelText('Metode pembayaran'), 'cash');
-  await user.type(
-    screen.getByLabelText('Catatan pemeriksaan'),
-    'Penerimaan uang sudah diperiksa.',
-  );
   await user.click(screen.getByRole('checkbox', { name: /memastikan uang/ }));
   await user.click(screen.getByRole('button', { name: 'Periksa pencatatan' }));
   return user;
@@ -207,7 +203,7 @@ it('rejects a proof with a reason without invoking booking cancellation', async 
   ).toHaveTextContent('Booking tidak dibatalkan');
   expect(reason).toEqual({ reason: 'Nominal tidak terlihat jelas.' });
 });
-it('requires transfer reference and actual receipt acknowledgement before review', async () => {
+it('requires actual receipt acknowledgement while omitting bank reference fields', async () => {
   mount();
   const user = userEvent.setup();
   await user.click(
@@ -216,8 +212,10 @@ it('requires transfer reference and actual receipt acknowledgement before review
     }),
   );
   await user.click(screen.getByRole('button', { name: 'Periksa pencatatan' }));
-  expect(await screen.findByText('Isi rekening penerima.')).toBeVisible();
-  expect(screen.getByText('Isi referensi transaksi.')).toBeVisible();
+  expect(screen.queryByLabelText('Rekening penerima')).not.toBeInTheDocument();
+  expect(
+    screen.queryByLabelText('Referensi transaksi'),
+  ).not.toBeInTheDocument();
   expect(
     screen.getByText('Periksa uang masuk sebelum melanjutkan.'),
   ).toBeVisible();
@@ -284,7 +282,7 @@ it('does not expose administrator payment actions to a customer', async () => {
   );
   mount();
   expect(
-    await screen.findByRole('heading', { name: 'Untuk rencana berikutnya' }),
+    await screen.findByRole('heading', { name: 'Pilih perangkat' }),
   ).toBeVisible();
   expect(
     screen.queryByRole('heading', { name: 'Detail booking' }),

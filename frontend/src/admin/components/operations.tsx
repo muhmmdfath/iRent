@@ -168,18 +168,13 @@ function OperationForm({
         existing?.receivedAtStore &&
         at === toLocal(existing.receivedAtStore)
           ? existing.receivedAtStore
-          : actualTime(at);
+          : actualTime(operation.kind === 'handover' ? nowWib() : at);
       if (operation.kind === 'handover') {
-        if (new Date(timestamp) < new Date(booking.initialStartAt))
-          throw new Error(
-            'Serah-terima tidak boleh sebelum jadwal pengambilan.',
-          );
         const delayed =
           booking.deliveryType === 'delivery' &&
           new Date(timestamp) > new Date(booking.initialStartAt);
         setReview({
           pickedUpAt: timestamp,
-          conditionNote: note(conditionNote),
           ...(delayed ? { shopDelayReason: note(reason) } : {}),
         });
         return;
@@ -367,20 +362,20 @@ function OperationForm({
         <form onSubmit={prepare} className="form-stack">
           {operation.kind !== 'reject' && (
             <>
-              <label>
-                {operation.kind === 'handover'
-                  ? 'Waktu serah-terima (WIB)'
-                  : operation.kind === 'loss'
+              {operation.kind !== 'handover' && (
+                <label>
+                  {operation.kind === 'loss'
                     ? 'Waktu hilang terverifikasi (WIB)'
                     : 'Diterima toko (WIB)'}
-                <Input
-                  type="datetime-local"
-                  step="1"
-                  required
-                  value={at}
-                  onChange={(event) => setAt(event.target.value)}
-                />
-              </label>
+                  <Input
+                    type="datetime-local"
+                    step="1"
+                    required
+                    value={at}
+                    onChange={(event) => setAt(event.target.value)}
+                  />
+                </label>
+              )}
               {['return', 'correct'].includes(operation.kind) &&
                 booking.deliveryType === 'delivery' && (
                   <label>
@@ -397,18 +392,20 @@ function OperationForm({
                     </span>
                   </label>
                 )}
-              <label>
-                {operation.kind === 'loss'
-                  ? 'Catatan kehilangan'
-                  : 'Catatan kondisi'}
-                <textarea
-                  required
-                  minLength={5}
-                  maxLength={1000}
-                  value={conditionNote}
-                  onChange={(event) => setNote(event.target.value)}
-                />
-              </label>
+              {operation.kind !== 'handover' && (
+                <label>
+                  {operation.kind === 'loss'
+                    ? 'Catatan kehilangan'
+                    : 'Catatan kondisi'}
+                  <textarea
+                    required
+                    minLength={5}
+                    maxLength={1000}
+                    value={conditionNote}
+                    onChange={(event) => setNote(event.target.value)}
+                  />
+                </label>
+              )}
             </>
           )}
           {(operation.kind === 'reject' ||
@@ -577,7 +574,9 @@ function OperationForm({
               checked={checked}
               onChange={(event) => setChecked(event.target.checked)}
             />
-            Saya sudah memeriksa barang, waktu aktual dan catatan tindakan ini.
+            {operation.kind === 'handover'
+              ? 'Saya sudah memeriksa barang dan memastikan pembayaran sudah lunas.'
+              : 'Saya sudah memeriksa barang, waktu aktual dan catatan tindakan ini.'}
           </label>
           {validation && (
             <p role="alert" className="field-error">

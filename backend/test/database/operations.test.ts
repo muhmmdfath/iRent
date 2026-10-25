@@ -127,6 +127,7 @@ test('operations_preserve_money_stock_and_verified_return_rules', async (t) => {
     actor = 0,
     delivery = false,
     quantity = 1,
+    durationHours = 6,
   ) {
     const item = await prisma.item.create({
       data: {
@@ -149,7 +150,7 @@ test('operations_preserve_money_stock_and_verified_return_rules', async (t) => {
       contexts[actor],
       {
         startAt,
-        durationHours: 6,
+        durationHours,
         items: [{ itemId: item.id, quantity }],
         deliveryType: delivery ? 'delivery' : 'pickup',
         ...(delivery
@@ -358,6 +359,198 @@ test('operations_preserve_money_stock_and_verified_return_rules', async (t) => {
       },
     );
     await t.test(
+      'mixed_days_and_half_day_prices_and_blocks_the_entire_sixty_hour_rental',
+      async () => {
+        const booking = await make('full', at(10), 50000n, 0, false, 1, 60);
+        assert.equal(booking.initialRentalTotal, 150000n);
+        assert.equal(
+          booking.items[0].currentEndAt.getTime() -
+            booking.items[0].startAt.getTime(),
+          60 * 3600000,
+        );
+        const availability = await bookings.availability(contexts[1], {
+          startAt: at(10, 0, 1),
+          durationHours: 6,
+          items: [{ itemId: booking.items[0].itemId, quantity: 1 }],
+          deliveryType: 'pickup',
+          payOption: 'full',
+        });
+        assert.equal(availability.available, false);
+      },
+    );
+    await t.test(
+      'calendar_disables_booked_and_past_dates_without_exposing_customer_data',
+      async () => {
+        const booking = await paid('50000', 'full');
+        const month = initialNow.toISOString().slice(0, 7);
+        const result = await inventory.calendar(booking.items[0].itemId, {
+          month,
+          time: '10:00',
+          durationHours: 6,
+          quantity: 1,
+        });
+        const date = initialNow.toISOString().slice(0, 10);
+        assert.equal(
+          result.days.find((day) => day.date === date)?.available,
+          false,
+        );
+        assert.equal(result.days[0].available, false);
+        assert.equal(JSON.stringify(result).includes(booking.code), false);
+        const response = await fetch(
+          base +
+            '/api/items/' +
+            booking.items[0].itemId +
+            '/calendar?month=' +
+            month +
+            '&time=10:00&durationHours=6',
+        );
+        assert.equal(response.status, 200);
+        assert.equal((await response.json()).days.length, result.days.length);
+        const invalid = await fetch(
+          base +
+            '/api/items/' +
+            booking.items[0].itemId +
+            '/calendar?month=2026-99&time=10:00&durationHours=6',
+        );
+        assert.equal(invalid.status, 400);
+      },
+    );
+    await t.test(
+      'expired_bookings_are_hidden_by_default_but_remain_accessible_in_archive',
+      async () => {
+        const booking = await make();
+        now = new Date(booking.expiresAt.getTime() + 1000);
+        await payments.expireDue();
+        for (const admin of [false, true]) {
+          const context = contexts[admin ? 2 : 0];
+          const main = await bookings.list(
+            context,
+            { page: 1, limit: 100 },
+            admin,
+          );
+          assert.equal(
+            main.some((row) => row.id === booking.id),
+            false,
+          );
+          const archive = await bookings.list(
+            context,
+            { page: 1, limit: 100, status: 'kedaluwarsa' },
+            admin,
+          );
+          assert.equal(
+            archive.some((row) => row.id === booking.id),
+            true,
+          );
+        }
+        assert.equal(
+          (await bookings.detail(contexts[0], booking.id)).status,
+          'kedaluwarsa',
+        );
+      },
+    );
+    await t.test(
+      'transfer_receipt_accepts_omitted_bank_fields_and_keeps_proof_idempotency',
+      async () => {
+        const booking = await make('full');
+        const proof = await upload(booking);
+        const input = {
+          proofId: proof.proofId!,
+          amount: '50000',
+          occurredAt: formatWibDateTime(now),
+          method: 'transfer' as const,
+          note: 'Mutasi masuk sudah diperiksa admin.',
+        };
+        const key = randomUUID();
+        await payments.verify(contexts[2], booking.id, input, key);
+        await payments.verify(contexts[2], booking.id, input, key);
+        assert.equal(
+          await prisma.payment.count({
+            where: { bookingId: booking.id, direction: 'in' },
+          }),
+          1,
+        );
+        await assert.rejects(
+          payments.verify(contexts[2], booking.id, input, randomUUID()),
+        );
+      },
+    );
+    await t.test(
+      'early_same_day_pickup_records_time_without_note_and_preserves_return_deadline',
+      async () => {
+        setTime(6);
+        const booking = await paid('50000', 'full');
+        setTime(9);
+        await operations.handover(
+          contexts[2],
+          booking.id,
+          { pickedUpAt: at(9) },
+          randomUUID(),
+        );
+        const item = await prisma.bookingItem.findUniqueOrThrow({
+          where: { id: booking.items[0].id },
+        });
+        assert.equal(item.pickedUpAt?.toISOString(), now.toISOString());
+        assert.equal(
+          item.currentEndAt.toISOString(),
+          booking.items[0].currentEndAt.toISOString(),
+        );
+        assert.equal(item.handoverNote, null);
+        assert.equal(item.shopDelaySeconds, 0);
+        const allocation = await prisma.unitAllocation.findFirstOrThrow({
+          where: { bookingItemId: item.id, allocationKind: 'rental' },
+        });
+        assert.equal(allocation.startAt.toISOString(), now.toISOString());
+      },
+    );
+    await t.test(
+      'early_pickup_still_rejects_another_protected_rental',
+      async () => {
+        const booking = await make('full', at(16));
+        const proof = await upload(booking);
+        await payments.verify(
+          contexts[2],
+          booking.id,
+          receipt(proof.proofId!, '50000'),
+          randomUUID(),
+        );
+        await bookings.create(
+          contexts[1],
+          {
+            startAt: at(8),
+            durationHours: 6,
+            items: [{ itemId: booking.items[0].itemId, quantity: 1 }],
+            deliveryType: 'pickup',
+            payOption: 'full',
+            termsVersion: TERMS_VERSION,
+            agreeTerms: true,
+            prepareIdentity: true,
+            understandPayment: true,
+            agreeOperatingHours: true,
+          },
+          randomUUID(),
+        );
+        // Keep the earlier unpaid hold valid until after the attempted handover.
+        await prisma.booking.updateMany({
+          where: { userId: users[1].id, status: 'menunggu_pembayaran' },
+          data: { expiresAt: new Date(initialNow.getTime() + 10 * 3600000) },
+        });
+        setTime(13);
+        await assert.rejects(
+          operations.handover(
+            contexts[2],
+            booking.id,
+            { pickedUpAt: at(13) },
+            randomUUID(),
+          ),
+          /bertabrakan/,
+        );
+        assert.equal(
+          (await bookings.detail(contexts[0], booking.id)).status,
+          'dikonfirmasi',
+        );
+      },
+    );
+    await t.test(
       'handover_checks_physical_readiness_and_timestamp_before_mutation',
       async () => {
         const booking = await paid('50000', 'full');
@@ -367,7 +560,7 @@ test('operations_preserve_money_stock_and_verified_return_rules', async (t) => {
           operations.handover(
             contexts[2],
             booking.id,
-            handoverInput(false, at(9)),
+            handoverInput(false, at(7)),
             randomUUID(),
           ),
           /Waktu serah/,

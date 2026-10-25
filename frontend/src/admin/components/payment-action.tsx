@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useActionKey } from '../action-key';
-import { useForm, useWatch } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useMutation } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -14,9 +14,6 @@ interface ReceiptFields {
   amount: string;
   occurredAt: string;
   method: ReceiptInput['method'];
-  receivingAccountReference: string;
-  transactionReference: string;
-  note: string;
   checked: boolean;
 }
 function currentWib() {
@@ -53,13 +50,9 @@ export function ReceiptForm({
       amount: suggestedAmount,
       occurredAt: currentWib(),
       method: proofId ? 'transfer' : 'cash',
-      receivingAccountReference: '',
-      transactionReference: '',
-      note: '',
       checked: false,
     },
   });
-  const method = useWatch({ control: form.control, name: 'method' });
   const mutation = useMutation({
     mutationFn: (input: ReceiptInput) =>
       proofId
@@ -80,12 +73,8 @@ export function ReceiptForm({
       amount: fields.amount,
       occurredAt,
       method: fields.method,
-      note: fields.note.trim(),
+      note: 'Uang masuk diperiksa dan dikonfirmasi admin.',
     };
-    if (fields.method !== 'cash') {
-      input.receivingAccountReference = fields.receivingAccountReference.trim();
-      input.transactionReference = fields.transactionReference.trim();
-    }
     mutation.reset();
     setReview(input);
   }
@@ -98,8 +87,8 @@ export function ReceiptForm({
       <h3>{proofId ? 'Verifikasi uang masuk' : 'Catat pelunasan'}</h3>
       <p className="muted text-sm">
         {proofId
-          ? 'Periksa mutasi rekening. Nominal bukti belum menjadi uang terverifikasi.'
-          : 'Catat uang yang benar-benar diterima untuk sisa tagihan booking ini.'}
+          ? 'Pastikan uang sudah masuk.'
+          : 'Isi uang pelunasan yang sudah diterima.'}
       </p>
       {review ? (
         <section
@@ -136,10 +125,8 @@ export function ReceiptForm({
               </div>
             )}
           </dl>
-          <p>{review.note}</p>
           <p className="muted text-sm">
-            Nominal kurang bayar tetap menyisakan tagihan. Kelebihan pembayaran
-            dicatat terpisah untuk refund.
+            Periksa nominal dan metode sebelum menyimpan.
           </p>
           <div className="form-actions">
             <Button
@@ -212,68 +199,6 @@ export function ReceiptForm({
                 <option value="qris">QRIS</option>
                 <option value="cash">Tunai</option>
               </select>
-            </div>
-            {method !== 'cash' && (
-              <>
-                <div className="field">
-                  <label htmlFor={prefix + '-account'}>Rekening penerima</label>
-                  <Input
-                    id={prefix + '-account'}
-                    maxLength={150}
-                    aria-invalid={!!error('receivingAccountReference')}
-                    {...form.register('receivingAccountReference', {
-                      validate: (value) =>
-                        form.getValues('method') === 'cash' ||
-                        !!value.trim() ||
-                        'Isi rekening penerima.',
-                    })}
-                  />
-                  {error('receivingAccountReference') && (
-                    <p className="field-error" role="alert">
-                      {error('receivingAccountReference')}
-                    </p>
-                  )}
-                </div>
-                <div className="field">
-                  <label htmlFor={prefix + '-reference'}>
-                    Referensi transaksi
-                  </label>
-                  <Input
-                    id={prefix + '-reference'}
-                    maxLength={150}
-                    aria-invalid={!!error('transactionReference')}
-                    {...form.register('transactionReference', {
-                      validate: (value) =>
-                        form.getValues('method') === 'cash' ||
-                        !!value.trim() ||
-                        'Isi referensi transaksi.',
-                    })}
-                  />
-                  {error('transactionReference') && (
-                    <p className="field-error" role="alert">
-                      {error('transactionReference')}
-                    </p>
-                  )}
-                </div>
-              </>
-            )}
-            <div className="field admin-field-wide">
-              <label htmlFor={prefix + '-note'}>Catatan pemeriksaan</label>
-              <textarea
-                id={prefix + '-note'}
-                maxLength={1000}
-                aria-invalid={!!error('note')}
-                {...form.register('note', {
-                  validate: (value) =>
-                    value.trim().length >= 5 ||
-                    'Isi catatan pemeriksaan minimal 5 karakter.',
-                })}
-              />
-              {error('note') && (
-                <p className="field-error" role="alert">
-                  {error('note')}
-                </p>
-              )}
             </div>
           </div>
           <label className="consent-row">

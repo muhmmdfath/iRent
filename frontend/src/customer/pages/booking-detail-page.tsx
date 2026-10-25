@@ -25,22 +25,15 @@ const paymentLabels: Record<string, string> = {
   ditutup: 'Pembayaran ditutup',
 };
 const statusNotes: Record<string, string> = {
-  menunggu_pembayaran:
-    'Selesaikan pembayaran dan unggah bukti agar booking dapat diperiksa admin.',
-  menunggu_konfirmasi:
-    'Bukti pembayaran sedang diperiksa admin. Status akan diperbarui setelah verifikasi.',
-  dikonfirmasi:
-    'Booking sudah dikonfirmasi. Siapkan identitas saat pengambilan perangkat.',
+  menunggu_pembayaran: 'Bayar lalu upload bukti.',
+  menunggu_konfirmasi: 'Bukti sedang diperiksa admin.',
+  dikonfirmasi: 'Booking siap. Bawa KTP/SIM saat ambil.',
   berjalan:
-    'Periksa jadwal kembali di bawah. Perlu waktu tambahan? Ajukan perpanjangan sebelum batas waktunya.',
-  selesai:
-    'Penyewaan sudah selesai. Rincian pembayaran dan pengembalian tetap dapat dilihat di sini.',
-  dibatalkan:
-    'Booking dibatalkan. Jika ada pengembalian dana, perkembangannya tersedia pada bagian refund.',
-  kedaluwarsa:
-    'Batas pembayaran booking sudah lewat. Buat booking baru untuk mengecek jadwal yang tersedia.',
-  ditolak:
-    'Booking tidak dapat dilanjutkan. Periksa keterangan dan rincian pembayaran.',
+    'Kembalikan sesuai jadwal. Butuh tambahan waktu? Ajukan perpanjangan.',
+  selesai: 'Sewa selesai. Terima kasih.',
+  dibatalkan: 'Booking dibatalkan. Cek refund jika ada.',
+  kedaluwarsa: 'Waktu bayar habis. Silakan booking lagi.',
+  ditolak: 'Booking ditolak. Lihat alasan di bawah.',
 };
 export function BookingDetailPage() {
   const { id = '' } = useParams();

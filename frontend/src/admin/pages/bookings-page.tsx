@@ -65,7 +65,10 @@ export function AdminBookingsPage() {
         <div>
           <p className="abw-kicker">Operasional / Transaksi</p>
           <h1>Booking & pembayaran</h1>
-          <p>Kelola penyewaan dan pemeriksaan pembayaran dalam satu tempat.</p>
+          <p>
+            Kelola penyewaan dan pembayaran. Booking kedaluwarsa tersedia lewat
+            filter status.
+          </p>
         </div>
         <Button
           variant="outline"

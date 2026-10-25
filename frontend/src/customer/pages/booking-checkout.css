@@ -217,6 +217,8 @@
   font-weight: 500;
 }
 :root body .rental-checkout .consent-section .check-label {
+  clear: both;
+  width: 100%;
   display: flex;
   align-items: flex-start;
   gap: 11px;
@@ -549,5 +551,10 @@
   text-decoration: underline;
   text-underline-offset: 3px;
 }
-.rental-checkout .checkout-terms-link:hover { color: #cc2460; }
-.rental-checkout .checkout-terms-link:focus-visible { outline: 2px solid #ff4081; outline-offset: 3px; }
+.rental-checkout .checkout-terms-link:hover {
+  color: #cc2460;
+}
+.rental-checkout .checkout-terms-link:focus-visible {
+  outline: 2px solid #ff4081;
+  outline-offset: 3px;
+}

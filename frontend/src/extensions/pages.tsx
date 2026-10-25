@@ -16,7 +16,10 @@ import { api } from '@/services/api';
 import { customerApi } from '@/customer/api';
 import { BusinessForm } from '@/components/business-form';
 import { ExtensionRequestForm } from './components/extension-request-form';
-import { receiptFields, validateReceipt } from '@/components/receipt-fields';
+import {
+  receiptFields,
+  validateSimpleReceipt,
+} from '@/components/receipt-fields';
 import { DownloadButton } from '@/components/download-button';
 import { Button } from '@/components/ui/button';
 import { LoadingState, ErrorState } from '@/components/feedback';
@@ -321,8 +324,8 @@ export function ExtensionDetailPage() {
       {action === 'settlement' && (
         <BusinessForm
           title="Catat pelunasan perpanjangan"
-          fields={receiptFields(detail.data.summary.remaining)}
-          validate={validateReceipt}
+          fields={receiptFields(detail.data.summary.remaining, true)}
+          validate={validateSimpleReceipt}
           execute={async (input, key) =>
             api.post(
               `/admin/bookings/${id}/settlement`,
@@ -456,9 +459,9 @@ export function ExtensionDetailPage() {
             {action === 'verify:' + proof.id && (
               <BusinessForm
                 title="Verifikasi uang perpanjangan"
-                description="Pastikan dana benar-benar diterima. Dana lengkap memicu pemeriksaan seluruh unit; jadwal tidak diubah jika tidak lagi tersedia."
-                fields={receiptFields(proof.claimedAmount)}
-                validate={validateReceipt}
+                description="Pastikan uang sudah masuk."
+                fields={receiptFields(proof.claimedAmount, true)}
+                validate={validateSimpleReceipt}
                 execute={async (input, key) =>
                   post('/payments/verify', { ...input, proofId: proof.id }, key)
                 }
@@ -520,7 +523,7 @@ export function ExtensionDetailPage() {
                   ],
                 },
               ]}
-              validate={validateReceipt}
+              validate={validateSimpleReceipt}
               execute={async (input, key) =>
                 post(
                   '/payments/reconcile',
