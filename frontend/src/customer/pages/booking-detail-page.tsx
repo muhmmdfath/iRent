@@ -1,3 +1,5 @@
+import { deliveryViaChat } from '../delivery-fee';
+import { DeliveryFeeNotice } from '../components/delivery-fee-notice';
 import { ArrowLeftIcon, ArrowRightIcon } from '@radix-ui/react-icons';
 import { Link, useParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -130,7 +132,9 @@ export function BookingDetailPage() {
                 <p>
                   {booking.deliveryType === 'pickup'
                     ? 'Ambil di toko'
-                    : booking.deliveryZoneNameSnapshot + ' - antar-jemput'}
+                    : deliveryViaChat(booking)
+                      ? 'Antar-jemput · ongkir lewat chat'
+                      : booking.deliveryZoneNameSnapshot + ' - antar-jemput'}
                 </p>
                 {booking.deliveryAddress && (
                   <p className="bd-unit">{booking.deliveryAddress}</p>
@@ -185,7 +189,11 @@ export function BookingDetailPage() {
             </div>
             <div>
               <dt>Antar-jemput</dt>
-              <dd>{rupiah(booking.deliveryFeeSnapshot)}</dd>
+              <dd>
+                {deliveryViaChat(booking)
+                  ? 'Diinfokan lewat chat'
+                  : rupiah(booking.deliveryFeeSnapshot)}
+              </dd>
             </div>
             <div className="bd-initial-total">
               <dt>Total awal</dt>
@@ -198,6 +206,7 @@ export function BookingDetailPage() {
               </div>
             )}
           </dl>
+          {deliveryViaChat(booking) && <DeliveryFeeNotice />}
           {financial.isPending ? (
             <p className="bd-unit">Memuat saldo...</p>
           ) : financial.isError ? (

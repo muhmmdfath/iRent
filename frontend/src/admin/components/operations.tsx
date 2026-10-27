@@ -1,3 +1,5 @@
+import { deliveryViaChat } from '@/customer/delivery-fee';
+import { DeliveryFeeNotice } from '@/customer/components/delivery-fee-notice';
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
@@ -636,9 +638,12 @@ export function BookingOperations({
       </div>
       {money.booking.status === 'dikonfirmasi' && (
         <>
+          {deliveryViaChat(booking) && <DeliveryFeeNotice />}
           {!paid && (
             <p className="info-note">
-              Lunasi sewa dan ongkir sebelum menyerahkan barang.
+              {deliveryViaChat(booking)
+                ? 'Lunasi tagihan sewa di aplikasi sebelum menyerahkan barang. Ongkir diurus lewat chat.'
+                : 'Lunasi sewa dan ongkir sebelum menyerahkan barang.'}
             </p>
           )}
           <Button

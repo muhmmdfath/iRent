@@ -1,6 +1,8 @@
 import { BadRequestException } from '@nestjs/common';
 
 export const settingsDefaults = {
+  // Missing flags in historical booking snapshots retain the original tariff.
+  delivery_fee_enabled: true,
   dp_amount: '20000',
   hold_minutes: 120,
   urgent_threshold_minutes: 180,
@@ -66,7 +68,11 @@ export function validateSettings(raw: Record<string, unknown>): SettingsValues {
       throw new BadRequestException('Key pengaturan tidak dikenal: ' + key);
   for (const [key, initial] of Object.entries(settingsDefaults)) {
     const value = raw[key] === undefined ? initial : raw[key];
-    if (key === 'dp_amount' || key === 'late_fee_per_hour')
+    if (key === 'delivery_fee_enabled') {
+      if (typeof value !== 'boolean')
+        throw new BadRequestException('Pengaturan ongkir harus boolean.');
+      result[key] = value;
+    } else if (key === 'dp_amount' || key === 'late_fee_per_hour')
       result[key] = rupiah(value).toString();
     else if (key === 'qris_image_path')
       result[key] = publicImage(value, 'qris');

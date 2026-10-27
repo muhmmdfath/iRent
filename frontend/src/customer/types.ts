@@ -35,6 +35,7 @@ export interface Catalog {
 export interface Policy {
   termsVersion: string;
   values: {
+    delivery_fee_enabled?: boolean;
     open_time: string;
     close_time: string;
     min_lead_minutes: number;
@@ -79,6 +80,7 @@ export interface BookingInput extends QuoteInput {
   agreeOperatingHours: boolean;
 }
 export interface Quote {
+  deliveryFeeMode?: 'chat' | 'system';
   startAt: string;
   endAt: string;
   durationHours: number;

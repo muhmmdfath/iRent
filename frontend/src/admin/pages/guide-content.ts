@@ -79,7 +79,7 @@ export const guideTopics: GuideTopic[] = [
     steps: [
       {
         title: 'Periksa syarat sebelum menyerahkan',
-        text: 'Pastikan biaya sewa dan ongkir lunas, unit siap, serta jadwal sesuai. Cocokkan identitas pelanggan dan kondisi barang.',
+        text: 'Pastikan tagihan aplikasi lunas, unit siap, serta jadwal sesuai. Jika ongkir dalam aplikasi nonaktif, urus ongkir lewat chat secara terpisah. Cocokkan identitas pelanggan dan kondisi barang.',
       },
       {
         title: 'Catat serah terima pada booking',
@@ -138,7 +138,7 @@ export const guideTopics: GuideTopic[] = [
       },
       {
         title: 'Selesaikan persetujuan ongkir dan dana',
-        text: 'Penjemputan terpisah memerlukan quotation ongkir dan persetujuan pelanggan. Verifikasi dana yang diterima sebelum menyetujui seluruh unit dalam permintaan.',
+        text: 'Booking dengan ongkir lewat chat langsung mengajukan perpanjangan tanpa persetujuan ongkir di aplikasi. Booking mode tarif zona tetap memakai quotation dan persetujuan pelanggan untuk penjemputan terpisah. Verifikasi dana sewa sebelum menyetujui permintaan.',
       },
       {
         title: 'Tindak lanjuti kendala unit',

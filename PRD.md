@@ -135,6 +135,7 @@ Nilai aturan dibaca dari settings melalui SettingsService dengan cache dan dapat
 | Key | Nilai awal | Kegunaan |
 |---|---|---|
 | dp_amount | 20000 | DP dan ambang wajib lunas |
+| delivery_fee_enabled | Boolean; nonaktif untuk operasional sementara | Toggle ongkir dalam aplikasi; nilai yang tidak tersimpan memakai true untuk kompatibilitas transaksi lama |
 | hold_minutes | 120 | Batas pembayaran booking biasa |
 | urgent_threshold_minutes | 180 | Ambang booking mendesak, termasuk tepat tiga jam |
 | urgent_hold_minutes | 30 | Batas pembayaran booking mendesak |
@@ -165,6 +166,15 @@ Perubahan settings tidak mengubah kesepakatan transaksi lama. Simpan harga, ongk
 Snapshot mempunyai versi struktur. Tarif dan aturan yang berlaku untuk perpanjangan suatu sewa berasal dari snapshot booking awal; nominal tambahan ongkir disimpan saat pelanggan menyetujui pengajuannya. Settings memvalidasi tipe, nilai nonnegatif, jam buka < jam tutup, rentang tanggal pembukaan 1–28, persentase 0–100, serta hubungan waktu agar deadline tidak terbentuk sebelum pembuatan permintaan. Nilai 1–28 menjaga tanggal pembukaan tetap ada pada setiap bulan. Perubahan key membatalkan cache; rahasia provider/VAPID tetap di environment.
 
 Implementasi settings/katalog/pricing memakai counter revisi settings dan shared/exclusive lock untuk menjaga cache lintas instance. API quote mengembalikan snapshot versi 1 tanpa membuat booking atau hold; alokasi wajib menghitung ulang dan menyimpan snapshot di transaksi booking. Ringkasan unit katalog bukan jaminan kalender. Endpoint dan batas implementasi ada di [backend/INVENTORY_PRICING.md](backend/INVENTORY_PRICING.md).
+
+### Ongkir sementara melalui chat (27 Oktober 2026)
+
+- Admin mengatur switch “Ongkir dalam aplikasi” pada Pengaturan sewa. Untuk operasional sementara, matikan switch. Antar-jemput tetap tersedia; pelanggan mengisi alamat atau menempel tautan lokasi Google Maps, tanpa memilih kecamatan/zona.
+- Saat nonaktif, ongkir diinformasikan dan dibayar secara manual melalui chat. Pelanggan tidak perlu menyetujui ongkir di aplikasi. Tidak ada biaya ongkir yang ditambahkan kemudian ke booking, pelunasan, refund, atau laporan aplikasi. Label biaya menegaskan “Diinfokan lewat chat”, bukan gratis.
+- Total dan kewajiban pembayaran aplikasi hanya mencakup sewa serta biaya lain yang memang dicatat aplikasi. Admin mengurus ongkir di luar aplikasi, termasuk saat serah terima. Bukti pembayaran sewa tetap dapat langsung diunggah tanpa menunggu admin.
+- Mode disimpan dalam snapshot booking. Perpanjangan sebagian pada booking mode chat langsung diajukan tanpa quotation/persetujuan ongkir; pemeriksaan stok, tenggat, pembayaran sewa, dan persetujuan perpanjangan tetap berlaku.
+- Saat switch aktif, mekanisme tarif zona dan quotation tambahan sebelumnya berlaku untuk booking baru. Booking lama, termasuk snapshot tanpa flag, mempertahankan tarif serta alur semula. Perubahan switch tidak menghapus zona atau mengubah saldo historis.
+- Ketentuan zona dan persetujuan ongkir di bagian berikut berlaku untuk mode aktif. Mode chat memakai zona null dan ongkir sistem nol; constraint database tetap mewajibkan alamat dan memeriksa snapshot. Halaman lama yang masih mengirim zona ketika switch sudah nonaktif ditolak dengan instruksi memuat ulang.
 
 ## 5. Model data dan integritas database
 

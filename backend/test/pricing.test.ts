@@ -12,6 +12,20 @@ import {
 } from '../src/modules/pricing/pricing.rules';
 import { parseWibDateTime } from '../src/shared/time/wib';
 
+test('delivery_fee_switch_accepts_boolean_and_rejects_truthy_strings', () => {
+  assert.deepEqual(validateSettings({ delivery_fee_enabled: false }), {
+    ...settingsDefaults,
+    delivery_fee_enabled: false,
+  });
+  assert.deepEqual(validateSettings({ delivery_fee_enabled: true }), {
+    ...settingsDefaults,
+    delivery_fee_enabled: true,
+  });
+  for (const value of ['false', 'true', 0, 1, null]) {
+    assert.throws(() => validateSettings({ delivery_fee_enabled: value }));
+  }
+});
+
 test('prices_6_12_24_48_168_hours_without_weekday_or_weekend_adjustments', () => {
   const tariffs = { price6h: 50000n, price12h: 80000n, price24h: 120000n };
   assert.deepEqual(

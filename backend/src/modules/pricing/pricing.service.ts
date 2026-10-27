@@ -59,7 +59,15 @@ export class PricingService {
     )
       throw new BadRequestException('Maksimal satu iPhone per booking.');
     let zone = null;
-    if (input.deliveryType === 'delivery') {
+    const deliveryFeeMode =
+      input.deliveryType === 'delivery' && !rules.values.delivery_fee_enabled
+        ? 'chat'
+        : 'system';
+    if (deliveryFeeMode === 'chat' && input.deliveryZoneId !== undefined)
+      throw new ConflictException(
+        'Pengaturan ongkir berubah. Muat ulang halaman dan periksa booking kembali.',
+      );
+    if (input.deliveryType === 'delivery' && deliveryFeeMode === 'system') {
       if (!input.deliveryZoneId)
         throw new BadRequestException('Zona antar-jemput wajib dipilih.');
       await tx.$queryRaw`SELECT id FROM delivery_zones WHERE id=${input.deliveryZoneId}::uuid FOR SHARE`;
@@ -67,7 +75,10 @@ export class PricingService {
         where: { id: input.deliveryZoneId, isActive: true },
       });
       if (!zone) throw new ConflictException('Zona antar-jemput tidak aktif.');
-    } else if (input.deliveryZoneId !== undefined)
+    } else if (
+      input.deliveryType === 'pickup' &&
+      input.deliveryZoneId !== undefined
+    )
       throw new BadRequestException('Pickup tidak memakai zona ongkir.');
     const quotedAt = this.clock.now(),
       schedule = validateSchedule(
@@ -94,6 +105,7 @@ export class PricingService {
       lines,
       rentalTotal,
       deliveryFee,
+      deliveryFeeMode,
       grandTotal: total,
       dpSnapshot: rules.values.dp_amount,
       ...payment,

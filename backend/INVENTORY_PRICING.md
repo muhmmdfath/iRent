@@ -39,6 +39,18 @@ Perawatan membutuhkan unit ready tanpa alokasi aktif. Selesai perawatan menjadi 
 
 ## Quote dan snapshot
 
+### Toggle ongkir dalam aplikasi
+
+Admin mengubah `delivery_fee_enabled` dengan `PATCH /api/admin/settings`, body `{"values":{"delivery_fee_enabled":false}}`. Nilai harus boolean. `GET /api/rental-policy` mengekspos flag untuk checkout. Matikan switch pada operasional sementara agar ongkir diurus manual lewat chat.
+
+Saat nonaktif, quote delivery tidak menerima `deliveryZoneId`, mengembalikan `deliveryFeeMode: "chat"`, dan tidak memasukkan ongkir ke total/DP. Kiriman zona dari halaman lama mendapat 409, sehingga pelanggan harus memuat ulang. Booking tetap membutuhkan `deliveryAddress` (alamat atau tautan lokasi Maps). UI menampilkan informasi ongkir lewat chat, bukan gratis. Pembayaran ongkir, pencatatan, dan refundnya dilakukan di luar aplikasi.
+
+Flag dibekukan pada `snapshot.rules.values` saat booking dibuat. Booking lama tanpa flag tetap memakai tarif zona; fallback `settingsDefaults` sengaja true untuk kompatibilitas. Mengaktifkan kembali switch hanya memengaruhi booking baru. Perpanjangan sebagian mode chat tidak memerlukan quotation/persetujuan ongkir di aplikasi dan tetap mengikuti validasi stok, pembayaran, serta persetujuan perpanjangan.
+
+Jalankan migrasi `20261027090000_optional_delivery_fee` sebelum mengaktifkan mode chat. Constraint delivery tetap mewajibkan alamat; zona null dan ongkir sistem nol hanya dibolehkan untuk snapshot dengan flag false. Seed mempertahankan nilai admin; setelah upgrade, matikan switch melalui pengaturan admin untuk memilih mode operasional ini.
+
+Contoh berikut menjelaskan perilaku lama ketika switch aktif.
+
 Contoh body:
 
 ```json

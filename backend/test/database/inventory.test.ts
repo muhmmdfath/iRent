@@ -363,7 +363,7 @@ test('inventory_settings_and_quotes_preserve_stock_history_and_money', async (t)
     );
     await t.test(
       'quote_counts_units_one_roundtrip_delivery_fee_and_flat_dp',
-      async () => {
+      async (t) => {
         const response = await call(
           '/admin/delivery-zones',
           'POST',
@@ -373,6 +373,59 @@ test('inventory_settings_and_quotes_preserve_stock_history_and_money', async (t)
         assert.equal(response.status, 201);
         zoneId = ((await response.json()) as { id: string }).id;
         zoneIds.push(zoneId);
+        await t.test(
+          'manual_chat_delivery_excludes_fee_and_rejects_stale_zone_then_can_be_reenabled',
+          async () => {
+            await settings.update(contexts[0], { delivery_fee_enabled: false });
+            try {
+              const publicPolicy = await call('/rental-policy');
+              assert.equal(
+                (await publicPolicy.json()).values.delivery_fee_enabled,
+                false,
+              );
+              const manual = await quote(
+                [{ itemId: iphoneId, quantity: 1 }],
+                6,
+                'delivery',
+              );
+              assert.equal(manual.status, 201, await manual.clone().text());
+              const value = await manual.json();
+              assert.equal(value.deliveryFeeMode, 'chat');
+              assert.equal(value.deliveryFee, '0');
+              assert.equal(value.grandTotal, '50000');
+              assert.equal(
+                value.snapshot.rules.values.delivery_fee_enabled,
+                false,
+              );
+              assert.equal(
+                (
+                  await quote(
+                    [{ itemId: iphoneId, quantity: 1 }],
+                    6,
+                    'delivery',
+                    zoneId,
+                  )
+                ).status,
+                409,
+              );
+              assert.equal(
+                (
+                  await call(
+                    '/admin/settings',
+                    'PATCH',
+                    { values: { delivery_fee_enabled: true } },
+                    2,
+                  )
+                ).status,
+                403,
+              );
+            } finally {
+              await settings.update(contexts[0], {
+                delivery_fee_enabled: true,
+              });
+            }
+          },
+        );
         const result = await quote(
           [
             { itemId: iphoneId, quantity: 1 },

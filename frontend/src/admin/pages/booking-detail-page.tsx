@@ -1,3 +1,5 @@
+import { deliveryViaChat } from '@/customer/delivery-fee';
+import { DeliveryFeeNotice } from '@/customer/components/delivery-fee-notice';
 import './bookings-workspace.css';
 import {
   ChevronLeftIcon,
@@ -138,8 +140,11 @@ export function AdminBookingDetailPage() {
               <p>
                 {booking.deliveryType === 'pickup'
                   ? 'Ambil di toko'
-                  : `Antar-jemput · ${booking.deliveryZoneNameSnapshot}`}
+                  : deliveryViaChat(booking)
+                    ? 'Antar-jemput · ongkir lewat chat'
+                    : `Antar-jemput · ${booking.deliveryZoneNameSnapshot}`}
               </p>
+              {deliveryViaChat(booking) && <DeliveryFeeNotice />}
               {booking.deliveryAddress && (
                 <p className="muted">{booking.deliveryAddress}</p>
               )}

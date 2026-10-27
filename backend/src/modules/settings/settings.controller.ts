@@ -35,6 +35,7 @@ export class RentalPolicyController {
   @Get() async read() {
     const { values } = await this.settings.read();
     const keys = [
+      'delivery_fee_enabled',
       'dp_amount',
       'hold_minutes',
       'urgent_threshold_minutes',

@@ -1,3 +1,5 @@
+import { deliveryViaChat } from '../delivery-fee';
+import { DeliveryFeeNotice } from '../components/delivery-fee-notice';
 import { useRef, useState } from 'react';
 import { ArrowLeftIcon } from '@radix-ui/react-icons';
 import { Link, useParams } from 'react-router-dom';
@@ -80,6 +82,7 @@ export function PaymentPage() {
       <div className="payment-columns">
         <section className="bp-main" aria-label="Pembayaran dan bukti">
           <div className="payment-overview">
+            {deliveryViaChat(booking) && <DeliveryFeeNotice />}
             {booking.items?.[0] && (
               <ItemPhoto
                 path={booking.items[0].item?.photoPath || null}
@@ -123,7 +126,11 @@ export function PaymentPage() {
                 : ''}
             </p>
           ) : completed ? (
-            <p className="success-note">Pembayaran lunas.</p>
+            <p className="success-note">
+              {deliveryViaChat(booking)
+                ? 'Tagihan aplikasi lunas.'
+                : 'Pembayaran lunas.'}
+            </p>
           ) : obligation ? (
             <div className="amount-focus">
               <p>

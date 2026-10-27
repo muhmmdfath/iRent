@@ -438,3 +438,13 @@ Hasil: 188 tes PostgreSQL/HTTP, 26 unit backend, 81 UI, 92 Chromium API simulasi
 - [x] Copy pelanggan dipersingkat pada beranda, detail item, checkout, profil, daftar/detail booking dan pembayaran. Persetujuan checkout menjadi satu checkbox eksplisit; seluruh flag persetujuan backend tetap dikirim setelah dicentang. Ketentuan lengkap tetap tersedia.
 - [x] Form standar verifikasi/pelunasan booking dan perpanjangan hanya nominal, waktu dan metode; catatan audit terisi otomatis. Rekonsiliasi/koreksi dan penolakan tetap mempunyai alasan yang relevan.
 - [x] Pemeriksaan: 23 tes frontend, 28 tes unit backend, 21 tes PostgreSQL/HTTP operasional (database lokal terpisah), dan 9 skenario Chromium; build/typecheck/lint backend/frontend lulus. Alur mobile 60 jam memverifikasi nominal, satu persetujuan, keempat flag API dan layout checkbox. Screenshot checkout-simple-60-hours-390 tersimpan di docs/frontend. Revisi dipush dan dideploy ke VPS pada commit 6cb12d7, 25 Oktober 2026. Lihat docs/deployment/2026-10-25-revision.md.
+
+## Toggle ongkir melalui chat (27 Oktober 2026)
+
+- [x] Switch “Ongkir dalam aplikasi” pada Pengaturan sewa; penyimpanan boolean, audit/revisi settings, status menyimpan dan penanganan kegagalan.
+- [x] Mode nonaktif tetap mengizinkan antar-jemput tanpa zona; alamat atau tautan lokasi Maps tetap wajib. Quote tidak memasukkan ongkir ke total/DP dan menolak zona dari halaman lama dengan 409.
+- [x] Informasi ongkir lewat chat pada checkout, detail/pembayaran pelanggan, detail admin, serah terima dan perpanjangan. Ongkir eksternal tidak masuk laporan/refund aplikasi.
+- [x] Snapshot booking melindungi tarif/alur lama; perpanjangan sebagian mode chat langsung diajukan tanpa quotation/persetujuan ongkir. Validasi stok, pembayaran dan persetujuan perpanjangan tetap berlaku.
+- [x] Migrasi `20261027090000_optional_delivery_fee` menjaga constraint alamat, zona dan biaya sesuai snapshot. Build/typecheck/lint backend/frontend, 29 tes unit backend, 49 tes PostgreSQL pada database sementara, 32 tes frontend dan 4 tes browser desktop/mobile lulus. Storage runtime privat dikecualikan dari lint.
+- Penerapan: jalankan migrasi sebelum mode chat digunakan, lalu matikan switch di Pengaturan sewa. Fallback flag yang belum tersimpan tetap true untuk kompatibilitas booking lama; seed mempertahankan pilihan admin.
+- Perubahan masih lokal; belum commit, push atau diterapkan ke VPS.

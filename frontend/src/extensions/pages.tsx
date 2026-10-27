@@ -1,3 +1,5 @@
+import { deliveryViaChat } from '@/customer/delivery-fee';
+import { DeliveryFeeNotice } from '@/customer/components/delivery-fee-notice';
 import { PAGE_SIZE } from '@/lib/pagination';
 import {
   AdminWorkspace,
@@ -193,6 +195,7 @@ export function ExtensionDetailPage() {
       </section>
       <section className="form-section">
         <h2>Biaya perpanjangan</h2>
+        {deliveryViaChat(parent) && <DeliveryFeeNotice />}
         <dl className="price-breakdown">
           <div>
             <dt>Sewa tambahan</dt>
@@ -201,9 +204,11 @@ export function ExtensionDetailPage() {
           <div>
             <dt>Ongkir tambahan</dt>
             <dd>
-              {extension.extraDeliveryQuote === null
-                ? 'Menunggu quotation'
-                : rupiah(extension.extraDeliveryQuote)}
+              {deliveryViaChat(parent)
+                ? 'Diinfokan lewat chat'
+                : extension.extraDeliveryQuote === null
+                  ? 'Menunggu quotation'
+                  : rupiah(extension.extraDeliveryQuote)}
             </dd>
           </div>
           <div>

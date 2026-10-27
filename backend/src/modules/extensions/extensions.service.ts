@@ -368,7 +368,9 @@ export class ExtensionsService {
                 ?.proposedEndAt.getTime() ?? item.currentEndAt.getTime(),
           );
         const quoteRequired =
-          booking.deliveryType === 'delivery' && new Set(ends).size > 1;
+          booking.deliveryType === 'delivery' &&
+          rules.delivery_fee_enabled &&
+          new Set(ends).size > 1;
         const created = await tx.extension.create({
           data: {
             bookingId: booking.id,
@@ -436,6 +438,10 @@ export class ExtensionsService {
         const proposal = await this.proposal(tx, booking.id, id);
         if (proposal.status !== 'draft_quote')
           throw new ConflictException('Quotation hanya untuk draft.');
+        if (!this.payments.rules(booking).values.delivery_fee_enabled)
+          throw new ConflictException(
+            'Ongkir booking ini diinformasikan lewat chat.',
+          );
         if (proposal.rentalQuoteTotal + extra > MAX_RUPIAH)
           throw new BadRequestException('Tagihan melampaui rentang rupiah.');
         const updated = await tx.extension.update({

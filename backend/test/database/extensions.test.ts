@@ -19,6 +19,7 @@ import { ProofStorageService } from '../../src/modules/payments/proof-storage.se
 import { PaymentLedgerService } from '../../src/modules/payments/payment-ledger.service';
 import { RefundsService } from '../../src/modules/payments/refunds.service';
 import { PaymentsService } from '../../src/modules/payments/payments.service';
+import { SettingsService } from '../../src/modules/settings/settings.service';
 import { BusinessClock } from '../../src/shared/time/business-clock';
 import { formatWibDateTime, wibNow } from '../../src/shared/time/wib';
 import { setupApp } from '../../src/setup-app';
@@ -53,6 +54,7 @@ test('extensions_preserve_scoped_money_calendar_deadlines_and_return_races', asy
     auth = app.get(AuthService),
     bookings = app.get(BookingsService),
     payments = app.get(PaymentsService),
+    settings = app.get(SettingsService),
     refunds = app.get(RefundsService),
     extensions = app.get(ExtensionsService),
     operations = app.get(OperationsService),
@@ -154,7 +156,9 @@ test('extensions_preserve_scoped_money_calendar_deadlines_and_return_races', asy
         deliveryType: delivery ? 'delivery' : 'pickup',
         ...(delivery
           ? {
-              deliveryZoneId: zone.id,
+              ...((await settings.read()).values.delivery_fee_enabled
+                ? { deliveryZoneId: zone.id }
+                : {}),
               deliveryAddress: 'Alamat fixture Semarang',
             }
           : {}),
@@ -324,7 +328,7 @@ test('extensions_preserve_scoped_money_calendar_deadlines_and_return_races', asy
     await payments.verify(
       contexts[2],
       booking.id,
-      receipt(proof.proofId!, delivery ? '110000' : '100000'),
+      receipt(proof.proofId!, booking.initialGrandTotal.toString()),
       randomUUID(),
     );
     setTime(10);
@@ -374,6 +378,103 @@ test('extensions_preserve_scoped_money_calendar_deadlines_and_return_races', asy
     return booking;
   }
   try {
+    await t.test(
+      'chat_delivery_preserves_booking_snapshots_and_submits_partial_extension_without_fee_approval',
+      async () => {
+        const original = await settings.read();
+        const originalRow = await prisma.setting.findUnique({
+          where: { key: 'delivery_fee_enabled' },
+        });
+        await settings.update(contexts[2], { delivery_fee_enabled: true });
+        const legacy = await make('full', at(10), 50000n, 0, true);
+        await settings.update(contexts[2], { delivery_fee_enabled: false });
+        try {
+          const booking = await runMulti(true);
+          assert.equal(booking.deliveryFeeSnapshot, 0n);
+          assert.equal(booking.deliveryZoneId, null);
+          assert.equal(booking.initialGrandTotal, 100000n);
+          await assert.rejects(
+            prisma.booking.update({
+              where: { id: booking.id },
+              data: {
+                deliveryZoneId: zone.id,
+                deliveryZoneNameSnapshot: zone.name,
+              },
+            }),
+            /bookings_delivery_fields/,
+          );
+          await assert.rejects(
+            prisma.booking.update({
+              where: { id: booking.id },
+              data: {
+                deliveryFeeSnapshot: 1n,
+                initialGrandTotal: 100001n,
+                amountDueNow: 100001n,
+              },
+            }),
+            /bookings_delivery_fields/,
+          );
+          assert.equal(
+            payments.rules(booking).values.delivery_fee_enabled,
+            false,
+          );
+          const old = (await detail(legacy)).booking;
+          assert.equal(old.deliveryFeeSnapshot, 10000n);
+          assert.equal(payments.rules(old).values.delivery_fee_enabled, true);
+          assert.equal((await detail(booking)).summary.bill, 100000n);
+          await settings.update(contexts[2], { delivery_fee_enabled: true });
+          const proposal = await extend(booking, [booking.items[0].id]);
+          assert.equal(proposal.status, 'menunggu_pembayaran');
+          assert.equal(proposal.amountDue, 50000n);
+          assert.equal(proposal.extraDeliveryQuote, 0n);
+          await assert.rejects(
+            extensions.quote(
+              contexts[2],
+              booking.id,
+              proposal.id,
+              {
+                extraDeliveryQuote: '15000',
+                note: 'Tambahan ongkir tidak boleh ditagihkan.',
+              },
+              randomUUID(),
+            ),
+            /draft|chat/,
+          );
+          const proof = await uploadExtension(booking, proposal.id);
+          const approved = await verifyExtension(
+            booking,
+            proposal.id,
+            proof.proofId!,
+          );
+          assert.equal(
+            approved.decision,
+            'approved',
+            JSON.stringify(approved.booking.extensions, (_, value: unknown) =>
+              typeof value === 'bigint' ? value.toString() : value,
+            ),
+          );
+          const result = await detail(booking);
+          assert.equal(result.summary.bill, 100000n);
+          assert.equal(
+            (await extensions.detail(contexts[0], booking.id, proposal.id))
+              .summary.bill,
+            50000n,
+          );
+          assert.equal(
+            payments.rules(result.booking).values.delivery_fee_enabled,
+            false,
+          );
+        } finally {
+          await settings.update(contexts[2], {
+            delivery_fee_enabled: original.values.delivery_fee_enabled,
+          });
+          await prisma.setting.update({
+            where: { key: 'delivery_fee_enabled' },
+            data: { updatedBy: originalRow?.updatedBy ?? null },
+          });
+        }
+      },
+    );
     await t.test(
       'approval_applies_snapshot_price_and_merges_hold_without_changing_initial_balance',
       async () => {

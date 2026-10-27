@@ -1,6 +1,7 @@
 import { LoadingState, ErrorState } from '@/components/feedback';
 import { usePolicy } from '../hooks';
 import { rupiah } from '../format';
+import { DeliveryFeeNotice } from '../components/delivery-fee-notice';
 export function TermsPage() {
   const query = usePolicy();
   if (query.isPending) return <LoadingState text="Memuat ketentuan..." />;
@@ -17,6 +18,21 @@ export function TermsPage() {
         <p>Periksa aturan yang berlaku sebelum memilih jadwal.</p>
       </header>
       <div className="terms-content">
+        <section>
+          <h2>Antar-jemput dan ongkir</h2>
+          {rule.delivery_fee_enabled === false ? (
+            <DeliveryFeeNotice />
+          ) : (
+            <p>
+              Ongkir dihitung berdasarkan zona dan termasuk tagihan aplikasi.
+            </p>
+          )}
+          <p>
+            Alamat atau tautan lokasi Google Maps diisi saat memilih
+            antar-jemput. Booking lama mengikuti rincian ongkir yang tersimpan
+            saat booking dibuat.
+          </p>
+        </section>
         <section>
           <h2>Jadwal dan perangkat</h2>
           <p>
@@ -86,7 +102,9 @@ export function TermsPage() {
           <p>
             Ajukan paling lambat {rule.extension_min_lead_minutes} menit sebelum
             jadwal kembali setiap unit, dengan tambahan 6, 12, atau 24 jam.
-            Ongkir penjemputan terpisah perlu persetujuan pelanggan; batas bayar{' '}
+            {rule.delivery_fee_enabled === false
+              ? 'Ongkir penjemputan terpisah diurus lewat chat tanpa tahap persetujuan ongkir di aplikasi; batas bayar '
+              : 'Ongkir penjemputan terpisah perlu persetujuan pelanggan; batas bayar '}
             {rule.extension_hold_minutes} menit dimulai setelah pengajuan final.
             Total durasi tetap mengikuti batas sewa.
           </p>

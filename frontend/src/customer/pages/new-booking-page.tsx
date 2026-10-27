@@ -1,4 +1,5 @@
 import { rentalDurations, durationLabel } from '../rental-duration';
+import { DeliveryFeeNotice } from '../components/delivery-fee-notice';
 import { PAGE_SIZE } from '@/lib/pagination';
 import {
   ChevronLeftIcon as PaginationPreviousIcon,
@@ -71,6 +72,7 @@ export function NewBookingPage() {
   const userId = useSession().data?.user.id;
   const profile = useProfile();
   const policy = usePolicy();
+  const deliveryFeeEnabled = policy.data?.values.delivery_fee_enabled !== false;
   const primary = useQuery({
     queryKey: ['item', initialId],
     queryFn: ({ signal }) => customerApi.item(initialId, signal),
@@ -84,6 +86,7 @@ export function NewBookingPage() {
   const zones = useQuery({
     queryKey: ['delivery-zones'],
     queryFn: ({ signal }) => customerApi.zones(signal),
+    enabled: !!policy.data && deliveryFeeEnabled,
   });
   const [primaryQuantity, setPrimaryQuantity] = useState(1);
   const [includePrimary, setIncludePrimary] = useState(true);
@@ -134,7 +137,7 @@ export function NewBookingPage() {
       })),
       deliveryType: values.deliveryType,
       payOption: values.payOption,
-      ...(values.deliveryType === 'delivery'
+      ...(values.deliveryType === 'delivery' && deliveryFeeEnabled
         ? { deliveryZoneId: values.deliveryZoneId }
         : {}),
     };
@@ -681,33 +684,36 @@ export function NewBookingPage() {
             </div>
             {values.deliveryType === 'delivery' && (
               <>
-                <div className="field">
-                  <label htmlFor="deliveryZone">Zona antar-jemput</label>
-                  <select
-                    id="deliveryZone"
-                    className="select-input"
-                    {...form.register('deliveryZoneId')}
-                  >
-                    <option value="">Pilih zona</option>
-                    {zones.data?.map((zone) => (
-                      <option key={zone.id} value={zone.id}>
-                        {zone.name} - {rupiah(zone.fee)}
-                      </option>
-                    ))}
-                  </select>
-                  {zones.isError && (
-                    <p className="field-error">
-                      {errorMessage(zones.error)}{' '}
-                      <button
-                        type="button"
-                        className="text-link"
-                        onClick={() => void zones.refetch()}
-                      >
-                        Coba lagi
-                      </button>
-                    </p>
-                  )}
-                </div>
+                {!deliveryFeeEnabled && <DeliveryFeeNotice />}
+                {deliveryFeeEnabled && (
+                  <div className="field">
+                    <label htmlFor="deliveryZone">Zona antar-jemput</label>
+                    <select
+                      id="deliveryZone"
+                      className="select-input"
+                      {...form.register('deliveryZoneId')}
+                    >
+                      <option value="">Pilih zona</option>
+                      {zones.data?.map((zone) => (
+                        <option key={zone.id} value={zone.id}>
+                          {zone.name} - {rupiah(zone.fee)}
+                        </option>
+                      ))}
+                    </select>
+                    {zones.isError && (
+                      <p className="field-error">
+                        {errorMessage(zones.error)}{' '}
+                        <button
+                          type="button"
+                          className="text-link"
+                          onClick={() => void zones.refetch()}
+                        >
+                          Coba lagi
+                        </button>
+                      </p>
+                    )}
+                  </div>
+                )}
                 <div className="field">
                   <label htmlFor="deliveryAddress">Alamat antar-jemput</label>
                   <textarea
@@ -715,6 +721,7 @@ export function NewBookingPage() {
                     rows={3}
                     maxLength={1000}
                     className="text-area"
+                    placeholder="Tulis alamat lengkap atau tempel tautan lokasi Google Maps"
                     {...form.register('deliveryAddress')}
                   />
                   {form.formState.errors.deliveryAddress && (
@@ -835,13 +842,20 @@ export function NewBookingPage() {
                 ))}
                 <div>
                   <dt>Antar-jemput</dt>
-                  <dd>{rupiah(currentPreview.quote.deliveryFee)}</dd>
+                  <dd>
+                    {currentPreview.quote.deliveryFeeMode === 'chat'
+                      ? 'Diinfokan lewat chat'
+                      : rupiah(currentPreview.quote.deliveryFee)}
+                  </dd>
                 </div>
                 <div>
                   <dt>Total sewa</dt>
                   <dd>{rupiah(currentPreview.quote.grandTotal)}</dd>
                 </div>
               </dl>
+              {currentPreview.quote.deliveryFeeMode === 'chat' && (
+                <DeliveryFeeNotice />
+              )}
               <div className="amount-focus">
                 <p>Bayar setelah booking</p>
                 <strong>{rupiah(currentPreview.quote.amountDueNow)}</strong>
