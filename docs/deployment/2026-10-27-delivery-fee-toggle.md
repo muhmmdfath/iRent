@@ -21,3 +21,11 @@ Sebelum rilis: build/typecheck/lint kedua aplikasi, 29 tes unit backend, 49 tes 
 Setelah rilis: API dan PostgreSQL healthy; policy publik mengembalikan `delivery_fee_enabled: false`. Halaman admin diperiksa dengan akun terautentikasi tanpa mutasi tambahan. Checkout diperiksa dengan identitas pelanggan simulasi serta katalog/policy live: antar-jemput tersedia, pilihan zona hilang, alamat tetap ada dan informasi ongkir lewat chat tampil. Layout 390/1440 px tidak overflow. Tidak membuat booking atau pembayaran pelanggan produksi.
 
 Screenshot tersimpan privat di `backend/storage/deployment/verification-d97fd93/`. Pembaruan dokumentasi setelah rilis tidak mengubah versi aplikasi yang dibangun.
+
+## Perbaikan lokasi dan animasi toggle
+
+Commit aplikasi `22f4285` dipush ke main dan dirilis pada hari yang sama. Toggle dipindahkan dari Pengaturan sewa ke halaman Zona ongkir. Switch langsung menunjukkan pilihan baru selama penyimpanan, kembali ke status tersimpan jika gagal, dan tetap terkunci selama permintaan berlangsung. Teks status berada di luar tombol; hover tidak mewarnai area teks. Transisi track/knob 280 ms menghormati pengaturan reduced motion.
+
+Build/typecheck/lint, sembilan tes frontend dan empat tes browser lulus. Tes browser memperlambat penyimpanan 650 ms dan memeriksa respons visual sebelum server menjawab, area klik yang terbatas pada switch, serta hover transparan. Backup baru `/opt/irent/backups/20261027T095609Z` lolos checksum; source/image web lama disimpan untuk rollback. Hanya web dibangun ulang; API dan schema tidak diperbarui lagi.
+
+Verifikasi live 390/1440 px memastikan toggle nonaktif di Zona ongkir, tidak ada toggle duplikat pada Pengaturan, hover transparan dan checkout tetap mode chat. Tidak menyalakan ongkir atau membuat transaksi produksi selama pemeriksaan. Bukti privat: `backend/storage/deployment/verification-22f4285/`. Marker VPS sekarang `22f4285`.
