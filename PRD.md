@@ -169,7 +169,7 @@ Implementasi settings/katalog/pricing memakai counter revisi settings dan shared
 
 ### Ongkir sementara melalui chat (27 Oktober 2026)
 
-- Admin mengatur switch “Ongkir dalam aplikasi” pada Pengaturan sewa. Untuk operasional sementara, matikan switch. Antar-jemput tetap tersedia; pelanggan mengisi alamat atau menempel tautan lokasi Google Maps, tanpa memilih kecamatan/zona.
+- Admin mengatur switch “Ongkir dalam aplikasi” pada halaman Zona ongkir. Untuk operasional sementara, matikan switch. Antar-jemput tetap tersedia; pelanggan mengisi alamat atau menempel tautan lokasi Google Maps, tanpa memilih kecamatan/zona.
 - Saat nonaktif, ongkir diinformasikan dan dibayar secara manual melalui chat. Pelanggan tidak perlu menyetujui ongkir di aplikasi. Tidak ada biaya ongkir yang ditambahkan kemudian ke booking, pelunasan, refund, atau laporan aplikasi. Label biaya menegaskan “Diinfokan lewat chat”, bukan gratis.
 - Total dan kewajiban pembayaran aplikasi hanya mencakup sewa serta biaya lain yang memang dicatat aplikasi. Admin mengurus ongkir di luar aplikasi, termasuk saat serah terima. Bukti pembayaran sewa tetap dapat langsung diunggah tanpa menunggu admin.
 - Mode disimpan dalam snapshot booking. Perpanjangan sebagian pada booking mode chat langsung diajukan tanpa quotation/persetujuan ongkir; pemeriksaan stok, tenggat, pembayaran sewa, dan persetujuan perpanjangan tetap berlaku.

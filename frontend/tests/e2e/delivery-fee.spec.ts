@@ -13,6 +13,7 @@ for (const width of [390, 1440]) {
     );
     await page.route('**/api/admin/settings', async (route) => {
       if (route.request().method() === 'PATCH') {
+        await new Promise((resolve) => setTimeout(resolve, 650));
         enabled = route.request().postDataJSON().values.delivery_fee_enabled;
       }
       await route.fulfill({
@@ -22,11 +23,20 @@ for (const width of [390, 1440]) {
         },
       });
     });
-    await page.goto('/admin/settings');
+    await page.route('**/api/admin/delivery-zones', (route) =>
+      route.fulfill({ json: [] }),
+    );
+    await page.goto('/admin/zones');
     const toggle = page.getByRole('switch', { name: 'Ongkir dalam aplikasi' });
     await expect(toggle).toHaveAttribute('aria-checked', 'true');
+    await toggle.hover();
+    await expect(toggle).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+    expect((await toggle.boundingBox())!.width).toBeLessThan(60);
     await toggle.click();
-    await expect(toggle).toHaveAttribute('aria-checked', 'false');
+    await expect(toggle).toHaveAttribute('aria-checked', 'false', {
+      timeout: 250,
+    });
+    await expect(toggle).toBeEnabled();
     await expect(
       page.getByText(/ongkir dibayar dan dicatat di luar aplikasi/),
     ).toBeVisible();

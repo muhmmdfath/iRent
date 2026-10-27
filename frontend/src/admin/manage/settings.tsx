@@ -14,12 +14,11 @@ import {
 } from '@radix-ui/react-icons';
 import { rupiah } from '@/customer/format';
 import { useState } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAdminRead } from './hooks';
 import { BusinessForm, type ActionField } from '@/components/business-form';
 import { Button } from '@/components/ui/button';
 import { LoadingState, ErrorState } from '@/components/feedback';
-import { api, errorMessage } from '@/services/api';
+import { api } from '@/services/api';
 import { ItemPhoto } from '@/customer/components/item-photo';
 import { PhotoForm } from '@/admin/inventory/photo-form';
 type Settings = {
@@ -124,25 +123,12 @@ const groups = [
   },
 ];
 export function SettingsPage() {
-  const queryClient = useQueryClient();
   const query = useAdminRead<Settings>('settings', '/admin/settings');
   const [edit, setEdit] = useState(false);
   const [group, setGroup] = useState('payment');
   const [saving, setSaving] = useState(false);
   const [photo, setPhoto] = useState(false);
   const [removePhoto, setRemovePhoto] = useState(false);
-  const deliveryFee = useMutation({
-    mutationFn: (enabled: boolean) =>
-      api.patch('/admin/settings', {
-        values: { delivery_fee_enabled: enabled },
-      }),
-    onSuccess: async () => {
-      await Promise.all([
-        query.refetch(),
-        queryClient.invalidateQueries({ queryKey: ['rental-policy'] }),
-      ]);
-    },
-  });
   if (query.isPending) return <LoadingState text="Memuat pengaturan..." />;
   if (query.isError)
     return (
@@ -180,48 +166,6 @@ export function SettingsPage() {
         Perubahan berlaku untuk booking berikutnya. Harga dan aturan pada
         transaksi lama mengikuti snapshot masing-masing.
       </AdminHint>
-      <section className="form-section am-delivery-fee-setting">
-        <div className="am-panel-heading">
-          <div>
-            <h2>Ongkir dalam aplikasi</h2>
-            <p>
-              {values.delivery_fee_enabled !== false
-                ? 'Aktif · ongkir dihitung berdasarkan zona dan masuk tagihan.'
-                : 'Nonaktif · antar-jemput tetap tersedia; ongkir diinformasikan lewat chat.'}
-            </p>
-          </div>
-          <button
-            type="button"
-            role="switch"
-            aria-label="Ongkir dalam aplikasi"
-            aria-checked={values.delivery_fee_enabled !== false}
-            disabled={deliveryFee.isPending || edit || photo || removePhoto}
-            className="am-delivery-fee-switch"
-            onClick={() =>
-              deliveryFee.mutate(values.delivery_fee_enabled === false)
-            }
-          >
-            <span aria-hidden="true" className="am-switch-track">
-              <span />
-            </span>
-            {deliveryFee.isPending
-              ? 'Menyimpan…'
-              : values.delivery_fee_enabled !== false
-                ? 'Aktif'
-                : 'Nonaktif'}
-          </button>
-        </div>
-        <p className="muted text-sm">
-          Berlaku untuk booking baru. Saat nonaktif, ongkir dibayar dan dicatat
-          di luar aplikasi; laporan dan refund aplikasi hanya mencakup tagihan
-          di aplikasi.
-        </p>
-        {deliveryFee.isError && (
-          <p role="alert" className="form-error">
-            {errorMessage(deliveryFee.error)}
-          </p>
-        )}
-      </section>
       <div className="am-settings-layout">
         <nav className="am-settings-nav" aria-label="Kelompok pengaturan">
           {groups.map((value) => (

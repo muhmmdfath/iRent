@@ -1,0 +1,80 @@
+:root body .am-delivery-fee-setting {
+  margin-bottom: 24px;
+}
+:root body .am-delivery-fee-control {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+:root body .am-delivery-fee-status {
+  min-width: 58px;
+  font-size: 12px;
+  color: #655660;
+}
+:root body .admin-workspace.am-zones button.am-delivery-fee-switch,
+:root
+  body
+  .admin-workspace.am-zones
+  button.am-delivery-fee-switch:hover:not(:disabled) {
+  display: grid;
+  place-items: center;
+  flex: 0 0 44px;
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 22px;
+  background: transparent;
+  box-shadow: none;
+  opacity: 1;
+  cursor: pointer;
+}
+:root body .am-switch-track {
+  display: flex;
+  align-items: center;
+  width: 44px;
+  height: 26px;
+  padding: 3px;
+  border-radius: 20px;
+  background-color: #dedade;
+  transition: background-color 280ms ease;
+}
+:root body .am-switch-track > span {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  transform: translateX(0);
+  transition: transform 280ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+:root body .am-delivery-fee-switch[aria-checked='true'] .am-switch-track {
+  background-color: #e64d86;
+}
+:root
+  body
+  .am-delivery-fee-switch[aria-checked='true']
+  .am-switch-track
+  > span {
+  transform: translateX(18px);
+}
+:root body .am-delivery-fee-switch:focus-visible {
+  outline: 2px solid #e64d86;
+  outline-offset: 3px;
+}
+:root body .admin-workspace.am-zones button.am-delivery-fee-switch:disabled {
+  cursor: wait;
+}
+:root body .admin-workspace .am-delivery-fee-save {
+  min-height: 20px;
+  margin: 6px 0 0;
+  color: #8e7b88;
+  font-size: 11px;
+}
+@media (prefers-reduced-motion: reduce) {
+  :root body .am-switch-track,
+  :root body .am-switch-track > span {
+    transition: none;
+  }
+}

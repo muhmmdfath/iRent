@@ -41,7 +41,7 @@ Perawatan membutuhkan unit ready tanpa alokasi aktif. Selesai perawatan menjadi 
 
 ### Toggle ongkir dalam aplikasi
 
-Admin mengubah `delivery_fee_enabled` dengan `PATCH /api/admin/settings`, body `{"values":{"delivery_fee_enabled":false}}`. Nilai harus boolean. `GET /api/rental-policy` mengekspos flag untuk checkout. Matikan switch pada operasional sementara agar ongkir diurus manual lewat chat.
+Admin mengubah `delivery_fee_enabled` dengan `PATCH /api/admin/settings`, body `{"values":{"delivery_fee_enabled":false}}`. Nilai harus boolean. `GET /api/rental-policy` mengekspos flag untuk checkout. Switch berada pada halaman admin Zona ongkir. Matikan switch pada operasional sementara agar ongkir diurus manual lewat chat.
 
 Saat nonaktif, quote delivery tidak menerima `deliveryZoneId`, mengembalikan `deliveryFeeMode: "chat"`, dan tidak memasukkan ongkir ke total/DP. Kiriman zona dari halaman lama mendapat 409, sehingga pelanggan harus memuat ulang. Booking tetap membutuhkan `deliveryAddress` (alamat atau tautan lokasi Maps). UI menampilkan informasi ongkir lewat chat, bukan gratis. Pembayaran ongkir, pencatatan, dan refundnya dilakukan di luar aplikasi.
 

@@ -53,7 +53,10 @@ it('saves a boolean delivery switch and keeps the saved state after an unsuccess
       return HttpResponse.json({});
     }),
   );
-  mount('/admin/settings');
+  server.use(
+    http.get(base + '/admin/delivery-zones', () => HttpResponse.json([])),
+  );
+  mount('/admin/zones');
   const user = userEvent.setup();
   const control = await screen.findByRole('switch', {
     name: 'Ongkir dalam aplikasi',

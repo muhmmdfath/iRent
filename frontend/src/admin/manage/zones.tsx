@@ -1,4 +1,5 @@
 import { PAGE_SIZE } from '@/lib/pagination';
+import { DeliveryFeeSetting } from './delivery-fee-setting';
 import { Pager } from './components';
 import {
   AdminWorkspace,
@@ -49,6 +50,7 @@ export function ZonesPage() {
           </Button>
         }
       />
+      <DeliveryFeeSetting disabled={!!editing} />
       <AdminHint>
         Tarif berlaku sekali per booking baru. Nonaktifkan zona untuk
         menghentikan pilihan baru; tarif transaksi lama tetap tersimpan.
